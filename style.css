@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+:root{
+  --bg:#0a0f1a;
+  --panel:#0f1726cc;
+  --glass:rgba(255,255,255,.06);
+  --txt:#e8f3ff;
+  --muted:#9bb3c8;
+  --pri:#00d1ff;
+  --pri2:#6c7cff;
+  --ok:#16c784;
+  --danger:#ff6b6b;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;background:radial-gradient(1200px 600px at 20% -10%, #0b2340, transparent),
+linear-gradient(160deg,#070b12,#0b1220 40%,#0b0f1a);color:var(--txt);font-family:Inter,system-ui,Segoe UI,Roboto,Arial}
+
+.container{width:min(1100px,92%);margin:0 auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+.brand{display:flex;gap:14px;align-items:center}
+.brand h1{margin:0;font-size:28px}
+.tag{margin:4px 0 0;color:var(--muted);font-size:13px}
+.logo{width:48px;height:48px}
+
+.nav{display:flex;gap:16px;align-items:center}
+.nav a{color:var(--muted);text-decoration:none}
+.nav a:hover{color:#fff}
+.btn{background:#1b263b;border:1px solid #2b3957;color:#dbe8ff;padding:10px 14px;border-radius:10px}
+.btn.primary{background:linear-gradient(90deg,var(--pri),var(--pri2));border:0;color:#001018;font-weight:800}
+.btn.xs{padding:6px 10px;font-size:12px}
+
+.glass{background:var(--panel);backdrop-filter:blur(8px);border:1px solid #21314f;border-radius:16px}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;padding:18px}
+.left .sub{color:var(--muted)}
+.countdown{display:flex;gap:16px;margin:10px 0 18px}
+.countdown div{background:var(--glass);border:1px solid #22314f;border-radius:12px;padding:10px 12px;text-align:center}
+.countdown span{font-size:26px;font-weight:800;display:block}
+
+.cex-row{display:flex;align-items:center;gap:8px;color:var(--muted)}
+.badges{display:flex;gap:8px}
+.cex{background:#0f1c2e;border:1px solid #22314f;padding:6px 10px;border-radius:999px;font-size:12px}
+
+.right .stage,.buy-box{margin-bottom:12px}
+.stage label,.buy-box label{display:block;margin-bottom:6px;color:#b8c7da}
+.stage select,.buy-box input{width:100%;padding:12px;border-radius:12px;border:1px solid #22314f;background:#0f1a2a;color:#e8f3ff}
+.price-line{display:flex;justify-content:space-between;color:#9dc2ff;margin:8px 0 12px}
+.addr{margin-top:10px;padding:10px;border-radius:12px;border:1px dashed #2a3c60}
+.addr.tiny{font-size:13px}
+.networks{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+#tokenomics,#about,#roadmap{margin-top:22px;padding:16px}
+.bars{display:grid;gap:10px;margin-top:12px}
+.bar{display:grid;grid-template-columns:140px 1fr;align-items:center;gap:12px}
+.bar>div{height:10px;background:#0c1d31;border-radius:999px;position:relative;border:1px solid #1f2f4b}
+.bar>div::after{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--w);background:linear-gradient(90deg,#21d4ff,#6f7bff);border-radius:999px}
+.bar span{color:#9bb3c8}
+
+.road{margin:8px 0 0 18px}
+.road li{margin:8px 0}
+
+.footer{padding:20px 0 60px;display:flex;justify-content:space-between;align-items:center}
+.socials a{color:#b0c7e2;margin-right:10px;text-decoration:none}
+.socials a:hover{color:#fff}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr}
+}
