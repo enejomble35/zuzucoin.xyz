@@ -1,0 +1,31 @@
+{
+  "PROJECT": {
+    "name": "ZUZU",
+    "tagline": "ZUZU is watching. And pumping.",
+    "symbol": "ZUZU",
+    "decimals": 18,
+    "siteUrl": "https://www.zuzucoin.xyz"
+  },
+  "PRESALE": {
+    "receiver": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",
+    "networkName": "Ethereum",
+    "chainId": 1,
+    "stages": [
+      { "name": "Stage 1", "priceEth": 0.0000020 },
+      { "name": "Stage 2", "priceEth": 0.0000030 },
+      { "name": "Stage 3", "priceEth": 0.0000040 },
+      { "name": "Stage 4", "priceEth": 0.0000050 }
+    ],
+    "endDate": "2025-09-30T21:00:00+03:00"
+  },
+  "ADDRESSES": {
+    "ETH": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",
+    "SOL": "",
+    "TON": ""
+  },
+  "SOCIALS": {
+    "twitter": "https://twitter.com/",
+    "telegram": "https://t.me/memedsener",
+    "discord": "https://discord.com/"
+  }
+}
