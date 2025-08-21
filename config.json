@@ -3,28 +3,19 @@
     "name": "ZUZU",
     "tagline": "AI-Powered Meme Intelligence",
     "symbol": "ZUZU",
-    "decimals": 18,
-    "siteUrl": "https://www.zuzucoin.xyz"
+    "decimals": 18
   },
   "PRESALE": {
     "receiver": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",
     "networkName": "BSC",
     "chainId": 56,
     "stages": [
-      { "name": "Stage 1", "priceUsdt": 0.0020 },
-      { "name": "Stage 2", "priceUsdt": 0.0030 },
-      { "name": "Stage 3", "priceUsdt": 0.0040 },
-      { "name": "Stage 4", "priceUsdt": 0.0050 }
+      { "name": "Stage 1 — 0.002000 USDT / ZUZU", "priceUsdt": 0.002 },
+      { "name": "Stage 2 — 0.003000 USDT / ZUZU", "priceUsdt": 0.003 },
+      { "name": "Stage 3 — 0.004000 USDT / ZUZU", "priceUsdt": 0.004 },
+      { "name": "Stage 4 — 0.005000 USDT / ZUZU", "priceUsdt": 0.005 }
     ],
-    "hardcapUsd": 300000,
-    "endDate": "2025-09-30T21:00:00+03:00"
-  },
-  "ADDRESSES": {
-    "USDT_BEP20": "0x55d398326f99059fF775485246999027B3197955"
-  },
-  "SOCIALS": {
-    "twitter": "https://x.com/",
-    "telegram": "https://t.me/",
-    "discord": "https://discord.gg/"
+    "endDate": "2025-09-30T21:00:00+03:00",
+    "goalUsd": 300000
   }
 }
