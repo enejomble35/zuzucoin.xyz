@@ -1,109 +1,147 @@
-const $ = s => document.querySelector(s);
-const $$ = s => document.querySelectorAll(s);
-
-let CFG, currentStage, unitPrice = 0, qty = 100000, raised = 0;
-
-// --- Load config & init
-(async function init(){
-  CFG = await fetch('config.json?v='+Date.now()).then(r=>r.json());
-  $('#receiver').value = CFG.PRESALE.receiver;
-  $('#usdtAddr').textContent = short(CFG.ADDRESSES.USDT_BEP20);
-  fillStages();
-  setStage(0);
-  $('#qty').value = qty;
-  calc();
-
-  makeQR(CFG.PRESALE.receiver);
-  startCountdown(new Date(CFG.PRESALE.endDate));
-  setHardcap(CFG.PRESALE.hardcapUsd);
-
-  // events
-  $('#stage').addEventListener('change', e=>{ setStage(e.target.selectedIndex); calc(); });
-  $('#qty').addEventListener('input', ()=>{ qty = +$('#qty').value||0; calc(); });
-  $$('.chip').forEach(c=>c.onclick=()=>{ qty=+c.dataset.q; $('#qty').value=qty; calc(); });
-  $('#copy').onclick = ()=>{ navigator.clipboard.writeText($('#receiver').value); toast('Adres kopyalandı'); };
-
-  $('#btnConnect').onclick = connectWallet;
-  $('#btnBuy').onclick = buyUSDT;
-})();
-
-function fillStages(){
-  const opt = CFG.PRESALE.stages.map(s=>`<option>${s.name} — ${s.priceUsdt.toFixed(6)} USDT / ZUZU</option>`).join('');
-  $('#stage').innerHTML = opt;
-}
-function setStage(i){ currentStage=i; unitPrice = CFG.PRESALE.stages[i].priceUsdt; $('#uPrice').textContent = unitPrice.toFixed(6); }
-function calc(){
-  const tot = unitPrice * (qty||0);
-  $('#total').textContent = (tot).toFixed(6);
-}
-function setHardcap(h){ $('#raisedTxt').textContent = `$${fmt(raised)} / $${fmt(h)}`; $('#bar').style.width = Math.min(100, (raised/h*100)) + '%'; }
-function startCountdown(end){
-  const dEl=$('#d'),hEl=$('#h'),mEl=$('#m'),sEl=$('#s');
-  const t = ()=>{ const now=new Date(); let ms=end-now; if(ms<0) ms=0;
-    const d=Math.floor(ms/86400000), h=Math.floor(ms%86400000/3600000),
-          m=Math.floor(ms%3600000/60000), s=Math.floor(ms%60000/1000);
-    dEl.textContent=pad(d); hEl.textContent=pad(h); mEl.textContent=pad(m); sEl.textContent=pad(s);
-  }; t(); setInterval(t,1000);
-}
-function pad(n){return (n<10?'0':'')+n}
-function fmt(n){return n.toLocaleString('en-US')}
-function short(a){return a.slice(0,6)+'…'+a.slice(-4)}
-function toast(t){console.log(t)}
-
-// QR (Google Chart)
-function makeQR(addr){
-  const data = encodeURIComponent(`ethereum:${CFG.ADDRESSES.USDT_BEP20}/transfer?address=${CFG.PRESALE.receiver}`);
-  $('#qr').innerHTML = `<img alt="qr" width="120" height="120" src="https://chart.googleapis.com/chart?cht=qr&chs=160x160&chl=${data}">`;
-}
-
-// ------- Wallet / Buy --------
-let provider, signer, userAddr;
-
-async function connectWallet(){
-  if(!window.ethereum){ alert('MetaMask / TrustWallet gerekli.'); return; }
-  try{
-    await ethereum.request({method:'eth_requestAccounts'});
-    // BSC’ye geç
-    try{
-      await ethereum.request({ method:'wallet_switchEthereumChain', params:[{ chainId:'0x38' }]});
-    }catch(e){
-      if(e.code===4902){
-        await ethereum.request({method:'wallet_addEthereumChain', params:[{
-          chainId:'0x38', chainName:'BNB Smart Chain', nativeCurrency:{name:'BNB',symbol:'BNB',decimals:18},
-          rpcUrls:['https://bsc-dataseed.binance.org'], blockExplorerUrls:['https://bscscan.com']
-        }]});
-      } else throw e;
-    }
-
-    provider = new ethers.BrowserProvider(window.ethereum);
-    signer   = await provider.getSigner();
-    userAddr = await signer.getAddress();
-    $('#btnConnect').textContent = short(userAddr);
-    toast('Cüzdan bağlandı');
-  }catch(err){ console.error(err); alert('Bağlantı reddedildi.'); }
-}
-
-async function buyUSDT(){
-  const amount = +$('#total').textContent;
-  if(!amount || amount<=0){ alert('Miktar belirt.'); return; }
-
-  if(!signer){ await connectWallet(); if(!signer) return; }
-
-  try{
-    const USDT = new ethers.Contract(
-      CFG.ADDRESSES.USDT_BEP20,
-      ["function transfer(address to,uint256 value) returns (bool)","function decimals() view returns (uint8)"],
-      signer
-    );
-    const decimals = await USDT.decimals(); // 18
-    const toWei = (val,dec=decimals)=> ethers.parseUnits(String(val), dec);
-    const tx = await USDT.transfer(CFG.PRESALE.receiver, toWei(amount));
-    $('#btnBuy').disabled = true; $('#btnBuy').textContent = 'Gönderiliyor…';
-    await tx.wait();
-    $('#btnBuy').disabled = false; $('#btnBuy').textContent = 'USDT (BEP20) ile Satın Al';
-    alert('Ödeme başarıyla gönderildi. Teşekkürler!');
-  }catch(e){
-    console.error(e); alert('İşlem iptal edildi veya başarısız oldu.');
-    $('#btnBuy').disabled = false; $('#btnBuy').textContent = 'USDT (BEP20) ile Satın Al';
+/* ZUZU v4 – light theme, no blue/black */
+const CFG_DEFAULT = {
+  PROJECT: { name: "ZUZU", tagline: "AI-Powered Meme Intelligence", symbol: "ZUZU", decimals: 18 },
+  PRESALE: {
+    receiver: "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", // senin BEP20 USDT adresin (EVM format)
+    networkName: "BSC",
+    chainId: 56,
+    stages: [
+      { name: "Stage 1 — 0.002000 USDT / ZUZU", priceUsdt: 0.002000 },
+      { name: "Stage 2 — 0.003000 USDT / ZUZU", priceUsdt: 0.003000 },
+      { name: "Stage 3 — 0.004000 USDT / ZUZU", priceUsdt: 0.004000 },
+      { name: "Stage 4 — 0.005000 USDT / ZUZU", priceUsdt: 0.005000 }
+    ],
+    endDate: "2025-09-30T21:00:00+03:00",
+    goalUsd: 300000
+  },
+  I18N: {
+    tr: {
+      connect:"Cüzdan Bağla", heroTitle:"ZUZU IS HERE", heroLead:"Bir sonraki büyük meme coini iniş yaptı",
+      days:"Gün", hours:"Saat", mins:"Dakika", secs:"Saniye",
+      presale:"Ön Satış Aşaması", stage:"Aşama", howMuch:"Kaç ZUZU?", price:"Fiyat:", total:"Toplam:",
+      buy:"USDT (BEP20) ile Satın Al", gasHint:"Ödeme USDT (BEP20) ile doğrudan proje kasasına gider. Gas için az miktar BNB gerekir.",
+      receiver:"Ödeme Alıcı Adresi", copy:"Kopyala", audit1:"Sözleşme: USDT (BEP20)", audit2:"Transfer →", audit3:"Non-custodial, direkt kasaya",
+      transparency:"Şeffaflık", transparencyTxt:"Satın alışlar USDT → Receiver olarak zincire kaydolur. Admin Panel üzerinden son işlemleri görebilirsin.",
+      raised:"Toplanan", about:"Hakkında",
+      aboutTxt:"ZUZU; meme maskot enerjisiyle minimal ve ciddi duruşu birleştiren topluluk coinidir. Presale USDT (BEP20) ile direkt kasaya gider. CEX başvuruları presale bitiminde."
+    },
+    en: {
+      connect:"Connect Wallet", heroTitle:"ZUZU IS HERE", heroLead:"The next great meme coin has landed",
+      days:"Days", hours:"Hours", mins:"Mins", secs:"Secs",
+      presale:"Presale Stage", stage:"Stage", howMuch:"How many ZUZU?", price:"Price:", total:"Total:",
+      buy:"Buy with USDT (BEP20)", gasHint:"Send USDT (BEP20) directly to treasury. A little BNB gas is required.",
+      receiver:"Receiver Address", copy:"Copy", audit1:"Contract: USDT (BEP20)", audit2:"Transfer →", audit3:"Non-custodial, straight to treasury",
+      transparency:"Transparency", transparencyTxt:"Purchases settle on-chain to Receiver. You can audit recent transfers on the Admin Panel.",
+      raised:"Raised", about:"About",
+      aboutTxt:"ZUZU blends meme energy with a serious, minimal stance. Presale funds go directly to treasury. CEX applications after presale."
+    },
+    pt:{...this?.tr}, ru:{...this?.tr}, zh:{...this?.tr}, hi:{...this?.tr}
   }
+};
+
+// --- utils
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const fmt = n => Number(n).toLocaleString(undefined,{minimumFractionDigits:6, maximumFractionDigits:6});
+const short = a => a.slice(0,6)+"…"+a.slice(-4);
+
+let CFG = CFG_DEFAULT;
+
+// i18n init
+const LANGS = [["tr","TR"],["en","EN"],["pt","PT"],["ru","RU"],["zh","ZH"],["hi","HI"]];
+const langSel = $("#lang");
+LANGS.forEach(([k,l])=>{ const o=document.createElement("option"); o.value=k; o.textContent=l; langSel.appendChild(o); });
+langSel.value = (localStorage.getItem("zuzu_lang")||"tr");
+function t(key){ const L = CFG.I18N[langSel.value]||CFG.I18N.tr; return L[key]||key; }
+function applyI18N(){
+  $$("[data-i18n]").forEach(el => el.textContent = t(el.dataset.i18n));
 }
+langSel.onchange = ()=>{ localStorage.setItem("zuzu_lang",langSel.value); applyI18N(); };
+
+async function boot(){
+  try{
+    const res = await fetch("config.json",{cache:"no-store"});
+    if(res.ok){ const j = await res.json(); CFG = {...CFG, ...j}; }
+  }catch(e){}
+  applyI18N();
+
+  // stage list
+  const stSel = $("#stage");
+  CFG.PRESALE.stages.forEach((s,i)=>{
+    const o=document.createElement("option");
+    o.value=i; o.textContent=s.name; stSel.appendChild(o);
+  });
+
+  // receiver + qr
+  const recv = CFG.PRESALE.receiver;
+  $("#receiver").value = recv;
+  $("#short").textContent = short(recv);
+  $("#qr").src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data="+encodeURIComponent(recv);
+
+  // calc
+  const amount = $("#amount");
+  const priceEl = $("#price");
+  const totalEl = $("#total");
+  function recalc(){
+    const st = CFG.PRESALE.stages[+stSel.value||0];
+    const p  = st.priceUsdt || 0;
+    const n  = Math.max(0, parseInt(amount.value||0));
+    priceEl.textContent = p.toFixed(6);
+    totalEl.textContent = (p*n).toFixed(6);
+  }
+  recalc();
+  stSel.onchange = recalc;
+  amount.oninput = recalc;
+  $$(".chip").forEach(c=>c.onclick=()=>{ amount.value=c.dataset.amt; recalc(); });
+
+  // copy
+  $("#copy").onclick = async ()=>{
+    await navigator.clipboard.writeText(recv);
+    $("#copy").textContent = langSel.value==="tr" ? "Kopyalandı!" : "Copied!";
+    setTimeout(()=>$("#copy").textContent = t("copy"), 1200);
+  };
+
+  // countdown
+  const end = new Date(CFG.PRESALE.endDate).getTime();
+  setInterval(()=>{
+    const now = Date.now(); let d=0,h=0,m=0,s=0;
+    let rem = Math.max(0, end-now)/1000;
+    d = Math.floor(rem/86400); rem -= d*86400;
+    h = Math.floor(rem/3600);  rem -= h*3600;
+    m = Math.floor(rem/60);    rem -= m*60;
+    s = Math.floor(rem);
+    $("#d").textContent = String(d).padStart(2,"0");
+    $("#h").textContent = String(h).padStart(2,"0");
+    $("#m").textContent = String(m).padStart(2,"0");
+    $("#s").textContent = String(s).padStart(2,"0");
+  },1000);
+
+  // buy btn → basit modal yerine info
+  $("#btnBuy").onclick = ()=>{
+    const st = CFG.PRESALE.stages[+stSel.value||0];
+    const n  = Math.max(0, parseInt($("#amount").value||0));
+    const total = (n * st.priceUsdt).toFixed(6);
+    alert(
+      (langSel.value==="tr"
+        ? `Cüzdanından USDT (BEP20) gönder:\n\nAlıcı: ${recv}\nTutar: ${total} USDT\n\nNot: Az miktar BNB gas gerekir.`
+        : `Send USDT (BEP20) from your wallet:\n\nTo: ${recv}\nAmount: ${total} USDT\n\nNote: requires a little BNB gas.`)
+    );
+  };
+
+  // raised (dummy; istersen admin panelden bağlarız)
+  const raised = 0;
+  $("#raisedTxt").textContent = `$${raised.toLocaleString()} / $${CFG.PRESALE.goalUsd.toLocaleString()}`;
+  $("#barFill").style.width = Math.min(100, (raised/CFG.PRESALE.goalUsd)*100) + "%";
+
+  // connect wallet (opsiyonel)
+  $("#btnConnect").onclick = async ()=>{
+    if(!window.ethereum){ alert(langSel.value==="tr"?"MetaMask/TrustWallet gerekli.":"MetaMask/TrustWallet required."); return; }
+    try{
+      await ethereum.request({ method: 'eth_requestAccounts' });
+      // BSC'ye geç
+      await ethereum.request({ method:'wallet_switchEthereumChain', params:[{ chainId:'0x38' }] });
+      $("#btnConnect").textContent = "Bağlandı";
+    }catch(e){ console.log(e); }
+  };
+}
+boot();
