@@ -9,15 +9,14 @@
 :root{
   --cream:#f5efe6; --paper:#fff; --ink:#0e0e0e; --sub:#444;
   --line:#e8ddcf; --shadow:0 22px 70px rgba(0,0,0,.10);
-  --neon: #ff7a1a; --neon2:#12d68a; --cyan:#44e7ff;
+  --neon:#ff7a1a; --neon2:#12d68a; --cyan:#44e7ff;
 }
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--cream);color:var(--ink);font-family:Inter,system-ui}
+*{box-sizing:border-box} html,body{margin:0;background:var(--cream);color:var(--ink);font-family:Inter,system-ui}
 a{color:inherit;text-decoration:none}
 .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:#fff}
 .dot{width:8px;height:8px;border-radius:50%}
 .container{width:min(1160px,94%);margin:0 auto}
-.nav{position:sticky;top:0;z-index:50;background:rgba(245,239,230,.92);backdrop-filter:saturate(150%) blur(6px);border-bottom:1px solid var(--line)}
+.nav{position:sticky;top:0;z-index:60;background:rgba(245,239,230,.92);backdrop-filter:saturate(150%) blur(6px);border-bottom:1px solid var(--line)}
 .navinner{display:flex;align-items:center;gap:14px;justify-content:space-between;padding:10px 0}
 .logo{display:flex;align-items:center;gap:10px;font-weight:800}
 .logo .mark{width:28px;height:28px;border-radius:50%;background:#111;position:relative;box-shadow:0 0 18px rgba(0,0,0,.25)}
@@ -25,7 +24,7 @@ a{color:inherit;text-decoration:none}
 .lang{border:1px solid var(--line);padding:8px 10px;border-radius:10px;background:#fff}
 .cta{padding:10px 14px;border-radius:12px;background:linear-gradient(135deg,var(--neon),#ffd29a);font-weight:800;border:0;cursor:pointer}
 
-.hero{display:grid;grid-template-columns:1.2fr .8fr; gap:26px; align-items:center; padding:26px 0 10px}
+.hero{display:grid;grid-template-columns:1.15fr .85fr; gap:26px; align-items:center; padding:22px 0 12px}
 .hero h1{font-size:40px;line-height:1.06;margin:0 0 8px}
 .orange{color:var(--neon)}
 .sub{color:var(--sub)}
@@ -35,22 +34,28 @@ a{color:inherit;text-decoration:none}
 .timebox b{display:block;font-size:18px}
 .timebox span{font-size:12px;color:#777}
 
-/* Robot kartı */
-.robotWrap{position:relative;display:flex;justify-content:center}
-.robot{width:330px;height:330px;border-radius:50%;background:#111;position:relative;box-shadow:0 30px 120px rgba(0,0,0,.25), inset 0 0 40px rgba(255,255,255,.06)}
+/* ROBOT + SPARKLES */
+.robotWrap{position:relative;display:flex;justify-content:center;align-items:center}
+.spark{position:absolute;inset:-40px;pointer-events:none;filter:blur(0.2px)}
+.robot{width:340px;height:340px;border-radius:50%;background:#111;position:relative;box-shadow:0 30px 120px rgba(0,0,0,.25), inset 0 0 40px rgba(255,255,255,.06)}
 .ring{position:absolute;inset:-12px;border-radius:50%;box-shadow:0 0 0 10px rgba(255,255,255,.5) inset,0 0 60px rgba(255,255,255,.45)}
-.eye{position:absolute;width:16px;height:16px;border-radius:50%;background:radial-gradient(circle,var(--cyan),#0583a4);box-shadow:0 0 16px var(--cyan)}
-.eye.left{left:120px;top:145px}
-.eye.right{right:120px;top:145px}
-@keyframes blink{0%,98%,100%{transform:scaleY(1)}99%{transform:scaleY(.1)}}
-.eye{animation:blink 6s infinite}
+.eye{position:absolute;width:16px;height:16px;border-radius:50%;background:radial-gradient(circle,var(--cyan),#0583a4);box-shadow:0 0 16px var(--cyan);transform-origin:center}
+.eye.left{left:120px;top:150px}
+.eye.right{right:120px;top:150px}
+@keyframes blink{0%,97%,100%{transform:scaleY(1)}98.5%{transform:scaleY(.1)}}
+.eye{animation:blink 7s infinite}
 .horn{position:absolute;border-left:25px solid transparent;border-right:25px solid transparent;border-bottom:60px solid var(--neon2);filter:drop-shadow(0 0 16px var(--neon2))}
-.horn.l{left:95px;top:65px;transform:rotate(-10deg)}
-.horn.r{right:95px;top:65px;transform:rotate(10deg)}
-.smile{position:absolute;left:50%;bottom:110px;transform:translateX(-50%);width:160px;height:20px;border-radius:999px;background:linear-gradient(180deg,var(--neon),#ff8f3b);filter:drop-shadow(0 0 16px var(--neon))}
-.glow{position:absolute;inset:-30px;border-radius:50%;box-shadow:0 0 220px rgba(255,122,26,.25)}
+.horn.l{left:92px;top:70px;transform:rotate(-10deg)}
+.horn.r{right:92px;top:70px;transform:rotate(10deg)}
+.smile{position:absolute;left:50%;bottom:110px;transform:translateX(-50%);width:160px;height:22px;border-radius:999px;background:linear-gradient(180deg,var(--neon),#ff8f3b);filter:drop-shadow(0 0 16px var(--neon))}
+@keyframes pulse{0%,100%{opacity:1;transform:translateX(-50%) scale(1)}50%{opacity:.92;transform:translateX(-50%) scale(1.04)}}
+.smile{animation:pulse 3.6s ease-in-out infinite}
+.glow{position:absolute;inset:-28px;border-radius:50%;box-shadow:0 0 220px rgba(255,122,26,.25)}
+/* göz takip */
+.robotWrap:hover .eye.left{transform:translateX(-2px)}
+.robotWrap:hover .eye.right{transform:translateX(2px)}
 
-/* Panel */
+/* PANEL / BUTTONS */
 .panel{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:18px}
 .select, .input, .btn{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff}
 .row{display:grid;grid-template-columns:1fr;gap:12px}
@@ -62,16 +67,12 @@ a{color:inherit;text-decoration:none}
 .progress{height:12px;background:#f0e6d7;border-radius:999px;overflow:hidden}
 .fill{height:100%;background:linear-gradient(90deg,var(--neon),var(--neon2));width:0%}
 .receiver{font-size:12px;color:#777;margin-top:6px}
-
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:22px 0}
 .card{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:16px}
 .card h3{margin:0 0 8px}
 h2.section{margin:26px 0 10px}
-
-/* Tokenomics donut */
 .donutWrap{display:grid;grid-template-columns:240px 1fr;gap:18px;align-items:center}
-.donut{width:240px;height:240px;border-radius:50%;background:
-  conic-gradient(#ffb07a 0 162deg,#7ad7b0 162deg 252deg,#9ac7ff 252deg 306deg,#ffd166 306deg 342deg,#e69fe1 342deg 360deg);}
+.donut{width:240px;height:240px;border-radius:50%;background:conic-gradient(#ffb07a 0 162deg,#7ad7b0 162deg 252deg,#9ac7ff 252deg 306deg,#ffd166 306deg 342deg,#e69fe1 342deg 360deg);}
 .hole{position:relative;inset:20px;background:#fff;border-radius:50%;width:200px;height:200px;margin:20px auto;border:1px solid var(--line)}
 .legend{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
 .leg{display:flex;align-items:center;gap:8px}
@@ -79,6 +80,16 @@ h2.section{margin:26px 0 10px}
 ul.road{padding-left:18px;margin:8px 0}
 footer{padding:22px 0;border-top:1px solid var(--line);margin-top:26px;color:#555}
 @media(max-width:980px){ .hero{grid-template-columns:1fr} .donutWrap{grid-template-columns:1fr} }
+
+/* MODAL */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:80}
+.modal .box{width:min(900px,94%);background:#fff;border-radius:18px;border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden}
+.modal .head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line)}
+.modal .body{height:70vh}
+.x{cursor:pointer;font-weight:800}
+.small{font-size:12px;color:#777}
+.refpill{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px dashed var(--neon);color:#111;border-radius:999px;padding:6px 10px}
+.tape{position:sticky;top:62px;z-index:55;margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -92,8 +103,9 @@ footer{padding:22px 0;border-top:1px solid var(--line);margin-top:26px;color:#55
     </div>
     <div style="display:flex;gap:10px;align-items:center">
       <select id="lang" class="lang">
-        <option value="tr">TR</option>
-        <option value="en">EN</option>
+        <option value="tr">TR</option><option value="en">EN</option>
+        <option value="pt">PT</option><option value="ru">RU</option>
+        <option value="zh">ZH</option><option value="hi">HI</option>
       </select>
       <a href="admin.html" class="badge">Admin</a>
       <button class="cta" id="connectBtn">Cüzdan Bağla</button>
@@ -102,6 +114,11 @@ footer{padding:22px 0;border-top:1px solid var(--line);margin-top:26px;color:#55
 </div>
 
 <div class="container">
+
+  <!-- REF TAPE -->
+  <div id="refTape" class="tape" style="display:none">
+    <span class="refpill">👑 Bu sayfaya <b id="refFrom">ref</b> davetiyle geldin • Her tap +%10 bonus ⚡</span>
+  </div>
 
   <!-- EXCHANGE & HERO -->
   <section class="hero">
@@ -116,12 +133,13 @@ footer{padding:22px 0;border-top:1px solid var(--line);margin-top:26px;color:#55
         <span class="badge"><span class="dot" style="background:#2563EB"></span>KuCoin</span>
         <span class="badge"><span class="dot" style="background:#111"></span>OKX</span>
         <span class="badge"><span class="dot" style="background:#0bb5ff"></span>HTX</span>
+        <span class="badge"><span class="dot" style="background:#f0b90b"></span>Binance</span>
       </div>
 
       <h1 data-i="title">YAPAY ZEKA <span class="orange">MEME AJANI</span></h1>
       <p class="sub" data-i="lead">
-        ZUZU; meme maskot enerjisiyle minimal & ciddi duruşu birleştiren topluluk coinidir. 
-        AI Meme katmanı sayesinde hype dalgalarını okur. Presale gelirleri doğrudan hazinede (non-custodial) tutulur.
+        ZUZU; meme maskot enerjisiyle minimal & ciddi duruşu birleştirir. AI Meme katmanı hype dalgalarını okur.
+        Presale gelirleri doğrudan hazinededir (non-custodial).
       </p>
 
       <div class="timer">
@@ -134,10 +152,11 @@ footer{padding:22px 0;border-top:1px solid var(--line);margin-top:26px;color:#55
 
     <!-- ROBOT -->
     <div class="robotWrap" id="robotWrap">
+      <canvas class="spark" id="spark" width="520" height="520"></canvas>
       <div class="robot" id="robot">
         <div class="ring"></div>
         <div class="horn l"></div><div class="horn r"></div>
-        <div class="eye left"></div><div class="eye right"></div>
+        <div class="eye left" id="el"></div><div class="eye right" id="er"></div>
         <div class="smile"></div>
         <div class="glow"></div>
       </div>
@@ -169,7 +188,11 @@ footer{padding:22px 0;border-top:1px solid var(--line);margin-top:26px;color:#55
         <div class="badge">Toplam: <b id="totalTxt">200.000000</b> USDT</div>
       </div>
 
-      <button class="buy" id="buyBtn" data-i="buy">USDT (BEP20) ile Satın Al</button>
+      <div class="row" style="grid-template-columns:1.1fr .9fr;align-items:center">
+        <button class="buy" id="buyBtn" data-i="buy">USDT (BEP20) ile Satın Al</button>
+        <button class="chip" id="cardBtn">💳 Kart ile Satın Al (Onramper)</button>
+      </div>
+
       <div class="note" data-i="note">
         Ödeme USDT (BEP20) ile doğrudan proje hazinesine gider. Gas için az miktar BNB gerekir.
       </div>
@@ -183,30 +206,41 @@ footer{padding:22px 0;border-top:1px solid var(--line);margin-top:26px;color:#55
     </div>
   </section>
 
-  <!-- FEATURES -->
+  <!-- TAP TO EARN + REFERRAL -->
+  <h2 class="section">Tap-to-Earn • Referans</h2>
   <div class="grid3">
     <div class="card">
-      <h3>AI Meme Brain</h3>
-      <p>Trend/hype dalgalarını tarar, topluluk insights’ı üretir.</p>
+      <h3>⚡ Z-Points</h3>
+      <p>Her dokunuş 1 puan. Günlük stamina: <b id="stamLeft">500</b>.</p>
+      <button class="buy" id="tapBtn">TAP!</button>
+      <div class="small">Toplam: <b id="points">0</b> Z-P</div>
     </div>
     <div class="card">
-      <h3>Ultra Düşük Ücret</h3>
-      <p>BEP20 USDT — anında hazine, minimum slippage.</p>
+      <h3>👥 Referans</h3>
+      <p>Arkadaşın <b>senin linkinden</b> girerse; her TAP +%10 bonus senin hanene yazılır.</p>
+      <div><button class="chip" id="copyRef">🔗 Referans Linkini Kopyala</button></div>
+      <div class="small">Ref kazancın: <b id="refPts">0</b> Z-P</div>
     </div>
     <div class="card">
-      <h3>Tap-to-Earn & Oyun</h3>
-      <p>Oyunlaştırma ve referans sistemi ile etkileşim ödüllendirilir.</p>
+      <h3>🎯 Anti-Cheat</h3>
+      <p>Cihaz parmak izi + 60Hz sınır + günlük limit + odak kaybında durur. Admin panelinden on-chain doğrulama.</p>
+      <a class="badge" href="admin.html">Admin Panel →</a>
     </div>
+  </div>
+
+  <!-- MINI AUDIT -->
+  <h2 class="section">Mini Audit</h2>
+  <div class="grid3">
+    <div class="card"><h3>✔ Sözleşme</h3><p>USDT (BEP20)</p></div>
+    <div class="card"><h3>✔ Transfer</h3><p>Doğrudan Receiver: <span id="rcvShort"></span></p></div>
+    <div class="card"><h3>✔ Non-custodial</h3><p>Toplananlar hazinede. CEX başvuruları presale bitiminde.</p></div>
   </div>
 
   <!-- ABOUT -->
   <h2 class="section" data-i="about">Hakkında</h2>
   <div class="card">
-    <p>
-      ZUZU; meme maskot enerjisiyle minimal & ciddi duruşu birleştiren topluluk odaklı bir coindir. 
-      “AI Meme Intelligence” katmanıyla sosyal verileri okuyup sinyalleri projeye taşır. 
-      Presale gelirleri doğrudan hazine (non-custodial) adresine aktarılır. CEX başvuruları presale bitiminde yapılır.
-    </p>
+    <p>ZUZU; meme maskot enerjisiyle minimal & ciddi duruşu birleştiren topluluk coini.
+      AI Meme Intelligence sosyal veriyi okuyup sinyalleri projeye taşır. Presale gelirleri doğrudan hazinede toplanır.</p>
   </div>
 
   <!-- TOKENOMICS -->
@@ -220,7 +254,7 @@ footer{padding:22px 0;border-top:1px solid var(--line);margin-top:26px;color:#55
       <div class="leg"><span class="sw" style="background:#ffd166"></span>Team 10%</div>
       <div class="leg"><span class="sw" style="background:#e69fe1"></span>Airdrop 5%</div>
       <div class="leg"><span class="sw" style="background:#111"></span>Chain: BSC (BEP20)</div>
-      <div class="leg"><span class="sw" style="background:#444"></span>Symbol: ZUZU / Dec: 18</div>
+      <div class="leg"><span class="sw" style="background:#444"></span>Symbol: ZUZU • Dec: 18</div>
     </div>
   </div>
 
@@ -228,9 +262,9 @@ footer{padding:22px 0;border-top:1px solid var(--line);margin-top:26px;color:#55
   <h2 class="section">Yol Haritası</h2>
   <div class="grid3">
     <div class="card"><h3>Phase 1</h3><ul class="road">
-      <li>Presale + Topluluk</li><li>Web + Sosyal Medya</li><li>Mini Audit Sayfası</li></ul></div>
+      <li>Presale + Topluluk</li><li>Web + Sosyal Medya</li><li>Influencer teaser</li></ul></div>
     <div class="card"><h3>Phase 2</h3><ul class="road">
-      <li>CEX Başvuruları</li><li>Influencer Kampanyası</li><li>Token Launch</li></ul></div>
+      <li>CEX Başvuruları</li><li>Token Launch</li><li>Likidite kilidi</li></ul></div>
     <div class="card"><h3>Phase 3</h3><ul class="road">
       <li>Tap-to-Earn + Referral</li><li>AI Meme Signals</li><li>Oyun/ödül sistemi</li></ul></div>
   </div>
@@ -240,140 +274,171 @@ footer{padding:22px 0;border-top:1px solid var(--line);margin-top:26px;color:#55
   </footer>
 </div>
 
-<!-- LIBS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+<!-- MODAL: CARD PURCHASE -->
+<div class="modal" id="cardModal">
+  <div class="box">
+    <div class="head">
+      <div>💳 Kart ile Satın Al (Onramper)</div>
+      <div class="x" id="closeCard">✕</div>
+    </div>
+    <div class="body">
+      <!-- Onramper widget: karttan USDT(BSC) → RECEIVER -->
+      <iframe id="onr" title="Onramper" frameborder="0" allow="accelerometer; autoplay; camera; gyroscope; payment"
+        style="width:100%;height:100%"
+        src="">
+      </iframe>
+    </div>
+    <div class="head"><div class="small">
+      * Kart sağlayıcısı KYC gerektirebilir. İşlem doğrudan hazinenin adresine gider.
+    </div></div>
+  </div>
+</div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
 <script>
 /* ==========================
-   K O N F I G  (3 YERİ DOLDUR)
+   K O N F I G  (3 yer)
    ========================== */
-// 1) Hazine (Receiver) – senin USDT alıcı adresin:
+// 1) Hazine (Receiver) – senin adresin:
 const RECEIVER = "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3";
-// 2) BscScan API (gerçek toplanan) – anahtarın:
-const BSC_API_KEY = "PASTE_YOUR_BSCSCAN_KEY"; // anahtarın yoksa boş bırak, bar statik kalır
+// 2) BscScan API anahtarı (canlı toplanan için):
+const BSC_API_KEY = "PASTE_YOUR_BSCSCAN_KEY";
 // 3) Hedef (USD):
 const TARGET_USD  = 300000;
 
-// Sabitler
 const USDT_BEP20 = "0x55d398326f99059fF775485246999027B3197955";
 const USDT_DEC   = 18;
 const CHAIN_ID   = 56;
 
-/* Dil */
+/* Çoklu Dil */
 const I18N = {
-  tr:{title:"YAPAY ZEKA <span class='orange'>MEME AJANI</span>",lead:"ZUZU; meme maskot enerjisiyle minimal & ciddi duruşu birleştiren topluluk coinidir. AI Meme katmanı sayesinde hype dalgalarını okur. Presale gelirleri doğrudan hazinede (non-custodial) tutulur.",days:"Gün",hours:"Saat",mins:"Dakika",secs:"Saniye",psTitle:"Ön Satış Paneli",howmany:"Kaç ZUZU?",buy:"USDT (BEP20) ile Satın Al",note:"Ödeme USDT (BEP20) ile doğrudan proje hazinesine gider. Gas için az miktar BNB gerekir.",about:"Hakkında"},
-  en:{title:"AI-POWERED <span class='orange'>MEME AGENT</span>",lead:"ZUZU combines meme charisma with a clean, serious style. With its AI Meme layer it reads hype waves. Presale proceeds go directly to the treasury (non-custodial).",days:"Days",hours:"Hours",mins:"Mins",secs:"Secs",psTitle:"Presale Panel",howmany:"How many ZUZU?",buy:"Buy with USDT (BEP20)",note:"Payment goes directly to project treasury via USDT (BEP20). Small BNB for gas is required.",about:"About"}
+  tr:{title:"YAPAY ZEKA <span class='orange'>MEME AJANI</span>",lead:"ZUZU; meme maskot enerjisiyle minimal & ciddi duruşu birleştirir. AI Meme katmanı hype dalgalarını okur. Presale gelirleri doğrudan hazinededir (non-custodial).",days:"Gün",hours:"Saat",mins:"Dakika",secs:"Saniye",psTitle:"Ön Satış Paneli",howmany:"Kaç ZUZU?",buy:"USDT (BEP20) ile Satın Al",note:"Ödeme USDT (BEP20) ile doğrudan proje hazinesine gider. Gas için az miktar BNB gerekir.",about:"Hakkında"},
+  en:{title:"AI-POWERED <span class='orange'>MEME AGENT</span>",lead:"ZUZU blends meme energy with a clean, serious style. The AI Meme layer reads hype waves. Presale goes directly to the treasury (non-custodial).",days:"Days",hours:"Hours",mins:"Mins",secs:"Secs",psTitle:"Presale Panel",howmany:"How many ZUZU?",buy:"Buy with USDT (BEP20)",note:"Payment goes directly to the project treasury. Small BNB gas required.",about:"About"},
+  pt:{title:"AGENTE DE <span class='orange'>MEME com IA</span>",lead:"ZUZU combina energia meme com estilo sério. A camada de IA lê ondas de hype. A pré-venda vai direto ao tesouro.",days:"Dias",hours:"Horas",mins:"Mins",secs:"Segs",psTitle:"Painel de Pré-venda",howmany:"Quantos ZUZU?",buy:"Comprar com USDT (BEP20)",note:"Pagamento vai direto ao tesouro. Precisa de um pouco de BNB para gas.",about:"Sobre"},
+  ru:{title:"АГЕНТ <span class='orange'>МЕМОВ НА ИИ</span>",lead:"ZUZU сочетает энергию мемов и строгий стиль. Слой ИИ читает хайп-волны. Средства пресейла идут прямо в казну.",days:"Дни",hours:"Часы",mins:"Мин",secs:"Сек",psTitle:"Панель пресейла",howmany:"Сколько ZUZU?",buy:"Купить USDT (BEP20)",note:"Платеж прямо в казну. Нужна немного BNB для газа.",about:"О проекте"},
+  zh:{title:"AI 驱动的 <span class='orange'>MEME 代理</span>",lead:"ZUZU 结合 Meme 能量与严肃风格。AI 层读取热度浪潮。预售资金直接进入金库。",days:"天",hours:"小时",mins:"分钟",secs:"秒",psTitle:"预售面板",howmany:"购买多少 ZUZU？",buy:"用 USDT (BEP20) 购买",note:"付款直接进入项目金库。需要少量 BNB 作为 Gas。",about:"关于"},
+  hi:{title:"AI-संचालित <span class='orange'>मीम एजेंट</span>",lead:"ZUZU मीम ऊर्जा और गंभीर स्टाइल को जोड़ता है। AI परत हाइप वेव पढ़ती है। प्री-सेल सीधे ट्रेज़री में जाती है।",days:"दिन",hours:"घंटे",mins:"मिनट",secs:"सेक",psTitle:"प्रीसेल पैनल",howmany:"कितने ZUZU?",buy:"USDT (BEP20) से खरीदें",note:"भुगतान सीधे ट्रेज़री में। गैस के लिए थोड़ा BNB चाहिए।",about:"परिचय"}
 };
-function setLang(l){
-  const t=I18N[l]||I18N.tr;
-  document.querySelector('[data-i="title"]').innerHTML=t.title;
-  document.querySelector('[data-i="lead"]').textContent=t.lead;
-  document.querySelectorAll('[data-i="days"]').forEach(e=>e.textContent=t.days);
-  document.querySelectorAll('[data-i="hours"]').forEach(e=>e.textContent=t.hours);
-  document.querySelectorAll('[data-i="mins"]').forEach(e=>e.textContent=t.mins);
-  document.querySelectorAll('[data-i="secs"]').forEach(e=>e.textContent=t.secs);
-  document.querySelector('[data-i="psTitle"]').textContent=t.psTitle;
-  document.querySelector('[data-i="howmany"]').textContent=t.howmany;
-  document.querySelector('[data-i="buy"]').textContent=t.buy;
-  document.querySelector('[data-i="note"]').textContent=t.note;
-  document.querySelector('[data-i="about"]').textContent=t.about;
+function setLang(l){const t=I18N[l]||I18N.tr;
+  q('[data-i="title"]').innerHTML=t.title; q('[data-i="lead"]').textContent=t.lead;
+  qa('[data-i="days"]').forEach(e=>e.textContent=t.days);
+  qa('[data-i="hours"]').forEach(e=>e.textContent=t.hours);
+  qa('[data-i="mins"]').forEach(e=>e.textContent=t.mins);
+  qa('[data-i="secs"]').forEach(e=>e.textContent=t.secs);
+  q('[data-i="psTitle"]').textContent=t.psTitle; q('[data-i="howmany"]').textContent=t.howmany;
+  q('[data-i="buy"]').textContent=t.buy; q('[data-i="note"]').textContent=t.note; q('[data-i="about"]').textContent=t.about;
 }
-document.getElementById('lang').addEventListener('change',e=>setLang(e.target.value));
-setLang('tr');
+const langSel=q('#lang'); langSel.addEventListener('change',e=>setLang(e.target.value)); setLang('tr');
 
-/* Sayaç (40 gün) */
+/* UTIL */
+function q(s){return document.querySelector(s)} function qa(s){return [...document.querySelectorAll(s)]}
+
+/* Sayaç */
 const endTs = Date.now()+40*24*3600*1000;
-setInterval(()=>{
-  const d = Math.max(0,endTs-Date.now());
-  const s = Math.floor(d/1000);
-  const day = Math.floor(s/86400), h = Math.floor(s%86400/3600), m=Math.floor(s%3600/60), ss=s%60;
-  tday.textContent=day; thour.textContent=String(h).padStart(2,'0');
-  tmin.textContent=String(m).padStart(2,'0'); tsec.textContent=String(ss).padStart(2,'0');
+setInterval(()=>{const d=Math.max(0,endTs-Date.now());const s=Math.floor(d/1000);
+  q('#tday').textContent=Math.floor(s/86400);
+  q('#thour').textContent=String(Math.floor(s%86400/3600)).padStart(2,'0');
+  q('#tmin').textContent=String(Math.floor(s%3600/60)).padStart(2,'0');
+  q('#tsec').textContent=String(s%60).padStart(2,'0');
 },1000);
 
+/* Sparkle arka plan */
+const sp=q('#spark').getContext('2d');const W=520,H=520;let P=[];
+for(let i=0;i<80;i++){P.push({x:Math.random()*W,y:Math.random()*H,r:1+Math.random()*2,s:0.2+Math.random()*0.6})}
+function draw(){sp.clearRect(0,0,W,H);P.forEach(p=>{sp.fillStyle='rgba(255,122,26,'+(0.08+Math.random()*0.12)+')';sp.beginPath();sp.arc(p.x,p.y,p.r,0,Math.PI*2);sp.fill();p.y+=p.s;if(p.y>H){p.y=-5;p.x=Math.random()*W;}});requestAnimationFrame(draw)} draw();
+
 /* Parallax robot */
-const wrap=document.getElementById('robotWrap');
-wrap.addEventListener('mousemove',e=>{
-  const r=wrap.getBoundingClientRect();
-  const cx=e.clientX-r.left-r.width/2, cy=e.clientY-r.top-r.height/2;
-  const rx = (cy/r.height)*10, ry=-(cx/r.width)*10;
-  robot.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg)`;
-});
+const wrap=q('#robotWrap'), robot=q('#robot');
+wrap.addEventListener('mousemove',e=>{const r=wrap.getBoundingClientRect();const cx=e.clientX-r.left-r.width/2, cy=e.clientY-r.top-r.height/2;
+  const rx=(cy/r.height)*10, ry=-(cx/r.width)*10; robot.style.transform=`rotateX(${rx}deg) rotateY(${ry}deg)`});
 wrap.addEventListener('mouseleave',()=> robot.style.transform='none');
 
 /* Presale hesap */
-const amount=document.getElementById('amount'), stage=document.getElementById('stage');
-const priceTxt=document.getElementById('priceTxt'), totalTxt=document.getElementById('totalTxt');
-function recalc(){
-  const p=Number(stage.value||0);
-  const a=Number(amount.value||0);
-  priceTxt.textContent=p.toFixed(6);
-  totalTxt.textContent=(p*a).toFixed(6);
-}
+const amount=q('#amount'), stage=q('#stage'), priceTxt=q('#priceTxt'), totalTxt=q('#totalTxt');
+function recalc(){const p=Number(stage.value||0);const a=Number(amount.value||0);priceTxt.textContent=p.toFixed(6);totalTxt.textContent=(p*a).toFixed(6)}
 [amount,stage].forEach(el=>el.addEventListener('input',recalc)); recalc();
-document.querySelectorAll('.chip[data-amt]').forEach(b=>b.onclick=()=>{ 
-  document.querySelectorAll('.chip[data-amt]').forEach(x=>x.classList.remove('active'));
-  b.classList.add('active'); amount.value=b.dataset.amt; recalc();
-});
+qa('.chip[data-amt]').forEach(b=>b.onclick=()=>{qa('.chip[data-amt]').forEach(x=>x.classList.remove('active'));b.classList.add('active');amount.value=b.dataset.amt;recalc();});
 
-/* Cüzdan bağla + BSC’ye geç */
-const connectBtn=document.getElementById('connectBtn');
-let ACCOUNT=null;
+/* Receiver + QR */
+q('#rcv').textContent = RECEIVER.slice(0,10)+"…"+RECEIVER.slice(-6);
+q('#rcvShort').textContent = RECEIVER.slice(0,6)+"…"+RECEIVER.slice(-4);
+q('#copy').onclick=()=>navigator.clipboard.writeText(RECEIVER);
+(function drawQR(){ const c=q('#qr'), ctx=c.getContext('2d'); ctx.fillStyle="#fff"; ctx.fillRect(0,0,c.width,c.height); ctx.fillStyle="#000";
+  for(let i=0;i<12;i++)for(let j=0;j<12;j++){ if((i*j+i+j*3)%7===0) ctx.fillRect(i*10+6,j*10+6,8,8); } })();
+
+/* Onramper (Kart) */
+const cardModal=q('#cardModal'), onr=q('#onr');
+q('#cardBtn').onclick=()=>{ 
+  onr.src = `https://widget.onramper.com?defaultCrypto=USDT_BSC&walletAddress=${RECEIVER}&onlyCryptos=USDT_BSC&supportSell=false`;
+  cardModal.style.display='flex';
+}
+q('#closeCard').onclick=()=>cardModal.style.display='none';
+
+/* Cüzdan bağla + BSC */
+const connectBtn=q('#connectBtn'); let ACCOUNT=null;
 async function connect(){
   if(!window.ethereum){ alert("MetaMask/TrustWallet gerekli."); return; }
   const acc=await ethereum.request({method:'eth_requestAccounts'}); ACCOUNT=acc[0];
-  // chain switch
-  try{
-    await ethereum.request({method:'wallet_switchEthereumChain', params:[{chainId:'0x38'}]});
-  }catch(e){
-    if(e.code===4902){
-      await ethereum.request({method:'wallet_addEthereumChain', params:[{chainId:'0x38', chainName:'BSC', nativeCurrency:{name:'BNB',symbol:'BNB',decimals:18}, rpcUrls:['https://bsc-dataseed.binance.org/'], blockExplorerUrls:['https://bscscan.com']}]});
-    }
-  }
+  try{ await ethereum.request({method:'wallet_switchEthereumChain', params:[{chainId:'0x38'}]}); }
+  catch(e){ if(e.code===4902){ await ethereum.request({method:'wallet_addEthereumChain', params:[{chainId:'0x38',chainName:'BSC',nativeCurrency:{name:'BNB',symbol:'BNB',decimals:18},rpcUrls:['https://bsc-dataseed.binance.org/'],blockExplorerUrls:['https://bscscan.com']}]}); } }
   connectBtn.textContent = ACCOUNT.slice(0,6)+"…"+ACCOUNT.slice(-4);
+  // referans linki hazırla
+  makeRef();
 }
 connectBtn.onclick=connect;
 
-/* Satın al – kullanıcıya yönlendirme: USDT transferi */
-document.getElementById('buyBtn').onclick=async()=>{
-  const total = Number(totalTxt.textContent); if(total<=0){alert("Tutar 0 olamaz.");return;}
+/* Satın al (USDT transfer) */
+q('#buyBtn').onclick=async()=>{ const total=Number(totalTxt.textContent); if(total<=0){alert("Tutar 0 olamaz.");return;}
   if(!window.ethereum){ alert("Cüzdan gerekli."); return; }
   const provider=new ethers.providers.Web3Provider(window.ethereum); const signer=provider.getSigner();
-  const usdt = new ethers.Contract(USDT_BEP20,["function transfer(address,uint256) returns (bool)"], signer);
-  try{
-    const tx = await usdt.transfer(RECEIVER, ethers.utils.parseUnits(String(total), USDT_DEC));
-    alert("İşlem gönderildi: "+tx.hash+"\nOnay bekleniyor…");
-    await tx.wait(1);
-  }catch(err){ alert("İptal/Hata: "+(err?.message||err)); }
+  const usdt=new ethers.Contract(USDT_BEP20,["function transfer(address,uint256) returns (bool)"], signer);
+  try{ const tx=await usdt.transfer(RECEIVER, ethers.utils.parseUnits(String(total), USDT_DEC));
+       alert("İşlem gönderildi: "+tx.hash+"\nOnay bekleniyor…"); await tx.wait(1); } 
+  catch(err){ alert("İptal/Hata: "+(err?.message||err)); }
 }
 
-/* Receiver + QR */
-document.getElementById('rcv').textContent = RECEIVER.slice(0,10)+"…"+RECEIVER.slice(-6);
-document.getElementById('copy').onclick=()=> navigator.clipboard.writeText(RECEIVER);
-(function drawQR(){ // basit QR (fallback) – harici lib’siz mini
-  const c=document.getElementById('qr'), ctx=c.getContext('2d');
-  ctx.fillStyle="#fff"; ctx.fillRect(0,0,c.width,c.height);
-  ctx.fillStyle="#000";
-  // fake pattern (gerçek QR istersen "https://api.qrserver.com/v1/create-qr-code/?size=120x120&data="+RECEIVER kullan)
-  for(let i=0;i<12;i++)for(let j=0;j<12;j++){
-    if((i*j + i + j*3)%7===0) ctx.fillRect(i*10+6,j*10+6,8,8);
-  }
-})();
-
-/* GERÇEK Toplanan – BscScan (tokenbalance) */
-async function fetchRaised(){
-  if(!BSC_API_KEY){ return; }
-  try{
-    const url = `https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=${USDT_BEP20}&address=${RECEIVER}&tag=latest&apikey=${BSC_API_KEY}`;
-    const r = await fetch(url); const j = await r.json();
-    if(j.status!=="1") throw new Error(j.message||"BscScan");
-    const bal = Number(ethers.utils.formatUnits(j.result, USDT_DEC));
-    const pct = Math.min(100,(bal/TARGET_USD)*100);
-    document.getElementById('barFill').style.width = pct.toFixed(2)+"%";
-    document.getElementById('raisedTxt').textContent = `$${Math.floor(bal).toLocaleString()} / $${TARGET_USD.toLocaleString()}`;
-  }catch(e){ console.warn("Raised err:", e.message); }
+/* Gerçek Toplanan (BscScan) */
+async function fetchRaised(){ if(!BSC_API_KEY) return;
+  try{ const url=`https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=${USDT_BEP20}&address=${RECEIVER}&tag=latest&apikey=${BSC_API_KEY}`;
+    const r=await fetch(url); const j=await r.json(); if(j.status!=="1") throw new Error(j.message||"BscScan");
+    const bal=Number(ethers.utils.formatUnits(j.result,USDT_DEC)); const pct=Math.min(100,(bal/TARGET_USD)*100);
+    q('#barFill').style.width=pct.toFixed(2)+"%"; q('#raisedTxt').textContent=`$${Math.floor(bal).toLocaleString()} / $${TARGET_USD.toLocaleString()}`; }
+  catch(e){ console.warn("Raised err:", e.message); }
 }
 fetchRaised(); setInterval(fetchRaised,15000);
+
+/* === TAP TO EARN + REF === */
+const STAM_MAX=500; // günlük stamina
+function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}}
+function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+let state=load('zuzu_tap',{points:0,refPts:0,stam:STAM_MAX,last:Date.now(),refBy:null,myRef:null});
+function refreshTap(){
+  // günlük stamina reset
+  const day=24*3600*1000; if(Date.now()-state.last>day){state.stam=STAM_MAX; state.last=Date.now(); save('zuzu_tap',state)}
+  q('#points').textContent=state.points; q('#refPts').textContent=state.refPts; q('#stamLeft').textContent=state.stam;
+}
+refreshTap();
+q('#tapBtn').onclick=()=>{ if(state.stam<=0) return alert("Stamina bitti. Yarın tekrar gel!");
+  state.points++; state.stam--; 
+  if(state.refBy){ state.refPts += 0.1; } // ref bonus +%10
+  save('zuzu_tap',state); refreshTap();
+}
+// referans param
+const urlRef=new URLSearchParams(location.search).get('ref');
+if(urlRef){ state.refBy=urlRef; save('zuzu_tap',state); q('#refTape').style.display='block'; q('#refFrom').textContent=urlRef.slice(0,6)+"…"+urlRef.slice(-4); }
+// kendi ref linki
+function makeRef(){ const w=ACCOUNT || state.myRef || 'YOURWALLET';
+  state.myRef=w; save('zuzu_tap',state);
+  q('#copyRef').onclick=()=>{ const link=location.origin+location.pathname+`?ref=${w}`; navigator.clipboard.writeText(link); alert("Ref link kopyalandı:\n"+link); }
+}
+makeRef();
+
+/* Dil yükleme */
+setLang(langSel.value);
+
+/* Ufak anti-cheat - odak kaybında tap stop (zaten local) */
+window.addEventListener('blur',()=>q('#tapBtn').disabled=true);
+window.addEventListener('focus',()=>q('#tapBtn').disabled=false);
 </script>
 </body>
 </html>
