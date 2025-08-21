@@ -1,0 +1,114 @@
+:root{
+  --bg:#0b1220; --card:#0e1526; --glass:rgba(255,255,255,.05);
+  --text:#e6f0ff; --muted:#a7b3c8; --priA:#4cc9f0; --priB:#4361ee; --acc:#22d3ee;
+}
+
+*{box-sizing:border-box} html,body{margin:0;height:100%}
+body{
+  font-family:'Outfit',system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  background: radial-gradient(1200px 600px at 10% -10%, #1b2a4a 0%, transparent 60%),
+              radial-gradient(900px 500px at 110% 10%, #10346b 0%, transparent 60%),
+              var(--bg);
+  color:var(--text);
+}
+
+/* Parallax / Glow */
+.bg .glow{position:fixed; filter:blur(80px); opacity:.35; z-index:-2; border-radius:50%;}
+.g1{width:520px;height:520px; background:#3b82f6; top:-120px; left:-80px; animation:float 12s ease-in-out infinite}
+.g2{width:420px;height:420px; background:#22d3ee; top:20%; right:-120px; animation:float 16s ease-in-out infinite reverse}
+.g3{width:300px;height:300px; background:#8b5cf6; bottom:-80px; left:30%; animation:float 14s ease-in-out infinite}
+.scanline{position:fixed; inset:0; background-image:linear-gradient(transparent 97%,rgba(255,255,255,.05) 98%,transparent 99%); background-size:100% 3px; opacity:.25; pointer-events:none; z-index:-1}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(20px)}}
+
+/* Layout */
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
+header.wrap{display:flex;align-items:center;gap:16px;justify-content:space-between;padding-top:20px}
+.brand{display:flex; align-items:center; gap:12px}
+.brand .ttl{display:flex; flex-direction:column; line-height:1}
+.logo-text{font-weight:800; font-size:26px; letter-spacing:.6px}
+.lottie{width:42px;height:42px}
+
+.nav{display:flex;align-items:center;gap:12px}
+.nav-link{color:var(--muted); text-decoration:none; padding:8px 10px; border-radius:10px}
+.nav-link:hover{background:var(--glass); color:var(--text)}
+.lang{background:var(--card); border:1px solid #22314f; padding:8px 10px; color:var(--text); border-radius:12px}
+
+.btn{cursor:pointer; border:none; padding:10px 16px; border-radius:14px; font-weight:700}
+.btn.primary{background:linear-gradient(135deg,var(--priA),var(--priB)); color:#fff; box-shadow:0 10px 30px rgba(67,97,238,.35)}
+.btn.primary.big{font-size:16px; padding:14px 18px}
+.btn.ghost{background:rgba(255,255,255,.06); color:#cfe3ff; border:1px solid rgba(255,255,255,.08)}
+.btn.ghost:hover{background:rgba(255,255,255,.12)}
+
+/* Glass card */
+.glass{background:var(--glass); border:1px solid rgba(255,255,255,.08); border-radius:18px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(0,0,0,.25)}
+
+/* Hero */
+.hero-card{padding:24px}
+.hero-title{margin:0 0 6px 0; font-size:36px; letter-spacing:.5px; text-shadow:0 0 16px rgba(76,201,240,.5)}
+.hero-sub{margin:0 0 16px 0; color:var(--muted)}
+.count{display:flex; gap:16px; margin-bottom:12px}
+.ct{background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); padding:10px; border-radius:14px; width:92px; text-align:center}
+.ct span{font-weight:800; font-size:26px; display:block}
+.ct small{color:var(--muted)}
+.exchs{display:flex; flex-wrap:wrap; gap:10px}
+.pill{border:1px dashed rgba(255,255,255,.12); padding:8px 14px; border-radius:999px; color:#cde3ff}
+
+/* Presale Panel */
+.presale .panel{padding:18px;margin-top:18px}
+.presale h2{margin:0 0 14px}
+.row{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+.col label{display:block; margin-bottom:6px; color:var(--muted)}
+.field{width:100%; padding:12px; background:#0b152b; border:1px solid #203154; color:#eaf2ff; border-radius:12px}
+.chips{display:flex; gap:10px; margin-top:8px}
+.chip{padding:8px 12px; border-radius:12px; background:#132243; color:#cfe3ff; border:1px solid #28406e; cursor:pointer}
+.chip:hover{background:#183061}
+.price-line{display:flex; align-items:center; justify-content:space-between; margin:14px 0; color:#cfe3ff}
+.note{margin-top:10px; color:#a3b4cf}
+
+.pay{display:grid; grid-template-columns: 1.5fr .9fr; gap:18px; margin-top:16px; padding:14px}
+.addr{display:flex; gap:8px; margin:6px 0}
+.addr input{flex:1; background:#0b152b; color:#cfe3ff; border:1px solid #203154; border-radius:12px; padding:10px}
+.audit-wrap{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:8px}
+.mini{padding:12px}
+.mini h4{margin:0 0 8px 0}
+.mini ul{margin:0;padding-left:16px;color:#cfe3ff}
+.payR .qr{width:160px;height:160px; background:#000; border-radius:12px; display:grid;place-items:center}
+.qr-info{display:block;margin-top:6px;color:#9fb2d2}
+
+/* Progress */
+.progress{width:100%; height:12px; background:#0d1b33; border-radius:999px; overflow:hidden; border:1px solid #1e2b49}
+.bar{height:100%; width:0; background:linear-gradient(90deg,#06b6d4,#4f46e5); box-shadow:0 0 22px rgba(6,182,212,.6)}
+
+/* AI Orb */
+.ai{display:grid; grid-template-columns:1.2fr .8fr; gap:16px; margin-top:24px; padding:18px}
+.aiR{display:grid; place-items:center}
+.orb{width:180px;height:180px;border-radius:50%; background:
+radial-gradient(circle at 30% 30%, #7dd3fc, transparent 45%),
+radial-gradient(circle at 70% 70%, #a78bfa, transparent 55%),
+radial-gradient(circle at 50% 50%, #22d3ee, transparent 65%);
+filter:blur(0.6px); box-shadow:0 0 40px #22d3ee inset,0 0 60px rgba(34,211,238,.45);
+animation:pulse 3.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+
+/* About / Token / Roadmap */
+.about,.token,.roadmap{margin-top:22px;padding:18px}
+.tk-list{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.tk{background:#0b152b;border:1px solid #203154;border-radius:14px;padding:14px;text-align:center}
+.rm{margin:0;padding-left:18px;color:#cfe3ff}
+.foot{display:grid; place-items:center; gap:8px; padding:28px 0; color:#9fb2d2}
+.socials{display:flex; gap:12px}
+.socials a{color:#bcd2ff}
+
+/* Modal */
+.modal{position:fixed; inset:0; display:grid; place-items:center; background:rgba(0,0,0,.55)}
+.modal.hidden{display:none}
+.modal-body{max-width:520px; padding:18px}
+
+/* Responsive */
+@media (max-width:860px){
+  .row{grid-template-columns:1fr}
+  .pay{grid-template-columns:1fr}
+  .audit-wrap{grid-template-columns:1fr}
+  .ai{grid-template-columns:1fr}
+  .tk-list{grid-template-columns:repeat(2,1fr)}
+}
