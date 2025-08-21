@@ -1,137 +1,139 @@
 <!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ZUZU Presale</title>
-  <link rel="stylesheet" href="style.css" />
-  <!-- Ethers.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+  <title>ZUZU — Presale</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <meta name="theme-color" content="#0c1524">
 </head>
 <body>
-  <header class="container topbar">
-    <div class="brand">
-      <div class="logo">
-        <!-- Basit neon ZUZU simgesi (SVG) -->
-        <svg viewBox="0 0 120 120">
-          <defs>
-            <linearGradient id="g" x1="0" x2="1">
-              <stop offset="0" stop-color="#4dd0ff"/><stop offset="1" stop-color="#6f7bff"/>
-            </linearGradient>
-          </defs>
-          <circle cx="60" cy="60" r="50" fill="url(#g)" opacity="0.9"/>
-          <path d="M35 60 a25 25 0 0 1 50 0" fill="none" stroke="#0ff" stroke-width="6" opacity="0.6"/>
-          <circle cx="45" cy="52" r="6" fill="#04121f"/>
-          <circle cx="75" cy="52" r="6" fill="#04121f"/>
-        </svg>
-      </div>
-      <div>
-        <h1>ZUZU</h1>
-        <p class="tag">ZUZU is watching. And pumping.</p>
-      </div>
+<header class="nav glass">
+  <div class="brand">
+    <div class="logo" aria-hidden="true">
+      <!-- basit neon meme maskot -->
+      <svg viewBox="0 0 120 120">
+        <defs>
+          <linearGradient id="g" x1="0" x2="1">
+            <stop offset="0" stop-color="#4dd0ff"/>
+            <stop offset="1" stop-color="#9af3ff"/>
+          </linearGradient>
+        </defs>
+        <circle cx="60" cy="60" r="44" fill="url(#g)" opacity="0.18"/>
+        <circle cx="60" cy="60" r="36" fill="none" stroke="url(#g)" stroke-width="6"/>
+        <path d="M40 54 a8 8 0 0 1 16 0" stroke="#1cf" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M64 78 a16 12 0 0 0 32 0" stroke="#9ef" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M82 35 l12 8" stroke="#8ff" stroke-width="6" stroke-linecap="round"/>
+        <path d="M77 28 l10 6" stroke="#8ff" stroke-width="6" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span id="brandText">ZUZU</span>
+  </div>
+
+  <nav class="links">
+    <a href="#about" data-i18n="about">Hakkında</a>
+    <a href="#tokenomics" data-i18n="tokenomics">Tokenomics</a>
+    <a href="#roadmap" data-i18n="roadmap">Yol Haritası</a>
+  </nav>
+
+  <div class="actions">
+    <select id="lang">
+      <option value="tr">TR</option>
+      <option value="en">EN</option>
+      <option value="pt">PT</option>
+      <option value="ru">RU</option>
+      <option value="zh">中文</option>
+      <option value="hi">HI</option>
+    </select>
+    <button id="btnConnect" class="btn" data-i18n="connect">Cüzdan Bağla</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero glass">
+    <h1 data-i18n="heroTitle">ZUZU IS HERE</h1>
+    <p class="sub" data-i18n="heroSub">The next great meme coin has landed</p>
+
+    <div class="count">
+      <div><span id="d">0</span><small data-i18n="countdownDay">Gün</small></div>
+      <div><span id="h">0</span><small data-i18n="countdownHour">Saat</small></div>
+      <div><span id="m">0</span><small data-i18n="countdownMin">Dakika</small></div>
+      <div><span id="s">0</span><small data-i18n="countdownSec">Saniye</small></div>
     </div>
 
-    <nav class="nav">
-      <a href="#about">About</a>
-      <a href="#tokenomics">Tokenomics</a>
-      <a href="#roadmap">Roadmap</a>
-      <button id="btn-connect" class="btn">Cüzdan Bağla</button>
-    </nav>
-  </header>
-
-  <main class="container">
-    <section class="hero glass">
-      <div class="left">
-        <h2 id="headline">ZUZU IS HERE</h2>
-        <p class="sub">The next great meme coin has landed</p>
-
-        <div class="countdown">
-          <div><span id="d">00</span><small>Gün</small></div>
-          <div><span id="h">00</span><small>Saat</small></div>
-          <div><span id="m">00</span><small>Dakika</small></div>
-          <div><span id="s">00</span><small>Saniye</small></div>
-        </div>
-
-        <div class="cex-row">
-          <span>To be listed on</span>
-          <div class="badges">
-            <span class="cex">MEXC</span>
-            <span class="cex">gate.io</span>
-            <span class="cex">BitMart</span>
-            <span class="cex">LBANK</span>
-            <span class="cex">BingX</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="right">
-        <div class="stage">
-          <label>Presale Stage</label>
-          <select id="stageSelect"></select>
-        </div>
-
-        <div class="buy-box">
-          <label>Kaç ZUZU almak istiyorsun?</label>
-          <input id="amount" type="number" min="0" step="1" placeholder="Örn: 100000" />
-          <div class="price-line">
-            <span id="priceLabel">Fiyat: -</span>
-            <span id="totalEth">Toplam (ETH): 0</span>
-          </div>
-          <button id="btn-buy" class="btn primary">ETH ile Satın Al</button>
-          <div class="net-hint" id="netHint"></div>
-        </div>
-
-        <div class="addr glass tiny">
-          <b>ETH Adresin (ödeme gidecek):</b>
-          <code id="receiver"></code>
-          <button id="copy-rec" class="btn xs">Kopyala</button>
-        </div>
-
-        <div class="networks">
-          <div class="addr tiny">
-            <b>SOL Adresin:</b> <code id="solAddr">—</code>
-          </div>
-          <div class="addr tiny">
-            <b>TON Adresin:</b> <code id="tonAddr">—</code>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="tokenomics" class="glass">
-      <h3>Tokenomics</h3>
-      <div class="bars">
-        <div class="bar"><span>Presale</span><div style="--w:45%"></div></div>
-        <div class="bar"><span>Likidite</span><div style="--w:30%"></div></div>
-        <div class="bar"><span>Marketing</span><div style="--w:15%"></div></div>
-        <div class="bar"><span>Ekip</span><div style="--w:10%"></div></div>
-      </div>
-    </section>
-
-    <section id="about" class="glass">
-      <h3>About</h3>
-      <p>ZUZU, eğlence ve topluluk odaklı bir meme coin’dir. Presale boyunca fiyat, haftalara göre artar.</p>
-    </section>
-
-    <section id="roadmap" class="glass">
-      <h3>Roadmap</h3>
-      <ul class="road">
-        <li><b>Q3 2025:</b> Presale, topluluk büyütme, audit başlatma.</li>
-        <li><b>Q4 2025:</b> DEX listeleme, CEX başvuruları.</li>
-        <li><b>Q1 2026:</b> CEX listeleri (MEXC vb), staking/utility.</li>
-      </ul>
-    </section>
-  </main>
-
-  <footer class="container footer">
-    <div class="socials">
-      <a id="tw" target="_blank">Twitter</a>
-      <a id="tg" target="_blank">Telegram</a>
-      <a id="dc" target="_blank">Discord</a>
+    <div class="exchanges">
+      <span data-i18n="toBeListed">To be listed on</span>
+      <div id="exList"></div>
     </div>
-    <div class="copy">© <span id="y"></span> ZUZU. All rights reserved.</div>
-  </footer>
 
-  <script src="script.js"></script>
+    <div class="card presale">
+      <label data-i18n="presaleStage">Ön Satış Aşaması</label>
+      <select id="stage"></select>
+
+      <label>
+        <input id="amount" type="number" placeholder="Örn: 100000" min="0" />
+      </label>
+
+      <div class="priceRow">
+        <span data-i18n="price">Fiyat</span>:
+        <b><span id="unitPrice">0</span> USDT / ZUZU</b>
+        <span style="margin-left:auto;" data-i18n="calcTotal">Toplam (USDT)</span>:
+        <b id="total">0</b>
+      </div>
+
+      <button id="btnBuy" class="btn big" data-i18n="buyBtn">USDT (BEP20) ile Satın Al</button>
+
+      <div class="receiver">
+        <div><small data-i18n="receiver">Ödeme gidecek USDT (BEP20) adresi</small></div>
+        <code id="receiver"></code>
+        <button class="copy" id="copyRecv" data-i18n="copy">Kopyala</button>
+      </div>
+
+      <div class="altAddrs">
+        <div><b data-i18n="solAddr">SOL Adresin</b>: <code id="solA">—</code></div>
+        <div><b data-i18n="tonAddr">TON Adresin</b>: <code id="tonA">—</code></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="glass">
+    <h2 data-i18n="about">Hakkında</h2>
+    <p>
+      ZUZU; <b>meme maskot</b> enerjisiyle, <b>minimal & ciddi</b> duruşu birlikte taşıyan,
+      topluluk odaklı bir coin. Presale ödemeleri <b>USDT (BEP20)</b> ile doğrudan
+      projenin kasasına (receiver) gider. CEX başvuruları presale bitiminde yapılır.
+    </p>
+  </section>
+
+  <section id="tokenomics" class="glass">
+    <h2 data-i18n="tokenomics">Tokenomics</h2>
+    <div id="tokBars" class="bars"></div>
+  </section>
+
+  <section id="roadmap" class="glass">
+    <h2 data-i18n="roadmap">Yol Haritası</h2>
+    <ul class="road">
+      <li><b>Q3 2025</b> — Presale, topluluk büyütme, audit başlatma</li>
+      <li><b>Q4 2025</b> — DEX listeleme, CEX başvuruları</li>
+      <li><b>Q1 2026</b> — CEX listeler (MEXC vb.), staking/utility</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="footer glass">
+  <div class="socials">
+    <a id="tw" target="_blank">Twitter</a>
+    <a id="tg" target="_blank">Telegram</a>
+    <a id="dc" target="_blank">Discord</a>
+  </div>
+  <div class="copy">
+    © <span id="y"></span> <span id="brand">ZUZU</span>. All rights reserved.
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
