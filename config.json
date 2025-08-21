@@ -1,107 +1,29 @@
 {
   "PROJECT": {
     "name": "ZUZU",
+    "tagline": "meme ruhu + minimal ciddiyet",
     "symbol": "ZUZU",
-    "tagline": "ZUZU is watching. And pumping.",
+    "decimals": 18,
     "siteUrl": "https://zuzucoin.xyz",
-    "logoText": "ZUZU"
+    "twitter": "https://twitter.com/",
+    "telegram": "https://t.me/",
+    "discord": "https://discord.gg/"
   },
-
   "PRESALE": {
-    "networkName": "BSC",
-    "chainId": 56,
-    "usdtAddress": "0x55d398326f99059fF775485246999027B3197955",
-    "receiverBSC": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",
+    "receiver": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",
+    "network": "BSC",
+    "usdtToken": "0x55d398326f99059fF775485246999027B3197955",
+    "endDate": "2025-09-30T21:00:00+03:00",
     "stages": [
       { "name": "Stage 1", "priceUsdt": 0.000002 },
       { "name": "Stage 2", "priceUsdt": 0.000003 },
       { "name": "Stage 3", "priceUsdt": 0.000004 },
       { "name": "Stage 4", "priceUsdt": 0.000005 }
-    ],
-    "endDate": "2025-09-30T21:00:00+03:00",
-    "minBuy": 10000,
-    "maxBuy": 200000000
-  },
-
-  "ADDRESSES": {
-    "ETH": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",
-    "SOL": "31Cjkx2PA5oMapNxxGAiZhuHDcvAyQ7hogqB8Hx6f1pW",
-    "TON": "UQD5Pkyp_l_O3907ri0WeLAY7fBVa-twb9nUnQ38Q1MinTND"
-  },
-
-  "SOCIALS": {
-    "twitter": "https://twitter.com/",
-    "telegram": "https://t.me/",
-    "discord": "https://discord.com/"
-  },
-
-  "UI": {
-    "exchanges": ["MEXC", "gate.io", "BitMart", "LBANK", "BingX"],
-    "tokenomics": [
-      { "label": "Presale",  "value": 45 },
-      { "label": "Liquidity", "value": 25 },
-      { "label": "Marketing","value": 15 },
-      { "label": "Team",      "value": 10 },
-      { "label": "Airdrop",   "value": 5  }
     ]
   },
-
-  "I18N": {
-    "tr": {
-      "connect": "Cüzdan Bağla",
-      "heroTitle": "ZUZU IS HERE",
-      "heroSub": "The next great meme coin has landed",
-      "toBeListed": "Listelenecek borsalar",
-      "presaleStage": "Ön Satış Aşaması",
-      "amountPH": "Örn: 100000",
-      "price": "Fiyat",
-      "buyBtn": "USDT (BEP20) ile Satın Al",
-      "receiver": "Ödeme gidecek USDT (BEP20) adresi",
-      "solAddr": "SOL Adresin",
-      "tonAddr": "TON Adresin",
-      "about": "Hakkında",
-      "tokenomics": "Tokenomics",
-      "roadmap": "Yol Haritası",
-      "copy": "Kopyala",
-      "needWallet": "MetaMask / TrustWallet gerekli.",
-      "switched": "Ağ BSC (BEP20) olarak ayarlandı.",
-      "wrongNet": "Lütfen BSC ağına geçiniz.",
-      "buySuccess": "Ödeme talebi cüzdanına gönderildi.",
-      "calcTotal": "Toplam (USDT)",
-      "countdownDay": "Gün",
-      "countdownHour": "Saat",
-      "countdownMin": "Dakika",
-      "countdownSec": "Saniye"
-    },
-    "en": {
-      "connect": "Connect Wallet",
-      "heroTitle": "ZUZU IS HERE",
-      "heroSub": "The next great meme coin has landed",
-      "toBeListed": "To be listed on",
-      "presaleStage": "Presale Stage",
-      "amountPH": "Eg: 100000",
-      "price": "Price",
-      "buyBtn": "Buy with USDT (BEP20)",
-      "receiver": "USDT (BEP20) receiver address",
-      "solAddr": "Your SOL Address",
-      "tonAddr": "Your TON Address",
-      "about": "About",
-      "tokenomics": "Tokenomics",
-      "roadmap": "Roadmap",
-      "copy": "Copy",
-      "needWallet": "MetaMask / TrustWallet required.",
-      "switched": "Network switched to BSC.",
-      "wrongNet": "Please switch to BSC.",
-      "buySuccess": "Payment request sent to your wallet.",
-      "calcTotal": "Total (USDT)",
-      "countdownDay": "Days",
-      "countdownHour": "Hours",
-      "countdownMin": "Minutes",
-      "countdownSec": "Seconds"
-    },
-    "pt": { "inherit": "en" },
-    "ru": { "inherit": "en" },
-    "zh": { "inherit": "en" },
-    "hi": { "inherit": "en" }
+  "ADDRESSES": {
+    "USDT_BEP20": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",
+    "SOL": "31Cjkx2PA5oMapNxxGAiZhuHDcvAyQ7hogqB8Hx6f1pW",
+    "TON": "UQD5Pkyp_l_03907ri0WeLAY7fBVa-twb9nUnQ38Q1MinTND"
   }
 }
