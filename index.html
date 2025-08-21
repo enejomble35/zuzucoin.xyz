@@ -1,26 +1,62 @@
 <!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ZUZU — Presale</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <meta name="theme-color" content="#0c1524">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ZUZU — Presale</title>
+<meta name="theme-color" content="#0c1524">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a1220;--card:#0f1b31cc;--glass:#101b31b3;--line:#22304b;--txt:#dce7ff;--btn:#1b9fff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:radial-gradient(80% 60% at 50% 0%,#13223a 0%, #0a1220 60%, #050a14 100%);color:var(--txt);font-family:Inter,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif}
+a{color:#9cd8ff;text-decoration:none}
+h1,h2{margin:0 0 10px}
+section{margin:18px auto;max-width:980px;padding:18px;border:1px solid var(--line);border-radius:16px}
+.glass{background:var(--glass);backdrop-filter:blur(8px)}
+.nav{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.6px}
+.brand .logo{width:42px;height:42px}
+.links a{margin:0 8px;opacity:.85}
+.actions{display:flex;gap:8px}
+select, input, button{font:inherit}
+.btn{background:var(--btn);color:white;border:none;border-radius:10px;padding:8px 14px;font-weight:700;cursor:pointer}
+.btn.big{padding:12px 16px;font-size:16px}
+.hero .sub{opacity:.75;margin-bottom:18px}
+.count{display:grid;grid-template-columns:repeat(4, minmax(60px,1fr));gap:8px;margin:8px 0 16px}
+.count div{background:#0f1b31;border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.count span{font-size:24px;font-weight:800}
+.count small{display:block;opacity:.75}
+.exchanges{display:flex;align-items:center;gap:10px;margin:8px 0 12px;flex-wrap:wrap}
+.exchanges #exList{display:flex;gap:8px;flex-wrap:wrap}
+.exch{padding:6px 10px;border:1px dashed #2c3e66;background:#0b1730;border-radius:999px;font-weight:700;font-size:12px;opacity:.95}
+.card.presale{display:flex;flex-direction:column;gap:10px}
+.card label{opacity:.9}
+.card input,.card select{width:100%;background:#0b1730;border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:10px}
+.priceRow{display:flex;gap:8px;align-items:center;background:#0c1730;border:1px solid var(--line);padding:10px;border-radius:10px}
+.receiver{margin-top:10px;border:1px solid var(--line);background:#0b1630;border-radius:12px;padding:10px}
+.receiver code{display:block;margin-top:4px}
+.copy{margin-top:8px;background:#173a5f;border:none;color:#9fdcff;border-radius:8px;padding:6px 10px}
+.bars{display:grid;gap:10px}
+.bar{display:flex;gap:8px;align-items:center}
+.bar .line{flex:1;height:10px;background:#0b1730;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.bar .fill{height:100%;background:linear-gradient(90deg,#2cc1ff,#99e6ff)}
+.road{line-height:1.9}
+.footer{margin:20px auto;max-width:980px;padding:18px;border:1px solid var(--line);border-radius:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.footer .socials a{margin-right:10px}
+@media (max-width:760px){.links{display:none}}
+</style>
 </head>
 <body>
 <header class="nav glass">
   <div class="brand">
     <div class="logo" aria-hidden="true">
-      <!-- basit neon meme maskot -->
+      <!-- minimal meme maskot -->
       <svg viewBox="0 0 120 120">
-        <defs>
-          <linearGradient id="g" x1="0" x2="1">
-            <stop offset="0" stop-color="#4dd0ff"/>
-            <stop offset="1" stop-color="#9af3ff"/>
-          </linearGradient>
-        </defs>
+        <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#4dd0ff"/><stop offset="1" stop-color="#9af3ff"/></linearGradient></defs>
         <circle cx="60" cy="60" r="44" fill="url(#g)" opacity="0.18"/>
         <circle cx="60" cy="60" r="36" fill="none" stroke="url(#g)" stroke-width="6"/>
         <path d="M40 54 a8 8 0 0 1 16 0" stroke="#1cf" stroke-width="6" fill="none" stroke-linecap="round"/>
@@ -31,21 +67,15 @@
     </div>
     <span id="brandText">ZUZU</span>
   </div>
-
   <nav class="links">
     <a href="#about" data-i18n="about">Hakkında</a>
     <a href="#tokenomics" data-i18n="tokenomics">Tokenomics</a>
     <a href="#roadmap" data-i18n="roadmap">Yol Haritası</a>
   </nav>
-
   <div class="actions">
     <select id="lang">
-      <option value="tr">TR</option>
-      <option value="en">EN</option>
-      <option value="pt">PT</option>
-      <option value="ru">RU</option>
-      <option value="zh">中文</option>
-      <option value="hi">HI</option>
+      <option value="tr">TR</option><option value="en">EN</option><option value="pt">PT</option>
+      <option value="ru">RU</option><option value="zh">中文</option><option value="hi">HI</option>
     </select>
     <button id="btnConnect" class="btn" data-i18n="connect">Cüzdan Bağla</button>
   </div>
@@ -64,7 +94,7 @@
     </div>
 
     <div class="exchanges">
-      <span data-i18n="toBeListed">To be listed on</span>
+      <span data-i18n="toBeListed">Listelenecek borsalar</span>
       <div id="exList"></div>
     </div>
 
@@ -72,9 +102,7 @@
       <label data-i18n="presaleStage">Ön Satış Aşaması</label>
       <select id="stage"></select>
 
-      <label>
-        <input id="amount" type="number" placeholder="Örn: 100000" min="0" />
-      </label>
+      <label><input id="amount" type="number" placeholder="Örn: 100000" min="0"/></label>
 
       <div class="priceRow">
         <span data-i18n="price">Fiyat</span>:
@@ -115,7 +143,7 @@
   <section id="roadmap" class="glass">
     <h2 data-i18n="roadmap">Yol Haritası</h2>
     <ul class="road">
-      <li><b>Q3 2025</b> — Presale, topluluk büyütme, audit başlatma</li>
+      <li><b>Q3 2025</b> — Presale, topluluk büyütme, audit</li>
       <li><b>Q4 2025</b> — DEX listeleme, CEX başvuruları</li>
       <li><b>Q1 2026</b> — CEX listeler (MEXC vb.), staking/utility</li>
     </ul>
@@ -128,12 +156,120 @@
     <a id="tg" target="_blank">Telegram</a>
     <a id="dc" target="_blank">Discord</a>
   </div>
-  <div class="copy">
-    © <span id="y"></span> <span id="brand">ZUZU</span>. All rights reserved.
-  </div>
+  <div class="copy">© <span id="y"></span> <span id="brand">ZUZU</span>. All rights reserved.</div>
 </footer>
 
+<!-- CONFIG JSON (inline) -->
+<script id="appConfig" type="application/json">
+{
+  "PROJECT":{"name":"ZUZU","symbol":"ZUZU","tagline":"ZUZU is watching. And pumping.","siteUrl":"https://zuzucoin.xyz"},
+  "PRESALE":{
+    "networkName":"BSC","chainId":56,
+    "usdtAddress":"0x55d398326f99059fF775485246999027B3197955",
+    "receiverBSC":"0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",
+    "stages":[
+      {"name":"Stage 1","priceUsdt":0.000002},
+      {"name":"Stage 2","priceUsdt":0.000003},
+      {"name":"Stage 3","priceUsdt":0.000004},
+      {"name":"Stage 4","priceUsdt":0.000005}
+    ],
+    "endDate":"2025-09-30T21:00:00+03:00",
+    "minBuy":10000,"maxBuy":200000000
+  },
+  "ADDRESSES":{
+    "ETH":"0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",
+    "SOL":"31Cjkx2PA5oMapNxxGAiZhuHDcvAyQ7hogqB8Hx6f1pW",
+    "TON":"UQD5Pkyp_l_O3907ri0WeLAY7fBVa-twb9nUnQ38Q1MinTND"
+  },
+  "SOCIALS":{"twitter":"https://twitter.com/","telegram":"https://t.me/","discord":"https://discord.com/"},
+  "UI":{
+    "exchanges":["MEXC","gate.io","BitMart","LBANK","BingX"],
+    "tokenomics":[
+      {"label":"Presale","value":45},
+      {"label":"Liquidity","value":25},
+      {"label":"Marketing","value":15},
+      {"label":"Team","value":10},
+      {"label":"Airdrop","value":5}
+    ]
+  },
+  "I18N":{
+    "tr":{"connect":"Cüzdan Bağla","heroTitle":"ZUZU IS HERE","heroSub":"The next great meme coin has landed","toBeListed":"Listelenecek borsalar","presaleStage":"Ön Satış Aşaması","amountPH":"Örn: 100000","price":"Fiyat","buyBtn":"USDT (BEP20) ile Satın Al","receiver":"Ödeme gidecek USDT (BEP20) adresi","solAddr":"SOL Adresin","tonAddr":"TON Adresin","about":"Hakkında","tokenomics":"Tokenomics","roadmap":"Yol Haritası","copy":"Kopyala","needWallet":"MetaMask / TrustWallet gerekli.","switched":"Ağ BSC (BEP20) olarak ayarlandı.","wrongNet":"Lütfen BSC ağına geçiniz.","buySuccess":"Ödeme talebi cüzdanına gönderildi.","calcTotal":"Toplam (USDT)","countdownDay":"Gün","countdownHour":"Saat","countdownMin":"Dakika","countdownSec":"Saniye"},
+    "en":{"connect":"Connect Wallet","heroTitle":"ZUZU IS HERE","heroSub":"The next great meme coin has landed","toBeListed":"To be listed on","presaleStage":"Presale Stage","amountPH":"Eg: 100000","price":"Price","buyBtn":"Buy with USDT (BEP20)","receiver":"USDT (BEP20) receiver address","solAddr":"Your SOL Address","tonAddr":"Your TON Address","about":"About","tokenomics":"Tokenomics","roadmap":"Roadmap","copy":"Copy","needWallet":"MetaMask / TrustWallet required.","switched":"Network switched to BSC.","wrongNet":"Please switch to BSC.","buySuccess":"Payment request sent to your wallet.","calcTotal":"Total (USDT)","countdownDay":"Days","countdownHour":"Hours","countdownMin":"Minutes","countdownSec":"Seconds"},
+    "pt":{"inherit":"en"},"ru":{"inherit":"en"},"zh":{"inherit":"en"},"hi":{"inherit":"en"}
+  }
+}
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-<script src="script.js"></script>
+<script>
+let CONFIG=null,provider,signer,userAddress=null;
+const el=s=>document.querySelector(s);
+async function load(){
+  CONFIG=JSON.parse(document.getElementById('appConfig').textContent);
+  el('#brand').textContent=CONFIG.PROJECT.name; el('#brandText').textContent=CONFIG.PROJECT.name;
+  el('#tw').href=CONFIG.SOCIALS.twitter; el('#tg').href=CONFIG.SOCIALS.telegram; el('#dc').href=CONFIG.SOCIALS.discord;
+
+  const ex=el('#exList');
+  CONFIG.UI.exchanges.forEach(x=>{const b=document.createElement('span');b.className='exch';b.textContent=x;ex.appendChild(b);});
+  const tb=el('#tokBars');
+  CONFIG.UI.tokenomics.forEach(t=>{const r=document.createElement('div');r.className='bar';
+    r.innerHTML='<div style="width:110px">'+t.label+'</div><div class="line"><div class="fill" style="width:'+t.value+'%"></div></div><div style="width:48px;text-align:right">'+t.value+'%</div>';
+    tb.appendChild(r);
+  });
+  const st=el('#stage');
+  CONFIG.PRESALE.stages.forEach((s,i)=>{const o=document.createElement('option');o.value=i;o.textContent=s.name+' — '+s.priceUsdt.toFixed(6)+' USDT / ZUZU';st.appendChild(o);});
+  el('#receiver').textContent=CONFIG.PRESALE.receiverBSC; el('#solA').textContent=CONFIG.ADDRESSES.SOL; el('#tonA').textContent=CONFIG.ADDRESSES.TON;
+  updatePrice(); el('#amount').addEventListener('input',updateTotal); el('#stage').addEventListener('change',updatePrice);
+  startCountdown(new Date(CONFIG.PRESALE.endDate).getTime());
+  el('#copyRecv').onclick=()=>navigator.clipboard.writeText(CONFIG.PRESALE.receiverBSC);
+  initI18n();
+}
+function curStage(){ const i=parseInt(el('#stage').value||0); return CONFIG.PRESALE.stages[i]; }
+function updatePrice(){ el('#unitPrice').textContent=curStage().priceUsdt.toFixed(6); updateTotal(); }
+function updateTotal(){ const amt=Number(el('#amount').value||0); el('#total').textContent=(amt*curStage().priceUsdt).toFixed(6); }
+function startCountdown(end){ function t(){const n=Date.now();let s=Math.max(0,Math.floor((end-n)/1000));
+  const d=Math.floor(s/86400); s-=d*86400; const h=Math.floor(s/3600); s-=h*3600; const m=Math.floor(s/60); s-=m*60;
+  el('#d').textContent=d; el('#h').textContent=h; el('#m').textContent=m; el('#s').textContent=s; }
+  t(); setInterval(t,1000);
+}
+function getText(k){const lang=localStorage.getItem('lang')||'tr'; let p=CONFIG.I18N[lang]; if(p&&p.inherit) p={...CONFIG.I18N[p.inherit],...p}; if(!p) p=CONFIG.I18N.en; return p[k]||CONFIG.I18N.en[k]||k;}
+function applyLang(lang){ let p=CONFIG.I18N[lang]; if(p&&p.inherit) p={...CONFIG.I18N[p.inherit],...p}; if(!p) p=CONFIG.I18N.en;
+  document.querySelectorAll('[data-i18n]').forEach(n=>{const k=n.getAttribute('data-i18n'); if(p[k]) n.textContent=p[k];});
+}
+function initI18n(){ el('#y').textContent=new Date().getFullYear(); const sel=el('#lang'); const saved=localStorage.getItem('lang')||'tr'; sel.value=saved; applyLang(saved);
+  sel.onchange=e=>{localStorage.setItem('lang',e.target.value); applyLang(e.target.value);}; }
+
+async function connect(){
+  if(!window.ethereum) return alert(getText('needWallet'));
+  provider=new ethers.providers.Web3Provider(window.ethereum); await provider.send('eth_requestAccounts',[]); signer=provider.getSigner(); userAddress=await signer.getAddress();
+  const net=await provider.getNetwork();
+  if(net.chainId!==56){
+    try{ await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:'0x38'}]}); alert(getText('switched')); }
+    catch(e){
+      if(e.code===4902){
+        await window.ethereum.request({method:'wallet_addEthereumChain',params:[{chainId:'0x38',chainName:'Binance Smart Chain',
+        nativeCurrency:{name:'BNB',symbol:'BNB',decimals:18},rpcUrls:['https://bsc-dataseed.binance.org/'],blockExplorerUrls:['https://bscscan.com/']}]});
+      } else { return alert(getText('wrongNet')); }
+    }
+  }
+  el('#btnConnect').textContent=userAddress.slice(0,6)+'...'+userAddress.slice(-4);
+}
+
+async function buy(){
+  try{
+    if(!provider){ await connect(); if(!provider) return; }
+    const amountZ=Number(el('#amount').value||0);
+    if(!amountZ || amountZ<CONFIG.PRESALE.minBuy) return alert('Min: '+CONFIG.PRESALE.minBuy+' ZUZU');
+    const net=await provider.getNetwork(); if(net.chainId!==56) return alert(getText('wrongNet'));
+    const price=curStage().priceUsdt; const total=ethers.utils.parseUnits((amountZ*price).toFixed(18),18);
+    const abi=["function transfer(address to,uint256 value) returns (bool)"];
+    const usdt=new ethers.Contract(CONFIG.PRESALE.usdtAddress,abi,signer);
+    const tx=await usdt.transfer(CONFIG.PRESALE.receiverBSC,total); await tx.wait();
+    alert(getText('buySuccess'));
+  }catch(e){ console.error(e); alert(e.message||'Error');}
+}
+
+document.addEventListener('DOMContentLoaded',()=>{ load(); el('#btnConnect').onclick=connect; el('#btnBuy').onclick=buy; });
+</script>
 </body>
 </html>
