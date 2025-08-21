@@ -3,33 +3,138 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ZUZU – AI-Powered Meme Intelligence • Presale</title>
+  <title>ZUZU – AI Meme Intelligence • Presale</title>
+  <meta name="theme-color" content="#0a0a0f">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <meta name="theme-color" content="#fff2d6">
+  <style>
+  :root{
+    --bg:#0a0a0f;            /* koyu siyah */
+    --panel:#0f1117;         /* kart zemini */
+    --ink:#e5e7eb;           /* ana metin */
+    --muted:#94a3b8;         /* açıklama */
+    --neon-orange:#ff7a1a;   /* neon turuncu */
+    --neon-green:#39ff14;    /* neon yeşil */
+    --neon-cyan:#00e5ff;     /* neon camgöbeği */
+    --glass:rgba(255,255,255,.05);
+    --radius:18px;
+    --shadow:0 10px 30px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,Segoe UI,Roboto,Arial}
+  .container{width:min(1100px,92%);margin-inline:auto}
+
+  /* NAV */
+  .nav{display:flex;justify-content:space-between;align-items:center;padding:16px 0}
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{position:relative;width:28px;height:28px;border-radius:50%;
+        background:radial-gradient(circle at 30% 30%,var(--neon-orange),#ffb36a 40%, transparent 60%),
+                   radial-gradient(circle at 70% 70%,var(--neon-green),transparent 60%);
+        box-shadow:0 0 18px var(--neon-orange),0 0 24px var(--neon-green);}
+  .brand strong{letter-spacing:.5px}
+  .brand small{color:var(--muted)}
+  .lang, .btn{border-radius:12px;border:1px solid #222; background:#0b0d12; color:var(--ink); padding:10px 12px}
+  .btn.ghost{background:#0b0d12}
+  .btn.primary{background:linear-gradient(135deg,var(--neon-orange),#ffae42);color:#111;
+               box-shadow:0 0 16px #ff7a1a70, inset 0 0 10px #ffd7a170}
+  .btn:active{transform:translateY(1px)}
+
+  /* HERO */
+  header{position:relative;overflow:hidden}
+  header:before{
+    content:"";position:absolute;inset:-40% -10% auto -10%;
+    height:90%; background:
+      radial-gradient(600px 300px at 10% 20%, #ff7a1a30, transparent 60%),
+      radial-gradient(600px 300px at 90% 0%, #00e5ff25, transparent 60%),
+      radial-gradient(600px 300px at 60% 60%, #39ff141f, transparent 60%);
+    filter:blur(30px); pointer-events:none;
+  }
+
+  .hero{display:grid;grid-template-columns:1.2fr .8fr; gap:30px; align-items:center; padding:14px 0 28px}
+  .title{font-size:40px;margin:4px 0 8px;text-shadow:0 0 22px #ffffff18, 0 0 14px #ff7a1a40}
+  .lead{color:var(--muted);font-size:18px;margin:0 0 14px}
+  .badges{display:flex;gap:10px;flex-wrap:wrap}
+  .badge{border:1px solid #1d2230;background:linear-gradient(180deg,#0f1117,#0a0c12);
+         color:#b8c3d6;padding:8px 12px;border-radius:999px;box-shadow:var(--shadow)}
+
+  .countdown{display:flex;gap:12px;margin-top:16px}
+  .countdown div{min-width:80px;text-align:center;padding:12px;border-radius:16px;
+                 background:linear-gradient(180deg,#0f1117,#0a0c12); border:1px solid #1d2230;
+                 box-shadow:0 0 18px #00e5ff25}
+  .countdown b{font-size:24px;display:block;color:#eaf2ff}
+  .countdown span{font-size:12px;color:#9fb2cc}
+
+  /* MASCOT (neon, mavi değil) */
+  .mascot{display:flex;justify-content:center}
+  .face{
+    width:min(320px,70vw);aspect-ratio:1/1;border-radius:50%;
+    background:radial-gradient(35% 35% at 45% 40%, #2b2f3d, #1b1f2a 60%, #12151c 100%);
+    position:relative; box-shadow:0 0 60px #00e5ff20, inset 0 0 40px #ffa34a20; 
+    animation:breath 5s ease-in-out infinite;
+  }
+  @keyframes breath{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+  .horn{position:absolute;top:14%;width:0;height:0;border-left:30px solid transparent;border-right:30px solid transparent;border-bottom:70px solid var(--neon-green);filter:drop-shadow(0 0 10px #39ff14)}
+  .horn-l{left:18%}.horn-r{right:18%}
+  .eye{position:absolute;top:40%;width:28px;height:28px;border-radius:50%;background:#0af;box-shadow:0 0 18px var(--neon-cyan),inset 0 0 10px #fff}
+  .eye-l{left:30%}.eye-r{right:30%}
+  .smile{position:absolute;left:50%;bottom:28%;transform:translateX(-50%);width:60%;height:18%;
+         border:10px solid transparent;border-bottom:12px solid var(--neon-orange);border-radius:0 0 90% 90%/0 0 100% 100%;
+         filter:drop-shadow(0 0 12px #ff7a1a)}
+  
+  /* CARDS */
+  .grid{display:grid;grid-template-columns:1.1fr 1fr; gap:22px; margin:18px 0 0}
+  .card{background:linear-gradient(180deg,#0f1117,#0a0c12); border:1px solid #1d2230; border-radius:var(--radius); padding:18px; box-shadow:var(--shadow)}
+  .card h3{margin:0 0 10px}
+  label{display:block;margin:10px 0 6px;color:#a7b2c8;font-weight:600}
+  .field{width:100%;padding:14px 12px;border-radius:12px;border:1px solid #263049;background:#0b0d12;color:#e5e7eb}
+  .field:focus{outline:none;box-shadow:0 0 0 3px #ff7a1a44;border-color:#ff7a1a}
+  .mono{font-family:ui-monospace, Menlo, Consolas, monospace}
+
+  .quick{display:flex;gap:8px;margin:8px 0 12px}
+  .chip{cursor:pointer;border-radius:999px;border:1px solid #263049;background:#0b0d12;color:#d7e0f3;padding:8px 10px}
+  .chip:hover{box-shadow:0 0 10px #39ff1435, inset 0 0 10px #39ff1415}
+
+  .pricebox{display:flex;justify-content:space-between;background:#0b0d12;border:1px solid #263049;border-radius:12px;padding:10px 12px;margin:10px 0 14px}
+  .btn.buy{background:linear-gradient(135deg,var(--neon-orange),#ffd08a); color:#111; font-weight:800; padding:14px 16px; border-radius:12px; border:0;
+           box-shadow:0 0 16px #ff7a1a70, inset 0 0 10px #ffd7a170}
+  .hint{color:#9fb2cc;font-size:12px;margin-top:8px}
+
+  .stack{display:flex;flex-direction:column;gap:16px}
+  .stack-row{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+  .qr{width:100%;max-width:160px;border-radius:12px;border:1px solid #263049;background:#0b0d12}
+
+  .mini{background:var(--glass);border:1px dashed #263049;border-radius:14px;padding:14px}
+  .mini h4{margin:0 0 6px}
+
+  .progress{margin-top:10px}
+  .progress-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .bar{height:10px;background:#1c2333;border-radius:999px;overflow:hidden}
+  .bar span{display:block;height:100%;background:linear-gradient(90deg,var(--neon-green),var(--neon-cyan));width:0%}
+
+  .tok .cols{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0 0;padding:0}
+  .tok .cols li{list-style:none;background:#0b0d12;border:1px solid #263049;border-radius:12px;padding:10px 12px}
+
+  .foot{padding:34px 0;text-align:center;color:#9fb2cc}
+
+  @media (max-width:980px){ .hero{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.stack-row{grid-template-columns:1fr} }
+  </style>
 </head>
 <body>
-  <header class="site-top">
+  <header>
     <div class="container nav">
       <div class="brand">
-        <span class="logo-blob" aria-hidden="true"></span>
-        <strong>ZUZU</strong>
-        <small>AI-Powered Meme Intelligence</small>
+        <span class="logo"></span>
+        <div><strong>ZUZU</strong><br><small>AI-Powered Meme Intelligence</small></div>
       </div>
-
-      <div class="nav-right">
+      <div>
         <select id="lang" class="lang"></select>
         <button id="btnConnect" class="btn ghost" data-i18n="connect">Cüzdan Bağla</button>
       </div>
     </div>
 
-    <!-- Parallax / Glow Hero -->
     <section class="hero container">
-      <div class="hero-copy">
+      <div>
         <h1 class="title" data-i18n="heroTitle">ZUZU IS HERE</h1>
-        <p class="lead" data-i18n="heroLead">
-          Bir sonraki büyük meme coini iniş yaptı
-        </p>
+        <p class="lead" data-i18n="heroLead">Bir sonraki büyük meme coini iniş yaptı</p>
 
         <div class="badges">
           <span class="badge">MEXC</span>
@@ -47,7 +152,6 @@
         </div>
       </div>
 
-      <!-- Maskot (mavi değil; sıcak viyole/amber) -->
       <div class="mascot">
         <div class="face">
           <div class="horn horn-l"></div>
@@ -61,7 +165,6 @@
   </header>
 
   <main class="container">
-    <!-- Presale Card -->
     <section class="grid">
       <div class="card">
         <h3 data-i18n="presale">Ön Satış Aşaması</h3>
@@ -83,30 +186,27 @@
           <div><span data-i18n="total">Toplam:</span> <b id="total">0.000000</b> <span>USDT</span></div>
         </div>
 
-        <button id="btnBuy" class="btn primary" data-i18n="buy">USDT (BEP20) ile Satın Al</button>
-        <p class="hint" data-i18n="gasHint">
-          Ödeme USDT (BEP20) ile doğrudan proje kasasına gider. Gas için az miktar BNB gerekir.
-        </p>
+        <button id="btnBuy" class="btn buy" data-i18n="buy">USDT (BEP20) ile Satın Al</button>
+        <p class="hint" data-i18n="gasHint">Ödeme USDT (BEP20) ile doğrudan proje kasasına gider. Gas için az miktar BNB gerekir.</p>
       </div>
 
-      <!-- Receiver / Audit / Progress -->
       <div class="card stack">
         <div class="stack-row">
-          <div class="stack-col">
+          <div>
             <h3 data-i18n="receiver">Ödeme Alıcı Adresi</h3>
             <div class="address">
               <input id="receiver" class="field mono" readonly>
               <button id="copy" class="btn ghost" data-i18n="copy">Kopyala</button>
             </div>
           </div>
-          <div class="stack-col qrwrap">
+          <div class="qrwrap">
             <h3>QR</h3>
             <img id="qr" class="qr" alt="QR">
           </div>
         </div>
 
         <div class="stack-row">
-          <div class="mini card-lite">
+          <div class="mini">
             <h4>Mini Audit</h4>
             <ul class="list">
               <li>✔ <span data-i18n="audit1">Sözleşme: USDT (BEP20)</span></li>
@@ -114,7 +214,7 @@
               <li>✔ <span data-i18n="audit3">Non-custodial, direkt kasaya</span></li>
             </ul>
           </div>
-          <div class="mini card-lite">
+          <div class="mini">
             <h4 data-i18n="transparency">Şeffaflık</h4>
             <p data-i18n="transparencyTxt">
               Satın alışlar USDT → Receiver olarak zincire kaydolur. Admin Panel üzerinden son işlemleri görebilirsin.
@@ -127,14 +227,11 @@
             <h4 data-i18n="raised">Toplanan</h4>
             <b id="raisedTxt">$0 / $300,000</b>
           </div>
-          <div class="bar">
-            <span id="barFill" style="width:0%"></span>
-          </div>
+          <div class="bar"><span id="barFill"></span></div>
         </div>
       </div>
     </section>
 
-    <!-- About -->
     <section class="card">
       <h3 data-i18n="about">Hakkında</h3>
       <p data-i18n="aboutTxt">
@@ -143,28 +240,19 @@
       </p>
     </section>
 
-    <!-- Tokenomics -->
     <section class="card tok">
       <h3>Tokenomics</h3>
       <ul class="cols">
-        <li><b>Presale:</b> 45%</li>
-        <li><b>Liquidity:</b> 25%</li>
-        <li><b>Marketing:</b> 15%</li>
-        <li><b>Team:</b> 10%</li>
-        <li><b>Airdrop:</b> 5%</li>
+        <li><b>Presale:</b> 45%</li><li><b>Liquidity:</b> 25%</li><li><b>Marketing:</b> 15%</li>
+        <li><b>Team:</b> 10%</li><li><b>Airdrop:</b> 5%</li>
       </ul>
-      <ul class="cols meta">
-        <li><b>Chain:</b> BSC (BEP20)</li>
-        <li><b>Symbol:</b> ZUZU</li>
-        <li><b>Decimals:</b> 18</li>
+      <ul class="cols">
+        <li><b>Chain:</b> BSC (BEP20)</li><li><b>Symbol:</b> ZUZU</li><li><b>Decimals:</b> 18</li>
       </ul>
     </section>
   </main>
 
-  <footer class="foot">
-    © 2025 ZUZU • AI-Powered Meme Intelligence
-  </footer>
-
+  <footer class="foot">© 2025 ZUZU • AI-Powered Meme Intelligence</footer>
   <script src="script.js"></script>
 </body>
 </html>
