@@ -1,143 +1,190 @@
-// ====== Basit Konfig ======
-let CFG;
+let CONFIG = null;
+let provider, signer, userAddress = null;
 
-async function loadConfig(){
-  try{
-    const r = await fetch('config.json?_=' + Date.now());
-    CFG = await r.json();
-  }catch(e){
-    // Yedek (fetch çalışmazsa)
-    CFG = {
-      PROJECT:{name:"ZUZU",tagline:"ZUZU is watching. And pumping.",symbol:"ZUZU",decimals:18,siteUrl:"https://www.zuzucoin.xyz"},
-      PRESALE:{
-        receiver:"0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",
-        networkName:"Ethereum", chainId:1,
-        stages:[
-          {name:"Stage 1", priceEth:0.0000020},
-          {name:"Stage 2", priceEth:0.0000030},
-          {name:"Stage 3", priceEth:0.0000040},
-          {name:"Stage 4", priceEth:0.0000050}
-        ],
-        endDate:"2025-09-30T21:00:00+03:00"
-      },
-      ADDRESSES:{ETH:"0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",SOL:"",TON:""},
-      SOCIALS:{twitter:"https://twitter.com/",telegram:"https://t.me/memedsener",discord:"https://discord.com/"}
-    };
-  }
-}
+const el = s => document.querySelector(s);
+const els = s => document.querySelectorAll(s);
 
-function qs(s){return document.querySelector(s)}
-function qsa(s){return [...document.querySelectorAll(s)]}
+async function loadConfig() {
+  CONFIG = await fetch('./config.json').then(r=>r.json());
+  // Brand & socials
+  el('#brand').textContent = CONFIG.PROJECT.name;
+  el('#brandText').textContent = CONFIG.PROJECT.name;
+  el('#tw').href = CONFIG.SOCIALS.twitter;
+  el('#tg').href = CONFIG.SOCIALS.telegram;
+  el('#dc').href = CONFIG.SOCIALS.discord;
 
-function initUI(){
-  // Receiver / socials
-  qs('#receiver').textContent = CFG.PRESALE.receiver;
-  qs('#tw').href = CFG.SOCIALS.twitter;
-  qs('#tg').href = CFG.SOCIALS.telegram;
-  qs('#dc').href = CFG.SOCIALS.discord;
-  qs('#y').textContent = new Date().getFullYear();
-  qs('#priceLabel').textContent = 'Fiyat: -';
+  // Exchanges
+  const ex = el('#exList');
+  CONFIG.UI.exchanges.forEach(x=>{
+    const b=document.createElement('span');
+    b.className='exch'; b.textContent=x; ex.appendChild(b);
+  });
 
-  // Stages
-  const sel = qs('#stageSelect');
-  CFG.PRESALE.stages.forEach((st, i)=>{
+  // Tokenomics
+  const tb = el('#tokBars');
+  CONFIG.UI.tokenomics.forEach(t=>{
+    const row = document.createElement('div');
+    row.className='bar';
+    row.innerHTML = `<div style="width:110px">${t.label}</div>
+    <div class="line"><div class="fill" style="width:${t.value}%"></div></div>
+    <div style="width:48px;text-align:right">${t.value}%</div>`;
+    tb.appendChild(row);
+  });
+
+  // Stage select
+  const st = el('#stage');
+  CONFIG.PRESALE.stages.forEach((s,i)=>{
     const o = document.createElement('option');
-    o.value = i; o.textContent = `${st.name} — ${st.priceEth} ETH / ZUZU`;
-    sel.appendChild(o);
+    o.value = i; o.textContent = `${s.name} — ${s.priceUsdt.toFixed(6)} USDT / ZUZU`;
+    st.appendChild(o);
   });
-  sel.addEventListener('change', updateTotal);
-  qs('#amount').addEventListener('input', updateTotal);
 
-  // Sayaç
-  startCountdown(new Date(CFG.PRESALE.endDate));
+  // Receiver & alt addrs
+  el('#receiver').textContent = CONFIG.PRESALE.receiverBSC;
+  el('#solA').textContent = CONFIG.ADDRESSES.SOL;
+  el('#tonA').textContent = CONFIG.ADDRESSES.TON;
+
+  // Unit price
+  updatePrice();
+  el('#amount').addEventListener('input', updateTotal);
+  el('#stage').addEventListener('change', updatePrice);
+
+  // Countdown
+  startCountdown(new Date(CONFIG.PRESALE.endDate).getTime());
+
+  // Copy
+  el('#copyRecv').onclick = () => {
+    navigator.clipboard.writeText(CONFIG.PRESALE.receiverBSC);
+  };
+
+  // i18n init
+  initI18n();
+}
+
+function currentStage() {
+  const idx = parseInt(el('#stage').value || 0);
+  return CONFIG.PRESALE.stages[idx];
+}
+function updatePrice() {
+  el('#unitPrice').textContent = currentStage().priceUsdt.toFixed(6);
   updateTotal();
-
-  // Kopyala
-  qs('#copy-rec').addEventListener('click', ()=>{
-    navigator.clipboard.writeText(CFG.PRESALE.receiver);
-    qs('#copy-rec').textContent='Kopyalandı ✓';
-    setTimeout(()=>qs('#copy-rec').textContent='Kopyala',1200);
-  });
-
-  // Cüzdan bağla / satın al
-  qs('#btn-connect').addEventListener('click', connectWallet);
-  qs('#btn-buy').addEventListener('click', buyWithETH);
+}
+function updateTotal() {
+  const amt = Number(el('#amount').value || 0);
+  const total = amt * currentStage().priceUsdt;
+  el('#total').textContent = total.toFixed(6);
 }
 
-function updateTotal(){
-  const i = Number(qs('#stageSelect').value || 0);
-  const price = CFG.PRESALE.stages[i].priceEth;
-  const amount = Number(qs('#amount').value || 0);
-  const total = price * amount;
-  qs('#priceLabel').textContent = `Fiyat: ${price} ETH / ZUZU`;
-  qs('#totalEth').textContent = `Toplam (ETH): ${total.toFixed(8)}`;
-}
-
-let provider, signer, account;
-
-async function connectWallet(){
-  if(!window.ethereum){ alert('MetaMask/TrustWallet gerekli.'); return; }
-  try{
-    const accs = await window.ethereum.request({method:'eth_requestAccounts'});
-    account = accs[0];
-    provider = new ethers.providers.Web3Provider(window.ethereum);
-    signer = provider.getSigner();
-
-    const net = await provider.getNetwork();
-    if(net.chainId !== CFG.PRESALE.chainId){
-      qs('#netHint').textContent = `Ağ: Ethereum Mainnet kullanın. (Mevcut chainId: ${net.chainId})`;
-      qs('#netHint').style.color = '#ffb74d';
-    }else{
-      qs('#netHint').textContent = 'Ağ uygun.';
-      qs('#netHint').style.color = '#16c784';
-    }
-    qs('#btn-connect').textContent = account.slice(0,6)+'…'+account.slice(-4);
-  }catch(err){
-    console.error(err);
-    alert('Cüzdan bağlantısı reddedildi.');
-  }
-}
-
-async function buyWithETH(){
-  if(!provider){ await connectWallet(); if(!provider) return; }
-  const i = Number(qs('#stageSelect').value || 0);
-  const price = CFG.PRESALE.stages[i].priceEth;
-  const amount = Number(qs('#amount').value || 0);
-  if(amount<=0){ alert('Miktar gir.'); return; }
-
-  const totalEth = price * amount;
-  const valueWei = ethers.utils.parseEther(totalEth.toString());
-
-  try{
-    const tx = await signer.sendTransaction({
-      to: CFG.PRESALE.receiver,
-      value: valueWei
-    });
-    alert('İşlem gönderildi: '+tx.hash);
-  }catch(e){
-    console.error(e);
-    alert('İşlem iptal edildi ya da hata oluştu.');
-  }
-}
-
-function startCountdown(target){
+function startCountdown(end) {
   function tick(){
-    const now = new Date();
-    const diff = target - now;
-    let d=0,h=0,m=0,s=0;
-    if(diff>0){
-      d = Math.floor(diff/86400000);
-      h = Math.floor((diff%86400000)/3600000);
-      m = Math.floor((diff%3600000)/60000);
-      s = Math.floor((diff%60000)/1000);
-    }
-    qs('#d').textContent = String(d).padStart(2,'0');
-    qs('#h').textContent = String(h).padStart(2,'0');
-    qs('#m').textContent = String(m).padStart(2,'0');
-    qs('#s').textContent = String(s).padStart(2,'0');
+    const now = Date.now();
+    let t = Math.max(0, Math.floor((end - now)/1000));
+    const d = Math.floor(t/86400); t -= d*86400;
+    const h = Math.floor(t/3600);  t -= h*3600;
+    const m = Math.floor(t/60);    t -= m*60;
+    const s = t;
+    el('#d').textContent = d; el('#h').textContent=h; el('#m').textContent=m; el('#s').textContent=s;
   }
   tick(); setInterval(tick,1000);
 }
 
-// Başlat
-loadConfig().then(initUI);
+async function connect() {
+  if(!window.ethereum){ alert(getText('needWallet')); return; }
+  provider = new ethers.providers.Web3Provider(window.ethereum);
+  await provider.send("eth_requestAccounts",[]);
+  signer = provider.getSigner();
+  userAddress = await signer.getAddress();
+
+  // Switch to BSC (56)
+  const chainIdHex = '0x38';
+  const net = await provider.getNetwork();
+  if(net.chainId !== 56){
+    try{
+      await window.ethereum.request({ method:'wallet_switchEthereumChain', params:[{ chainId: chainIdHex }] });
+      alert(getText('switched'));
+    }catch(e){
+      if(e.code === 4902){
+        await window.ethereum.request({
+          method:'wallet_addEthereumChain',
+          params:[{
+            chainId: chainIdHex,
+            chainName:'Binance Smart Chain',
+            nativeCurrency:{ name:'BNB', symbol:'BNB', decimals:18 },
+            rpcUrls:['https://bsc-dataseed.binance.org/'],
+            blockExplorerUrls:['https://bscscan.com/']
+          }]
+        });
+      }else{
+        alert(getText('wrongNet')); return;
+      }
+    }
+  }
+  el('#btnConnect').textContent = userAddress.slice(0,6)+'...'+userAddress.slice(-4);
+}
+
+async function buy() {
+  try{
+    if(!provider){ await connect(); if(!provider) return; }
+    const amountZ = Number(el('#amount').value || 0);
+    if(!amountZ || amountZ < CONFIG.PRESALE.minBuy){ 
+      return alert(`Min: ${CONFIG.PRESALE.minBuy} ZUZU`);
+    }
+    const net = await provider.getNetwork();
+    if(net.chainId !== 56){ alert(getText('wrongNet')); return; }
+
+    const price = currentStage().priceUsdt;
+    const totalUSDT = ethers.utils.parseUnits((amountZ*price).toFixed(18), 18);
+
+    const usdtAbi = [
+      "function balanceOf(address) view returns (uint256)",
+      "function allowance(address,address) view returns (uint256)",
+      "function approve(address spender,uint256 value) returns (bool)",
+      "function transfer(address to,uint256 value) returns (bool)"
+    ];
+    const usdt = new ethers.Contract(CONFIG.PRESALE.usdtAddress, usdtAbi, signer);
+
+    // YOL 1: Doğrudan transfer (cüzdandan receiver'a USDT)
+    const tx = await usdt.transfer(CONFIG.PRESALE.receiverBSC, totalUSDT);
+    await tx.wait();
+    alert(getText('buySuccess'));
+  }catch(err){
+    console.error(err);
+    alert(err.message || 'Error');
+  }
+}
+
+function initI18n() {
+  const y = new Date().getFullYear();
+  el('#y').textContent = y;
+
+  const langSel = el('#lang');
+  const saved = localStorage.getItem('lang') || 'tr';
+  langSel.value = saved;
+  applyLang(saved);
+
+  langSel.onchange = e => {
+    localStorage.setItem('lang', e.target.value);
+    applyLang(e.target.value);
+  };
+}
+function getText(key){
+  const lang = localStorage.getItem('lang') || 'tr';
+  const pack = CONFIG.I18N[lang] || CONFIG.I18N.en;
+  return (pack[key]) ? pack[key] : (CONFIG.I18N.en[key] || key);
+}
+function applyLang(lang) {
+  let pack = CONFIG.I18N[lang];
+  if(pack && pack.inherit) pack = { ...CONFIG.I18N[pack.inherit], ...pack };
+  if(!pack) pack = CONFIG.I18N.en;
+
+  document.querySelectorAll('[data-i18n]').forEach(n=>{
+    const k = n.getAttribute('data-i18n');
+    if(pack[k]) n.textContent = pack[k];
+  });
+}
+
+document.addEventListener('DOMContentLoaded', async ()=>{
+  await loadConfig();
+  el('#btnConnect').addEventListener('click', connect);
+  el('#btnBuy').addEventListener('click', buy);
+});
