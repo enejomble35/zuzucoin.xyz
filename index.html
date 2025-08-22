@@ -416,3 +416,182 @@ document.addEventListener('DOMContentLoaded', ()=>{
 </script>
 </body>
 </html>
+
+<!-- ========== ZUZU Realistic Heroes v10 – Tek Parça Patch ========== -->
+<script>
+(() => {
+  'use strict';
+
+  /* ----------------- 1) Manifest: 10 karakter ----------------- */
+  const ZR = [
+    { key:'hero',       name:'ZUZU Hero',       desc:'Neon zırh, göğüs kristali',     img:'assets/zuzu/realistic/hero.webp' },
+    { key:'sorceress',  name:'ZUZU Sorceress',  desc:'Karanlık büyü, mor aura',       img:'assets/zuzu/realistic/sorceress.webp' },
+    { key:'rogue',      name:'ZUZU Rogue',      desc:'Gizli bıçak, gölge',             img:'assets/zuzu/realistic/rogue.webp' },
+    { key:'warrior',    name:'ZUZU Warrior',    desc:'Kılıç parlaması',                img:'assets/zuzu/realistic/warrior.webp' },
+    { key:'ranger',     name:'ZUZU Ranger',     desc:'Vizör + kayış',                   img:'assets/zuzu/realistic/ranger.webp' },
+    { key:'hacker',     name:'ZUZU Hacker',     desc:'Siber yüz tarama',               img:'assets/zuzu/realistic/hacker.webp' },
+    { key:'scientist',  name:'ZUZU Scientist',  desc:'Devre hatları',                  img:'assets/zuzu/realistic/scientist.webp' },
+    { key:'titan',      name:'ZUZU Titan',      desc:'Kalkan + pulse',                 img:'assets/zuzu/realistic/titan.webp' },
+    { key:'berserker',  name:'ZUZU Berserker',  desc:'Kızgın aura',                    img:'assets/zuzu/realistic/berserker.webp' },
+    { key:'maiden',     name:'ZUZU Maiden',     desc:'Dramatik gözyaşı',               img:'assets/zuzu/realistic/maiden.webp' }
+  ];
+
+  /* ----------------- 2) Bölümü yerleştir ----------------- */
+  function injectSection(){
+    const holder = document.createElement('section');
+    holder.id = 'z-realistic';
+    holder.innerHTML = `
+      <div class="zreal-wrap container">
+        <h2 class="zreal-title">Gerçekçi ZUZU Karakterleri</h2>
+        <p class="zreal-sub">Tümü yüksek detay – Lottie mevcutsa otomatik animasyon uygulanır.</p>
+        <div class="zreal-grid" id="zrealGrid"></div>
+      </div>
+
+      <div class="zreal-lightbox" id="zrealLight">
+        <div class="zreal-backdrop" data-close></div>
+        <div class="zreal-dialog">
+          <button class="zreal-close" data-close>&times;</button>
+          <img id="zrealFull" alt="">
+          <div class="zreal-caption">
+            <div class="zreal-name" id="zrealName"></div>
+            <div class="zreal-desc" id="zrealDesc"></div>
+          </div>
+        </div>
+      </div>
+    `;
+    // Maskot Galerisi’nin altına ekle; yoksa en sona
+    const ref = document.querySelector('#zuzu-gallery') || document.querySelector('.zuzu-gallery') || document.body;
+    ref.parentNode.insertBefore(holder, ref.nextSibling);
+  }
+
+  /* ----------------- 3) CSS enjekte ----------------- */
+  function injectStyle(){
+    const css = `
+      #z-realistic{padding:32px 0;margin-top:24px;border-top:1px solid rgba(255,255,255,.06)}
+      .zreal-title{font:700 22px/1.2 system-ui,ui-sans-serif;color:#e7f6ff;margin:0 0 4px}
+      .zreal-sub{color:#9fb3c8;margin:0 0 16px}
+      .zreal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+      @media(min-width:720px){.zreal-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}}
+      .zcard{position:relative;border-radius:14px;background:#0c1218;box-shadow:0 0 0 1px rgba(255,255,255,.05) inset;overflow:hidden}
+      .zcard-media{position:relative;aspect-ratio:1/1;display:grid;place-items:center;background:radial-gradient(120px 120px at 50% 50%,rgba(0,255,200,.07),transparent 60%)}
+      .zcard-media img{width:100%;height:100%;object-fit:cover;filter:contrast(1.03) saturate(1.05)}
+      .zcard-glow{position:absolute;inset:0;pointer-events:none;opacity:.75}
+      .zcard-info{padding:10px 10px 12px}
+      .zname{font:700 14px/1.2 system-ui;color:#dff3ff;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .zdesc{font:500 12px/1.2 system-ui;color:#93a9bd;opacity:.9}
+      .zcard:hover{box-shadow:0 0 0 1px rgba(0,250,200,.25) inset,0 6px 22px rgba(0,250,200,.1)}
+      .zbtn{position:absolute;inset:0;border:none;background:transparent;cursor:pointer}
+      /* Lightbox */
+      .zreal-lightbox{position:fixed;inset:0;display:none}
+      .zreal-lightbox.active{display:block}
+      .zreal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px)}
+      .zreal-dialog{position:absolute;inset:40px 16px;display:grid;grid-template-rows:auto 1fr auto;gap:10px;background:#0b1117;border:1px solid rgba(255,255,255,.08);border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.35)}
+      @media(min-width:980px){.zreal-dialog{inset:80px 120px;grid-template-columns:minmax(0,1fr) 320px;grid-template-rows:1fr auto}}
+      .zreal-close{position:absolute;right:12px;top:10px;width:36px;height:36px;border-radius:10px;border:1px solid rgba(255,255,255,.12);background:#0e151c;color:#dfeefe;font:700 20px/1 system-ui}
+      .zreal-dialog img{width:100%;height:100%;object-fit:contain;background:#05090f;border-radius:12px}
+      .zreal-caption{padding:14px;color:#cfe3f6}
+      .zreal-name{font:800 18px/1.2 system-ui;margin-bottom:6px}
+      .zreal-desc{opacity:.9;font:500 13px/1.4 system-ui}
+    `;
+    const s = document.createElement('style'); s.textContent = css; document.head.appendChild(s);
+  }
+
+  /* ----------------- 4) Lottie helper ----------------- */
+  function ensureLottie(){
+    return new Promise(res=>{
+      if (window.lottie) return res(window.lottie);
+      const s = document.createElement('script');
+      s.src='https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js';
+      s.onload=()=>res(window.lottie);
+      document.head.appendChild(s);
+    });
+  }
+  async function tryLottie(container,key){
+    const tries = [
+      `assets/zuzu/lottie_realistic/${key}.json`,
+      `assets/zuzu/lottie/${key}.json`,
+      `zuzu/lottie_realistic/${key}.json`,
+      `zuzu/lottie/${key}.json`
+    ];
+    for (const url of tries){
+      try{
+        const r = await fetch(url,{cache:'no-store'});
+        if (r.ok){
+          const json = await r.json();
+          await ensureLottie();
+          const box = document.createElement('div');
+          box.className='zcard-glow';
+          container.appendChild(box);
+          window.lottie.loadAnimation({
+            container: box, renderer:'svg', loop:true, autoplay:true,
+            animationData: json, name:`real_${key}`
+          });
+          return true;
+        }
+      }catch(_){}
+    }
+    return false;
+  }
+
+  /* ----------------- 5) Grid kurulum ----------------- */
+  function buildGrid(){
+    const grid = document.getElementById('zrealGrid');
+    grid.innerHTML = ZR.map(c => `
+      <article class="zcard">
+        <div class="zcard-media" data-key="${c.key}">
+          <img loading="lazy" src="${c.img}" alt="${c.name}">
+        </div>
+        <div class="zcard-info">
+          <div class="zname">${c.name}</div>
+          <div class="zdesc">${c.desc}</div>
+        </div>
+        <button class="zbtn" data-show="${c.key}"></button>
+      </article>
+    `).join('');
+  }
+
+  /* ----------------- 6) Lightbox ----------------- */
+  function bindLightbox(){
+    const light = document.getElementById('zrealLight');
+    const full  = document.getElementById('zrealFull');
+    const nEl   = document.getElementById('zrealName');
+    const dEl   = document.getElementById('zrealDesc');
+
+    document.addEventListener('click', e=>{
+      const btn = e.target.closest('[data-show]');
+      if (btn){
+        const key = btn.dataset.show;
+        const it  = ZR.find(x=>x.key===key);
+        full.src  = it.img; full.alt = it.name;
+        nEl.textContent = it.name; dEl.textContent = it.desc;
+        light.classList.add('active');
+      }
+      if (e.target.hasAttribute('data-close')) light.classList.remove('active');
+    });
+    document.addEventListener('keydown', e=>{
+      if (e.key==='Escape') light.classList.remove('active');
+    });
+  }
+
+  /* ----------------- 7) Başlat ----------------- */
+  window.addEventListener('DOMContentLoaded', async () => {
+    injectStyle();
+    injectSection();
+    buildGrid();
+    bindLightbox();
+
+    // Lottie varsa otomatik bind
+    const media = document.querySelectorAll('.zcard-media');
+    for (const m of media){
+      const key = m.dataset.key;
+      const ok = await tryLottie(m, key); // varsa glow/breath overlay
+      if (!ok){
+        // yoksa soft CSS glow efekti
+        m.style.boxShadow = 'inset 0 0 40px rgba(0,255,200,.10)';
+      }
+    }
+    console.log('[ZUZU] Realistic section yüklendi ✔');
+  });
+})();
+</script>
+<!-- ============= /ZUZU Realistic Heroes v10 ============= -->
