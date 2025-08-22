@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ZUZU • Admin Panel</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="card" style="max-width:980px;margin:20px auto">
+  <h2>Admin Panel — On-chain Log</h2>
+  <p>Receiver adresine gelen <b>USDT (BEP20)</b> transferlerini BscScan API ile gösterir.</p>
+
+  <div class="row">
+    <input id="apiKey" placeholder="BscScan API Key (config.json yerine geçici)" />
+    <button class="btn" id="loadBtn">Yenile</button>
+  </div>
+
+  <div class="row">
+    <input id="addr" placeholder="Receiver Address" />
+    <input id="token" placeholder="USDT Contract" />
+  </div>
+
+  <table class="card" style="width:100%;border-collapse:collapse">
+    <thead><tr><th>Tarih</th><th>Tx</th><th>From</th><th>To</th><th>Miktar (USDT)</th></tr></thead>
+    <tbody id="tb"></tbody>
+  </table>
+</div>
+
+<script>
+let CFG;
+async function getCfg(){ if(!CFG) CFG = await (await fetch('config.json')).json(); return CFG; }
+
+async function fetchLogs(){
+  const cfg = await getCfg();
+  const apiKey = document.getElementById('apiKey').value || cfg.bscscan.apiKey;
+  const addr = document.getElementById('addr').value || cfg.receiver;
+  const token = document.getElementById('token').value || cfg.usdt.bep20;
+
+  const url = `${cfg.bscscan.base}?module=account&action=tokentx&contractaddress=${token}&address=${addr}&page=1&offset=50&sort=desc&apikey=${apiKey}`;
+  const r = await fetch(url); const j = await r.json();
+  const tb = document.getElementById('tb'); tb.innerHTML='';
+  if(j.status!=='1'){ tb.innerHTML = `<tr><td colspan="5">Kayıt bulunamadı / API kısıtlı</td></tr>`; return; }
+  j.result.forEach(tx=>{
+    const amt = (Number(tx.value) / (10 ** Number(tx.tokenDecimal))).toFixed(2);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${new Date(tx.timeStamp*1000).toLocaleString()}</td>
+                    <td><a href="https://bscscan.com/tx/${tx.hash}" target="_blank">${tx.hash.slice(0,10)}…</a></td>
+                    <td>${tx.from.slice(0,6)}…${tx.from.slice(-4)}</td>
+                    <td>${tx.to.slice(0,6)}…${tx.to.slice(-4)}</td>
+                    <td>${amt}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+document.getElementById('loadBtn').onclick = fetchLogs;
+window.addEventListener('load',async()=>{ const cfg=await getCfg(); document.getElementById('addr').value=cfg.receiver; document.getElementById('token').value=cfg.usdt.bep20;});
+</script>
+</body>
+</html>
