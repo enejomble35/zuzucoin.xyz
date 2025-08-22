@@ -1,225 +1,129 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ZUZU • AI-Powered Meme Intelligence</title>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ZUZU • V7 Power-Up</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-  <!-- Glow Layer -->
-  <div class="bg-glow"></div>
+  <!-- Arka plan parıltılı doku -->
+  <div class="bg-dots"></div>
 
-  <header class="nav">
+  <!-- HEADER -->
+  <header class="site-header">
     <div class="brand">
-      <!-- Mini logo dot -->
-      <span class="dot"></span>
-      <strong>ZUZU</strong>
-      <span class="tag">AI Meme Intelligence</span>
+      <div class="logo-dot"></div>
+      <span>ZUZU • AI Meme Intelligence</span>
     </div>
-
-    <div class="nav-actions">
-      <select id="langSelect" class="select"></select>
-      <button id="connectBtn" class="btn btn-outline" data-i18n="connect">Cüzdan Bağla</button>
-    </div>
+    <nav class="nav">
+      <a href="#hero">Anasayfa</a>
+      <a href="#parade">ZUZU Parade</a>
+      <a href="#arena">Arena</a>
+    </nav>
   </header>
 
-  <main class="container">
+  <!-- HERO: Büyük hareketli ZUZU Adam -->
+  <section id="hero" class="hero">
+    <h1 class="title">
+      <span class="neon-orange">YAPAY ZEKA</span> 
+      <span class="neon-green">ZUZU</span> 
+      <span class="neon-blue">ORDUSU</span>
+    </h1>
+    <p class="subtitle">İnsan vücutlu, neon zırhlı ZUZU adamlar — canlı, hareketli, glow efektli.</p>
 
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero-left">
-        <h1><span class="neon-orange" data-i18n="heroTitle1">YAPAY ZEKA</span> <span class="neon-green" data-i18n="heroTitle2">MEME AJANI</span></h1>
-        <p class="muted" data-i18n="tagline">
-          ZUZU; meme enerjisini <b>AI Meme Intelligence</b> ile birleştirir.
-          Presale fonları <b>non-custodial</b> hazinede tutulur.
-        </p>
+    <!-- Büyük tek ZUZU -->
+    <div id="zuzu-hero" class="zuzu-holder"></div>
 
-        <!-- exchanges -->
-        <div class="exchips" id="exchips">
-          <span class="chip">MEXC</span>
-          <span class="chip">Gate.io</span>
-          <span class="chip">BitMart</span>
-          <span class="chip">BingX</span>
-          <span class="chip">Bybit</span>
-          <span class="chip">KuCoin</span>
-          <span class="chip">OKX</span>
-        </div>
+    <div class="hero-note">
+      Bu bölüm sadece “maskot/animasyon” demodur. Presale/Staking/Top-to-Earn
+      gibi panelleri bir sonraki adımda yeni tasarıma entegre edeceğim.
+    </div>
+  </section>
 
-        <!-- countdown -->
-        <div class="countdown">
-          <div><b id="dd">00</b><span data-i18n="days">Gün</span></div>
-          <div><b id="hh">00</b><span data-i18n="hours">Saat</span></div>
-          <div><b id="mm">00</b><span data-i18n="mins">Dakika</span></div>
-          <div><b id="ss">00</b><span data-i18n="secs">Saniye</span></div>
-        </div>
+  <!-- PARADE: Farklı renklerde çoklu ZUZU -->
+  <section id="parade" class="parade">
+    <h2>Parade • Mini ZUZU Adamlar</h2>
+    <div class="parade-grid" id="zuzu-parade-grid"></div>
+  </section>
 
-        <!-- referral -->
-        <div class="ref">
-          <span class="link-icon">🔗</span>
-          <span class="muted" data-i18n="yourRef">Senin referans linkin:</span>
-          <a id="refLink" class="ref-a" href="#">#</a>
-          <button id="copyRef" class="btn btn-ghost" data-i18n="copy">Kopyala</button>
-        </div>
-      </div>
+  <!-- ARENA: Sürekli kayan ZUZU geçidi -->
+  <section id="arena" class="arena">
+    <h2>Arena • Sonsuz Geçit</h2>
+    <div class="marquee">
+      <div class="marquee-track" id="zuzu-marquee-track"></div>
+    </div>
+  </section>
 
-      <!-- Animated Mascot -->
-      <div class="hero-right">
-        <div class="mascot" id="mascot">
-          <div class="face">
-            <div class="horn horn-left"></div>
-            <div class="horn horn-right"></div>
-            <div class="eye eye-left"></div>
-            <div class="eye eye-right"></div>
-            <div class="mouth"></div>
-          </div>
-          <div class="halo"></div>
-        </div>
-      </div>
-    </section>
+  <!-- === ZUZU TEMPLATE (SVG) ===
+       İnsan vücutlu, ZUZU kafalı; kollar-bacaklar swing animasyonuna uygun sınıflandırıldı. -->
+  <template id="zuzu-template">
+    <svg class="zuzu" viewBox="0 0 220 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <!-- Neon dış parıltı -->
+      <defs>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="4.5" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
 
-    <!-- PRESALE -->
-    <section class="card presale">
-      <h2 class="title" data-i18n="buyTitle">$ZUZU Token Satın Al – Şimdi Ön Satışta!</h2>
+      <!-- GÖVDE -->
+      <g class="body" filter="url(#glow)">
+        <!-- Torso -->
+        <rect x="75" y="110" rx="20" ry="20" width="70" height="90" fill="#0f1115" stroke="var(--accent)" stroke-width="2"/>
+        <!-- Omuz zırhı -->
+        <ellipse cx="110" cy="115" rx="45" ry="18" fill="rgba(255,255,255,0.04)" stroke="var(--accent)" stroke-width="1.5"/>
+        <!-- Bel kemeri -->
+        <rect x="80" y="185" width="60" height="12" rx="6" fill="rgba(255,255,255,0.07)"/>
+      </g>
 
-      <div class="presale-grid">
-        <div class="left">
-          <label data-i18n="stage">Aşama</label>
-          <select id="stage" class="select"></select>
+      <!-- KAFA / ZUZU -->
+      <g class="head float">
+        <circle cx="110" cy="75" r="42" fill="#0a0b10" stroke="var(--accent)" stroke-width="2"/>
+        <!-- Boyn halka -->
+        <ellipse cx="110" cy="105" rx="26" ry="8" fill="rgba(255,255,255,0.05)" stroke="var(--accent)" stroke-width="1"/>
+        <!-- Horns -->
+        <polygon points="90,35 100,10 110,35" fill="var(--accent)"/>
+        <polygon points="130,35 140,10 150,35" fill="var(--accent)"/>
+        <!-- Eyes (sabit, mimik yok) -->
+        <circle cx="95" cy="70" r="6" fill="var(--accent)"/>
+        <circle cx="125" cy="70" r="6" fill="var(--accent)"/>
+        <!-- Ağız (sabit çizgi) -->
+        <rect x="92" y="86" width="36" height="6" rx="3" fill="var(--accent-orange)"/>
+      </g>
 
-          <div class="chips">
-            <button class="mini" data-amt="100000">100k</button>
-            <button class="mini" data-amt="250000">250k</button>
-            <button class="mini" data-amt="1000000">1M</button>
-          </div>
+      <!-- KOLLAR -->
+      <g class="arms">
+        <!-- Sol kol -->
+        <g class="arm arm-left">
+          <rect x="58" y="120" width="16" height="58" rx="8" fill="#0f1115" stroke="var(--accent)" stroke-width="2"/>
+          <circle cx="66" cy="182" r="9" fill="var(--accent)"/>
+        </g>
+        <!-- Sağ kol -->
+        <g class="arm arm-right">
+          <rect x="146" y="120" width="16" height="58" rx="8" fill="#0f1115" stroke="var(--accent)" stroke-width="2"/>
+          <circle cx="154" cy="182" r="9" fill="var(--accent)"/>
+        </g>
+      </g>
 
-          <label data-i18n="howMany">Kaç ZUZU?</label>
-          <input id="qty" class="input" type="number" min="1" placeholder="100000">
-
-          <div class="price-line">
-            <span data-i18n="price">Fiyat:</span> <b id="unitPrice">0.000000</b> USDT / ZUZU
-            <span class="spacer"></span>
-            <span data-i18n="total">Toplam:</span> <b id="totalUSDT">0.000000</b> USDT
-          </div>
-
-          <div class="buy-btns">
-            <button id="buyCard" class="btn btn-green" data-i18n="buyCard">Kart ile Satın Al</button>
-            <button id="buyCrypto" class="btn btn-cyan" data-i18n="buyCrypto">Kripto ile Satın Al (USDT/BEP20)</button>
-          </div>
-
-          <p class="hint" data-i18n="hint">
-            Ödeme USDT (BEP20) ile yapılır. Gas için az miktar BNB gerekir.
-          </p>
-        </div>
-
-        <div class="right">
-          <div class="receiver card-mini">
-            <h3 data-i18n="receiver">Receiver</h3>
-            <div class="addr">
-              <input id="receiver" class="input mono" readonly>
-              <button id="copyAddr" class="btn btn-ghost" data-i18n="copy">Kopyala</button>
-            </div>
-            <canvas id="qr" width="180" height="180"></canvas>
-          </div>
-
-          <div class="raised card-mini">
-            <h3 data-i18n="raised">Toplanan</h3>
-            <div class="bar"><div id="barInner"></div></div>
-            <div class="mono"><span id="raisedTxt">$0</span> / $<span id="targetTxt">0</span></div>
-          </div>
-
-          <div class="audit card-mini">
-            <h3>Mini Audit</h3>
-            <ul>
-              <li>✔ <span data-i18n="aud1">Sözleşme: USDT (BEP20)</span></li>
-              <li>✔ <span data-i18n="aud2">Transfer → receiver</span></li>
-              <li>✔ <span data-i18n="aud3">Non-custodial, direkt kasaya</span></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAP & STAKE -->
-    <section class="twogrid">
-      <div class="card">
-        <h2 data-i18n="tapTitle">Tap-to-Earn</h2>
-        <p class="muted" data-i18n="tapDesc">Dokundukça puan kazan. Referans varsa x1.2 çarpan eklenir.</p>
-        <div class="tap-box">
-          <div class="row">
-            <div><b data-i18n="score">Puan:</b> <span id="tapScore">0</span></div>
-            <div><b data-i18n="mult">Çarpan:</b> <span id="tapMult">1.0x</span></div>
-          </div>
-          <button id="tapBtn" class="btn btn-orange big" data-i18n="tap">TAP!</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2 data-i18n="stakeTitle">Staking (Demo)</h2>
-        <div class="stake">
-          <select id="stakeDays" class="select">
-            <option value="30">30 gün — ~12% APY</option>
-            <option value="60">60 gün — ~22% APY</option>
-            <option value="90">90 gün — ~36% APY</option>
-          </select>
-          <input id="stakeAmt" class="input" type="number" placeholder="50000">
-          <button id="stakeBtn" class="btn btn-outline" data-i18n="stake">Stake Et (Demo)</button>
-          <div class="muted" id="stakeInfo"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- FEATURES -->
-    <section class="features">
-      <div class="card-mini">
-        <h3>AI Meme Brain</h3>
-        <p>ZUZU, topluluk içgörülerini tarayıp hype dalgalarını yakalar.</p>
-      </div>
-      <div class="card-mini">
-        <h3>Ultra Düşük Ücret</h3>
-        <p>BEP20 USDT – anında hazineye, minimum slippage.</p>
-      </div>
-      <div class="card-mini">
-        <h3>Tap-to-Earn & Oyun</h3>
-        <p>Oyunlaştırma ve referans sistemi ile paylaşımı ödüllendirir.</p>
-      </div>
-    </section>
-
-    <!-- TOKENOMICS + ROADMAP -->
-    <section class="twogrid">
-      <div class="card">
-        <h2 data-i18n="tokenomics">Tokenomik</h2>
-        <div class="tokenomics">
-          <div class="pie" style="--p1:45;--p2:25;--p3:15;--p4:10;--p5:5"></div>
-          <ul class="legend">
-            <li><span class="c1"></span> Presale 45%</li>
-            <li><span class="c2"></span> Liquidity 25%</li>
-            <li><span class="c3"></span> Marketing 15%</li>
-            <li><span class="c4"></span> Team 10%</li>
-            <li><span class="c5"></span> Airdrop 5%</li>
-          </ul>
-        </div>
-        <div class="mono info">Chain: BSC (BEP20) • Symbol: ZUZU • Decimals: 18</div>
-      </div>
-
-      <div class="card">
-        <h2 data-i18n="roadmap">Yol Haritası</h2>
-        <ol class="road">
-          <li>Phase 1 — Presale + Topluluk</li>
-          <li>Phase 2 — CEX Başvuruları</li>
-          <li>Phase 3 — Tap-to-Earn + AI Bot</li>
-        </ol>
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="footer">
-    © 2025 ZUZU • AI-Powered Meme Intelligence
-  </footer>
+      <!-- BACAKLAR -->
+      <g class="legs">
+        <!-- Sol bacak -->
+        <g class="leg leg-left">
+          <rect x="88" y="200" width="16" height="66" rx="6" fill="#0f1115" stroke="var(--accent)" stroke-width="2"/>
+          <rect x="82" y="262" width="28" height="8" rx="4" fill="var(--accent)"/>
+        </g>
+        <!-- Sağ bacak -->
+        <g class="leg leg-right">
+          <rect x="116" y="200" width="16" height="66" rx="6" fill="#0f1115" stroke="var(--accent)" stroke-width="2"/>
+          <rect x="110" y="262" width="28" height="8" rx="4" fill="var(--accent)"/>
+        </g>
+      </g>
+    </svg>
+  </template>
 
   <script src="script.js"></script>
 </body>
