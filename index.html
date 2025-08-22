@@ -1,127 +1,418 @@
-<!-- Üst menüde -->
-<div class="btn" id="connectBtn">Cüzdan Bağla</div>
-
-<!-- Satın alma panelinde (buton satırı) -->
-<div class="row" style="margin-top:12px">
-  <div class="btn btn-primary">Kart ile Satın Al (yakında)</div>
-  <div class="btn" id="buyUsdtBtn">USDT (BEP20) ile Satın Al</div>
-</div>
 <!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>ZUZU • AI Meme Intelligence</title>
-  <link rel="stylesheet" href="./style.css?v=9"/>
-  <meta name="description" content="ZUZU — AI Meme Intelligence presale, maskot galerisi, tap-to-earn, staking (demo)."/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ZUZU • AI Meme Intelligence – Ön Satış</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+<!-- ====== STYLES (Tek Parça) ====== -->
+<style>
+:root{
+  --bg:#0e141a;--panel:#0f1923;--muted:#8191a3;--txt:#e6eef7;
+  --pri:#64ffda;--acc:#00ffa3;--warn:#ffb86c;--danger:#ff5b5b;
+  --btn:#1b2a38;--btn2:#12303a;--glow:0 0 0 1px rgba(100,255,218,.18),0 0 22px rgba(100,255,218,.18);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:radial-gradient(80% 60% at 50% -10%,#10212e 0%,#0e141a 45%,#0e141a 100%);color:var(--txt);font:16px/1.55 'Inter',system-ui,Segoe UI,Roboto}
+a{color:var(--pri);text-decoration:none}
+.container{max-width:1100px;margin:0 auto;padding:20px}
+
+.nav{position:sticky;top:0;z-index:12;background:rgba(10,14,18,.7);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.06)}
+.nav .row{display:flex;gap:14px;align-items:center;justify-content:space-between;padding:10px 20px}
+.brand{display:flex;gap:10px;align-items:center;font-weight:800;letter-spacing:.4px}
+.logoDot{width:12px;height:12px;border-radius:50%;background:var(--pri);box-shadow:0 0 16px var(--pri)}
+.badges{display:flex;gap:8px;flex-wrap:wrap}
+.badge{padding:6px 10px;border-radius:100px;background:#0d1620;border:1px solid rgba(255,255,255,.06);color:#a8b6c8;font-size:12px}
+.btn{cursor:pointer;user-select:none;background:linear-gradient(180deg,#143b3b 0%,#0f2626 100%);border:1px solid rgba(100,255,218,.35);
+  color:#dffef8;border-radius:10px;padding:10px 14px;transition:.15s box-shadow,.15s transform}
+.btn:hover{box-shadow:var(--glow)}
+.btn.primary{background:linear-gradient(180deg,#25c9aa,#0f6a59);border-color:#26e3bf}
+.grid{display:grid;gap:16px}
+.grid.cols-2{grid-template-columns:1fr 1fr}
+.grid.cols-3{grid-template-columns:repeat(3,1fr)}
+.grid.cols-4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:900px){.grid.cols-2,.grid.cols-3,.grid.cols-4{grid-template-columns:1fr}}
+
+.panel{background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:16px}
+.h{margin:6px 0 10px 0}
+.h .title{font-weight:800;font-size:20px;letter-spacing:.2px}
+.h .desc{color:var(--muted);font-size:14px}
+
+.kicker{font-weight:800;font-size:28px}
+.kicker .z1{color:#ff7aa5}
+.kicker .z2{color:#64ffda}
+.kicker .z3{color:#9c7cff}
+.sub{color:#b1c3d7}
+
+.timer{display:flex;gap:10px;margin:10px 0 18px}
+.timer .t{background:#0b1117;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:8px 10px;min-width:62px;text-align:center}
+.timer .t b{display:block;font-size:18px}
+.timer .t small{color:#96a6bb;font-size:12px}
+
+.input,.select{width:100%;background:#0b1219;border:1px solid rgba(255,255,255,.08);border-radius:12px;color:#e9f5ff;padding:12px 12px}
+.row{display:flex;gap:10px;align-items:center}
+.row .btn{flex:1;text-align:center}
+.quick{display:flex;gap:8px;margin:10px 0 8px}
+.quick .chip{cursor:pointer;background:#0b141b;border:1px solid rgba(255,255,255,.08);color:#a9bed2;padding:7px 10px;border-radius:8px}
+.copy{display:inline-flex;gap:8px;align-items:center}
+
+.audit li{margin:6px 0;color:#a7bacf}
+.muted{color:#8ea2b7}
+.success{color:#4de7c9}
+.warn{color:#ffd28c}
+
+.animCard{display:flex;gap:14px;align-items:center;background:#0e1721;border:1px solid rgba(255,255,255,.06);
+  padding:12px;border-radius:14px}
+.animThumb{width:52px;height:52px;border-radius:12px;background:#0a131b;border:1px solid rgba(255,255,255,.08);overflow:hidden}
+.animInfo b{display:block}
+.animInfo small{color:#8ea2b7}
+
+.tag{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;background:#0b1620;border:1px solid rgba(255,255,255,.06);color:#8fb1c2;font-size:12px}
+
+.footer{margin:28px 0 18px;color:#7f93a8;text-align:center}
+.small{font-size:13px;color:#93a7ba}
+.sep{height:1px;background:linear-gradient(90deg,transparent,#173340,transparent);margin:12px 0}
+</style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="nav">
-      <div class="logo"><span class="badge">ZUZU</span><span>AI Meme Intelligence</span></div>
-      <div class="row" style="margin-left:auto;gap:10px">
-        <span class="tag">MEXC</span><span class="tag">Gate.io</span><span class="tag">BitMart</span>
-        <span class="tag">Bybit</span><span class="tag">KuCoin</span><span class="tag">OKX</span>
-        <div class="btn">TR</div>
-        <div class="btn btn-primary">Cüzdan Bağla</div>
+
+<!-- ====== NAV ====== -->
+<div class="nav">
+  <div class="row">
+    <div class="brand"><span class="logoDot"></span> ZUZU • <span class="small">AI Meme Intelligence</span></div>
+    <div class="badges">
+      <div class="badge">MEXC</div><div class="badge">Gate.io</div><div class="badge">BitMart</div>
+      <div class="badge">Bybit</div><div class="badge">KuCoin</div><div class="badge">OKX</div>
+    </div>
+    <div class="btn" id="connectBtn">Cüzdan Bağla</div>
+  </div>
+</div>
+
+<div class="container">
+  <!-- ====== HERO ====== -->
+  <div class="grid cols-2">
+    <div class="panel">
+      <div class="kicker">
+        YAPAY ZEKA <span class="z1">ZU</span><span class="z2">ZU</span> ORDUSU
+      </div>
+      <div class="sub">
+        ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> katmanıyla birleştirir.
+        Presale fonları <b>non–custodial</b> hazinede tutulur. Paylaş, tap–to–earn ile puan topla, stake ile daha fazla kazanç hedefle.
+      </div>
+
+      <div class="timer" id="timer">
+        <div class="t"><b id="d">39</b><small>Gün</small></div>
+        <div class="t"><b id="h">23</b><small>Saat</small></div>
+        <div class="t"><b id="m">59</b><small>Dakika</small></div>
+        <div class="t"><b id="s">59</b><small>Saniye</small></div>
+      </div>
+
+      <div class="small">
+        Referans linkin: <span id="refLink" class="copy"></span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="h"><div class="title">$ZUZU Token Satın Al – Şimdi Ön Satışta!</div></div>
+
+      <div class="select" id="stageSel">
+        Stage 1 — 0.002000 USDT / ZUZU
+      </div>
+
+      <div class="quick">
+        <div class="chip" data-q="100000">100k</div>
+        <div class="chip" data-q="250000">250k</div>
+        <div class="chip" data-q="1000000">1M</div>
+      </div>
+
+      <div class="row">
+        <input id="amountInp" class="input" type="number" value="100000" placeholder="Kaç ZUZU?">
+      </div>
+
+      <div class="row" style="margin:8px 0 4px">
+        <div class="tag">Fiyat: <b id="priceTag" style="margin-left:6px">0.00</b> USDT / ZUZU</div>
+        <div class="tag">Toplam: <b id="totalTag" style="margin-left:6px">0.00</b> USDT</div>
+      </div>
+
+      <div class="row" style="margin-top:8px">
+        <div class="btn">Kart ile Satın Al (yakında)</div>
+        <div class="btn primary" id="buyUsdtBtn">USDT (BEP20) ile Satın Al</div>
       </div>
     </div>
   </div>
 
-  <div class="container">
-    <div class="kicker">YAPAY ZEKA <span class="c-green">ZUZU</span> ORDUSU</div>
-    <h1 class="hero-title">Memetik enerji + <span class="c-orange">AI Meme Intelligence</span> ile paylaşıp kazan, stake ile katla.</h1>
-    <p class="muted">Presale fonları <b>non-custodial</b> hazinede tutulur. Paylaş, tap-to-earn ile puan topla, stake ile daha fazla kazanç hedefle.</p>
-
-    <div class="grid grid-2">
-      <div class="panel">
-        <div class="h"><b>$ZUZU Token Satın Al</b> – Şimdi Ön Satışta!</div>
-        <div class="row">
-          <select class="select" id="stageSel">
-            <option>Stage 1 — 0.002000 USDT / ZUZU</option>
-            <option>Stage 2 — 0.002500 USDT / ZUZU</option>
-            <option>Stage 3 — 0.003000 USDT / ZUZU</option>
-          </select>
-          <div class="tag js-preset" data-v="100000">100k</div>
-          <div class="tag js-preset" data-v="250000">250k</div>
-          <div class="tag js-preset" data-v="1000000">1M</div>
-        </div>
-        <div class="row" style="margin-top:10px">
-          <input class="input" id="amountInp" value="100000" placeholder="Kaç ZUZU?"/>
-        </div>
-        <div class="row" style="margin-top:10px">
-          <div class="tag">Fiyat: <b id="priceLbl">0.002000</b> USDT / ZUZU</div>
-          <div class="tag">Toplam: <b id="totalLbl">200.000000</b> USDT</div>
-        </div>
-        <div class="row" style="margin-top:12px">
-          <div class="btn btn-primary">Kart ile Satın Al (yakında)</div>
-          <div class="btn">USDT (BEP20) ile Satın Al</div>
-        </div>
-        <p class="muted" style="margin-top:8px">Ödeme USDT (BEP20) ile doğrudan hazineye gider. Az miktar BNB gerekir.</p>
+  <div class="grid cols-2" style="margin-top:16px">
+    <div class="panel">
+      <div class="h"><div class="title">Receiver</div></div>
+      <div class="row">
+        <input id="receiverInp" class="input" readonly>
+        <div class="btn" id="copyRc">Kopyala</div>
       </div>
-
-      <div class="panel">
-        <div class="h"><b>Receiver</b></div>
-        <div class="row">
-          <input class="input" id="rcv" value="">
-          <div class="btn" id="copyBtn">Kopyala</div>
+      <div class="sep"></div>
+      <div class="grid cols-2">
+        <div class="panel" style="background:#0b131b">
+          <div class="h"><div class="title">Mini Audit</div></div>
+          <ul class="audit">
+            <li>✔ Sözleşme: <b>USDT (BEP20)</b></li>
+            <li>✔ Transfer → <b>receiver</b></li>
+            <li>✔ Non–custodial, direkt kasaya</li>
+          </ul>
         </div>
-        <div class="row" style="margin-top:10px;align-items:flex-start">
-          <div class="qr" id="qr">QR</div>
-          <div style="flex:1">
-            <div class="auditItem"><b>Mini Audit</b><div class="line"></div>
-              <div class="small">✔ Sözleşme: USDT (BEP20)</div>
-              <div class="small">✔ Transfer → receiver</div>
-              <div class="small">✔ Non-custodial, direkt kasaya</div>
-            </div>
-            <div class="auditItem" style="margin-top:8px"><b>Şeffaflık</b><div class="line"></div>
-              <div class="small">Satın alımlar on-chain receiver adresine kaydolur. Admin Panel üzerinden son işlemleri görebilirsin.</div>
-            </div>
-            <div class="auditItem" style="margin-top:8px"><b>Toplanan</b><div class="line"></div>
-              <div class="small" id="raised">$0 / $300,000</div>
-              <div class="small muted">(BscScan ile yaklaşık)</div>
-            </div>
-          </div>
+        <div class="panel" style="background:#0b131b">
+          <div class="h"><div class="title">Şeffaflık</div></div>
+          <div class="muted">Satın alımlar on-chain receiver adresine kaydolur. Admin Panel üzerinden son işlemleri görebilirsin.</div>
         </div>
       </div>
+      <div class="sep"></div>
+      <div class="small">Toplanan: <b id="raised">$0 / $300,000</b></div>
     </div>
 
-    <h3 style="margin:24px 0 10px">ZUZU Maskot Galerisi</h3>
-    <div class="gallery" id="gallery"></div>
-
-    <div class="grid grid-3" style="margin-top:18px">
-      <div class="panel"><div class="h">Tokenomi</div>
-        <div class="badges">
-          <span class="tag">Presale: 45%</span><span class="tag">Liquidity: 25%</span>
-          <span class="tag">Marketing: 15%</span><span class="tag">Team: 10%</span>
-          <span class="tag">Airdrop: 5%</span><span class="tag">Chain: BSC (BEP20)</span>
-        </div>
-      </div>
-      <div class="panel"><div class="h">Phase 1</div><div class="small">Presale + Topluluk + Maskot Setleri</div></div>
-      <div class="panel"><div class="h">Phase 2</div><div class="small">CEX Başvuruları, Pazarlama, Partnerlikler</div></div>
-    </div>
-
-    <div class="grid grid-3" style="margin-top:8px">
-      <div class="panel"><div class="h">Phase 3</div><div class="small">Tap-to-Earn + Staking + AI Meme Intelligence</div></div>
-      <div class="panel"><div class="h">Tap-to-Earn</div>
-        <div class="small">Dokundukça puan kazan. Referans varsa x1.2 çarpan eklenir.</div>
-        <div class="btn" style="margin-top:8px" id="tapBtn">TAP!</div>
-        <div class="small" id="tapStat">Puan: 0 • Çarpan: 1.0x</div>
-      </div>
-      <div class="panel"><div class="h">Staking (Demo)</div>
-        <div class="row">
-          <select class="select" id="stkDur"><option>30 gün</option><option>60 gün</option><option>90 gün</option></select>
-          <input class="input" id="stkAmt" value="50000"/>
-        </div>
-        <div class="small" id="apy">Tahmini APY: %12</div>
-        <div class="small" id="earn">Beklenen kazanç: 493.15 ZUZU</div>
-        <div class="btn" style="margin-top:6px">Stake Et (Demo)</div>
+    <div class="panel">
+      <div class="h"><div class="title">ZUZU Maskot Galerisi</div><div class="desc">Hepsi canlı Lottie animasyonlarıdır.</div></div>
+      <div class="grid cols-2" id="gallery">
+        <!-- Dinamik doldurulacak -->
       </div>
     </div>
-
-    <div class="footer">© 2025 ZUZU • AI-Powered Meme Intelligence</div>
   </div>
 
-  <script src="./script.js?v=9" defer></script>
+  <div class="grid cols-3" style="margin-top:16px">
+    <div class="panel">
+      <div class="h"><div class="title">Tokenomi</div></div>
+      <div class="row" style="flex-wrap:wrap;gap:8px">
+        <div class="tag">Presale: 45%</div>
+        <div class="tag">Liquidity: 25%</div>
+        <div class="tag">Marketing: 15%</div>
+        <div class="tag">Team: 10%</div>
+        <div class="tag">Airdrop: 5%</div>
+        <div class="tag">Chain: BSC (BEP20)</div>
+        <div class="tag">Symbol: ZUZU</div>
+        <div class="tag">Decimals: 18</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="h"><div class="title">Phase 1</div></div>
+      <div class="muted">Presale + Topluluk + Maskot Setleri</div>
+    </div>
+    <div class="panel">
+      <div class="h"><div class="title">Phase 2</div></div>
+      <div class="muted">CEX Başvuruları, Pazarlama, Partnerlikler</div>
+    </div>
+  </div>
+
+  <div class="footer">© 2025 ZUZU • AI-Powered Meme Intelligence</div>
+</div>
+
+<!-- ====== SCRIPTS (Tek Parça) ====== -->
+<script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
+<script>
+/* =========================
+   CONFIG
+   ========================= */
+const CFG = {
+  // RECEIVER adresin:
+  receiver: "0x69014a76eE25c8B73dAe9044dfcAd7356fe74bC3",
+  // BSC USDT sözleşmesi:
+  usdtContract: "0x55d398326f99059fF775485246999027B3197955",
+  // Presale hedefi:
+  hardCap: 300000,
+  // Lottie json yolları:
+  lotties: {
+    logo:       "assets/zuzu/lottie/zuzu_logo.json",
+    hero:       "assets/zuzu/lottie/zuzu_hero.json",
+    hacker:     "assets/zuzu/lottie/zuzu_hacker.json",
+    warrior:    "assets/zuzu/lottie/zuzu_warrior.json",
+    sorceress:  "assets/zuzu/lottie/zuzu_sorceress.json",
+    ranger:     "assets/zuzu/lottie/zuzu_ranger.json",
+    berserker:  "assets/zuzu/lottie/zuzu_berserker.json",
+    scientist:  "assets/zuzu/lottie/zuzu_scientist.json",
+    rogue:      "assets/zuzu/lottie/zuzu_rogue.json",
+    titan:      "assets/zuzu/lottie/zuzu_titan.json"
+  }
+};
+
+// Basit fiyat fonksiyonu
+function price(){ return 0.002; }
+
+/* =========================
+   UI Helpers
+   ========================= */
+function $(q){return document.querySelector(q)}
+function el(tag,cls){const n=document.createElement(tag); if(cls) n.className=cls; return n;}
+function fmt(x){return Number(x).toLocaleString('en-US',{maximumFractionDigits:6})}
+
+function buildRef(){
+  const url = new URL(window.location.href);
+  let ref = url.searchParams.get('ref') || localStorage.getItem('zref') || 'share-this-link';
+  localStorage.setItem('zref', ref);
+  const a = document.createElement('a');
+  a.href = `${location.origin}${location.pathname}?ref=${ref}`;
+  a.textContent = a.href;
+  $('#refLink').appendChild(a);
+}
+
+function timerInit(){
+  const tEnd = Date.now() + 39*24*3600*1000 + 23*3600*1000 + 59*60*1000; // demo
+  setInterval(()=>{
+    let diff = Math.max(0, tEnd - Date.now());
+    let d = Math.floor(diff/864e5); diff-=d*864e5;
+    let h = Math.floor(diff/36e5);  diff-=h*36e5;
+    let m = Math.floor(diff/6e4);   diff-=m*6e4;
+    let s = Math.floor(diff/1e3);
+    $('#d').textContent=d; $('#h').textContent=h; $('#m').textContent=m; $('#s').textContent=s;
+  },1000);
+}
+
+function bindPresale(){
+  const amountInp = $('#amountInp');
+  const priceTag  = $('#priceTag');
+  const totalTag  = $('#totalTag');
+  const quick = document.querySelectorAll('.chip');
+
+  function recalc(){
+    const p = price();
+    priceTag.textContent = fmt(p);
+    const q = Number(amountInp.value||0);
+    totalTag.textContent = fmt(q*p);
+  }
+  amountInp.addEventListener('input', recalc);
+  quick.forEach(c=>c.addEventListener('click',()=>{
+    amountInp.value = c.dataset.q; recalc();
+  }));
+  recalc();
+}
+
+/* =========================
+   LOTTIE Gallery
+   ========================= */
+const MASKS = [
+  ['ZUZU Logo',      CFG.lotties.logo,      'Temel maskot – glow'],
+  ['ZUZU Hero',      CFG.lotties.hero,      'Neon zırh + hatlar'],
+  ['ZUZU Hacker',    CFG.lotties.hacker,    'Yüz tarama + sinyal'],
+  ['ZUZU Warrior',   CFG.lotties.warrior,   'Kılıç parlaması'],
+  ['ZUZU Sorceress', CFG.lotties.sorceress, 'Büyü küresi'],
+  ['ZUZU Ranger',    CFG.lotties.ranger,    'Vizör + kayaış'],
+  ['ZUZU Berserker', CFG.lotties.berserker, 'Kızgın aura'],
+  ['ZUZU Scientist', CFG.lotties.scientist, 'Devre hatları'],
+  ['ZUZU Rogue',     CFG.lotties.rogue,     'Gizli bıçak'],
+  ['ZUZU Titan',     CFG.lotties.titan,     'Kalkan + pulse'],
+];
+
+function buildGallery(){
+  const wrap = $('#gallery');
+  MASKS.forEach((m,i)=>{
+    const card = el('div','animCard');
+    const thumb = el('div','animThumb'); thumb.id = 'anim-'+i;
+    const info = el('div','animInfo');
+    info.innerHTML = `<b>${m[0]}</b><small>${m[2]}</small>`;
+    card.append(thumb,info);
+    wrap.appendChild(card);
+
+    // Lottie animasyonu
+    try{
+      lottie.loadAnimation({
+        container: thumb,
+        renderer: 'svg',
+        loop: true, autoplay: true,
+        path: m[1]
+      });
+    }catch(e){ console.warn('Lottie load fail', m[0]); }
+  });
+}
+
+/* =========================
+   Wallet + USDT transfer (ethers)
+   ========================= */
+async function loadEthers() {
+  if (window.ethers) return window.ethers;
+  await new Promise((res) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js';
+    s.onload = res; document.head.appendChild(s);
+  });
+  return window.ethers;
+}
+let provider, signer, userAddr;
+
+async function connectWallet() {
+  const ethers = await loadEthers();
+  if (!window.ethereum) { alert('MetaMask / Wallet eklentisi bulunamadı.'); return; }
+
+  provider = new ethers.BrowserProvider(window.ethereum);
+  const chain = await provider.getNetwork();
+  if (Number(chain.chainId) !== 56) {
+    try {
+      await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x38' }] });
+    } catch (e) {
+      await window.ethereum.request({ method: 'wallet_addEthereumChain', params: [{
+        chainId:'0x38', chainName:'BNB Smart Chain',
+        nativeCurrency:{name:'BNB',symbol:'BNB',decimals:18},
+        rpcUrls:['https://bsc-dataseed.binance.org/'], blockExplorerUrls:['https://bscscan.com']
+      }]});
+    }
+  }
+  signer = await provider.getSigner();
+  userAddr = await signer.getAddress();
+  $('#connectBtn').textContent = userAddr.slice(0,6)+'...'+userAddr.slice(-4);
+}
+
+const ERC20_ABI = [
+  "function decimals() view returns (uint8)",
+  "function balanceOf(address) view returns (uint256)",
+  "function transfer(address to, uint256 value) returns (bool)"
+];
+
+async function buyWithUSDT(){
+  try{
+    const ethers = await loadEthers();
+    if (!signer) { await connectWallet(); if (!signer) return; }
+
+    const zuzu = Number($('#amountInp').value||0);
+    const usdtAmount = zuzu * price();
+    if (!usdtAmount || usdtAmount<=0){ alert('Geçerli bir miktar gir.'); return; }
+
+    const usdt = new ethers.Contract(CFG.usdtContract, ERC20_ABI, signer);
+    const decimals = await usdt.decimals();
+    const value = ethers.parseUnits(usdtAmount.toString(), decimals);
+
+    const bal = await usdt.balanceOf(userAddr);
+    if (bal < value){ alert('USDT bakiyesi yetersiz.'); return; }
+
+    $('#buyUsdtBtn').textContent = 'Gönderiliyor...';
+    const tx = await usdt.transfer(CFG.receiver, value);
+    await tx.wait();
+    $('#buyUsdtBtn').textContent = 'USDT (BEP20) ile Satın Al';
+    alert('Satın alma tamam! Tx: '+tx.hash);
+  }catch(e){
+    console.error(e);
+    $('#buyUsdtBtn').textContent = 'USDT (BEP20) ile Satın Al';
+    alert('İşlem iptal/başarısız.');
+  }
+}
+
+/* =========================
+   INIT
+   ========================= */
+document.addEventListener('DOMContentLoaded', ()=>{
+  // receiver
+  $('#receiverInp').value = CFG.receiver;
+
+  // ref link
+  buildRef();
+  // sayaç
+  timerInit();
+  // presale kalkülator
+  bindPresale();
+  // galeri
+  buildGallery();
+
+  // buttons
+  $('#copyRc').addEventListener('click',()=>{ navigator.clipboard.writeText(CFG.receiver); });
+  $('#connectBtn').addEventListener('click', connectWallet);
+  $('#buyUsdtBtn').addEventListener('click', buyWithUSDT);
+});
+</script>
 </body>
 </html>
