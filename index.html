@@ -1,169 +1,255 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ZUZU • AI Meme Intelligence – Presale v8</title>
-<link rel="stylesheet" href="style.css" />
-<!-- Lottie (JSON vardıysa otomatik yüklenecek) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ZUZU • V9 Presale + Anime Maskotlar</title>
+  <meta name="color-scheme" content="dark" />
+  <link rel="stylesheet" href="style.css?v=9.0" />
+
+  <!-- Lottie -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js" defer></script>
+  <!-- QR -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+  <!-- Web3 (opsiyonel) -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js" defer></script>
 </head>
 <body>
-<header class="nav">
-  <div class="brand">
-    <img src="assets/zuzu/svg/zuzu_logo.svg" alt="ZUZU" />
-    <span>ZUZU</span>
-  </div>
-  <nav>
-    <a href="#presale">Ön Satış</a>
-    <a href="#zuzu-characters">Maskotlar</a>
-    <a href="#tokenomics">Tokenomi</a>
-    <a href="#roadmap">Yol Haritası</a>
-    <button id="connectBtn" class="btn btn-neon">Cüzdan Bağla</button>
-  </nav>
-</header>
-
-<section class="hero">
-  <div class="copy">
-    <h1>YAPAY ZEKA <span class="neon">ZUZU</span> ORDUSU</h1>
-    <p>ZUZU; memetik enerji ile <b>AI Meme Intelligence</b> katmanını birleştirir.  
-      Presale gelirleri non-custodial hazinede tutulur.</p>
-    <div class="cex-badges">
-      <span>MEXC</span><span>Gate.io</span><span>BitMart</span><span>LBank</span><span>BingX</span><span>Bybit</span><span>KuCoin</span><span>OKX</span>
+  <!-- ====== HEADER ====== -->
+  <header class="topbar glass">
+    <div class="brand">
+      <img class="logo" src="assets/zuzu/svg/zuzu_logo.svg" alt="ZUZU" />
+      <span class="brand-name">ZUZU</span>
     </div>
-  </div>
-  <div class="hero-visual">
-    <!-- Buradaki kapsayıcı Lottie varsa JSON yükler, yoksa SVG gösterir -->
-    <div class="lottie-slot" data-json="assets/zuzu/lottie/zuzu_hero.json">
-      <img src="assets/zuzu/svg/zuzu_hero.svg" class="fallback-svg" alt="ZUZU Hero">
-    </div>
-  </div>
-</section>
 
-<section id="presale" class="panel">
-  <h2>$ZUZU Token Satın Al – Şimdi Ön Satışta!</h2>
-  <div class="grid-2">
-    <div class="card">
-      <label>Aşama</label>
-      <select id="stage">
-        <option>Stage 1 — 0.002000 USDT / ZUZU</option>
-        <option>Stage 2 — 0.003000 USDT / ZUZU</option>
-        <option>Stage 3 — 0.004000 USDT / ZUZU</option>
-        <option>Stage 4 — 0.005000 USDT / ZUZU</option>
+    <nav class="nav">
+      <a href="#presale">Ön Satış</a>
+      <a href="#gallery">Maskotlar</a>
+      <a href="#tokenomics">Tokenomi</a>
+      <a href="#roadmap">Yol Haritası</a>
+    </nav>
+
+    <div class="actions">
+      <select id="lang" class="select">
+        <option value="TR" selected>TR</option>
+        <option value="EN">EN</option>
+        <option value="RU">RU</option>
+        <option value="HI">HI</option>
+        <option value="ZH">ZH</option>
       </select>
-      <div class="chips"><button data-q="100000">100k</button><button data-q="250000">250k</button><button data-q="1000000">1M</button></div>
-      <label>Kaç ZUZU?</label>
-      <input id="amount" value="100000" />
-      <div class="price-row">
-        <span id="priceTxt">Fiyat: 0.002000 USDT / ZUZU</span>
-        <span id="totalTxt">Toplam: 200.000000 USDT</span>
+      <button id="btnConnect" class="btn neon">Cüzdan Bağla</button>
+    </div>
+  </header>
+
+  <!-- ====== HERO ====== -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="badges">
+        <span class="cx">MEXC</span>
+        <span class="cx">Gate.io</span>
+        <span class="cx">BitMart</span>
+        <span class="cx">BingX</span>
+        <span class="cx">Bybit</span>
+        <span class="cx">KuCoin</span>
+        <span class="cx">OKX</span>
       </div>
-      <div class="actions">
-        <button class="btn btn-green">Kart ile Satın Al (yakında)</button>
-        <button id="buyUsdt" class="btn btn-cyan">USDT (BEP20) ile Satın Al</button>
+
+      <h1><span class="neon-o">YAPAY ZEKA</span> <span class="neon-g">ZUZU</span> <span class="neon-b">ORDUSU</span></h1>
+      <p class="lead">
+        ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> katmanıyla birleştirir. Presale fonları
+        <b>non-custodial</b> hazinede tutulur. Paylaş, tap-to-earn ile puan topla, stake ile daha fazla kazanç hedefle.
+      </p>
+
+      <div class="ref glass">
+        <span>Referans linkin:</span>
+        <input id="refLink" class="input" readonly />
+        <button id="copyRef" class="btn tiny">Kopyala</button>
       </div>
-      <p class="note">Ödeme USDT (BEP20) ile doğrudan hazineye gider. Gas için az miktar BNB gerekir.</p>
+
+      <div class="countdown">
+        <div><b id="cd-d">39</b><small>Gün</small></div>
+        <div><b id="cd-h">23</b><small>Saat</small></div>
+        <div><b id="cd-m">59</b><small>Dakika</small></div>
+        <div><b id="cd-s">59</b><small>Saniye</small></div>
+      </div>
     </div>
 
-    <div class="card">
-      <h3>Receiver</h3>
-      <div class="address">
-        <input id="receiver" readonly value="0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3" />
-        <button id="copyAddr" class="btn btn-mini">Kopyala</button>
-      </div>
-      <canvas id="qr" width="180" height="180"></canvas>
-      <div class="mini-audit">
-        <ul>
-          <li>✓ Sözleşme: USDT (BEP20)</li>
-          <li>✓ Transfer → receiver</li>
-          <li>✓ Non-custodial, direkt kasaya</li>
-        </ul>
+    <div class="hero-right">
+      <!-- Büyük kahraman animasyonu -->
+      <div
+        class="lottie-box hero-lottie glow-lg"
+        data-lottie="assets/zuzu/lottie/zuzu_hero.json">
       </div>
     </div>
-  </div>
+  </section>
 
-  <div class="grid-3 mt">
-    <div class="card">
-      <h3>Tap-to-Earn</h3>
-      <p>Dokundukça puan kazan. Referansın varsa çarpan eklenir.</p>
-      <div class="tapbox"><button id="tapBtn" class="btn btn-neon">TAP!</button><div>Puan: <b id="score">0</b> • Çarpan: <b id="mul">1.0x</b></div></div>
-    </div>
-    <div class="card">
-      <h3>Staking (UI)</h3>
-      <div class="stack-ui">
-        <select id="stakeDays"><option>30 gün</option><option>60 gün</option><option>90 gün</option></select>
-        <input id="stakeAmt" value="50000"/>
-        <div>Tahmini APY: <b id="apy">12%</b></div>
-        <div>Beklenen kazanç: <b id="est">0</b> ZUZU</div>
-        <button class="btn btn-orange" id="stakeDemo">Stake Et (Demo)</button>
+  <!-- ====== PRESALE ====== -->
+  <section id="presale" class="section">
+    <h2>$ZUZU Token Satın Al – <span class="soft">Şimdi Ön Satışta!</span></h2>
+
+    <div class="grid-2">
+      <div class="card">
+        <label class="label">Aşama</label>
+        <select id="stage" class="select">
+          <option value="0">Stage 1 — 0.002000 USDT / ZUZU</option>
+          <option value="1">Stage 2 — 0.003000 USDT / ZUZU</option>
+          <option value="2">Stage 3 — 0.004000 USDT / ZUZU</option>
+          <option value="3">Stage 4 — 0.005000 USDT / ZUZU</option>
+        </select>
+
+        <div class="chips">
+          <button class="chip" data-q="100000">100k</button>
+          <button class="chip" data-q="250000">250k</button>
+          <button class="chip" data-q="1000000">1M</button>
+        </div>
+
+        <label class="label">Kaç ZUZU?</label>
+        <input id="qty" class="input" type="number" value="100000" min="1" />
+
+        <div class="price-row">
+          <div>Fiyat: <b id="unitPrice">0.002000</b> USDT / ZUZU</div>
+          <div>Toplam: <b id="totalPrice">200.000000</b> USDT</div>
+        </div>
+
+        <div class="btns">
+          <button id="btnBuyCard" class="btn green">Kart ile Satın Al (yakında)</button>
+          <button id="btnBuyUSDT" class="btn blue">USDT (BEP20) ile Satın Al</button>
+        </div>
+
+        <small class="muted">Ödeme USDT (BEP20) ile doğrudan hazineye gider. Az miktar BNB gerekir.</small>
+      </div>
+
+      <div class="card">
+        <h3>Receiver</h3>
+        <div class="row gap">
+          <input id="receiver" class="input mono" readonly />
+          <button id="copyAddr" class="btn tiny">Kopyala</button>
+        </div>
+        <div id="qrcode" class="qrcode"></div>
+
+        <div class="cols">
+          <div class="mini-card">
+            <h4>Mini Audit</h4>
+            <ul>
+              <li>✔ Sözleşme: USDT (BEP20)</li>
+              <li>✔ Transfer → receiver</li>
+              <li>✔ Non-custodial, direkt kasa</li>
+            </ul>
+          </div>
+          <div class="mini-card">
+            <h4>Şeffaflık</h4>
+            <p>Satın alımlar on-chain receiver adresine kaydolur. Admin Panel üzerinden son işlemleri görebilirsin.</p>
+          </div>
+          <div class="mini-card">
+            <h4>Toplanan</h4>
+            <div class="progress"><span id="raisedBar" style="width:0%"></span></div>
+            <div class="mono" id="raisedText">$0 / $300.000</div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="card">
-      <h3>Toplanan</h3>
-      <div id="raised">$0 / $300.000</div>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section id="zuzu-characters" class="panel">
-  <h2>ZUZU Maskot Galerisi</h2>
-  <div class="char-grid">
-    <!-- Lottie varsa JSON, yoksa SVG/GIF -->
-    <div class="char">
-      <div class="lottie-slot" data-json="assets/zuzu/lottie/zuzu_hacker.json">
-        <img src="assets/zuzu/svg/zuzu_hacker.svg" class="fallback-svg" alt="Hacker">
+  <!-- ====== TAP & STAKE ====== -->
+  <section class="section">
+    <div class="grid-2">
+      <div class="card">
+        <h3>Tap-to-Earn</h3>
+        <p>Dokundukça puan kazan. Referansın varsa x1.2 çarpan eklenir.</p>
+        <div class="tap-panel">
+          <button id="tapBtn" class="tap-btn neon">TAP!</button>
+          <div class="tap-stats">
+            <div>Puan: <b id="tapScore">0</b></div>
+            <div>Çarpan: <b id="tapMul">1.0x</b></div>
+          </div>
+        </div>
       </div>
-      <div class="cname">ZUZU Hacker</div>
-    </div>
-    <div class="char">
-      <div class="lottie-slot" data-json="assets/zuzu/lottie/zuzu_warrior.json">
-        <img src="assets/zuzu/svg/zuzu_warrior.svg" class="fallback-svg" alt="Warrior">
+
+      <div class="card">
+        <h3>Staking (Demo)</h3>
+        <div class="row">
+          <select id="stakeDays" class="select">
+            <option value="30">30 gün</option>
+            <option value="60">60 gün</option>
+            <option value="90">90 gün</option>
+          </select>
+          <input id="stakeAmount" class="input" type="number" value="50000" />
+        </div>
+        <div class="stake-out">
+          <div>Tahmini APY: <b id="apy">12%</b></div>
+          <div>Beklenen kazanç: <b id="stakeEarn">493.15</b> ZUZU</div>
+        </div>
+        <button class="btn orange" disabled>Stake Et (Demo)</button>
       </div>
-      <div class="cname">ZUZU Warrior</div>
     </div>
-    <div class="char">
-      <div class="lottie-slot" data-json="assets/zuzu/lottie/zuzu_sorceress.json">
-        <img src="assets/zuzu/svg/zuzu_sorceress.svg" class="fallback-svg" alt="Sorceress">
+  </section>
+
+  <!-- ====== MASKOT GALERİ (LOTTIE) ====== -->
+  <section id="gallery" class="section">
+    <h2>ZUZU Maskot Galerisi</h2>
+
+    <div class="gallery">
+      <div class="gcard">
+        <div class="lottie-box" data-lottie="assets/zuzu/lottie/zuzu_hacker.json"></div>
+        <div class="gtitle">ZUZU Hacker</div>
       </div>
-      <div class="cname">ZUZU Sorceress</div>
-    </div>
-    <div class="char">
-      <div class="lottie-slot" data-json="assets/zuzu/lottie/zuzu_mini_bot.json">
-        <img src="assets/zuzu/svg/zuzu_mini_bot.svg" class="fallback-svg" alt="Mini Bot">
+      <div class="gcard">
+        <div class="lottie-box" data-lottie="assets/zuzu/lottie/zuzu_warrior.json"></div>
+        <div class="gtitle">ZUZU Warrior</div>
       </div>
-      <div class="cname">ZUZU Mini-Bot</div>
+      <div class="gcard">
+        <div class="lottie-box" data-lottie="assets/zuzu/lottie/zuzu_sorceress.json"></div>
+        <div class="gtitle">ZUZU Sorceress</div>
+      </div>
+      <div class="gcard">
+        <div class="lottie-box" data-lottie="assets/zuzu/lottie/zuzu_mini_bot.json"></div>
+        <div class="gtitle">ZUZU Mini-Bot</div>
+      </div>
+      <div class="gcard wide">
+        <div class="lottie-box big" data-lottie="assets/zuzu/lottie/zuzu_logo.json"></div>
+        <div class="gtitle">ZUZU Logo</div>
+      </div>
     </div>
-    <div class="char">
-      <img src="assets/zuzu/svg/zuzu_logo.svg" class="fallback-svg glow" alt="Logo"/>
-      <div class="cname">ZUZU Logo</div>
+  </section>
+
+  <!-- ====== TOKENOMICS ====== -->
+  <section id="tokenomics" class="section">
+    <h2>Tokenomi</h2>
+    <div class="pills">
+      <span class="pill">Presale: 45%</span>
+      <span class="pill">Liquidity: 25%</span>
+      <span class="pill">Marketing: 15%</span>
+      <span class="pill">Team: 10%</span>
+      <span class="pill">Airdrop: 5%</span>
+      <span class="pill">Chain: BSC (BEP20)</span>
+      <span class="pill">Symbol: ZUZU</span>
+      <span class="pill">Decimals: 18</span>
     </div>
-  </div>
-</section>
+  </section>
 
-<section id="tokenomics" class="panel">
-  <h2>Tokenomi</h2>
-  <div class="token-box">
-    <div class="tags">
-      <span>Presale 45%</span><span>Liquidity 25%</span><span>Marketing 15%</span>
-      <span>Team 10%</span><span>Airdrop 5%</span>
-      <span>Chain: BSC (BEP20)</span><span>Symbol: ZUZU</span><span>Decimals: 18</span>
+  <!-- ====== ROADMAP ====== -->
+  <section id="roadmap" class="section">
+    <h2>Yol Haritası</h2>
+    <div class="road">
+      <div class="step glow-sm">
+        <h4>Phase 1</h4>
+        <p>Presale + Topluluk + Maskot Setleri</p>
+      </div>
+      <div class="step glow-sm">
+        <h4>Phase 2</h4>
+        <p>CEX Başvuruları, Pazarlama, Partnerlikler</p>
+      </div>
+      <div class="step glow-sm">
+        <h4>Phase 3</h4>
+        <p>Tap-to-Earn + Staking + AI Meme Intelligence</p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section id="roadmap" class="panel">
-  <h2>Yol Haritası</h2>
-  <div class="road">
-    <div class="phase"><h3>Phase 1</h3><p>Presale + Topluluk</p></div>
-    <div class="phase"><h3>Phase 2</h3><p>CEX Başvuruları</p></div>
-    <div class="phase"><h3>Phase 3</h3><p>Tap-to-Earn + AI Bot</p></div>
-  </div>
-</section>
+  <footer class="footer">
+    © 2025 ZUZU • AI-Powered Meme Intelligence
+  </footer>
 
-<footer class="foot">
-  © 2025 ZUZU • AI-Powered Meme Intelligence
-</footer>
-
-<script src="script.js"></script>
+  <script src="script.js?v=9.0" defer></script>
 </body>
 </html>
