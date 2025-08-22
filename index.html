@@ -1,227 +1,175 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ZUZU • AI-Powered Meme Intelligence</title>
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="styles.css">
-<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ZUZU • AI-Powered Meme Intelligence – Presale</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Lottie (parıltı/partikül) -->
+  <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
+  <!-- Ethers (USDT transfer) -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 </head>
 <body>
-<header class="topbar">
+<header class="nav">
   <div class="brand">
-    <div class="zlogo" aria-label="ZUZU maskot">
-      <!-- Animated ZUZU (SVG) -->
-      <svg viewBox="0 0 200 200" class="zzu">
-        <defs>
-          <radialGradient id="faceGrad" cx="50%" cy="45%" r="60%">
-            <stop offset="0%" stop-color="#0b0f14"/>
-            <stop offset="100%" stop-color="#0b0f14"/>
-          </radialGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-        </defs>
-        <circle cx="100" cy="100" r="80" fill="url(#faceGrad)" filter="url(#glow)" />
-        <!-- horns -->
-        <polygon id="hornL" points="55,40 85,20 75,65" fill="#00ff87" />
-        <polygon id="hornR" points="145,40 115,20 125,65" fill="#00ff87" />
-        <!-- eyes -->
-        <circle id="eyeL" cx="75" cy="95" r="8" fill="#52E4FF"/>
-        <circle id="eyeR" cx="125" cy="95" r="8" fill="#52E4FF"/>
-        <!-- smile -->
-        <path id="smile" d="M65,130 Q100,150 135,130" stroke="#ff7a00" stroke-width="10" fill="none" stroke-linecap="round"/>
-      </svg>
-      <span>ZUZU</span>
+    <div class="logo">
+      <div class="halo"></div>
+      <div class="zhead">
+        <div class="horn h1"></div>
+        <div class="horn h2"></div>
+        <div class="eye e1"></div>
+        <div class="eye e2"></div>
+        <div class="smile"></div>
+      </div>
+      <div id="lottie" class="lottie"></div>
     </div>
+    <div class="btext">ZUZU <span>AI Meme Intelligence</span></div>
   </div>
 
-  <nav class="nav">
-    <a href="#about" data-i18n="about">Hakkında</a>
-    <a href="#tokenomics" data-i18n="tokenomics">Tokenomi</a>
-    <a href="#roadmap" data-i18n="roadmap">Yol Haritası</a>
-    <select id="langSel" class="lang"></select>
-    <button id="connectBtn" class="btn neon" data-i18n="connect">Cüzdan Bağla</button>
-  </nav>
+  <div class="nav-right">
+    <select id="lang" class="select">
+      <option value="tr" selected>TR</option>
+      <option value="en">EN</option>
+    </select>
+    <button id="btnConnect" class="btn btn-outline">Cüzdan Bağla</button>
+  </div>
 </header>
 
 <section class="hero">
-  <div class="hero-text">
-    <h1><span class="neon-red" data-i18n="aiagent">YAPAY ZEKA</span> <span class="neon-orange">MEME AJANI</span></h1>
-    <p data-i18n="subtitle">
-      ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> ile birleştirir. Fonlar <b>non-custodial</b> hazinede tutulur.
-    </p>
-
-    <div class="badges">
-      <span class="ex">MEXC</span><span class="ex">Gate.io</span><span class="ex">BitMart</span>
-      <span class="ex">LBank</span><span class="ex">BingX</span><span class="ex">Bybit</span>
-      <span class="ex">KuCoin</span><span class="ex">OKX</span>
-    </div>
-
-    <div class="ref-block">
-      <span class="icon">🔗</span>
-      <span data-i18n="refText">Senin referans linkin:</span>
-      <a id="refLink" href="#">—</a>
-      <button id="copyRef" class="btn small" data-i18n="copy">Kopyala</button>
-    </div>
-
-    <div class="countdown">
-      <div><b id="d">00</b><span data-i18n="days">Gün</span></div>
-      <div><b id="h">00</b><span data-i18n="hours">Saat</span></div>
-      <div><b id="m">00</b><span data-i18n="minutes">Dakika</span></div>
-      <div><b id="s">00</b><span data-i18n="seconds">Saniye</span></div>
-    </div>
+  <div class="ex-badges">
+    <span class="ex"><img src="https://cryptologos.cc/logos/mexc-global-mexc-logo.svg?v=035" height="14">MEXC</span>
+    <span class="ex"><img src="https://cryptologos.cc/logos/gatechain-gate-logo.svg?v=035" height="14">Gate.io</span>
+    <span class="ex"><img src="https://cryptologos.cc/logos/bitmart-bmx-logo.svg?v=035" height="14">BitMart</span>
+    <span class="ex"><img src="https://cryptologos.cc/logos/lbank-lbank-logo.svg?v=035" height="14">LBank</span>
+    <span class="ex"><img src="https://cryptologos.cc/logos/bingx-bingx-logo.svg?v=035" height="14">BingX</span>
+    <span class="ex"><img src="https://cryptologos.cc/logos/bybit-bybit-logo.svg?v=035" height="14">Bybit</span>
+    <span class="ex"><img src="https://cryptologos.cc/logos/kucoin-kucoin-logo.svg?v=035" height="14">KuCoin</span>
+    <span class="ex"><img src="https://cryptologos.cc/logos/okx-okb-logo.svg?v=035" height="14">OKX</span>
   </div>
-  <div class="hero-art">
-    <!-- parallax glow canvas -->
-    <div class="halo"></div>
+
+  <h1 id="hTitle"><span class="neon-orange">YAPAY ZEKA</span> MEME AJANI</h1>
+  <p id="hDesc" class="desc">
+    ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> ile birleştirir. Fonlar <b>non-custodial</b> hazinede tutulur.
+  </p>
+
+  <div class="refline">
+    <span id="refLabel">🔗 Senin referans linkin:</span>
+    <a id="refLink" target="_blank" rel="noopener">—</a>
+    <button id="btnCopyRef" class="btn-ghost">Kopyala</button>
+  </div>
+
+  <div class="countdown">
+    <div><b id="cdD">40</b><span>Gün</span></div>
+    <div><b id="cdH">0</b><span>Saat</span></div>
+    <div><b id="cdM">0</b><span>Dakika</span></div>
+    <div><b id="cdS">0</b><span>Saniye</span></div>
   </div>
 </section>
 
-<section id="presale" class="card shadow">
-  <h2 data-i18n="buyTitle">$ZUZU Token Satın Al – Şimdi Ön Satışta!</h2>
+<section class="panel card">
+  <h2 id="buyTitle">$ZUZU Token Satın Al – Şimdi Ön Satışta!</h2>
 
-  <div class="grid2">
-    <div>
-      <label data-i18n="stage">Aşama</label>
-      <select id="stageSel"></select>
+  <label id="stgLbl">Aşama</label>
+  <select id="stage" class="select stage"></select>
 
-      <div class="chips">
-        <button class="chip" data-amt="100000">100k</button>
-        <button class="chip" data-amt="250000">250k</button>
-        <button class="chip" data-amt="1000000">1M</button>
+  <div class="chips">
+    <button class="chip" data-amt="100000">100k</button>
+    <button class="chip" data-amt="250000">250k</button>
+    <button class="chip" data-amt="1000000">1M</button>
+  </div>
+
+  <label id="howmanyLbl">Kaç ZUZU?</label>
+  <input id="amount" class="input" type="number" value="100000" min="1">
+
+  <div class="pricebox">
+    <div>Fiyat: <b id="priceLine">–</b></div>
+    <div>Toplam: <b id="totalLine">–</b></div>
+  </div>
+
+  <div class="btnrow">
+    <button id="btnCard" class="btn btn-mint" disabled>Kart ile Satın Al (yakında)</button>
+    <button id="btnBuy" class="btn btn-primary">USDT (BEP20) ile Satın Al</button>
+  </div>
+
+  <p class="hint">Ödeme USDT (BEP20) ile doğrudan hazineye gider. Gas için az miktar BNB gerekir.</p>
+
+  <div class="grid-2">
+    <div class="card subtle">
+      <h3>Receiver</h3>
+      <div class="copyrow">
+        <input id="rcv" class="input mono" readonly>
+        <button id="btnCopyRcv" class="btn-ghost">Kopyala</button>
       </div>
-
-      <label data-i18n="howMany">Kaç ZUZU?</label>
-      <input id="amount" type="number" min="1000" step="1000" value="100000" />
-
-      <div class="price">
-        <div><span data-i18n="price">Fiyat:</span> <b id="price">0</b> <span>USDT / ZUZU</span></div>
-        <div><span data-i18n="total">Toplam:</span> <b id="total">0</b> <span>USDT</span></div>
-      </div>
-
-      <div class="actions">
-        <button id="buyUsdt" class="btn neon-green" data-i18n="buyUSDT">Kripto ile Satın Al (USDT/BEP20)</button>
-        <button class="btn disabled" title="Yakında">Kart ile Satın Al (yakında)</button>
-      </div>
-
-      <p class="help" data-i18n="gas">Ödeme USDT (BEP20) ile yapılır. İşlem için az miktar BNB gerekir.</p>
+      <img id="qr" class="qr" alt="QR">
     </div>
 
-    <div>
-      <label data-i18n="receiver">Receiver</label>
-      <div class="row">
-        <input id="recv" type="text" readonly>
-        <button id="copyRecv" class="btn small" data-i18n="copy">Kopyala</button>
+    <div class="card subtle">
+      <h3>Toplanan</h3>
+      <div class="raised">
+        <div class="bar"><span id="bar"></span></div>
+        <div class="raisedline">$<span id="raised">0</span> / <span id="target">0</span></div>
       </div>
-      <canvas id="qr" class="qr"></canvas>
 
       <div class="mini-grid">
-        <div class="miniCard">
-          <b>Mini Audit</b>
-          <ul>
-            <li>✔ USDT (BEP20)</li>
-            <li>✔ Transfer → <span id="recvShort">—</span></li>
-            <li>✔ Non-custodial, direkt kasaya</li>
-          </ul>
+        <div class="pill">
+          <b>Mini Audit</b><br>
+          ✔ Sözleşme: USDT (BEP20)<br>
+          ✔ Transfer → receiver<br>
+          ✔ Non-custodial, direkt kasaya
         </div>
-        <div class="miniCard">
-          <b data-i18n="transparency">Şeffaflık</b>
-          <p data-i18n="adminPanel">Satın alımlar on-chain receiver adresine kaydolur. <a href="admin.html" class="link">Admin Panel →</a></p>
+        <div class="pill">
+          <b>Şeffaflık</b><br>
+          Satın alışlar on-chain receiver adresine kaydolur.<br>
+          <a href="admin.html" class="link">Admin Panel →</a>
         </div>
-      </div>
-
-      <div class="progress">
-        <div class="pbar" id="pbar"></div>
-      </div>
-      <div class="row">
-        <span>$<b id="raised">0</b> / $<b id="hardcap">0</b></span>
       </div>
     </div>
   </div>
 </section>
 
-<section id="engage" class="card">
+<section class="card">
   <h2>Top-to-Earn & Staking</h2>
-  <div class="grid2">
-    <div class="tap">
+
+  <div class="tte">
+    <div class="tte-left">
       <h3>Tap-to-Earn</h3>
-      <p>Dokundukça puan kazan. Referans varsa <b>x1.2</b> çarpan.</p>
-      <div class="tapRow">
-        <span>Puan: <b id="tapScore">0</b></span>
-        <span>Çarpan: <b id="tapMul">1x</b></span>
-      </div>
-      <button id="tapBtn" class="btn neon">TAP!</button>
+      <p>Dokundukça puan kazan. Referans varsa x1.2 çarpan eklenir.</p>
+      <div class="score">Puan: <b id="score">0</b> • Çarpan: <b id="mult">1x</b></div>
+      <button id="btnTap" class="btn btn-glow">TAP!</button>
     </div>
-    <div class="stake">
+    <div class="tte-right">
       <h3>Staking (UI)</h3>
-      <p>Gösterim amaçlı arayüz. Kontrat sahası daha sonra.</p>
-      <div class="row">
-        <select id="stakeDays">
-          <option value="30">30 gün • APY 12%</option>
-          <option value="60">60 gün • APY 22%</option>
-          <option value="90">90 gün • APY 36%</option>
-        </select>
-        <input id="stakeAmt" type="number" placeholder="Miktar (ZUZU)" />
-        <button class="btn" id="stakeCalc">Hesapla</button>
-      </div>
-      <p id="stakeOut" class="muted"></p>
+      <label>Süre</label>
+      <select id="stakeDays" class="select">
+        <option value="30">30 gün</option>
+        <option value="60">60 gün</option>
+        <option value="90">90 gün</option>
+      </select>
+      <label>Miktar (ZUZU)</label>
+      <input id="stakeAmt" class="input" type="number" value="50000">
+      <div class="apy">Tahmini APY: <b id="apy">12%</b></div>
+      <button id="btnStake" class="btn btn-orange" disabled>Stake Et (Demo)</button>
     </div>
   </div>
 </section>
 
-<section id="about" class="card">
-  <h2 data-i18n="about">Hakkında</h2>
-  <p>
-    ZUZU; minimal & ciddi duruşlu meme maskot enerjisini toplulukla birleştirir. “AI Meme Intelligence”
-    trendleri okur, sinyalleri projeye taşır. Presale gelirleri doğrudan hazinede tutulur (non-custodial).
-  </p>
+<section class="card">
+  <h2>Hakkında</h2>
+  <p>ZUZU; minimal & ciddi duruşu meme maskot enerjisiyle birleştirir. AI Meme Intelligence katmanı trendleri okur ve gücü projeye taşır. Presale gelirleri doğrudan hazineye (non-custodial) gider. CEX başvuruları presale bitiminde başlar.</p>
 </section>
 
-<section id="tokenomics" class="card">
-  <h2 data-i18n="tokenomics">Tokenomi</h2>
-  <div class="tokGrid">
-    <div class="donut">
-      <svg viewBox="0 0 42 42" class="donutChart">
-        <!-- donut slices -->
-        <circle class="donut-ring" cx="21" cy="21" r="15.9155" fill="transparent" stroke="#1f2937" stroke-width="3"></circle>
-        <circle class="donut-segment seg1" cx="21" cy="21" r="15.9155" fill="transparent" stroke="#22d3ee" stroke-width="3" stroke-dasharray="45 55" stroke-dashoffset="25"></circle>
-        <circle class="donut-segment seg2" cx="21" cy="21" r="15.9155" fill="transparent" stroke="#22c55e" stroke-width="3" stroke-dasharray="25 75" stroke-dashoffset="70"></circle>
-        <circle class="donut-segment seg3" cx="21" cy="21" r="15.9155" fill="transparent" stroke="#f59e0b" stroke-width="3" stroke-dasharray="15 85" stroke-dashoffset="95"></circle>
-        <circle class="donut-segment seg4" cx="21" cy="21" r="15.9155" fill="transparent" stroke="#ef4444" stroke-width="3" stroke-dasharray="10 90" stroke-dashoffset="110"></circle>
-        <circle class="donut-segment seg5" cx="21" cy="21" r="15.9155" fill="transparent" stroke="#a855f7" stroke-width="3" stroke-dasharray="5 95" stroke-dashoffset="120"></circle>
-      </svg>
-    </div>
-    <ul class="tokList">
-      <li><b>Presale</b> — 45%</li>
-      <li><b>Liquidity</b> — 25%</li>
-      <li><b>Marketing</b> — 15%</li>
-      <li><b>Team</b> — 10%</li>
-      <li><b>Airdrop</b> — 5%</li>
-      <li><b>Chain:</b> BSC (BEP20)</li>
-      <li><b>Symbol:</b> ZUZU • <b>Decimals:</b> 18</li>
-    </ul>
+<section class="card">
+  <h2>Tokenomi</h2>
+  <div class="chips soft" id="tokenomics"></div>
+  <div class="chips soft">
+    <span class="chip soft">Chain: <b>BSC (BEP20)</b></span>
+    <span class="chip soft">Symbol: <b>ZUZU</b></span>
+    <span class="chip soft">Decimals: <b>18</b></span>
   </div>
 </section>
 
-<section id="roadmap" class="card">
-  <h2 data-i18n="roadmap">Yol Haritası</h2>
-  <div class="road">
-    <div class="step"><b>Phase 1</b><span>Presale + Topluluk</span></div>
-    <div class="step"><b>Phase 2</b><span>CEX Başvuruları</span></div>
-    <div class="step"><b>Phase 3</b><span>Tap-to-Earn + AI Bot</span></div>
-  </div>
-</section>
-
-<footer class="foot">
-  © 2025 ZUZU • AI-Powered Meme Intelligence
-</footer>
+<footer class="foot">© 2025 ZUZU • AI-Powered Meme Intelligence</footer>
 
 <script src="script.js"></script>
 </body>
