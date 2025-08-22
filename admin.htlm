@@ -3,77 +3,86 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ZUZU – Admin</title>
+<title>ZUZU Admin • On-Chain Log</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-body{background:#070c1a;color:#eaf2ff;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;margin:0}
-.wrap{max-width:980px;margin:20px auto;padding:0 14px}
-.card{background:#0e1836;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px}
-.btn{background:#173061;color:#fff;border:0;padding:10px 14px;border-radius:10px;cursor:pointer}
-table{width:100%;border-collapse:collapse;margin-top:10px}
-td,th{border-bottom:1px solid rgba(255,255,255,.08);padding:8px;font-size:14px}
-small{color:#9fb5dd}
+body{margin:0;background:#0b0f14;color:#e9f1ff;font-family:Inter}
+.wrap{max-width:1050px;margin:0 auto;padding:24px}
+.card{background:#0e1420;border:1px solid #162236;border-radius:16px;padding:16px}
+input,button{font:600 14px Inter;border-radius:10px;padding:10px 12px;border:none;outline:none}
+input{background:#0c1422;border:1px solid #1a2c45;color:#cfe7ff}
+button{background:#18a0fb;color:#031219;cursor:pointer}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+table{width:100%;border-collapse:collapse;margin-top:12px}
+th,td{border-bottom:1px solid #182436;padding:8px 6px;font-size:13px}
+.badge{background:#102036;border:1px solid #1b2d46;color:#9fc7f7;border-radius:999px;padding:6px 10px}
+.small{font-size:12px;color:#8fb1d8}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h2>ZUZU • Admin</h2>
+  <h1>ZUZU • Admin Panel</h1>
   <div class="card">
-    <button id="btnConnect" class="btn">Cüzdan Bağla</button>
-    <div id="me" style="margin-top:8px"></div>
-    <p><small>Gösterilenler: USDT (BEP20) → Receiver transferleri (son ~50k blok içinde).</small></p>
-  </div>
-
-  <div class="card" style="margin-top:12px">
-    <h3>Son İşlemler</h3>
+    <div class="row">
+      <input id="rcv" style="flex:1" placeholder="Receiver (Varsayılan: 0x6901…74bC3)">
+      <input id="usdt" style="flex:1" placeholder="USDT (BSC) kontrat" value="0x55d398326f99059fF775485246999027B3197955">
+    </div>
+    <div class="row">
+      <input id="api" style="flex:1" placeholder="BscScan API Key">
+      <button id="btn">Çek</button>
+      <button id="csv">CSV İndir</button>
+    </div>
+    <div class="row">
+      <span class="badge">Toplam: <b id="sum">$0</b></span>
+      <span class="badge">Adet: <b id="cnt">0</b></span>
+    </div>
+    <div class="small">Not: Sadece **USDT token transferleri** (to=receiver) toplanır.</div>
     <table>
-      <thead><tr><th>Tx</th><th>From</th><th>To</th><th>Amount (USDT)</th><th>Block</th></tr></thead>
-      <tbody id="rows"></tbody>
+      <thead><tr><th>Zaman</th><th>Tx</th><th>Kimden</th><th>Kime</th><th>Miktar (USDT)</th></tr></thead>
+      <tbody id="tb"></tbody>
     </table>
   </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
 <script>
-// Aynı config buraya gömüldü (receiver/admin/usdt)
-const CFG={ ADMIN_ADDRESS:"0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",
-            USDT:"0x55d398326f99059fF775485246999027B3197955",
-            RECEIVER:"0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3" };
+const DEF_RCV="0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3";
+function fmtUSD(x){return "$"+Number(x).toLocaleString(undefined,{maximumFractionDigits:2});}
+document.getElementById('rcv').value=DEF_RCV;
 
-let provider, signer, me;
-
-const short=a=>a.slice(0,6)+'…'+a.slice(-4);
-
-async function connect(){
-  if(!window.ethereum) return alert('MetaMask/TrustWallet gerekli.');
-  provider=new ethers.providers.Web3Provider(window.ethereum,'any');
-  await provider.send('eth_requestAccounts',[]); signer=provider.getSigner(); me=await signer.getAddress();
-  const net=await provider.getNetwork(); if(net.chainId!==56){ try{await provider.send('wallet_switchEthereumChain',[{chainId:'0x38'}]);}catch(_){} }
-  document.getElementById('me').textContent='Cüzdan: '+me+(me.toLowerCase()===CFG.ADMIN_ADDRESS.toLowerCase()?' (ADMIN)':' (yetkisiz)');
-  if(me.toLowerCase()!==CFG.ADMIN_ADDRESS.toLowerCase()) return alert('Admin değilsin.');
-  await loadLogs();
-}
-
-async function loadLogs(){
-  const rows=document.getElementById('rows'); rows.innerHTML='Yükleniyor…';
-  try{
-    const latest=await provider.getBlockNumber();
-    const fromBlock=Math.max(1, latest-50000);
-    const topicTransfer=ethers.utils.id("Transfer(address,address,uint256)");
-    const toTopic="0x000000000000000000000000"+CFG.RECEIVER.toLowerCase().slice(2);
-    const logs=await provider.getLogs({fromBlock,toBlock:'latest',address:CFG.USDT,topics:[topicTransfer,null,toTopic]});
-    rows.innerHTML='';
-    const iface=new ethers.utils.Interface(["event Transfer(address indexed from,address indexed to,uint256 value)"]);
-    logs.slice(-100).reverse().forEach(l=>{
-      const p=iface.parseLog(l);
-      const amt=Number(ethers.utils.formatUnits(p.args.value,18));
-      const tr=`<tr><td><a target="_blank" href="https://bscscan.com/tx/${l.transactionHash}">${l.transactionHash.slice(0,10)}…</a></td>
-                <td>${short(p.args.from)}</td><td>${short(p.args.to)}</td><td>${amt.toFixed(6)}</td><td>${l.blockNumber}</td></tr>`;
-      rows.insertAdjacentHTML('beforeend',tr);
+async function pull(){
+  const rcv=(document.getElementById('rcv').value||DEF_RCV).trim();
+  const usdt=document.getElementById('usdt').value.trim();
+  const api=document.getElementById('api').value.trim();
+  const url=`https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=${usdt}&address=${rcv}&page=1&offset=200&sort=desc&apikey=${api}`;
+  const res=await fetch(url); const j=await res.json();
+  const tb=document.getElementById('tb'); tb.innerHTML="";
+  let sum=0,c=0; 
+  if(j.status==="1"){
+    j.result.forEach(x=>{
+      if((x.to||"").toLowerCase()===rcv.toLowerCase()){
+        c++; const v=Number(x.value)/1e18; sum+=v;
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td>${new Date(x.timeStamp*1000).toLocaleString()}</td>
+          <td><a href="https://bscscan.com/tx/${x.hash}" target="_blank">${x.hash.slice(0,10)}…</a></td>
+          <td>${x.from.slice(0,8)}…${x.from.slice(-6)}</td>
+          <td>${x.to.slice(0,8)}…${x.to.slice(-6)}</td>
+          <td>${v.toFixed(6)}</td>`;
+        tb.appendChild(tr);
+      }
     });
-    if(!logs.length) rows.innerHTML='<tr><td colspan="5">Kayıt yok.</td></tr>';
-  }catch(e){console.error(e); rows.innerHTML='<tr><td colspan="5">Hata / RPC sınırlandı.</td></tr>';}
+  }
+  document.getElementById('sum').textContent=fmtUSD(sum);
+  document.getElementById('cnt').textContent=c;
+  window._lastData={rows:[...tb.querySelectorAll('tr')].map(tr=>[...tr.children].map(td=>td.innerText))};
 }
-document.getElementById('btnConnect').addEventListener('click',connect);
+document.getElementById('btn').onclick=pull;
+
+document.getElementById('csv').onclick=()=>{
+  const rows = (window._lastData?.rows)||[];
+  let csv="time,tx,from,to,amount\n";
+  rows.forEach(r=>{csv+=r.map(x=>`"${x}"`).join(",")+"\n";});
+  const blob=new Blob([csv],{type:"text/csv"}); const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download="zuzu_logs.csv"; a.click();
+};
 </script>
 </body>
 </html>
