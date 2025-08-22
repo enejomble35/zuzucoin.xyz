@@ -1,0 +1,24 @@
+<svg width="520" height="520" viewBox="0 0 520 520" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="g"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <linearGradient id="a" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0b1520"/><stop offset="1" stop-color="#071018"/>
+    </linearGradient>
+    <linearGradient id="c" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00ffe6"/><stop offset="1" stop-color="#00bfff"/>
+    </linearGradient>
+  </defs>
+  <rect width="520" height="520" fill="url(#a)"/>
+  <g transform="translate(80,40)" filter="url(#g)">
+    <circle cx="180" cy="100" r="90" fill="#101621" stroke="#0ff" stroke-width="4"/>
+    <path d="M125 60 L170 20 L160 95 Z" fill="#21f0c7"/><path d="M235 60 L190 20 L200 95 Z" fill="#21f0c7"/>
+    <circle cx="155" cy="100" r="14" fill="#58f3ff"/><circle cx="205" cy="100" r="14" fill="#58f3ff"/>
+    <path d="M150 135 Q180 160 210 135" stroke="#ff7a22" stroke-width="14" fill="none" stroke-linecap="round"/>
+
+    <!-- Gövde -->
+    <path d="M60 220 h240 v130 a20 20 0 0 1 -20 20 h-200 a20 20 0 0 1 -20 -20z" fill="#0f1723" stroke="url(#c)" stroke-width="4"/>
+    <path d="M100 240 h160 v20 h-160z M90 280 h60 v16 h-60z M230 280 h60 v16 h-60z" fill="#06101a" stroke="#0ff" stroke-width="2"/>
+    <rect x="60" y="350" width="80" height="70" rx="12" fill="#0f1723" stroke="#0ff" stroke-width="3"/>
+    <rect x="220" y="350" width="80" height="70" rx="12" fill="#0f1723" stroke="#0ff" stroke-width="3"/>
+  </g>
+</svg>
