@@ -1,142 +1,186 @@
-/************  AYARLAR  ************/
-const PRICE_PER_ZUZU = 0.002;     // Stage-1
-const USE_INLINE = true;          // true = dosyasız; false = assets/zuzu/lottie/*.json
-const VERSION = 'v10.2';          // cache-bust
-/***********************************/
+// ---------- Config yükle ----------
+let CFG = {receiver:"", bscscanKey:"", usdtContract:"", goalUSD:300000};
+fetch('./config.json?v=9').then(r=>r.json()).then(cfg=>{
+  CFG = cfg;
+  document.getElementById('rcv').value = CFG.receiver || '';
+  initAll();
+}).catch(_=>{
+  // config yoksa da çalışsın
+  document.getElementById('rcv').value = '';
+  initAll();
+});
 
-const $ = s => document.querySelector(s);
-const $$ = s => document.querySelectorAll(s);
-
-// presale hesap
-function updateTotals(){
-  const v = parseFloat($('#inpZuzu').value || '0');
-  $('#pUnit').textContent = PRICE_PER_ZUZU.toFixed(6);
-  $('#pTotal').textContent = (v*PRICE_PER_ZUZU).toFixed(6);
+// ---------- Lottie CDN'ini script.js içinden yükle ----------
+function ensureLottie(){
+  return new Promise((res)=>{
+    if(window.lottie){return res(window.lottie);}
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js';
+    s.crossOrigin='anonymous';
+    s.onload=()=>res(window.lottie);
+    document.head.appendChild(s);
+  });
 }
-$('#inpZuzu').addEventListener('input', updateTotals);
-$$('.pill').forEach(b => b.onclick = () => { $('#inpZuzu').value = b.dataset.v; updateTotals(); });
-updateTotals();
 
-// kopyala
-$('#copy').onclick = () => {
-  navigator.clipboard.writeText($('#receiver').value);
-  $('#copy').textContent = 'Kopyalandı';
-  setTimeout(()=>$('#copy').textContent='Kopyala',1200);
-};
+// ---------- Yardımcılar ----------
+const $ = sel => document.querySelector(sel);
+function fmt(n, d=6){ return Number(n||0).toFixed(d); }
+function price(){
+  const val = $('#stageSel').value;
+  if(val.includes('0.002000')) return 0.002;
+  if(val.includes('0.002500')) return 0.0025;
+  return 0.003;
+}
+function updateTotal(){
+  $('#priceLbl').textContent = price().toFixed(6);
+  $('#totalLbl').textContent  = fmt(price() * Number($('#amountInp').value||0));
+}
 
-// LOTTIE BASE (inline) — göz kırpma + ağız hareketi + glow
-function baseLottieJSON(hex='#00E0FF'){
-  // hex örn '#00E0FF', stroke için turuncu sabit
-  const C = hex;
-  return {
-    v:"5.7.4", fr:30, ip:0, op:180, w:512, h:512, nm:"zuzu_base", ddd:0, assets:[],
-    layers:[
-      {ddd:0,ind:1,ty:4,nm:"glow",
-        ks:{o:{a:1,k:[{t:0,s:[55]},{t:180,s:[35]}]},
-            r:{a:0,k:0}, p:{a:0,k:[256,256,0]}, a:{a:0,k:[0,0,0]},
-            s:{a:1,k:[{t:0,s:[100,100,100]},{t:90,s:[108,108,100]},{t:180,s:[100,100,100]}]}},
-        shapes:[
-          {ty:"el",p:{a:0,k:[0,0]},s:{a:0,k:[380,380]}},
-          {ty:"fl",c:{a:0,k:hexToRGBA(C)},o:{a:0,k:20},r:1}
-        ]},
-      {ddd:0,ind:2,ty:4,nm:"face",
-        ks:{o:{a:0,k:100},r:{a:0,k:0},p:{a:0,k:[256,256,0]},a:{a:0,k:[0,0,0]},s:{a:0,k:[100,100,100]}},
-        shapes:[
-          {ty:"el",p:{a:0,k:[0,0]},s:{a:0,k:[300,300]}},
-          {ty:"fl",c:{a:0,k:[0.035,0.07,0.11,1]},o:{a:0,k:100},r:1}
-        ]},
-      // horns
-      horn(196,146,C), horn(316,146,C),
-      // eyes
-      eye(216,256,C,0), eye(296,256,C,90),
-      // mouth (stroke turuncu)
-      {ddd:0,ind:7,ty:4,nm:"mouth",
-        ks:{o:{a:0,k:100},r:{a:0,k:0},p:{a:1,k:[{t:0,s:[256,316,0]},{t:90,s:[256,308,0]},{t:180,s:[256,316,0]}]},
-            a:{a:0,k:[0,0,0]}, s:{a:0,k:[100,100,100]}},
-        shapes:[
-          {ty:"sh",ks:{a:0,k:{i:[[0,0],[0,0],[0,0]],o:[[0,0],[0,0],[0,0]],v:[[-70,0],[0,24],[70,0]],c:false}}},
-          {ty:"st",c:{a:0,k:[1,0.35,0,1]},o:{a:0,k:100},w:{a:0,k:18},lc:2,lj:2}
-        ]}
-    ]
+// ---------- QR sahte render ----------
+function renderQR(){
+  const el = $('#qr');
+  const c = document.createElement('canvas'); c.width=100; c.height=100;
+  el.innerHTML=''; el.appendChild(c);
+  const ctx=c.getContext('2d'); ctx.fillStyle='#0c1f27'; ctx.fillRect(0,0,100,100);
+  for(let i=0;i<460;i++){ ctx.fillStyle=Math.random()>.5?'#00e6ff':'#29f08f'; ctx.fillRect(Math.random()*100,Math.random()*100,3,3); }
+}
+
+// ---------- Tap-to-earn demo ----------
+let tapScore=0, mult=1.0;
+function bindTap(){
+  $('#tapBtn').addEventListener('click', ()=>{
+    tapScore += 1*mult;
+    $('#tapStat').textContent = `Puan: ${tapScore} • Çarpan: ${mult.toFixed(1)}x`;
+  });
+}
+
+// ---------- Staking demo ----------
+function bindStake(){
+  const upd=()=>{
+    const apy = 12; $('#apy').textContent = 'Tahmini APY: %'+apy;
+    const amt = Number($('#stkAmt').value||0);
+    const days = $('#stkDur').selectedIndex===0?30:($('#stkDur').selectedIndex===1?60:90);
+    const gain = amt*(apy/100)*(days/365);
+    $('#earn').textContent = 'Beklenen kazanç: '+gain.toFixed(2)+' ZUZU';
   };
-  function horn(x,y,color){
-    return {ddd:0,ind:3,ty:4,nm:"horn",
-      ks:{o:{a:0,k:100},r:{a:0,k:0},p:{a:0,k:[x,y,0]},a:{a:0,k:[0,0,0]},s:{a:0,k:[100,100,100]}},
-      shapes:[
-        {ty:"sh",ks:{a:0,k:{i:[[0,0],[0,0],[0,0]],o:[[0,0],[0,0],[0,0]],v:[[-40,30],[0,-60],[40,30]],c:true}}},
-        {ty:"fl",c:{a:0,k:hexToRGBA(color)},o:{a:0,k:100}}
-      ]};
-  }
-  function eye(x,y,color,blinkAt){
-    return {ddd:0,ind:5,ty:4,nm:"eye",
-      ks:{o:{a:1,k:[{t:blinkAt,s:[100]},{t:blinkAt+5,s:[0]},{t:blinkAt+10,s:[100]}]},
-          r:{a:0,k:0},p:{a:0,k:[x,y,0]},a:{a:0,k:[0,0,0]},s:{a:0,k:[100,100,100]}},
-      shapes:[{ty:"el",p:{a:0,k:[0,0]},s:{a:0,k:[42,42]}},{ty:"fl",c:{a:0,k:hexToRGBA(color)},o:{a:0,k:100},r:1}]
-    };
-  }
-  function hexToRGBA(h){ // '#00E0FF' -> [0,0.878,1,1]
-    const n = h.replace('#',''); const r = parseInt(n.slice(0,2),16)/255;
-    const g = parseInt(n.slice(2,4),16)/255; const b = parseInt(n.slice(4,6),16)/255;
-    return [r,g,b,1];
+  $('#stkAmt').addEventListener('input', upd);
+  $('#stkDur').addEventListener('change', upd);
+  upd();
+}
+
+// ---------- Preset değerler ----------
+function bindPresets(){
+  document.querySelectorAll('.js-preset').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      $('#amountInp').value = el.dataset.v;
+      updateTotal();
+    });
+  });
+  $('#amountInp').addEventListener('input', updateTotal);
+  $('#stageSel').addEventListener('change', updateTotal);
+  updateTotal();
+}
+
+// ---------- Receiver kopyala ----------
+function bindCopy(){ $('#copyBtn').addEventListener('click',()=>navigator.clipboard.writeText($('#rcv').value)); }
+
+// ---------- BscScan toplam (yaklaşık) ----------
+async function updateRaised(){
+  try{
+    if(!CFG.bscscanKey || !CFG.receiver){ throw new Error('no-key-or-addr'); }
+    // USDT (BEP20) transferlerini çek
+    const url = `https://api.bscscan.com/api?module=account&action=tokentx&address=${CFG.receiver}&contractaddress=${CFG.usdtContract}&page=1&offset=50&sort=desc&apikey=${CFG.bscscanKey}`;
+    const r = await fetch(url);
+    const j = await r.json();
+    if(j.status!=='1'){ throw new Error('api'); }
+    let total = 0;
+    for(const tx of j.result){
+      // to = receiver ise gelen para
+      if((tx.to||'').toLowerCase() === CFG.receiver.toLowerCase()){
+        total += Number(tx.value)/1e18; // USDT decimals 18
+      }
+    }
+    const goal = CFG.goalUSD||300000;
+    $('#raised').textContent = `$${Math.floor(total).toLocaleString()} / $${goal.toLocaleString()}`;
+  }catch(e){
+    $('#raised').textContent = `$0 / $${(CFG.goalUSD||300000).toLocaleString()}`;
   }
 }
 
-// Karakter tablosu (10 adet)
-const CHARS = [
-  { id:'char-logo',      color:'#00E0FF' },
-  { id:'char-hero',      color:'#00FFD0' },
-  { id:'char-hacker',    color:'#1AF5FF' },
-  { id:'char-warrior',   color:'#A4FF45' },
-  { id:'char-sorceress', color:'#F69AFF' },
-  { id:'char-ranger',    color:'#19F57D' },
-  { id:'char-berserker', color:'#FF7A1A' },
-  { id:'char-scientist', color:'#66E3FF' },
-  { id:'char-rogue',     color:'#8AF5C6' },
-  { id:'char-titan',     color:'#00B8FF' }
+// ---------- Lottie Galeri ----------
+const CARDS=[
+  {id:'char-logo',      name:'ZUZU Logo',      desc:'Temel maskot – glow',          file:'zuzu_logo.json'},
+  {id:'char-hero',      name:'ZUZU Hero',      desc:'Neon zırh + hatlar',           file:'zuzu_hero.json'},
+  {id:'char-hacker',    name:'ZUZU Hacker',    desc:'Yüz tarama + sinyal',          file:'zuzu_hacker.json'},
+  {id:'char-warrior',   name:'ZUZU Warrior',   desc:'Kılıç parlaması',              file:'zuzu_warrior.json'},
+  {id:'char-sorceress', name:'ZUZU Sorceress', desc:'Büyü küresi',                  file:'zuzu_sorceress.json'},
+  {id:'char-ranger',    name:'ZUZU Ranger',    desc:'Vizör + kayış',                file:'zuzu_ranger.json'},
+  {id:'char-berserker', name:'ZUZU Berserker', desc:'Kızgın aura',                  file:'zuzu_berserker.json'},
+  {id:'char-scientist', name:'ZUZU Scientist', desc:'Devre hatları',                file:'zuzu_scientist.json'},
+  {id:'char-rogue',     name:'ZUZU Rogue',     desc:'Gizli bıçak',                  file:'zuzu_rogue.json'},
+  {id:'char-titan',     name:'ZUZU Titan',     desc:'Kalkan – pulse',               file:'zuzu_titan.json'},
 ];
 
-// Inline mod: direkt animationData ile yükle
-function mountInline(containerId, color){
-  const el = document.getElementById(containerId);
-  if(!el) return;
-  const data = baseLottieJSON(color);
-  lottie.loadAnimation({
-    container: el, renderer:'svg', loop:true, autoplay:true,
-    rendererSettings:{preserveAspectRatio:'xMidYMid meet'},
-    animationData: data
+function svgFallback(){
+  return `
+  <svg viewBox="0 0 120 120">
+    <defs><radialGradient id="g" cx="50%" cy="50%" r="65%">
+      <stop offset="0%" stop-color="#00e6ff" stop-opacity=".15"/><stop offset="100%" stop-color="#00e6ff" stop-opacity="0"/></radialGradient></defs>
+    <circle cx="60" cy="60" r="54" fill="#0b1118" stroke="#1f3042"/>
+    <circle cx="60" cy="60" r="54" fill="url(#g)"/>
+    <circle cx="44" cy="52" r="7" fill="#9ff8ff"></circle>
+    <circle cx="76" cy="52" r="7" fill="#9ff8ff"></circle>
+    <path d="M40 78 Q60 92 80 78" fill="none" stroke="#ff8c2a" stroke-width="8" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function buildGallery(){
+  const g = $('#gallery'); g.innerHTML='';
+  CARDS.forEach(card=>{
+    const el = document.createElement('div'); el.className='card';
+    el.innerHTML = `
+      <div class="charbox" id="${card.id}">
+        ${svgFallback()}
+      </div>
+      <div>
+        <div class="charname">${card.name}</div>
+        <div class="small">${card.desc}</div>
+      </div>`;
+    g.appendChild(el);
   });
 }
 
-// File mod (ileride istersen)
-function mountFromFile(containerId, key, color){
-  const el = document.getElementById(containerId);
-  const url = `assets/zuzu/lottie/${key}.json?${VERSION}`;
-  fetch(url).then(r=>{
-    if(!r.ok) throw new Error('404 '+url);
-    return r.json();
-  }).then(json=>{
-    // Renk hatlarını değiştir
-    let s = JSON.stringify(json);
-    s = s.replace(/#00E0FF/gi, color);
-    const data = JSON.parse(s);
-    lottie.loadAnimation({ container:el, renderer:'svg', loop:true, autoplay:true, animationData:data });
-  }).catch(err=>{
-    console.warn('Lottie yok, inline fallback', err);
-    mountInline(containerId, color);
-  });
-}
+async function mountLottie(){
+  await ensureLottie();
+  const io = ('IntersectionObserver' in window) ? new IntersectionObserver((ents)=>{
+    ents.forEach(e=>{ const a=e.target._anim; if(!a) return; e.isIntersecting?a.play():a.pause(); });
+  },{threshold:.25}) : null;
 
-// Tüm karakterleri yükle
-function boot(){
-  // hero anim
-  mountInline('anim-hero', '#00E0FF');
-
-  CHARS.forEach((c,i)=>{
-    if (USE_INLINE) mountInline(c.id, c.color);
-    else {
-      const key = c.id.replace('char-','zuzu_'); // char-hero -> zuzu_hero.json
-      mountFromFile(c.id, key, c.color);
+  for(const card of CARDS){
+    const holder = document.getElementById(card.id);
+    if(!holder) continue;
+    try{
+      const url = `./assets/zuzu/lottie/${card.file}?v=9`;
+      const data = await fetch(url).then(r=>r.json());
+      const svg = holder.querySelector('svg'); if(svg) svg.style.display='none';
+      const box = document.createElement('div'); box.className='lottie-holder'; holder.appendChild(box);
+      const anim = lottie.loadAnimation({container:box, renderer:'svg', loop:true, autoplay:true, animationData:data});
+      holder._anim = anim; if(io) io.observe(holder);
+    }catch(e){
+      // fallback olarak svg kalsın
     }
-  });
+  }
 }
-document.addEventListener('DOMContentLoaded', boot);
+
+// ---------- INIT ----------
+function initAll(){
+  buildGallery();
+  bindTap();
+  bindStake();
+  bindPresets();
+  bindCopy();
+  renderQR();
+  updateTotal();
+  updateRaised().catch(()=>{});
+  mountLottie(); // lottie json'ları yükle
+}
