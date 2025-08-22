@@ -1,172 +1,218 @@
-const S = {
-  cfg:null, provider:null, signer:null, account:null, stageIdx:0, price:0
+// ---- Config yükle ----------------------------------------------------------
+let CFG = {
+  receiver: "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",   // senin adresin
+  usdt:     "0x55d398326f99059fF775485246999027B3197955",  // BSC USDT
+  targetUSD: 300000,
+  // Stage fiyatları (USDT / ZUZU)
+  stages: [
+    { name: "Stage 1 — 0.002000 USDT / ZUZU", price: 0.002 },
+    { name: "Stage 2 — 0.003000 USDT / ZUZU", price: 0.003 },
+    { name: "Stage 3 — 0.004000 USDT / ZUZU", price: 0.004 },
+    { name: "Stage 4 — 0.005000 USDT / ZUZU", price: 0.005 }
+  ],
+  // BscScan API (opsiyonel; boş kalırsa local değer)
+  bscscanKey: ""  // istersen anahtarını gir
 };
 
-const I18N = {
-  TR:{about:"Hakkında",tokenomics:"Tokenomi",roadmap:"Yol Haritası",connect:"Cüzdan Bağla",aiagent:"YAPAY ZEKA",subtitle:"ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> ile birleştirir. Fonlar <b>non-custodial</b> hazinede tutulur.",refText:"Senin referans linkin:",copy:"Kopyala",days:"Gün",hours:"Saat",minutes:"Dakika",seconds:"Saniye",buyTitle:"$ZUZU Token Satın Al – Şimdi Ön Satışta!",stage:"Aşama",howMany:"Kaç ZUZU?",price:"Fiyat:",total:"Toplam:",buyUSDT:"Kripto ile Satın Al (USDT/BEP20)",gas:"Ödeme USDT (BEP20) ile yapılır. İşlem için az miktar BNB gerekir.",receiver:"Receiver",transparency:"Şeffaflık",adminPanel:"Satın alımlar on-chain receiver adresine kaydolur. <a href='admin.html' class='link'>Admin Panel →</a>"},
-  EN:{about:"About",tokenomics:"Tokenomics",roadmap:"Roadmap",connect:"Connect",aiagent:"AI AGENT",subtitle:"ZUZU fuses memetic energy with <b>AI Meme Intelligence</b>. Funds remain <b>non-custodial</b> in treasury.",refText:"Your referral link:",copy:"Copy",days:"Days",hours:"Hours",minutes:"Minutes",seconds:"Seconds",buyTitle:"Buy $ZUZU – Presale Live!",stage:"Stage",howMany:"How many ZUZU?",price:"Price:",total:"Total:",buyUSDT:"Buy with USDT (BEP20)",gas:"Transaction requires small BNB gas.",receiver:"Receiver",transparency:"Transparency",adminPanel:"Purchases are recorded on-chain. <a href='admin.html' class='link'>Admin Panel →</a>"},
-  PT:{about:"Sobre",tokenomics:"Tokenomics",roadmap:"Roteiro",connect:"Conectar"},
-  RU:{about:"О проекте",tokenomics:"Токеномика",roadmap:"Дорожная карта",connect:"Подключить"},
-  ZH:{about:"关于",tokenomics:"代币经济",roadmap:"路线图",connect:"连接钱包"},
-  HI:{about:"बारे में",tokenomics:"टोकनोमिक्स",roadmap:"रोडमैप",connect:"वॉलेट जोड़ें"}
-};
+const $ = s => document.querySelector(s);
+
+// ---- UI init ---------------------------------------------------------------
+window.addEventListener('DOMContentLoaded', init);
 
 async function init(){
-  S.cfg = await (await fetch('config.json?_=' + Date.now())).json();
-
-  // dil menüsü
-  const sel = document.getElementById('langSel');
-  S.cfg.langs.forEach(l=>{ const o=document.createElement('option'); o.value=o.textContent=l; sel.appendChild(o);});
-  sel.value = (new URLSearchParams(location.search).get('lang') || 'TR');
-  applyLang(sel.value);
-  sel.onchange = ()=>{ applyLang(sel.value); history.replaceState(null,'',setParam('lang',sel.value)); };
-
-  // stage
-  const stageSel = document.getElementById('stageSel');
-  S.cfg.stages.forEach((st,i)=>{
-    const o=document.createElement('option'); o.value=i; o.textContent=`${st.label} — ${st.price.toFixed(6)} USDT / ZUZU`; stageSel.appendChild(o);
-  });
-  stageSel.onchange=()=>{S.stageIdx=+stageSel.value; updatePrice();};
-  stageSel.value=0; S.stageIdx=0; updatePrice();
-
-  // chips
-  document.querySelectorAll('.chip').forEach(b=> b.onclick=()=>{ document.getElementById('amount').value=b.dataset.amt; calc(); });
-
-  // receiver + QR
-  document.getElementById('recv').value=S.cfg.receiver;
-  document.getElementById('recvShort').textContent = short(S.cfg.receiver);
-  QRCode.toCanvas(document.getElementById('qr'), S.cfg.receiver, {width:160});
-
-  // counts
-  ['amount'].forEach(id=> document.getElementById(id).addEventListener('input',calc));
-  calc();
-
-  // cüzdan
-  document.getElementById('connectBtn').onclick=connectWallet;
-  document.getElementById('buyUsdt').onclick=buyUSDT;
-  document.getElementById('copyRecv').onclick=()=>copyText(S.cfg.receiver);
-  document.getElementById('copyRef').onclick=()=>copyText(document.getElementById('refLink').href);
-
-  // countdown
-  tickCountdown(new Date(S.cfg.presaleEndsAt).getTime()); setInterval(()=>tickCountdown(new Date(S.cfg.presaleEndsAt).getTime()),1000);
-
-  // progress (admin ile gerçek zamanlı toplama bağlayacağız)
-  document.getElementById('hardcap').textContent = S.cfg.hardcapUSDT.toLocaleString();
-  updateRaisedDemo(0);
-
-  // referral
-  setupReferral();
-
-  // Tap-to-earn demo
-  setupTap();
-
-  // stake demo
-  setupStake();
-}
-
-function applyLang(code){
-  const dict = I18N[code] || I18N.TR;
-  document.querySelectorAll('[data-i18n]').forEach(el=>{
-    const k = el.getAttribute('data-i18n');
-    if(dict[k]) el.innerHTML = dict[k];
-  });
-}
-function setParam(key,val){
-  const u = new URL(location.href); u.searchParams.set(key,val); return u.toString();
-}
-
-function updatePrice(){ S.price = S.cfg.stages[S.stageIdx].price; document.getElementById('price').textContent=S.price.toFixed(6); calc(); }
-function calc(){
-  const amt = +document.getElementById('amount').value||0;
-  const total = amt * S.price;
-  document.getElementById('total').textContent = total.toFixed(6);
-}
-
-function short(a){ return a.slice(0,6)+'...'+a.slice(-4); }
-async function copyText(t){ await navigator.clipboard.writeText(t); toast('Kopyalandı'); }
-function toast(t){ console.log(t); }
-
-async function connectWallet(){
-  if(!window.ethereum){ alert('MetaMask/TrustWallet gerekli'); return;}
-  S.provider = new ethers.providers.Web3Provider(window.ethereum);
-  await S.provider.send('eth_requestAccounts', []);
-  S.signer = S.provider.getSigner();
-  S.account = await S.signer.getAddress();
-
-  // BSC switch
+  // Lottie
   try{
-    await window.ethereum.request({method:'wallet_switchEthereumChain', params:[{chainId:'0x'+S.cfg.chain.chainId.toString(16)}]});
-  }catch(e){
-    if(e.code===4902){
-      await window.ethereum.request({method:'wallet_addEthereumChain', params:[{chainId:'0x'+S.cfg.chain.chainId.toString(16), chainName:'BSC', nativeCurrency:{name:'BNB',symbol:'BNB',decimals:18}, rpcUrls:[S.cfg.chain.rpc], blockExplorerUrls:['https://bscscan.com']}]});
+    if(window.lottie){
+      window.lottie.loadAnimation({
+        container: document.getElementById('lottie'),
+        renderer:'svg', loop:true, autoplay:true,
+        path:'https://assets5.lottiefiles.com/private_files/lf30_2kzn2x.json'
+      });
+    }
+  }catch(e){console.warn(e)}
+
+  // Stage listesi
+  const st = $('#stage');
+  CFG.stages.forEach((x,i)=>{
+    const o = document.createElement('option');
+    o.value = i; o.textContent = x.name;
+    st.appendChild(o);
+  });
+
+  // Receiver/QR/Target
+  $('#rcv').value = CFG.receiver;
+  $('#qr').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(CFG.receiver)}`;
+  $('#target').textContent = CFG.targetUSD.toLocaleString();
+
+  // Eventler
+  document.querySelectorAll('.chip').forEach(ch=>ch.addEventListener('click',()=>{$('#amount').value = ch.dataset.amt; calc();}));
+  $('#amount').addEventListener('input', calc);
+  $('#stage').addEventListener('change', calc);
+  $('#btnCopyRcv').addEventListener('click',()=>copy($('#rcv').value));
+  $('#btnCopyRef').addEventListener('click',()=>copy($('#refLink').href));
+  $('#btnBuy').addEventListener('click', buyUSDT);
+  $('#btnConnect').addEventListener('click', connect);
+
+  // Lang
+  $('#lang').addEventListener('change', setLang);
+  setLang();
+
+  // Countdown 40 gün
+  const end = Date.now() + 40*24*60*60*1000;
+  setInterval(()=>{ tick(end); },1000); tick(end);
+
+  // Referans link
+  buildRefLink();
+
+  // Tap-to-earn
+  initTap();
+
+  // Staking UI
+  $('#stakeDays').addEventListener('change', updateApy);
+  updateApy();
+
+  // Raised
+  raised();
+  calc();
+}
+
+function setLang(){
+  const v = $('#lang').value;
+  const tr = {
+    hTitle:'<span class="neon-orange">YAPAY ZEKA</span> MEME AJANI',
+    hDesc:'ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> ile birleştirir. Fonlar <b>non-custodial</b> hazinede tutulur.',
+    stgLbl:'Aşama', howmanyLbl:'Kaç ZUZU?', buyTitle:'$ZUZU Token Satın Al – Şimdi Ön Satışta!'
+  };
+  const en = {
+    hTitle:'<span class="neon-orange">AI-POWERED</span> MEME AGENT',
+    hDesc:'ZUZU merges memetic energy with <b>AI Meme Intelligence</b>. Funds are kept in a <b>non-custodial</b> treasury.',
+    stgLbl:'Stage', howmanyLbl:'How many ZUZU?', buyTitle:'Buy $ZUZU Token – Presale Live!'
+  };
+  const t = v==='en'?en:tr;
+  $('#hTitle').innerHTML = t.hTitle;
+  $('#hDesc').innerHTML = t.hDesc;
+  $('#stgLbl').textContent = t.stgLbl;
+  $('#howmanyLbl').textContent = t.howmanyLbl;
+  $('#buyTitle').textContent = t.buyTitle;
+}
+
+function tick(end){
+  let r = Math.max(0, end - Date.now());
+  let s = Math.floor(r/1000);
+  let d = Math.floor(s/86400); s-=d*86400;
+  let h = Math.floor(s/3600); s-=h*3600;
+  let m = Math.floor(s/60); s-=m*60;
+  $('#cdD').textContent=d; $('#cdH').textContent=h; $('#cdM').textContent=m; $('#cdS').textContent=s;
+}
+
+function calc(){
+  const st = CFG.stages[+$('#stage').value||0];
+  const amt = Math.max(0, +$('#amount').value||0);
+  const total = (st.price * amt);
+  $('#priceLine').textContent = st.price.toFixed(6) + ' USDT / ZUZU';
+  $('#totalLine').textContent = total.toFixed(6) + ' USDT';
+}
+
+function copy(t){ navigator.clipboard.writeText(t).then(()=>alert('Kopyalandı')); }
+
+function buildRefLink(){
+  const cur = new URL(location.href);
+  const ref = cur.searchParams.get('ref') || 'share-this-link';
+  const me = `${location.origin}/?ref=${encodeURIComponent(ref)}`;
+  const a = $('#refLink'); a.textContent = me; a.href = me;
+}
+
+function initTap(){
+  const urlRef = new URL(location.href).searchParams.get('ref');
+  const mult = urlRef && urlRef!=='share-this-link' ? 1.2 : 1;
+  $('#mult').textContent = mult+'x';
+  let score = +(localStorage.getItem('zuzu_score')||0);
+  $('#score').textContent = Math.floor(score);
+  $('#btnTap').addEventListener('click',()=>{
+    score += 1*mult; localStorage.setItem('zuzu_score',score);
+    $('#score').textContent = Math.floor(score);
+  });
+}
+
+function updateApy(){
+  const d = +$('#stakeDays').value;
+  const apy = d===30?12 : d===60?22 : 36;
+  $('#apy').textContent = apy+'%';
+}
+
+// ---- Raised / BscScan ------------------------------------------------------
+async function raised(){
+  let sum = 0;
+  try{
+    if(CFG.bscscanKey){
+      // Receiver’a gelen USDT transferlerini toplar
+      const url = `https://api.bscscan.com/api?module=account&action=tokentx&address=${CFG.receiver}&contractaddress=${CFG.usdt}&page=1&offset=200&sort=desc&apikey=${CFG.bscscanKey}`;
+      const r = await fetch(url); const j = await r.json();
+      if(j.status==='1'){
+        // Yalnızca gelen (to == receiver)
+        for(const tx of j.result){
+          if(tx.to.toLowerCase()===CFG.receiver.toLowerCase()){
+            const val = Number(tx.value)/1e18; // USDT 18 decimals on BSC
+            sum += val;
+          }
+        }
+      }
+    }
+  }catch(e){ console.warn('BscScan yok/yanıt yok, local 0 kullanılacak'); }
+  $('#raised').textContent = sum.toLocaleString(undefined,{maximumFractionDigits:2});
+  const p = Math.min(100, (sum/CFG.targetUSD)*100);
+  $('#bar').style.width = p+'%';
+}
+
+// ---- Wallet / USDT Transfer -------------------------------------------------
+async function connect(){
+  if(!window.ethereum){ alert('MetaMask/TrustWallet gerekli. Uygulama içi tarayıcıdan aç.'); return; }
+  const chainId = '0x38'; // BSC
+  const cur = await ethereum.request({method:'eth_chainId'});
+  if(cur!==chainId){
+    try{
+      await ethereum.request({method:'wallet_switchEthereumChain', params:[{chainId}]});
+    }catch(e){
+      try{
+        await ethereum.request({method:'wallet_addEthereumChain', params:[{
+          chainId, chainName:'BNB Smart Chain', nativeCurrency:{name:'BNB',symbol:'BNB',decimals:18},
+          rpcUrls:['https://bsc-dataseed1.binance.org'], blockExplorerUrls:['https://bscscan.com']
+        }]});
+      }catch(err){ console.error(err); alert('BSC ağı eklenemedi.'); return; }
     }
   }
-  document.getElementById('connectBtn').textContent = short(S.account);
+  const accs = await ethereum.request({method:'eth_requestAccounts'});
+  const a = accs[0];
+  $('#btnConnect').textContent = a.slice(0,6)+'…'+a.slice(-4);
+
+  // referans linki adres ile üret
+  const u = new URL(location.origin);
+  u.searchParams.set('ref', a);
+  $('#refLink').href = u.toString();
+  $('#refLink').textContent = u.toString();
 }
 
 async function buyUSDT(){
+  if(!window.ethereum) return alert('Cüzdan bulunamadı.');
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const st = CFG.stages[+$('#stage').value||0];
+  const amountZUZU = Math.max(0, +$('#amount').value||0);
+  const totalUSDT = st.price * amountZUZU;
+
+  if(totalUSDT<=0) return alert('Miktar gir.');
+  const usdt = new ethers.Contract(
+    CFG.usdt,
+    ["function transfer(address to,uint256 value) returns (bool)","function decimals() view returns(uint8)"],
+    signer
+  );
+  const dec = await usdt.decimals();
+  const val = ethers.utils.parseUnits(totalUSDT.toFixed(dec), dec);
+
   try{
-      if(!S.signer) await connectWallet();
-      const amt = +document.getElementById('amount').value||0;
-      if(amt<=0) return alert('Miktar gir');
-      const total = ethers.utils.parseUnits((amt * S.price).toFixed(S.cfg.usdt.decimals), S.cfg.usdt.decimals);
-
-      // USDT contract
-      const abi = ["function transfer(address to,uint256 value) returns (bool)"];
-      const usdt = new ethers.Contract(S.cfg.usdt.bep20, abi, S.signer);
-      const tx = await usdt.transfer(S.cfg.receiver, total);
-      toast('Onay bekleniyor: '+tx.hash);
-      await tx.wait();
-      toast('Ödeme tamam!');
-
-      // demo: progress bar ileri al
-      updateRaisedDemo(parseFloat(document.getElementById('total').textContent));
-  }catch(err){ console.error(err); alert('Hata: '+(err.message||err));}
-}
-
-function updateRaisedDemo(add){
-  const current = parseFloat(document.getElementById('raised').textContent.replace(/,/g,'')) || 0;
-  const next = Math.min(current + add, S.cfg.hardcapUSDT);
-  document.getElementById('raised').textContent = next.toLocaleString();
-  const pct = Math.min(100, (next / S.cfg.hardcapUSDT) * 100);
-  document.getElementById('pbar').style.width = pct+'%';
-}
-
-function tickCountdown(endMs){
-  const now = Date.now(); let d=0,h=0,m=0,s=0;
-  let diff = Math.max(0, endMs - now);
-  s = Math.floor(diff/1000)%60; m = Math.floor(diff/1000/60)%60; h = Math.floor(diff/1000/3600)%24; d = Math.floor(diff/1000/3600/24);
-  ['d','h','m','s'].forEach(id=> document.getElementById(id).textContent = eval(id).toString().padStart(2,'0'));
-}
-
-function setupReferral(){
-  const u = new URL(location.href);
-  const ref = u.searchParams.get('ref');
-  if(ref) localStorage.setItem('zuzu_ref', ref);
-  const my = setParam('ref', 'share-this-link');
-  const a = document.getElementById('refLink'); a.textContent = my; a.href=my;
-
-  // multiplier
-  const hasRef = !!(ref || localStorage.getItem('zuzu_ref'));
-  window.__refMul = hasRef ? 1.2 : 1.0;
-}
-
-function setupTap(){
-  const btn = document.getElementById('tapBtn'); const sc = document.getElementById('tapScore'); const mul = document.getElementById('tapMul');
-  mul.textContent = window.__refMul+'x';
-  let score = 0;
-  btn.onclick=()=>{ score += 1 * window.__refMul; sc.textContent = Math.floor(score); btn.style.transform='scale(.98)'; setTimeout(()=>btn.style.transform='',80); };
-}
-
-function setupStake(){
-  const calcBtn = document.getElementById('stakeCalc');
-  calcBtn.onclick=()=>{
-    const d = +document.getElementById('stakeDays').value;
-    const amt = +document.getElementById('stakeAmt').value||0;
-    const apy = (d===30?12:(d===60?22:36));
-    const reward = amt * (apy/100) * (d/365);
-    document.getElementById('stakeOut').textContent = `~${reward.toFixed(2)} ZUZU tahmini ödül (APY ${apy}%)`;
+    const tx = await usdt.transfer(CFG.receiver, val);
+    alert('İşlem gönderildi: '+tx.hash);
+  }catch(e){
+    console.error(e); alert('İşlem iptal/hata.');
   }
 }
-
-window.addEventListener('load',init);
