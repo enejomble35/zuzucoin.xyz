@@ -1,370 +1,119 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ZUZU • AI-Powered Meme Intelligence</title>
-<link rel="preconnect" href="https://cdnjs.cloudflare.com">
-<style>
-:root{
-  --bg:#0b1016; --panel:#0f1620; --card:#121b26; --soft:#1a2633;
-  --text:#d8e6f3; --muted:#90a4b8; --accent:#00e6ff; --green:#29f08f; --orange:#ff8c2a; --pink:#ff4d8a; --yellow:#ffd166;
-  --glow:0 0 12px rgba(0,230,255,.35);
-}
-*{box-sizing:border-box}
-html,body{margin:0;background:radial-gradient(1200px 800px at 15% -10%,#0d1722 0%,#0b1016 35%,#0b1016 100%);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
-a{color:#8dd9ff;text-decoration:none}
-.container{max-width:1200px;margin:0 auto;padding:24px}
-.topbar{position:sticky;top:0;z-index:10;background:linear-gradient(to bottom,rgba(11,16,22,.9),rgba(11,16,22,.3));backdrop-filter:saturate(130%) blur(6px);border-bottom:1px solid rgba(255,255,255,.06)}
-.nav{display:flex;align-items:center;gap:16px;padding:12px 24px}
-.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px}
-.badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:10px;background:#0e1a25;border:1px solid #1f2a36;font-size:12px;color:#a2bed7}
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:12px;background:var(--soft);border:1px solid #233041;color:var(--text);cursor:pointer;transition:.2s}
-.btn:hover{transform:translateY(-1px);box-shadow:var(--glow)}
-.btn-primary{background:linear-gradient(135deg,#00e6ff,#26ffd2);color:#071217;border:0;font-weight:700}
-.grid{display:grid;gap:16px}
-.grid-2{grid-template-columns:1.2fr .8fr}
-.grid-3{grid-template-columns:repeat(3,1fr)}
-.panel{background:var(--panel);border:1px solid #1f2a36;border-radius:16px;padding:16px}
-.h{margin:6px 0 12px;font-size:18px}
-.kicker{letter-spacing:.15em;color:#8cd7ff;text-transform:uppercase;font-weight:700;font-size:13px}
-.hero-title{font-size:32px;line-height:1.2;margin:0 0 14px}
-.muted{color:var(--muted)}
-.input,.select{width:100%;background:#0f1723;border:1px solid #233041;border-radius:12px;color:var(--text);padding:10px 12px;font-size:14px}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.tag{padding:6px 10px;border-radius:100px;background:#0f1723;border:1px solid #233041;font-size:12px;color:#89b1cf}
-.auditItem{background:var(--card);border:1px solid #1f2a36;border-radius:12px;padding:12px}
-.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-@media(min-width:860px){.gallery{grid-template-columns:repeat(5,1fr)}}
-.card{background:var(--card);border:1px solid #1f2a36;border-radius:16px;padding:12px;display:flex;gap:12px;align-items:center}
-.charbox{width:64px;height:64px;border-radius:14px;background:linear-gradient(180deg,#0c141d,#0b1118);border:1px solid #233041;display:grid;place-items:center;position:relative;overflow:hidden}
-.charbox svg,.charbox canvas,.charbox img,.charbox .lottie-holder{width:56px;height:56px}
-.charname{font-weight:700}
-.small{font-size:12px;color:#9fb7cc}
-.badges{display:flex;gap:8px;margin:8px 0}
-.badges .tag{background:#0c131b}
-.footer{margin:20px 0 60px;font-size:12px;color:#94abc1;text-align:center}
-.qr{width:110px;height:110px;border-radius:12px;background:linear-gradient(135deg,#00e6ff22,#26ffd222);border:1px dashed #244455;display:grid;place-items:center}
-.line{height:1px;background:#182332;margin:10px 0}
-/* SVG fallback anim */
-.blink .eye{animation:blink 3s infinite}
-@keyframes blink{0%,90%,100%{transform:scaleY(1)}92%{transform:scaleY(.1)}}
-.glow{filter:drop-shadow(0 0 8px rgba(0,230,255,.6))}
-.pulse{animation:pulse 2s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:.85}50%{opacity:1}}
-</style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>ZUZU • AI Meme Intelligence</title>
+  <link rel="stylesheet" href="./style.css?v=9"/>
+  <meta name="description" content="ZUZU — AI Meme Intelligence presale, maskot galerisi, tap-to-earn, staking (demo)."/>
 </head>
 <body>
-<div class="topbar">
-  <div class="nav">
-    <div class="logo">
-      <span class="badge">ZUZU</span>
-      <span>AI Meme Intelligence</span>
-    </div>
-    <div class="row" style="margin-left:auto;gap:10px">
-      <span class="tag">MEXC</span><span class="tag">Gate.io</span><span class="tag">BitMart</span>
-      <span class="tag">Bybit</span><span class="tag">KuCoin</span><span class="tag">OKX</span>
-      <div class="btn">TR</div>
-      <div class="btn btn-primary">Cüzdan Bağla</div>
+  <div class="topbar">
+    <div class="nav">
+      <div class="logo"><span class="badge">ZUZU</span><span>AI Meme Intelligence</span></div>
+      <div class="row" style="margin-left:auto;gap:10px">
+        <span class="tag">MEXC</span><span class="tag">Gate.io</span><span class="tag">BitMart</span>
+        <span class="tag">Bybit</span><span class="tag">KuCoin</span><span class="tag">OKX</span>
+        <div class="btn">TR</div>
+        <div class="btn btn-primary">Cüzdan Bağla</div>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="container">
-  <div class="kicker">YAPAY ZEKA <span style="color:#5bff6f">ZUZU</span> ORDUSU</div>
-  <h1 class="hero-title">Memetik enerji + <span style="color:#ff8c2a">AI Meme Intelligence</span> ile paylaşıp kazan, stake ile katla.</h1>
-  <p class="muted">Presale fonları <b>non-custodial</b> hazinede tutulur. Paylaş, tap-to-earn ile puan topla, stake ile daha fazla kazanç hedefle.</p>
+  <div class="container">
+    <div class="kicker">YAPAY ZEKA <span class="c-green">ZUZU</span> ORDUSU</div>
+    <h1 class="hero-title">Memetik enerji + <span class="c-orange">AI Meme Intelligence</span> ile paylaşıp kazan, stake ile katla.</h1>
+    <p class="muted">Presale fonları <b>non-custodial</b> hazinede tutulur. Paylaş, tap-to-earn ile puan topla, stake ile daha fazla kazanç hedefle.</p>
 
-  <div class="grid grid-2" style="margin-top:16px">
-    <div class="panel">
-      <div class="h"><b>$ZUZU Token Satın Al</b> – Şimdi Ön Satışta!</div>
-      <div class="row">
-        <select class="select" id="stageSel">
-          <option>Stage 1 — 0.002000 USDT / ZUZU</option>
-          <option>Stage 2 — 0.002500 USDT / ZUZU</option>
-          <option>Stage 3 — 0.003000 USDT / ZUZU</option>
-        </select>
-        <div class="tag">100k</div><div class="tag">250k</div><div class="tag">1M</div>
+    <div class="grid grid-2">
+      <div class="panel">
+        <div class="h"><b>$ZUZU Token Satın Al</b> – Şimdi Ön Satışta!</div>
+        <div class="row">
+          <select class="select" id="stageSel">
+            <option>Stage 1 — 0.002000 USDT / ZUZU</option>
+            <option>Stage 2 — 0.002500 USDT / ZUZU</option>
+            <option>Stage 3 — 0.003000 USDT / ZUZU</option>
+          </select>
+          <div class="tag js-preset" data-v="100000">100k</div>
+          <div class="tag js-preset" data-v="250000">250k</div>
+          <div class="tag js-preset" data-v="1000000">1M</div>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <input class="input" id="amountInp" value="100000" placeholder="Kaç ZUZU?"/>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <div class="tag">Fiyat: <b id="priceLbl">0.002000</b> USDT / ZUZU</div>
+          <div class="tag">Toplam: <b id="totalLbl">200.000000</b> USDT</div>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <div class="btn btn-primary">Kart ile Satın Al (yakında)</div>
+          <div class="btn">USDT (BEP20) ile Satın Al</div>
+        </div>
+        <p class="muted" style="margin-top:8px">Ödeme USDT (BEP20) ile doğrudan hazineye gider. Az miktar BNB gerekir.</p>
       </div>
-      <div class="row" style="margin-top:10px">
-        <input class="input" id="amountInp" value="100000" placeholder="Kaç ZUZU?"/>
-      </div>
-      <div class="row" style="margin-top:10px">
-        <div class="tag">Fiyat: <b id="priceLbl">0.002000</b> USDT / ZUZU</div>
-        <div class="tag">Toplam: <b id="totalLbl">200.000000</b> USDT</div>
-      </div>
-      <div class="row" style="margin-top:12px">
-        <div class="btn btn-primary">Kart ile Satın Al (yakında)</div>
-        <div class="btn">USDT (BEP20) ile Satın Al</div>
-      </div>
-      <p class="muted" style="margin-top:8px">Ödeme USDT (BEP20) ile doğrudan hazineye gider. Az miktar BNB gerekir.</p>
-    </div>
 
-    <div class="panel">
-      <div class="h"><b>Receiver</b></div>
-      <div class="row"><input class="input" id="rcv" value="0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3"><div class="btn" onclick="copyRcv()">Kopyala</div></div>
-      <div class="row" style="margin-top:10px;align-items:flex-start">
-        <div class="qr" id="qr">QR</div>
-        <div style="flex:1">
-          <div class="auditItem"><b>Mini Audit</b><div class="line"></div>
-            <div class="small">✔ Sözleşme: USDT (BEP20)</div>
-            <div class="small">✔ Transfer → receiver</div>
-            <div class="small">✔ Non-custodial, direkt kasaya</div>
-          </div>
-          <div class="auditItem" style="margin-top:8px"><b>Şeffaflık</b><div class="line"></div>
-            <div class="small">Satın alımlar on-chain receiver adresine kaydolur. Admin Panel üzerinden son işlemleri görebilirsin.</div>
+      <div class="panel">
+        <div class="h"><b>Receiver</b></div>
+        <div class="row">
+          <input class="input" id="rcv" value="">
+          <div class="btn" id="copyBtn">Kopyala</div>
+        </div>
+        <div class="row" style="margin-top:10px;align-items:flex-start">
+          <div class="qr" id="qr">QR</div>
+          <div style="flex:1">
+            <div class="auditItem"><b>Mini Audit</b><div class="line"></div>
+              <div class="small">✔ Sözleşme: USDT (BEP20)</div>
+              <div class="small">✔ Transfer → receiver</div>
+              <div class="small">✔ Non-custodial, direkt kasaya</div>
+            </div>
+            <div class="auditItem" style="margin-top:8px"><b>Şeffaflık</b><div class="line"></div>
+              <div class="small">Satın alımlar on-chain receiver adresine kaydolur. Admin Panel üzerinden son işlemleri görebilirsin.</div>
+            </div>
+            <div class="auditItem" style="margin-top:8px"><b>Toplanan</b><div class="line"></div>
+              <div class="small" id="raised">$0 / $300,000</div>
+              <div class="small muted">(BscScan ile yaklaşık)</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <h3 style="margin:24px 0 10px">ZUZU Maskot Galerisi</h3>
-  <div class="gallery" id="gallery">
-    <!-- Kartlar JS ile doldurulacak -->
-  </div>
+    <h3 style="margin:24px 0 10px">ZUZU Maskot Galerisi</h3>
+    <div class="gallery" id="gallery"></div>
 
-  <div class="grid grid-3" style="margin-top:18px">
-    <div class="panel"><div class="h">Tokenomi</div>
-      <div class="badges">
-        <span class="tag">Presale: 45%</span><span class="tag">Liquidity: 25%</span>
-        <span class="tag">Marketing: 15%</span><span class="tag">Team: 10%</span>
-        <span class="tag">Airdrop: 5%</span><span class="tag">Chain: BSC (BEP20)</span>
+    <div class="grid grid-3" style="margin-top:18px">
+      <div class="panel"><div class="h">Tokenomi</div>
+        <div class="badges">
+          <span class="tag">Presale: 45%</span><span class="tag">Liquidity: 25%</span>
+          <span class="tag">Marketing: 15%</span><span class="tag">Team: 10%</span>
+          <span class="tag">Airdrop: 5%</span><span class="tag">Chain: BSC (BEP20)</span>
+        </div>
+      </div>
+      <div class="panel"><div class="h">Phase 1</div><div class="small">Presale + Topluluk + Maskot Setleri</div></div>
+      <div class="panel"><div class="h">Phase 2</div><div class="small">CEX Başvuruları, Pazarlama, Partnerlikler</div></div>
+    </div>
+
+    <div class="grid grid-3" style="margin-top:8px">
+      <div class="panel"><div class="h">Phase 3</div><div class="small">Tap-to-Earn + Staking + AI Meme Intelligence</div></div>
+      <div class="panel"><div class="h">Tap-to-Earn</div>
+        <div class="small">Dokundukça puan kazan. Referans varsa x1.2 çarpan eklenir.</div>
+        <div class="btn" style="margin-top:8px" id="tapBtn">TAP!</div>
+        <div class="small" id="tapStat">Puan: 0 • Çarpan: 1.0x</div>
+      </div>
+      <div class="panel"><div class="h">Staking (Demo)</div>
+        <div class="row">
+          <select class="select" id="stkDur"><option>30 gün</option><option>60 gün</option><option>90 gün</option></select>
+          <input class="input" id="stkAmt" value="50000"/>
+        </div>
+        <div class="small" id="apy">Tahmini APY: %12</div>
+        <div class="small" id="earn">Beklenen kazanç: 493.15 ZUZU</div>
+        <div class="btn" style="margin-top:6px">Stake Et (Demo)</div>
       </div>
     </div>
-    <div class="panel"><div class="h">Phase 1</div><div class="small">Presale + Topluluk + Maskot Setleri</div></div>
-    <div class="panel"><div class="h">Phase 2</div><div class="small">CEX Başvuruları, Pazarlama, Partnerlikler</div></div>
+
+    <div class="footer">© 2025 ZUZU • AI-Powered Meme Intelligence</div>
   </div>
 
-  <div class="grid grid-3" style="margin-top:8px">
-    <div class="panel"><div class="h">Phase 3</div><div class="small">Tap-to-Earn + Staking + AI Meme Intelligence</div></div>
-    <div class="panel"><div class="h">Tap-to-Earn</div>
-      <div class="small">Dokundukça puan kazan. Referans varsa x1.2 çarpan eklenir.</div>
-      <div class="btn" style="margin-top:8px" onclick="tap()">TAP!</div>
-      <div class="small" id="tapStat">Puan: 0 • Çarpan: 1.0x</div>
-    </div>
-    <div class="panel"><div class="h">Staking (Demo)</div>
-      <div class="row">
-        <select class="select" id="stkDur"><option>30 gün</option><option>60 gün</option><option>90 gün</option></select>
-        <input class="input" id="stkAmt" value="50000"/>
-      </div>
-      <div class="small" id="apy">Tahmini APY: %12</div>
-      <div class="small" id="earn">Beklenen kazanç: 493.15 ZUZU</div>
-      <div class="btn" style="margin-top:6px">Stake Et (Demo)</div>
-    </div>
-  </div>
-
-  <div class="footer">© 2025 ZUZU • AI-Powered Meme Intelligence</div>
-</div>
-
-<!-- LOTTIE -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js" crossorigin="anonymous"></script>
-
-<script>
-/* ----------------- Presale hesap ----------------- */
-const amountInp=document.getElementById('amountInp');
-const stageSel=document.getElementById('stageSel');
-function price(){return Number(stageSel.value.includes('0.002000')?0.002:stageSel.value.includes('0.002500')?0.0025:0.003);}
-function fmt(n){return Number(n).toFixed(6)}
-function upd(){document.getElementById('priceLbl').textContent=price().toFixed(6);document.getElementById('totalLbl').textContent=fmt(price()*Number(amountInp.value||0));}
-amountInp.oninput=upd; stageSel.onchange=upd; upd();
-
-/* ----------------- Tap to Earn demo ----------------- */
-let tapScore=0, mult=1.0; function tap(){tapScore+=1*mult; document.getElementById('tapStat').textContent='Puan: '+tapScore+' • Çarpan: '+mult.toFixed(1)+'x'}
-
-/* ----------------- Receiver + QR (fake) ------------- */
-function copyRcv(){navigator.clipboard.writeText(document.getElementById('rcv').value)}
-(function qrFake(){
-  const el=document.getElementById('qr'); const c=document.createElement('canvas'); c.width=100;c.height=100; el.innerHTML=''; el.appendChild(c);
-  const ctx=c.getContext('2d'); ctx.fillStyle='#0c1f27'; ctx.fillRect(0,0,100,100); for(let i=0;i<460;i++){ctx.fillStyle=Math.random()>.5?'#00e6ff':'#29f08f'; ctx.fillRect(Math.random()*100,Math.random()*100,3,3);}
-})();
-
-/* -------------- G A L E R İ   D A T A ---------------- */
-const CARDS=[
-  {id:'char-logo',      name:'ZUZU Logo',      desc:'Temel maskot – glow',          lottie:'zuzu_logo'},
-  {id:'char-hero',      name:'ZUZU Hero',      desc:'Neon zırh + hatlar',           lottie:'zuzu_hero'},
-  {id:'char-hacker',    name:'ZUZU Hacker',    desc:'Yüz tarama + sinyal',          lottie:'zuzu_hacker'},
-  {id:'char-warrior',   name:'ZUZU Warrior',   desc:'Kılıç parlaması',              lottie:'zuzu_warrior'},
-  {id:'char-sorceress', name:'ZUZU Sorceress', desc:'Büyü küresi',                  lottie:'zuzu_sorceress'},
-  {id:'char-ranger',    name:'ZUZU Ranger',    desc:'Vizör + kayış',                lottie:'zuzu_ranger'},
-  {id:'char-berserker', name:'ZUZU Berserker', desc:'Kızgın aura',                  lottie:'zuzu_berserker'},
-  {id:'char-scientist', name:'ZUZU Scientist', desc:'Devre hatları',                lottie:'zuzu_scientist'},
-  {id:'char-rogue',     name:'ZUZU Rogue',     desc:'Gizli bıçak',                  lottie:'zuzu_rogue'},
-  {id:'char-titan',     name:'ZUZU Titan',     desc:'Kalkan – pulse',               lottie:'zuzu_titan'}
-];
-
-/* ----------------- Galeri çiz ----------------- */
-function makeCard(item){
-  const el=document.createElement('div'); el.className='card';
-  el.innerHTML=`
-    <div class="charbox blink" id="${item.id}">
-      ${svgFallback()}
-    </div>
-    <div>
-      <div class="charname">${item.name}</div>
-      <div class="small">${item.desc}</div>
-    </div>`;
-  return el;
-}
-function svgFallback(){
-  return `
-  <svg viewBox="0 0 120 120">
-    <defs><radialGradient id="g" cx="50%" cy="50%" r="65%"><stop offset="0%" stop-color="#00e6ff" stop-opacity=".15"/><stop offset="100%" stop-color="#00e6ff" stop-opacity="0"/></radialGradient></defs>
-    <circle cx="60" cy="60" r="54" fill="#0b1118" stroke="#1f3042"/>
-    <circle cx="60" cy="60" r="54" fill="url(#g)"/>
-    <circle cx="44" cy="52" r="7" class="eye" fill="#9ff8ff"/>
-    <circle cx="76" cy="52" r="7" class="eye" fill="#9ff8ff"/>
-    <path d="M40 78 Q60 92 80 78" fill="none" stroke="#ff8c2a" stroke-width="8" stroke-linecap="round" class="glow"/>
-  </svg>`;
-}
-function buildGallery(){
-  const g=document.getElementById('gallery'); g.innerHTML='';
-  CARDS.forEach(card=>g.appendChild(makeCard(card)));
-}
-buildGallery();
-
-/* -------------- Lottie inline loader ---------------- */
-const io=('IntersectionObserver' in window)?new IntersectionObserver((ents)=>{ents.forEach(e=>{const a=e.target._anim;if(!a)return; e.isIntersecting?a.play():a.pause();});},{threshold:.25}):null;
-
-function inlineJSON(id){ // <script type="application/json" id="lottie:zuzu_logo">
-  const el=document.getElementById('lottie:'+id);
-  if(!el) return null; try{return JSON.parse(el.textContent);}catch(_){return null}
-}
-
-function mountLottie(){
-  CARDS.forEach(card=>{
-    const holder=document.getElementById(card.id); if(!holder) return;
-    const data=inlineJSON(card.lottie);
-    if(!data){return} // JSON yoksa SVG fallback çalışır
-    // fallback svg'yi sakla
-    const svg=holder.querySelector('svg'); if(svg) svg.style.display='none';
-    const box=document.createElement('div'); box.className='lottie-holder'; holder.appendChild(box);
-    const anim=lottie.loadAnimation({container:box,renderer:'svg',loop:true,autoplay:true,animationData:data});
-    holder._anim=anim; if(io) io.observe(holder);
-  });
-}
-mountLottie();
-
-/* -------------- Staking demo hesap ------------------ */
-function updStake(){
-  const apy=12; document.getElementById('apy').textContent='Tahmini APY: %'+apy;
-  const amt=Number(document.getElementById('stkAmt').value||0);
-  const days=document.getElementById('stkDur').selectedIndex===0?30:(document.getElementById('stkDur').selectedIndex===1?60:90);
-  const gain=amt*(apy/100)*(days/365); document.getElementById('earn').textContent='Beklenen kazanç: '+gain.toFixed(2)+' ZUZU';
-}
-document.getElementById('stkAmt').oninput=updStake;document.getElementById('stkDur').onchange=updStake;updStake();
-</script>
-
-<!-- ============= INLINE LOTTIE JSON SET (10 ADET) ============= -->
-<!-- Not: Minimal, hafif JSON’lar — parlayan çember + göz kırpma + aura/simge -->
-<script type="application/json" id="lottie:zuzu_logo">
-{
- "v":"5.7.6","fr":30,"ip":0,"op":90,"w":120,"h":120,"nm":"zuzu_logo","ddd":0,"assets":[],
- "layers":[
-  {"ddd":0,"ind":1,"ty":4,"nm":"glow","sr":1,"ks":{"o":{"a":1,"k":[{"t":0,"s":[60]},{"t":45,"s":[100]},{"t":90,"s":[60]}]},"r":{"a":0,"k":0},"p":{"a":0,"k":[60,60,0]},"a":{"a":0,"k":[0,0,0]},"s":{"a":0,"k":[100,100,100]}},
-   "shapes":[{"ty":"gr","it":[
-      {"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[108,108]}},
-      {"ty":"fl","c":{"a":0,"k":[0.0,0.9,1,1]},"o":{"a":0,"k":12},"r":1},
-      {"ty":"tr","p":{"a":0,"k":[0,0]}}
-   ]}]},
-  {"ddd":0,"ind":2,"ty":4,"nm":"face","ks":{"o":{"a":0,"k":100},"r":{"a":0,"k":0},"p":{"a":0,"k":[60,60,0]},"a":{"a":0,"k":[0,0,0]},"s":{"a":0,"k":[100,100,100]}},
-   "shapes":[{"ty":"gr","it":[
-      {"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[96,96]}},
-      {"ty":"fl","c":{"a":0,"k":[0.04,0.07,0.11,1]},"o":{"a":0,"k":100},"r":1},
-      {"ty":"tr","p":{"a":0,"k":[0,0]}}
-   ]}]},
-  {"ddd":0,"ind":3,"ty":4,"nm":"eyes","ks":{"o":{"a":0,"k":100},"p":{"a":0,"k":[60,56,0]},"a":{"a":0,"k":[0,0,0]},"s":{"a":0,"k":[100,100,100]},"r":{"a":0,"k":0}},
-   "shapes":[{"ty":"gr","it":[
-     {"ty":"el","p":{"a":0,"k":[-14,0]},"s":{"a":0,"k":[12,12]}},
-     {"ty":"fl","c":{"a":0,"k":[0.62,0.97,1,1]},"o":{"a":0,"k":100}},
-     {"ty":"el","p":{"a":0,"k":[14,0]},"s":{"a":0,"k":[12,12]}},
-     {"ty":"fl","c":{"a":0,"k":[0.62,0.97,1,1]},"o":{"a":0,"k":100}},
-     {"ty":"tr","p":{"a":1,"k":[{"t":10,"s":[0,0]},{"t":15,"s":[0,4]},{"t":25,"s":[0,0]}]}}
-   ]}]},
-  {"ddd":0,"ind":4,"ty":4,"nm":"smile","ks":{"o":{"a":0,"k":100},"p":{"a":0,"k":[60,78,0]},"a":{"a":0,"k":[0,0,0]},"s":{"a":0,"k":[100,100,100]}},
-   "shapes":[{"ty":"gr","it":[
-     {"ty":"sh","ks":{"a":0,"k":{"i":[[0,0],[0,0]],"o":[[0,0],[0,0]],"v":[[-20,0],[20,0]],"c":false}},"nm":"line"},
-     {"ty":"st","c":{"a":0,"k":[1,0.55,0.16,1]},"o":{"a":0,"k":100},"w":{"a":0,"k":8},"lc":2,"lj":1},
-     {"ty":"tr","p":{"a":0,"k":[0,0]}}
-   ]}]}
- ]
-}
-</script>
-
-<script type="application/json" id="lottie:zuzu_hero">
-{"v":"5.7.6","fr":30,"ip":0,"op":90,"w":120,"h":120,"nm":"hero","ddd":0,"assets":[],"layers":[
- {"ty":4,"nm":"aura","ks":{"o":{"a":1,"k":[{"t":0,"s":[30]},{"t":45,"s":[80]},{"t":90,"s":[30]}]},"p":{"a":0,"k":[60,60,0]},"a":{"a":0,"k":[0,0,0]},"s":{"a":0,"k":[100,100,100]}},
-  "shapes":[{"ty":"gr","it":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[110,110]}},{"ty":"st","c":{"a":0,"k":[0,1,0.76,1]},"w":{"a":0,"k":2}},{"ty":"tr","p":{"a":0,"k":[0,0]}}]}]},
- {"ty":4,"nm":"body","ks":{"o":{"a":0,"k":100},"p":{"a":0,"k":[60,70,0]},"a":{"a":0,"k":[0,0,0]},"s":{"a":0,"k":[100,100,100]}},
-  "shapes":[{"ty":"gr","it":[{"ty":"rc","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[40,50]},"r":{"a":0,"k":10}},{"ty":"fl","c":{"a":0,"k":[0.04,0.07,0.11,1]}},{"ty":"st","c":{"a":0,"k":[0,1,0.76,1]},"w":{"a":0,"k":2}},{"ty":"tr","p":{"a":0,"k":[0,0]}}]}]},
- {"ty":4,"nm":"visor","ks":{"o":{"a":0,"k":100},"p":{"a":0,"k":[60,45,0]},"a":{"a":0,"k":[0,0,0]},"s":{"a":1,"k":[{"t":0,"s":[100,100,100]},{"t":45,"s":[108,108,100]},{"t":90,"s":[100,100,100]}]}},
-  "shapes":[{"ty":"gr","it":[{"ty":"rc","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[46,18]},"r":{"a":0,"k":9}},{"ty":"fl","c":{"a":0,"k":[0,0.9,1,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]}}]}]}
-]}
-</script>
-
-<script type="application/json" id="lottie:zuzu_hacker">
-{"v":"5.7.6","fr":30,"ip":0,"op":90,"w":120,"h":120,"nm":"hacker","ddd":0,"assets":[],"layers":[
- {"ty":4,"nm":"grid","ks":{"o":{"a":0,"k":100},"p":{"a":0,"k":[60,60,0]},"s":{"a":0,"k":[100,100,100]}},
-  "shapes":[{"ty":"gr","it":[{"ty":"rc","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[96,96]},"r":{"a":0,"k":10}},{"ty":"st","c":{"a":0,"k":[0,0.6,1,1]},"w":{"a":0,"k":1}},{"ty":"tr","p":{"a":0,"k":[0,0]}}]}]},
- {"ty":4,"nm":"scanner","ks":{"o":{"a":1,"k":[{"t":0,"s":[0]},{"t":30,"s":[80]},{"t":60,"s":[0]}]},"p":{"a":1,"k":[{"t":0,"s":[20,20,0]},{"t":60,"s":[100,100,0]}]},"s":{"a":0,"k":[100,100,100]}},
-  "shapes":[{"ty":"gr","it":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[14,14]}},{"ty":"fl","c":{"a":0,"k":[0,0.9,1,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]}}]}]}
-]}
-</script>
-
-<script type="application/json" id="lottie:zuzu_warrior">
-{"v":"5.7.6","fr":30,"ip":0,"op":90,"w":120,"h":120,"nm":"warrior","ddd":0,"assets":[],"layers":[
- {"ty":4,"nm":"sword","ks":{"o":{"a":1,"k":[{"t":0,"s":[60]},{"t":30,"s":[100]},{"t":60,"s":[60]}]},"p":{"a":0,"k":[80,40,0]},"a":{"a":0,"k":[0,0,0]},"s":{"a":0,"k":[100,100,100]}},
-  "shapes":[{"ty":"gr","it":[{"ty":"rc","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[8,44]},"r":{"a":0,"k":2}},{"ty":"fl","c":{"a":0,"k":[0.9,0.9,1,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]}}]}]},
- {"ty":4,"nm":"guard","ks":{"o":{"a":0,"k":100},"p":{"a":0,"k":[60,70,0]},"s":{"a":0,"k":[100,100,100]}},
-  "shapes":[{"ty":"gr","it":[{"ty":"rc","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[44,52]},"r":{"a":0,"k":10}},{"ty":"fl","c":{"a":0,"k":[0.04,0.07,0.11,1]}},{"ty":"st","c":{"a":0,"k":[1,0.34,0.12,1]},"w":{"a":0,"k":2}},{"ty":"tr","p":{"a":0,"k":[0,0]}}]}]}
-]}
-</script>
-
-<script type="application/json" id="lottie:zuzu_sorceress">
-{"v":"5.7.6","fr":30,"ip":0,"op":90,"w":120,"h":120,"nm":"sorceress","ddd":0,"assets":[],"layers":[
- {"ty":4,"nm":"orb","ks":{"o":{"a":1,"k":[{"t":0,"s":[40]},{"t":45,"s":[100]},{"t":90,"s":[40]}]},"p":{"a":0,"k":[60,46,0]},"s":{"a":0,"k":[100,100,100]}},
-  "shapes":[{"ty":"gr","it":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[28,28]}},{"ty":"fl","c":{"a":0,"k":[0.0,1,0.7,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]}}]}]},
- {"ty":4,"nm":"hands","ks":{"o":{"a":0,"k":100},"p":{"a":0,"k":[60,70,0]},"s":{"a":0,"k":[100,100,100]}},
-  "shapes":[{"ty":"gr","it":[{"ty":"rc","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[50,54]},"r":{"a":0,"k":10}},{"ty":"st","c":{"a":0,"k":[0,1,0.7,1]},"w":{"a":0,"k":1}},{"ty":"tr","p":{"a":0,"k":[0,0]}}]}]}
-]}
-</script>
-
-<script type="application/json" id="lottie:zuzu_ranger">
-{"v":"5.7.6","fr":30,"ip":0,"op":90,"w":120,"h":120,"nm":"ranger","ddd":0,"assets":[],"layers":[
- {"ty":4,"nm":"visor sweep","ks":{"o":{"a":1,"k":[{"t":0,"s":[0]},{"t":20,"s":[100]},{"t":40,"s":[0]}]},"p":{"a":1,"k":[{"t":0,"s":[30,40,0]},{"t":40,"s":[90,40,0]}]},"s":{"a":0,"k":[100,100,100]}},
-  "shapes":[{"ty":"gr","it":[{"ty":"rc","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[30,10]},"r":{"a":0,"k":5}},{"ty":"fl","c":{"a":0,"k":[0,0.9,1,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]}}]}]}
-]}
-</script>
-
-<script type="application/json" id="lottie:zuzu_berserker">
-{"v":"5.7.6","fr":30,"ip":0,"op":90,"w":120,"h":120,"nm":"berserker","ddd":0,"assets":[],"layers":[
- {"ty":4,"nm":"ring","ks":{"o":{"a":1,"k":[{"t":0,"s":[30]},{"t":30,"s":[90]},{"t":60,"s":[30]}]},"p":{"a":0,"k":[60,60,0]},"s":{"a":1,"k":[{"t":0,"s":[90,90,100]},{"t":60,"s":[110,110,100]}]}},
-  "shapes":[{"ty":"gr","it":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[90,90]}},{"ty":"st","c":{"a":0,"k":[1,0.3,0.2,1]},"w":{"a":0,"k":3}},{"ty":"tr","p":{"a":0,"k":[0,0]}}]}]}
-]}
-</script>
-
-<script type="application/json" id="lottie:zuzu_scientist">
-{"v":"5.7.6","fr":30,"ip":0,"op":90,"w":120,"h":120,"nm":"scientist","ddd":0,"assets":[],"layers":[
- {"ty":4,"nm":"circuits","ks":{"o":{"a":1,"k":[{"t":0,"s":[40]},{"t":30,"s":[100]},{"t":60,"s":[40]}]},"p":{"a":0,"k":[60,60,0]},"s":{"a":0,"k":[100,100,100]}},
-  "shapes":[{"ty":"gr","it":[
-    {"ty":"sh","ks":{"a":0,"k":{"i":[],"o":[],"v":[[-30,20],[-10,0],[10,10],[30,-10]],"c":false}}},{"ty":"st","c":{"a":0,"k":[0,1,0.7,1]},"w":{"a":0,"k":2}},{"ty":"tr","p":{"a":0,"k":[0,0]}}
-  ]}]}
-]}
-</script>
-
-<script type="application/json" id="lottie:zuzu_rogue">
-{"v":"5.7.6","fr":30,"ip":0,"op":90,"w":120,"h":120,"nm":"rogue","ddd":0,"assets":[],"layers":[
- {"ty":4,"nm":"dagger glow","ks":{"o":{"a":1,"k":[{"t":0,"s":[40]},{"t":45,"s":[100]},{"t":90,"s":[40]}]},"p":{"a":0,"k":[80,65,0]},"s":{"a":0,"k":[100,100,100]}},
-  "shapes":[{"ty":"gr","it":[{"ty":"rc","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[8,28]},"r":{"a":0,"k":2}},{"ty":"fl","c":{"a":0,"k":[1,1,1,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]}}]}]}
-]}
-</script>
-
-<script type="application/json" id="lottie:zuzu_titan">
-{"v":"5.7.6","fr":30,"ip":0,"op":90,"w":120,"h":120,"nm":"titan","ddd":0,"assets":[],"layers":[
- {"ty":4,"nm":"shield","ks":{"o":{"a":1,"k":[{"t":0,"s":[30]},{"t":45,"s":[90]},{"t":90,"s":[30]}]},"p":{"a":0,"k":[60,60,0]},"s":{"a":0,"k":[100,100,100]}},
-  "shapes":[{"ty":"gr","it":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[84,84]}},{"ty":"st","c":{"a":0,"k":[0.96,0.82,0.2,1]},"w":{"a":0,"k":3}},{"ty":"tr","p":{"a":0,"k":[0,0]}}]}]}
-]}
-</script>
-
+  <script src="./script.js?v=9" defer></script>
 </body>
 </html>
