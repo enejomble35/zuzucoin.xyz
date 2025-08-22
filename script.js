@@ -1,261 +1,236 @@
-/* =========================================================
-   ZUZU – Tek Parça Script
-   - Lottie animasyonları (otomatik yükleme + fallback)
-   - Maskot Galerisi oluşturma
-   - Cüzdan bağlama (ethers otomat yükleme)
-   - Borsa logoları (simple-icons ile)
-   ========================================================= */
+<script>
+(() => {
+  'use strict';
 
-const CFG = {
-  receiver: "0x69014a76eE25c8B73dAe9044dfcAd7356fe74bC3",
-  usdt: "0x55d398326f99059fF775485246999027B3197955",   // BSC USDT
-  hardCap: 300000,
-  base: "assets/zuzu",
-  lotties: [
-    { key: "logo",      title: "ZUZU Logo",      hint: "Temel maskot – glow" },
-    { key: "hero",      title: "ZUZU Hero",      hint: "Neon zırh + hatlar" },
-    { key: "hacker",    title: "ZUZU Hacker",    hint: "Yüz tarama + sinyal" },
-    { key: "warrior",   title: "ZUZU Warrior",   hint: "Kılıç parlaması" },
-    { key: "sorceress", title: "ZUZU Sorceress", hint: "Büyü küresi" },
-    { key: "ranger",    title: "ZUZU Ranger",    hint: "Vizör + kayış" },
-    { key: "berserker", title: "ZUZU Berserker", hint: "Kızgın aura" },
-    { key: "scientist", title: "ZUZU Scientist", hint: "Devre hatları" },
-    { key: "rogue",     title: "ZUZU Rogue",     hint: "Gizli bıçak" },
-    { key: "titan",     title: "ZUZU Titan",     hint: "Kalkan + pulse" },
-  ],
-  // simple-icons slugs
-  exchanges: [
-    { name: "MEXC",   slug: "mexc" },
-    { name: "Gate.io",slug: "gateio" },
-    { name: "BitMart",slug: "bitmart" },
-    { name: "BingX",  slug: "bingx" },
-    { name: "Bybit",  slug: "bybit" },
-    { name: "KuCoin", slug: "kucoin" },
-    { name: "OKX",    slug: "okx" },
-  ]
-};
+  /********************************************************
+   * ZUZU Presale – Lottie + SVG Gallery Loader (v9.2)
+   *******************************************************/
 
-// ---------- mini helper ----------
-const $ = q => document.querySelector(q);
-const $$ = q => Array.from(document.querySelectorAll(q));
-const fmt = n => Number(n).toLocaleString('en-US', { maximumFractionDigits: 6 });
-const price = () => 0.002;
-
-// ---------- dynamic loaders ----------
-function loadScript(src){
-  return new Promise((res, rej)=>{
-    const s = document.createElement('script');
-    s.src = src; s.onload = res; s.onerror = rej;
-    document.head.appendChild(s);
-  });
-}
-async function ensureLottie(){
-  if (window.lottie) return;
-  await loadScript("https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js");
-}
-async function ensureEthers(){
-  if (window.ethers) return;
-  await loadScript("https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js");
-}
-
-// ---------- REF + TIMER ----------
-function initRef(){
-  const url = new URL(location.href);
-  const ref = url.searchParams.get('ref') || localStorage.getItem('zref') || 'share-this-link';
-  localStorage.setItem('zref', ref);
-  const a = document.createElement('a');
-  a.href = `${location.origin}${location.pathname}?ref=${ref}`;
-  a.textContent = a.href;
-  const refBox = $('#refLink');
-  if (refBox && !refBox.querySelector('a')) refBox.appendChild(a);
-}
-function initTimer(){
-  const end = Date.now() + 39*24*3600*1000;
-  const ids = {d:'#d',h:'#h',m:'#m',s:'#s'};
-  const el = {}; for(const k in ids){ el[k] = $(ids[k]); }
-  function tick(){
-    let diff = Math.max(0, end - Date.now());
-    let d = Math.floor(diff/864e5); diff-=d*864e5;
-    let h = Math.floor(diff/36e5);  diff-=h*36e5;
-    let m = Math.floor(diff/6e4);   diff-=m*6e4;
-    let s = Math.floor(diff/1e3);
-    if(el.d){ el.d.textContent = d; el.h.textContent=h; el.m.textContent=m; el.s.textContent=s; }
-  }
-  tick(); setInterval(tick, 1000);
-}
-
-// ---------- PRESALE UI ----------
-function initPresale(){
-  const amount = $('#amountInp');
-  const pLabel = $('#priceTag');
-  const tLabel = $('#totalTag');
-
-  function recalc(){
-    const p = price();
-    const q = Number(amount?.value||0);
-    if (pLabel) pLabel.textContent = fmt(p);
-    if (tLabel) tLabel.textContent = fmt(p*q);
-  }
-  if (amount){
-    amount.addEventListener('input', recalc);
-    $$('.chip').forEach(c=>c.addEventListener('click',()=>{
-      amount.value = c.dataset.q; recalc();
-    }));
-    recalc();
-  }
-  const recv = $('#receiverInp'); if (recv) recv.value = CFG.receiver;
-  const copy = $('#copyRc'); if (copy) copy.onclick = ()=>navigator.clipboard.writeText(CFG.receiver);
-}
-
-// ---------- GALLERY ----------
-async function buildGallery(){
-  const box = $('#gallery');
-  if (!box) return;
-  await ensureLottie();
-
-  // eski html'i temizle ve kendimiz oluştur
-  box.innerHTML = '';
-  CFG.lotties.forEach((m,i)=>{
-    const card = document.createElement('div');
-    card.className = 'animCard';
-
-    const thumb = document.createElement('div');
-    thumb.className = 'animThumb';
-    thumb.id = `anim-${i}`;
-    // görünmeme sorununu engelle: sabit boy ver
-    thumb.style.width = '88px';
-    thumb.style.height = '88px';
-    thumb.style.borderRadius = '14px';
-    thumb.style.background = 'rgba(255,255,255,0.02)';
-    thumb.style.display = 'flex';
-    thumb.style.alignItems = 'center';
-    thumb.style.justifyContent = 'center';
-
-    const info = document.createElement('div');
-    info.className = 'animInfo';
-    info.innerHTML = `<b>${m.title}</b><small>${m.hint}</small>`;
-
-    card.append(thumb, info);
-    box.appendChild(card);
-
-    // Önce JSON dene, olmazsa SVG’ye düş
-    const json = `${CFG.base}/lottie/zuzu_${m.key}.json`;
-    const svg  = `${CFG.base}/svg/zuzu_${m.key}.svg`;
-
-    fetch(json, {method:'HEAD'})
-      .then(r=>{
-        if(r.ok){
-          lottie.loadAnimation({container: thumb, renderer:'svg', loop:true, autoplay:true, path: json});
-        }else{
-          const img = new Image();
-          img.src = svg; img.style.width='64px'; img.style.height='64px';
-          thumb.appendChild(img);
+  const CFG = {
+    // Asset kökü (relative). GitHub Pages / custom domain ikisinde de çalışır.
+    base: 'assets/zuzu',
+    // Galeride çıkacak karakter anahtarları
+    keys: [
+      'logo',
+      'hero',
+      'hacker',
+      'warrior',
+      'sorceress',
+      'ranger',
+      'berserker',
+      'scientist',
+      'rogue',
+      'titan'
+      // 'mini_bot'  // istersen aç
+    ],
+    i18n: {
+      tr: {
+        title: {
+          logo: 'ZUZU Logo',
+          hero: 'ZUZU Hero',
+          hacker: 'ZUZU Hacker',
+          warrior: 'ZUZU Warrior',
+          sorceress: 'ZUZU Sorceress',
+          ranger: 'ZUZU Ranger',
+          berserker: 'ZUZU Berserker',
+          scientist: 'ZUZU Scientist',
+          rogue: 'ZUZU Rogue',
+          titan: 'ZUZU Titan',
+          mini_bot: 'ZUZU Mini-Bot'
+        },
+        sub: {
+          logo: 'Temel maskot – glow',
+          hero: 'Neon zırh + hatlar',
+          hacker: 'Yüz tarama + sinyal',
+          warrior: 'Kılıç parlaması',
+          sorceress: 'Büyü küresi',
+          ranger: 'Vizör + kayış',
+          berserker: 'Kızgın aura',
+          scientist: 'Devre hatları',
+          rogue: 'Gizli bıçak',
+          titan: 'Kalkan + pulse',
+          mini_bot: 'Mini drone'
         }
-      })
-      .catch(_=>{
-        const img = new Image();
-        img.src = svg; img.style.width='64px'; img.style.height='64px';
-        thumb.appendChild(img);
-      });
-  });
-}
-
-// ---------- EXCHANGE LOGOS ----------
-async function buildExchanges(){
-  const row = $('#exchanges');
-  if (!row) return;
-  row.innerHTML = '';
-  for(const ex of CFG.exchanges){
-    const badge = document.createElement('div');
-    badge.className = 'ex-badge';
-
-    const img = new Image();
-    const url = `https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/${ex.slug}.svg`;
-    // SVG'yi <img> içine almak için data URL'a çevir
-    try{
-      const svgText = await fetch(url).then(r=> r.ok ? r.text() : null);
-      if (svgText){
-        const blob = new Blob([svgText], {type:'image/svg+xml'});
-        img.src = URL.createObjectURL(blob);
-      }else{
-        img.style.display='none';
-        badge.textContent = ex.name;
       }
-    }catch(e){
-      img.style.display='none';
-      badge.textContent = ex.name;
     }
-    img.alt = ex.name;
-    img.style.width='18px';
-    img.style.height='18px';
-    img.style.marginRight='6px';
+  };
 
-    const label = document.createElement('span');
-    label.textContent = ex.name;
+  // Basit yardımcılar
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+  const log = (...a) => console.log('%c[ZUZU]', 'color:#79ffe1', ...a);
 
-    badge.append(img,label);
-    row.appendChild(badge);
+  // Lottie mevcut değilse CDN’den ekle
+  function ensureLottie() {
+    return new Promise((resolve) => {
+      if (window.lottie) return resolve(window.lottie);
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js';
+      s.onload = () => resolve(window.lottie);
+      document.head.appendChild(s);
+    });
   }
-}
 
-// ---------- WALLET ----------
-let provider, signer, user;
-async function connectWallet(){
-  await ensureEthers();
-  if (!window.ethereum){ alert('Cüzdan bulunamadı (MetaMask/OKX vb).'); return; }
-  const ethers = window.ethers;
-  provider = new ethers.BrowserProvider(window.ethereum);
-  signer   = await provider.getSigner();
-  user     = await signer.getAddress();
-  const btn = $('#connectBtn') || $('#connectWallet');
-  if (btn) btn.textContent = user.slice(0,6)+'...'+user.slice(-4);
-}
+  /**
+   * Belirtilen kapsayıcıya Lottie animasyonu yükler.
+   * JSON bulunamazsa SVG fallback yapar.
+   */
+  async function loadCharacterAnimation(container, key, options = {}) {
+    const jsonUrl = `${CFG.base}/lottie/zuzu_${key}.json`;
+    const svgFallback = `${CFG.base}/svg/zuzu_${key}.svg`;
 
-const ERC20_ABI = [
-  "function decimals() view returns (uint8)",
-  "function balanceOf(address) view returns (uint256)",
-  "function transfer(address to, uint256 value) returns (bool)"
-];
+    try {
+      const r = await fetch(jsonUrl, { cache: 'no-store' });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const animData = await r.json();
+      await ensureLottie();
 
-async function buyWithUSDT(){
-  try{
-    await ensureEthers();
-    const ethers = window.ethers;
-    if (!signer) await connectWallet();
-    if (!signer) return;
+      container.innerHTML = ''; // temizle
+      container.classList.add('zuzu-thumb');
 
-    const q = Number($('#amountInp')?.value||0);
-    const total = q * price();
-    if (!total || total<=0) { alert('Geçersiz miktar.'); return; }
+      const anim = window.lottie.loadAnimation({
+        container,
+        renderer: 'svg',
+        loop: options.loop ?? true,
+        autoplay: options.autoplay ?? true,
+        animationData: animData,
+        name: `zuzu_${key}`
+      });
 
-    const usdt = new ethers.Contract(CFG.usdt, ERC20_ABI, signer);
-    const dec  = await usdt.decimals();
-    const val  = ethers.parseUnits(total.toString(), dec);
-    const bal  = await usdt.balanceOf(user);
-    if (bal < val){ alert('USDT bakiyesi yetersiz.'); return; }
-
-    const btn = $('#buyUsdtBtn'); if (btn) btn.textContent = 'Gönderiliyor...';
-    const tx  = await usdt.transfer(CFG.receiver, val);
-    await tx.wait();
-    if (btn) btn.textContent = 'USDT (BEP20) ile Satın Al';
-    alert('Başarılı: ' + tx.hash);
-  }catch(e){
-    console.error(e);
-    const btn = $('#buyUsdtBtn'); if (btn) btn.textContent = 'USDT (BEP20) ile Satın Al';
-    alert('İşlem başarısız/iptal.');
+      // Hover / visibility optimize
+      container.addEventListener('mouseenter', () => anim.setDirection(1));
+      container.addEventListener('mouseleave', () => anim.setDirection(1));
+      return true;
+    } catch (err) {
+      // SVG fallback
+      log(`Lottie bulunamadı (${key}) → SVG’ye düştüm`, err.message || err);
+      container.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = svgFallback;
+      img.alt = key;
+      img.loading = 'lazy';
+      img.style.width = '84px';
+      img.style.height = '84px';
+      img.style.opacity = '.9';
+      img.style.filter = 'drop-shadow(0 0 10px rgba(0,255,200,.25))';
+      container.appendChild(img);
+      return false;
+    }
   }
-}
 
-// ---------- INIT ----------
-document.addEventListener('DOMContentLoaded', async ()=>{
-  initRef();
-  initTimer();
-  initPresale();
-  await buildExchanges();
-  await buildGallery();
+  /**
+   * Tek bir kart DOM’u üretir ve animasyonu başlatır.
+   */
+  async function mountCard(parent, key, title, sub) {
+    const card = document.createElement('div');
+    card.className = 'zuzu-card';
+    card.innerHTML = `
+      <div class="zuzu-card-body">
+        <div class="zuzu-thumb" aria-hidden="true"></div>
+        <div class="zuzu-text">
+          <div class="zuzu-title">${title}</div>
+          <div class="zuzu-sub">${sub}</div>
+        </div>
+      </div>
+    `;
+    parent.appendChild(card);
 
-  // buton bağla (iki id'den biri olabilir)
-  const cbtn = $('#connectBtn') || $('#connectWallet');
-  if (cbtn) cbtn.addEventListener('click', connectWallet);
-  const bbtn = $('#buyUsdtBtn'); if (bbtn) bbtn.addEventListener('click', buyWithUSDT);
-});
+    const thumb = $('.zuzu-thumb', card);
+    await loadCharacterAnimation(thumb, key);
+  }
+
+  /**
+   * Galeriyi inşa eder. Hedef:
+   *  - #zuzu-gallery varsa oraya
+   *  - yoksa [data-gallery="zuzu"] 
+   *  - hiçbiri yoksa section oluşturup body’ye basar
+   */
+  async function buildGallery() {
+    let host = $('#zuzu-gallery') || $('[data-gallery="zuzu"]');
+    if (!host) {
+      host = document.createElement('div');
+      host.id = 'zuzu-gallery';
+      document.body.appendChild(host);
+    }
+    host.classList.add('zuzu-gallery');
+
+    const lang = 'tr';
+    const T = CFG.i18n[lang];
+
+    for (const key of CFG.keys) {
+      const title = T.title[key] ?? `ZUZU ${key}`;
+      const sub = T.sub[key] ?? '';
+      await mountCard(host, key, title, sub);
+    }
+  }
+
+  /**
+   * Hero alanını (üstte büyük görsel) başlatır.
+   * `#heroLottie` bulunursa `hero` animasyonu yüklenir,
+   * yoksa görmezden gelir.
+   */
+  async function initHero() {
+    const hero = $('#heroLottie');
+    if (!hero) return;
+    hero.classList.add('zuzu-hero');
+    await loadCharacterAnimation(hero, 'hero', { autoplay: true, loop: true });
+  }
+
+  /** Cüzdan bağlama butonu (stub) */
+  function initWalletButton() {
+    const btn = $(`[data-action="connect-wallet"], .wallet-connect, .btn-wallet, .connect-wallet, [data-connect="wallet"]`);
+    if (!btn) return;
+    btn.addEventListener('click', async () => {
+      alert('Cüzdan bağlama (demo) – prod’da Web3 sağlayıcı eklenecek.');
+    });
+  }
+
+  /** Borsa rozetleri ikonları (basit sınıf ekleme) */
+  function fixExBadges() {
+    $$('.ex-badge').forEach(b => {
+      b.classList.add('is-on');
+    });
+  }
+
+  /** Mini style – kartlar için temel stiller (gömülü) */
+  function injectMiniStyle() {
+    const css = `
+      .zuzu-gallery{
+        display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+        gap:14px;margin-top:12px
+      }
+      .zuzu-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+        border-radius:14px;padding:10px;backdrop-filter:blur(3px)}
+      .zuzu-card-body{display:flex;gap:10px;align-items:center}
+      .zuzu-thumb{width:84px;height:84px;display:grid;place-items:center;
+        background:radial-gradient(120px 120px at 50% 50%,rgba(0,255,200,.08),transparent 60%);
+        border-radius:10px}
+      .zuzu-text{display:flex;flex-direction:column;gap:2px}
+      .zuzu-title{font-weight:700;color:#e6f5ff}
+      .zuzu-sub{font-size:.9rem;color:#9fb4c7}
+      .zuzu-hero{width:240px;height:240px;margin:auto;border-radius:16px;
+        background:radial-gradient(240px 240px at 50% 50%,rgba(0,255,200,.05),transparent 60%)}
+    `;
+    const s = document.createElement('style');
+    s.textContent = css;
+    document.head.appendChild(s);
+  }
+
+  // ---- Boot
+  window.addEventListener('DOMContentLoaded', async () => {
+    try {
+      injectMiniStyle();
+      await Promise.all([
+        initHero(),
+        buildGallery()
+      ]);
+      initWalletButton();
+      fixExBadges();
+      log('Maskot galerisi yüklendi ✔️');
+    } catch (e) {
+      console.error('[ZUZU] init error:', e);
+    }
+  });
+
+})();
+</script>
