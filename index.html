@@ -1,393 +1,203 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>ZUZU • AI Meme Intelligence – Presale</title>
-<meta name="theme-color" content="#0b1117"/>
-<style>
-  :root{
-    --bg:#0b1117;--bg2:#0f1722;--card:#0c1218;--line:rgba(255,255,255,.08);
-    --txt:#dce9f7;--muted:#93a9bd;--cyan:#09fbd3;--green:#00ff95;--amber:#ffb24d;--rose:#ff657a;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;height:100%;background:var(--bg);color:var(--txt);font:500 15px/1.55 system-ui,Segoe UI,Roboto,Arial}
-  a{color:#87d4ff;text-decoration:none}
-  .wrap{max-width:1180px;margin:0 auto;padding:20px 14px 90px}
-  header{display:flex;align-items:center;gap:12px;padding:6px 0 12px}
-  .logo{display:flex;align-items:center;gap:10px}
-  .logo-dot{width:28px;height:28px;border-radius:8px;background:radial-gradient(12px 12px at 40% 40%, #00ffd0 0%, #001219 70%);position:relative;box-shadow:0 0 18px rgba(0,255,210,.35) inset}
-  .logo-dot:before,.logo-dot:after{content:"";position:absolute;background:#00ffd0;width:6px;height:8px;border-radius:3px;left:6px;top:6px;box-shadow:10px 0 0 #00ffd0}
-  .logo-smile{position:absolute;left:6px;right:6px;bottom:6px;height:6px;border-radius:6px;background:#ff7a1a;filter:drop-shadow(0 0 6px rgba(255,122,26,.6))}
-  h1{font:800 22px/1.1 system-ui;margin:0}
-  .tag{font:700 11px/1.1 system-ui;letter-spacing:.1em;color:#6bdcff;text-transform:uppercase}
-  .nav{margin-left:auto;display:flex;gap:8px;align-items:center}
-  .ex{font:700 11px/1 system-ui;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg2);color:#b9cbe0}
-  .btn{padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:linear-gradient(180deg,#0e1621,#0a1118);color:#cfe3f6;font:700 14px/1 system-ui}
-  .grid{display:grid;grid-template-columns:1fr;gap:14px}
-  @media(min-width:980px){.grid{grid-template-columns:1fr 1fr}}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
-  .kicker{font:800 13px/1.1 system-ui;color:#87ffc8;margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em}
-  .title{font:900 26px/1.15 system-ui;margin:0 0 8px}
-  .muted{color:var(--muted)}
-  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  .chips{display:flex;gap:6px;flex-wrap:wrap}
-  .chip{padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg2);font:700 12px/1 system-ui;color:#b9cbe0}
-  input,select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg2);color:#e8f2ff}
-  .actions{display:flex;gap:8px;flex-wrap:wrap}
-  .btn-prim{background:linear-gradient(180deg,#0e2a2a,#0a1717);border-color:rgba(0,255,200,.25);box-shadow:0 0 0 1px rgba(0,255,200,.15) inset;color:#9fffe5}
-  .btn-sec{background:linear-gradient(180deg,#171313,#0f0a0a);border-color:rgba(255,130,70,.25);color:#ffd2c0}
-  .h2{font:800 18px/1.2 system-ui;margin:0 0 6px}
-  .cols{display:grid;grid-template-columns:1fr;gap:12px}
-  @media(min-width:720px){.cols{grid-template-columns:1fr 1fr}}
-  .audit{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .qr{width:160px;height:160px;border-radius:12px;background:
-      radial-gradient(18px 18px at 20% 30%,#00ffd0 0 60%,transparent 62%),
-      radial-gradient(14px 14px at 70% 60%,#00ffd0 0 58%,transparent 60%),
-      radial-gradient(10px 10px at 34% 70%,#00ffd0 0 58%,transparent 60%),
-      radial-gradient(12px 12px at 50% 48%,#00ffd0 0 60%,transparent 62%),
-      #031015;border:1px solid rgba(0,255,200,.18)}
-  /* GALLERY */
-  .sect{margin-top:18px}
-  .sect h3{margin:0 0 6px;font:900 20px/1.2 system-ui}
-  .zgal{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
-  @media(min-width:860px){.zgal{grid-template-columns:repeat(5,minmax(0,1fr))}}
-  .zcard{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;position:relative}
-  .zanim{position:relative;aspect-ratio:1/1;display:grid;place-items:center;background:radial-gradient(140px 140px at 50% 50%,rgba(0,255,200,.10),transparent 60%)}
-  .zanim svg,.zanim canvas{width:100%!important;height:100%!important}
-  .zanim img{width:92%;height:92%;object-fit:contain;filter:contrast(1.05) saturate(1.05)}
-  .zinfo{padding:10px}
-  .zname{font:800 14px/1.2 system-ui}
-  .zdesc{font:500 12px/1.2 system-ui;color:#9ab0c4}
-  .zbtn{position:absolute;inset:0;border:0;background:transparent;cursor:pointer}
-  /* Lightbox */
-  .zbox{position:fixed;inset:0;display:none}
-  .zbox.active{display:block}
-  .zbox-bg{position:absolute;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px)}
-  .zbox-dlg{position:absolute;inset:40px 16px;background:#0b1117;border:1px solid var(--line);border-radius:12px;display:grid}
-  @media(min-width:980px){.zbox-dlg{inset:80px 120px;grid-template-columns:minmax(0,1fr) 320px}}
-  .zbox-img{width:100%;height:100%;object-fit:contain;background:#05090f;border-radius:12px}
-  .zbox-close{position:absolute;right:10px;top:10px;width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:#0f1722;color:#dfeefe;font:700 20px/1}
-  .zbox-cap{padding:14px;color:#cfe3f6}
-  .zbox-name{font:800 18px/1.2 system-ui;margin-bottom:6px}
-  .zbox-desc{font:500 13px/1.4 system-ui;color:#9eb4c7}
-  footer{margin-top:24px;padding-top:12px;color:#9eb4c7}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ZUZU • AI Meme Intelligence – Presale</title>
+  <meta name="theme-color" content="#0b1117" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Kütüphaneler -->
+  <script defer src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
+  <script defer src="script.js"></script>
 </head>
 <body>
-<div class="wrap">
+  <div class="wrap">
 
-  <!-- Header -->
-  <header>
-    <div class="logo">
-      <div class="logo-dot"><div class="logo-smile"></div></div>
-      <div>
-        <div class="tag">ZUZU • AI Meme Intelligence</div>
-        <h1>ZUZU Presale</h1>
+    <!-- ÜST BAR -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="zlogo">
+          <div class="zlogo-dot"></div>
+          <div class="zlogo-smile"></div>
+        </div>
+        <div class="brand-txt">
+          <div class="brand-tag">ZUZU • AI Meme Intelligence</div>
+          <h1 class="brand-title">ZUZU Presale</h1>
+        </div>
       </div>
-    </div>
-    <div class="nav">
-      <span class="ex">MEXC</span><span class="ex">Gate.io</span><span class="ex">BitMart</span>
-      <span class="ex">Bybit</span><span class="ex">KuCoin</span><span class="ex">OKX</span>
-      <button class="btn">Cüzdan Bağla</button>
-    </div>
-  </header>
 
-  <div class="grid">
-    <!-- Left intro -->
-    <section class="card">
-      <div class="kicker">Yapay Zeka ZUZU Ordusu</div>
-      <h2 class="title">Memetik enerjiyi <span style="color:#74ffcf">AI Meme Intelligence</span> ile birleştir.</h2>
-      <p class="muted">Presale fonları <b>non-custodial</b> hazinede tutulur. Paylaş, tap-to-earn ile puan topla, stake ile daha fazla kazanç hedefle.</p>
-      <div class="chips">
-        <span class="chip">39 Gün</span><span class="chip">23 Saat</span><span class="chip">58 Dakika</span><span class="chip">43 Saniye</span>
-      </div>
-      <div style="margin-top:10px">
-        <div class="muted" style="font:700 12px/1.2 system-ui;margin-bottom:6px">Referans linkin:</div>
-        <input value="http://www.zuzucoin.xyz/?ref=share-this-link" readonly />
-      </div>
-    </section>
+      <nav class="exchanges">
+        <!-- Inline SVG rozetler -->
+        <span class="ex">MEXC</span>
+        <span class="ex">Gate.io</span>
+        <span class="ex">BitMart</span>
+        <span class="ex">Bybit</span>
+        <span class="ex">KuCoin</span>
+        <span class="ex">OKX</span>
+      </nav>
 
-    <!-- Right presale -->
-    <section class="card">
-      <h3 class="h2">$ZUZU Token Satın Al – Şimdi Ön Satışta!</h3>
-      <div class="row" style="margin:8px 0">
-        <select>
-          <option>Stage 1 — 0.002000 USDT / ZUZU</option>
-          <option>Stage 2 — 0.003200 USDT / ZUZU</option>
-        </select>
+      <div class="wallet-box">
+        <button id="btnConnect" class="btn">Cüzdan Bağla</button>
+        <div id="walletInfo" class="wallet-info"></div>
       </div>
-      <div class="row">
-        <div class="chips"><span class="chip">100k</span><span class="chip">250k</span><span class="chip">1M</span></div>
-      </div>
-      <div style="margin-top:8px">
-        <label class="muted" style="font:700 12px/1.2 system-ui">Kaç ZUZU?</label>
-        <input value="100000" />
-      </div>
-      <div class="row" style="justify-content:space-between;margin-top:8px">
-        <div class="muted">Fiyat: 0.002000 USDT / ZUZU</div>
-        <div class="muted">Toplam: 200 USDT</div>
-      </div>
-      <div class="actions" style="margin-top:10px">
-        <button class="btn btn-sec">Kart ile Satın Al (yakında)</button>
-        <button class="btn btn-prim">USDT (BEP20) ile Satın Al</button>
-      </div>
-    </section>
-  </div>
+    </header>
 
-  <!-- Receiver / Audit -->
-  <div class="cols" style="margin-top:12px">
-    <section class="card">
-      <h3 class="h2">Receiver</h3>
-      <div class="row" style="gap:8px;align-items:flex-start;margin-top:4px">
-        <input value="0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3" readonly />
-        <button class="btn" onclick="navigator.clipboard.writeText('0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3')">Kopyala</button>
+    <!-- HERO GRID -->
+    <section class="grid">
+      <div class="card">
+        <div class="kicker">Yapay Zeka ZUZU Ordusu</div>
+        <h2 class="title">
+          ZUZU; memetik enerjiyi
+          <span class="hl">AI Meme Intelligence</span> katmanıyla birleştirir.
+        </h2>
+        <p class="muted">
+          Presale fonları <b>non-custodial</b> hazinede tutulur. Paylaş, tap-to-earn ile puan topla, stake ile daha fazla kazanç hedefle.
+        </p>
+
+        <div class="chips">
+          <span class="chip" id="dLeft">39 Gün</span>
+          <span class="chip" id="hLeft">23 Saat</span>
+          <span class="chip" id="mLeft">58 Dakika</span>
+          <span class="chip" id="sLeft">43 Saniye</span>
+        </div>
+
+        <div class="ref">
+          <label>Referans linkin:</label>
+          <input id="refLink" value="https://www.zuzucoin.xyz/?ref=share-this-link" readonly />
+          <button class="btn sm" id="btnRefCopy">Kopyala</button>
+        </div>
       </div>
-      <div class="audit" style="margin-top:10px">
-        <div class="qr" aria-hidden="true"></div>
-        <div>
-          <div class="kicker">Mini Audit</div>
-          <ul class="muted" style="margin:6px 0 0 16px">
-            <li>Sözleşme: USDT (BEP20)</li>
-            <li>Transfer → receiver</li>
-            <li>Non-custodial, direkt kasaya</li>
-          </ul>
-          <div class="kicker" style="margin-top:10px">Şeffaflık</div>
-          <ul class="muted" style="margin:6px 0 0 16px">
-            <li>Satın alımlar on-chain receiver adresine kaydolur.</li>
-            <li>Admin Panel üzerinden son işlemleri görebilirsin.</li>
-          </ul>
-          <div class="muted" style="margin-top:10px">Toplanan: $0 / $300,000</div>
+
+      <div class="card">
+        <h3 class="h2">$ZUZU Token Satın Al – Şimdi Ön Satışta!</h3>
+
+        <div class="row">
+          <label>Aşama</label>
+          <select id="stageSel">
+            <option value="0.002">Stage 1 — 0.002000 USDT / ZUZU</option>
+            <option value="0.0032">Stage 2 — 0.003200 USDT / ZUZU</option>
+          </select>
+        </div>
+
+        <div class="chips">
+          <button class="chip pick" data-amt="100000">100k</button>
+          <button class="chip pick" data-amt="250000">250k</button>
+          <button class="chip pick" data-amt="1000000">1M</button>
+        </div>
+
+        <div class="row">
+          <label>Kaç ZUZU?</label>
+          <input id="buyAmount" value="100000" inputmode="numeric"/>
+        </div>
+
+        <div class="row two">
+          <div class="muted" id="priceLine">Fiyat: 0.002000 USDT / ZUZU</div>
+          <div class="muted" id="totalLine">Toplam: 200.000000 USDT</div>
+        </div>
+
+        <div class="actions">
+          <button class="btn warn">Kart ile Satın Al (yakında)</button>
+          <button id="btnBuy" class="btn prim">USDT (BEP20) ile Satın Al</button>
         </div>
       </div>
     </section>
 
-    <!-- GALLERY -->
-    <section class="card sect" id="gallery-root">
-      <h3>ZUZU Maskot Galerisi</h3>
-      <div class="muted" style="margin-bottom:8px">Hepsi canlı Lottie animasyonlarıdır.</div>
-      <div class="zgal" id="zgal"></div>
+    <!-- RECEIVER + GALERİ -->
+    <section class="cols">
+      <div class="card">
+        <h3 class="h2">Receiver</h3>
+        <div class="row">
+          <input id="receiver" value="0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3" readonly />
+          <button class="btn sm" id="btnRcCopy">Kopyala</button>
+        </div>
+
+        <div class="audit">
+          <div class="qr"></div>
+          <div class="audit-right">
+            <div class="kicker">Mini Audit</div>
+            <ul class="muted">
+              <li>Sözleşme: <b>USDT (BEP20)</b></li>
+              <li>Transfer → receiver</li>
+              <li>Non-custodial, direkt kasaya</li>
+            </ul>
+
+            <div class="kicker">Şeffaflık</div>
+            <ul class="muted">
+              <li>Satın alımlar <b>on-chain</b> receiver adresine kaydolur.</li>
+              <li>Admin Panel üzerinden son işlemleri görebilirsin.</li>
+            </ul>
+
+            <div class="muted"><b>Toplanan:</b> $0 / $300,000</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="h2">ZUZU Maskot Galerisi</h3>
+        <p class="muted">Hepsi canlı Lottie animasyonlarıdır. Tıkla ve büyüt.</p>
+        <div id="zgal" class="zgal"></div>
+      </div>
     </section>
+
+    <!-- TOKENOMİ + YOL HARİTASI -->
+    <section class="cols">
+      <div class="card">
+        <h3 class="h2">Tokenomi</h3>
+        <canvas id="tokenChart" height="240"></canvas>
+        <div class="legend">
+          <span><b>Presale:</b> 45%</span>
+          <span><b>Liquidity:</b> 25%</span>
+          <span><b>Marketing:</b> 15%</span>
+          <span><b>Team:</b> 10%</span>
+          <span><b>Airdrop:</b> 5%</span>
+        </div>
+        <div class="meta muted">
+          <span>Chain: BSC (BEP20)</span>
+          <span>Symbol: ZUZU</span>
+          <span>Decimals: 18</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="h2">Yol Haritası</h3>
+        <div class="road">
+          <div class="rstep">
+            <div class="rtitle">Phase 1</div>
+            <div class="rdesc">Presale + Topluluk + Maskot Setleri</div>
+          </div>
+          <div class="rstep">
+            <div class="rtitle">Phase 2</div>
+            <div class="rdesc">CEX Başvuruları, Pazarlama, Partnerlikler</div>
+          </div>
+          <div class="rstep">
+            <div class="rtitle">Phase 3</div>
+            <div class="rdesc">Tap-to-Earn + Staking + AI Meme Intelligence</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot">
+      © 2025 <b>ZUZU</b> • AI-Powered Meme Intelligence
+    </footer>
   </div>
 
-  <footer class="wrap">
-    © 2025 <b>ZUZU</b> • AI-Powered Meme Intelligence
-  </footer>
-</div>
-
-<!-- Lightbox -->
-<div class="zbox" id="zbox">
-  <div class="zbox-bg" data-close></div>
-  <div class="zbox-dlg">
-    <button class="zbox-close" data-close>&times;</button>
-    <img class="zbox-img" id="zboxImg" alt="">
-    <div class="zbox-cap">
-      <div class="zbox-name" id="zboxName">ZUZU</div>
-      <div class="zbox-desc" id="zboxDesc">Detay</div>
+  <!-- Lightbox -->
+  <div class="zbox" id="zbox">
+    <div class="zbox-bg" data-close></div>
+    <div class="zbox-dlg">
+      <button class="zbox-close" data-close>&times;</button>
+      <div class="zbox-media">
+        <div id="zboxAnim" class="zbox-anim"></div>
+      </div>
+      <div class="zbox-cap">
+        <div class="zbox-name" id="zboxName">ZUZU</div>
+        <div class="zbox-desc" id="zboxDesc">Detay</div>
+      </div>
     </div>
   </div>
-</div>
-
-<!-- Lottie library -->
-<script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
-
-<!-- === INLINE LOTTIE JSON (10 karakter) ===
-  Not: Gerçekçi anime çizimleri burada vektörize / minimal glow animasyonu ile temsil ediliyor.
-  İleri aşamada After Effects’ten export edilen JSON’lar bu blokların yerine bırakılabilir.
--->
-<script type="application/json" id="json-logo">
-{
-  "v":"5.7.4","fr":30,"ip":0,"op":120,"w":512,"h":512,"nm":"zuzu_logo_glow","ddd":0,
-  "assets":[],"layers":[
-    {"ty":4,"nm":"face","sr":1,"ks":{"o":{"a":0,"k":100},"r":{"a":0,"k":0},"p":{"a":0,"k":[256,256,0]},
-      "a":{"a":0,"k":[0,0,0]},"s":{"a":0,"k":[100,100,100]}},
-      "shapes":[
-        {"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[420,420]},"nm":"circle","hd":false,
-         "st":{"o":{"a":0,"k":0}},"fl":{"c":{"a":0,"k":[0.03,0.07,0.11,1]}}},
-        {"ty":"gr","nm":"eyes","it":[
-          {"ty":"rc","p":{"a":0,"k":[-80,-40]},"s":{"a":0,"k":[28,40]},"r":{"a":0,"k":14}},
-          {"ty":"fl","c":{"a":0,"k":[0,1,0.82,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]}}
-        ]},
-        {"ty":"gr","nm":"eyes2","it":[
-          {"ty":"rc","p":{"a":0,"k":[80,-40]},"s":{"a":0,"k":[28,40]},"r":{"a":0,"k":14}},
-          {"ty":"fl","c":{"a":0,"k":[0,1,0.82,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]}}
-        ]},
-        {"ty":"gr","nm":"smile","it":[
-          {"ty":"rc","p":{"a":0,"k":[0,60]},"s":{"a":0,"k":[160,26]},"r":{"a":0,"k":13}},
-          {"ty":"fl","c":{"a":0,"k":[1,0.53,0.2,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]}}
-        ]},
-        {"ty":"gr","nm":"glow","it":[
-          {"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":1,"k":[{"t":0,"s":[420,420]},{"t":60,"s":[460,460]},{"t":120,"s":[420,420]}]}},
-          {"ty":"st","c":{"a":0,"k":[0,1,0.82,1]},"w":{"a":0,"k":6}},
-          {"ty":"tr","p":{"a":0,"k":[0,0]}}
-        ]}
-      ]
-    }
-  ]
-}
-</script>
-
-<!-- Diğer 9 karakter için hafif varyasyonlu glow / çizgi animasyonları -->
-<script type="application/json" id="json-hero">
-{"v":"5.7.4","fr":30,"ip":0,"op":120,"w":512,"h":512,"nm":"hero","ddd":0,"assets":[],"layers":[
- {"ty":4,"nm":"suit","ks":{"o":{"a":0,"k":100},"r":{"a":0,"k":0},"p":{"a":0,"k":[256,256,0]},"a":{"a":0,"k":[0,0,0]},"s":{"a":0,"k":[100,100,100]}},
-  "shapes":[
-    {"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[440,440]},
-     "st":{"o":{"a":0,"k":0}},"fl":{"c":{"a":0,"k":[0.04,0.07,0.12,1]}}},
-    {"ty":"gr","nm":"visor","it":[
-      {"ty":"rc","p":{"a":0,"k":[0,-40]},"s":{"a":0,"k":[220,50]},"r":{"a":0,"k":12}},
-      {"ty":"fl","c":{"a":0,"k":[0,1,0.82,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]}}
-    ]},
-    {"ty":"gr","nm":"core","it":[
-      {"ty":"el","p":{"a":0,"k":[0,40]},"s":{"a":1,"k":[{"t":0,"s":[40,40]},{"t":60,"s":[70,70]},{"t":120,"s":[40,40]}]}},
-      {"ty":"fl","c":{"a":0,"k":[0,1,0.82,1]}},{"ty":"tr","p":{"a":0,"k":[0,0]}}
-    ]}
-  ]}
-]}
-</script>
-
-<script type="application/json" id="json-hacker">{"v":"5.7.4","fr":30,"ip":0,"op":120,"w":512,"h":512,"nm":"hacker","ddd":0,"assets":[],"layers":[
-{"ty":4,"nm":"scan","ks":{"o":{"a":0,"k":100},"p":{"a":0,"k":[256,256,0]},"a":{"a":0,"k":[0,0,0]},"s":{"a":0,"k":[100,100,100]}},
- "shapes":[
-  {"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[440,440]},"fl":{"c":{"a":0,"k":[0.04,0.07,0.12,1]}}},
-  {"ty":"gr","it":[{"ty":"rc","p":{"a":1,"k":[{"t":0,"s":[-150,0]},{"t":120,"s":[150,0]}]},"s":{"a":0,"k":[300,10]},"r":{"a":0,"k":4}},{"ty":"fl","c":{"a":0,"k":[0,1,0.82,1]}}]}
- ]}]}</script>
-
-<script type="application/json" id="json-warrior">{"v":"5.7.4","fr":30,"ip":0,"op":120,"w":512,"h":512,"nm":"warrior","ddd":0,"assets":[],"layers":[
-{"ty":4,"nm":"blade","ks":{"o":{"a":0,"k":100},"p":{"a":0,"k":[256,256,0]},"a":{"a":0,"k":[0,0,0]},"s":{"a":0,"k":[100,100,100]}},
- "shapes":[
-  {"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[440,440]},"fl":{"c":{"a":0,"k":[0.04,0.07,0.12,1]}}},
-  {"ty":"gr","it":[{"ty":"rc","p":{"a":0,"k":[20,-60]},"s":{"a":1,"k":[{"t":0,"s":[16,180]},{"t":60,"s":[16,220]},{"t":120,"s":[16,180]}]},"r":{"a":0,"k":6}},
-          {"ty":"fl","c":{"a":0,"k":[1,0.55,0.3,1]}}]}
- ]}]}</script>
-
-<script type="application/json" id="json-sorceress">{"v":"5.7.4","fr":30,"ip":0,"op":120,"w":512,"h":512,"nm":"sorceress","ddd":0,"assets":[],"layers":[
-{"ty":4,"nm":"orb","ks":{"o":{"a":0,"k":100},"p":{"a":0,"k":[256,256,0]}},
- "shapes":[
-  {"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[440,440]},"fl":{"c":{"a":0,"k":[0.04,0.07,0.12,1]}}},
-  {"ty":"el","p":{"a":0,"k":[0,40]},"s":{"a":1,"k":[{"t":0,"s":[60,60]},{"t":60,"s":[120,120]},{"t":120,"s":[60,60]}]},"st":{"o":{"a":0,"k":0}},
-   "fl":{"c":{"a":0,"k":[0,1,0.82,1]}}}
- ]}]}</script>
-
-<script type="application/json" id="json-ranger">{"v":"5.7.4","fr":30,"ip":0,"op":120,"w":512,"h":512,"nm":"ranger","ddd":0,"assets":[],"layers":[
-{"ty":4,"nm":"visor","ks":{"o":{"a":0,"k":100},"p":{"a":0,"k":[256,256,0]}},
- "shapes":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[440,440]},"fl":{"c":{"a":0,"k":[0.04,0.07,0.12,1]}}},
-           {"ty":"rc","p":{"a":0,"k":[0,-30]},"s":{"a":1,"k":[{"t":0,"s":[200,30]},{"t":60,"s":[260,30]},{"t":120,"s":[200,30]}]},"r":{"a":0,"k":10},"fl":{"c":{"a":0,"k":[0,1,0.82,1]}}}
- ]}]}</script>
-
-<script type="application/json" id="json-berserker">{"v":"5.7.4","fr":30,"ip":0,"op":120,"w":512,"h":512,"nm":"berserker","ddd":0,"assets":[],"layers":[
-{"ty":4,"nm":"aura","ks":{"o":{"a":0,"k":100},"p":{"a":0,"k":[256,256,0]}},
- "shapes":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[440,440]},"fl":{"c":{"a":0,"k":[0.04,0.07,0.12,1]}}},
-           {"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":1,"k":[{"t":0,"s":[420,420]},{"t":60,"s":[470,470]},{"t":120,"s":[420,420]}]},"st":{"o":{"a":0,"k":0}},
-            "fl":{"c":{"a":0,"k":[1,0.35,0.35,1]}}}
- ]}]}</script>
-
-<script type="application/json" id="json-scientist">{"v":"5.7.4","fr":30,"ip":0,"op":120,"w":512,"h":512,"nm":"scientist","ddd":0,"assets":[],"layers":[
-{"ty":4,"nm":"circuit","ks":{"o":{"a":0,"k":100},"p":{"a":0,"k":[256,256,0]}},
- "shapes":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[440,440]},"fl":{"c":{"a":0,"k":[0.04,0.07,0.12,1]}}},
-           {"ty":"rc","p":{"a":0,"k":[0,20]},"s":{"a":1,"k":[{"t":0,"s":[220,8]},{"t":60,"s":[280,8]},{"t":120,"s":[220,8]}]},"r":{"a":0,"k":3},"fl":{"c":{"a":0,"k":[0,1,0.82,1]}}}
- ]}]}</script>
-
-<script type="application/json" id="json-rogue">{"v":"5.7.4","fr":30,"ip":0,"op":120,"w":512,"h":512,"nm":"rogue","ddd":0,"assets":[],"layers":[
-{"ty":4,"nm":"blade","ks":{"o":{"a":0,"k":100},"p":{"a":0,"k":[256,256,0]}},
- "shapes":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[440,440]},"fl":{"c":{"a":0,"k":[0.04,0.07,0.12,1]}}},
-           {"ty":"rc","p":{"a":0,"k":[0,60]},"s":{"a":1,"k":[{"t":0,"s":[160,24]},{"t":60,"s":[200,24]},{"t":120,"s":[160,24]}]},"r":{"a":0,"k":10},
-            "fl":{"c":{"a":0,"k":[0.9,0.9,1,1]}}}
- ]}]}</script>
-
-<script type="application/json" id="json-titan">{"v":"5.7.4","fr":30,"ip":0,"op":120,"w":512,"h":512,"nm":"titan","ddd":0,"assets":[],"layers":[
-{"ty":4,"nm":"shield","ks":{"o":{"a":0,"k":100},"p":{"a":0,"k":[256,256,0]}},
- "shapes":[{"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":0,"k":[440,440]},"fl":{"c":{"a":0,"k":[0.04,0.07,0.12,1]}}},
-           {"ty":"el","p":{"a":0,"k":[0,0]},"s":{"a":1,"k":[{"t":0,"s":[280,280]},{"t":60,"s":[340,340]},{"t":120,"s":[280,280]}]},"st":{"o":{"a":0,"k":0}},
-            "fl":{"c":{"a":0,"k":[0,1,0.82,1]}}}
- ]}]}</script>
-
-<!-- SVG Fallback (tek dosya içinde) -->
-<script type="application/json" id="svg-fallbacks">
-{
- "logo":"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='256' fill='#09121a'/><circle cx='256' cy='256' r='210' fill='#0a1420'/><g fill='#00ffd0'><rect x='168' y='190' width='36' height='50' rx='10'/><rect x='308' y='190' width='36' height='50' rx='10'/></g><rect x='176' y='300' width='160' height='26' rx='13' fill='#ff7a1a'/></svg>",
- "hero":"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='22' fill='#0a1420'/><rect x='96' y='120' width='320' height='280' rx='24' fill='#0e2233' stroke='#00ffd0' stroke-width='4'/><rect x='146' y='200' width='220' height='40' rx='12' fill='#00ffd0'/><circle cx='256' cy='300' r='24' fill='#00ffd0'/></svg>",
- "hacker":"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='#07111a'/><rect x='90' y='120' width='332' height='272' rx='24' fill='#0d1e2c'/><rect x='120' y='248' width='272' height='12' rx='6' fill='#00ffd0'/></svg>",
- "warrior":"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='#081420'/><rect x='240' y='160' width='20' height='200' fill='#ff9a55'/><rect x='220' y='160' width='60' height='20' fill='#ff9a55'/></svg>",
- "sorceress":"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='#081420'/><circle cx='256' cy='280' r='60' fill='#00ffd0'/></svg>",
- "ranger":"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='#081420'/><rect x='136' y='220' width='240' height='40' rx='14' fill='#00ffd0'/></svg>",
- "berserker":"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='#081420'/><circle cx='256' cy='256' r='180' fill='#28171b'/><circle cx='256' cy='256' r='150' fill='#ff6677'/></svg>",
- "scientist":"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='#081420'/><rect x='120' y='180' width='272' height='10' fill='#00ffd0'/><rect x='120' y='220' width='272' height='10' fill='#00ffd0'/><rect x='120' y='260' width='272' height='10' fill='#00ffd0'/></svg>",
- "rogue":"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='#081420'/><rect x='176' y='300' width='160' height='26' rx='13' fill='#cfe3ff'/></svg>",
- "titan":"<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='#081420'/><circle cx='256' cy='256' r='140' fill='#0d1e2c' stroke='#00ffd0' stroke-width='8'/></svg>"
-}
-</script>
-
-<script>
-(() => {
-  const ITEMS = [
-    {key:'logo',      name:'ZUZU Logo',      desc:'Temel maskot – glow'},
-    {key:'hero',      name:'ZUZU Hero',      desc:'Neon zırh + hatlar'},
-    {key:'hacker',    name:'ZUZU Hacker',    desc:'Yüz tarama + sinyal'},
-    {key:'warrior',   name:'ZUZU Warrior',   desc:'Kılıç parlaması'},
-    {key:'sorceress', name:'ZUZU Sorceress', desc:'Büyü küresi'},
-    {key:'ranger',    name:'ZUZU Ranger',    desc:'Vizör + kayış'},
-    {key:'berserker', name:'ZUZU Berserker', desc:'Kızgın aura'},
-    {key:'scientist', name:'ZUZU Scientist', desc:'Devre hatları'},
-    {key:'rogue',     name:'ZUZU Rogue',     desc:'Gizli bıçak'},
-    {key:'titan',     name:'ZUZU Titan',     desc:'Kalkan + pulse'}
-  ];
-
-  const zgal = document.getElementById('zgal');
-  const fallbackMap = JSON.parse(document.getElementById('svg-fallbacks').textContent);
-
-  // Kartları çiz
-  zgal.innerHTML = ITEMS.map(it => `
-    <article class="zcard">
-      <div class="zanim" data-key="${it.key}">
-        <!-- Fallback SVG inline (başlangıçta görünür) -->
-        <img alt="${it.name}" src="data:image/svg+xml;utf8,${encodeURIComponent(fallbackMap[it.key])}">
-      </div>
-      <div class="zinfo"><div class="zname">${it.name}</div><div class="zdesc">${it.desc}</div></div>
-      <button class="zbtn" data-show="${it.key}"></button>
-    </article>
-  `).join('');
-
-  // Lottie’yi inline JSON’dan yükle
-  const idFromKey = k => `json-${k}`;
-  const animHolders = document.querySelectorAll('.zanim');
-  animHolders.forEach(holder=>{
-    const key = holder.dataset.key;
-    const el = document.getElementById(idFromKey(key));
-    if(!el) return;     // JSON yoksa fallback kalır
-    try{
-      const data = JSON.parse(el.textContent);
-      const anim = lottie.loadAnimation({
-        container: holder, renderer:'svg', loop:true, autoplay:true, animationData: data
-      });
-      // SVG fallback img'yi gizle
-      const img = holder.querySelector('img');
-      if (img) img.style.display='none';
-    }catch(e){
-      console.warn('[ZUZU] Lottie parse hatası', key, e);
-    }
-  });
-
-  // Lightbox
-  const box = document.getElementById('zbox');
-  const img = document.getElementById('zboxImg');
-  const nEl = document.getElementById('zboxName');
-  const dEl = document.getElementById('zboxDesc');
-  document.addEventListener('click', e=>{
-    const btn = e.target.closest('[data-show]');
-    if (btn){
-      const key = btn.dataset.show;
-      const it = ITEMS.find(x=>x.key===key);
-      // Fallback görseli büyüterek gösteriyoruz (tek dosya)
-      img.src = 'data:image/svg+xml;utf8,'+encodeURIComponent(fallbackMap[key]);
-      nEl.textContent = it.name; dEl.textContent = it.desc;
-      box.classList.add('active');
-    }
-    if (e.target.hasAttribute('data-close')) box.classList.remove('active');
-  });
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape') box.classList.remove('active') });
-
-})();
-</script>
 </body>
 </html>
