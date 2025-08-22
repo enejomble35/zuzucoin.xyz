@@ -2,115 +2,101 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
-<title>ZUZU • AI-Powered Meme Intelligence – Presale</title>
-<meta name="theme-color" content="#0b0f14"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ZUZU • AI Meme Intelligence – Presale</title>
+<meta name="theme-color" content="#0a0d11"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 <style>
 :root{
-  --bg:#0b0f14;--card:#0f131a;--muted:#a6b0c3;--text:#e9f1ff;
-  --neon:#00f6c8;--neon2:#18a0fb;--accent:#ff7a00;--ok:#24db8f;--warn:#ffb500;
+  --bg:#0a0d11;--card:#0d121a;--mut:#9db2c7;--txt:#e8f2ff;
+  --neon:#00f6a9;--neon2:#16b6ff;--orange:#ff7a00;--ok:#1fe08e;--line:#1a2b41;
 }
 *{box-sizing:border-box}html,body{height:100%}
-body{margin:0;background:radial-gradient(1200px 900px at 15% -10%,#0f2d44 0%,#0b0f14 55%),#0b0f14;
-  color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
-a{color:var(--neon);text-decoration:none}
-.container{max-width:1150px;margin:0 auto;padding:24px}
-.nav{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 0}
-.brand{display:flex;align-items:center;gap:10px}
-.badge{font-size:12px;padding:4px 8px;border-radius:999px;background:#0b1320;color:#89a3c7;border:1px solid #142134}
-.lang-chain{display:flex;gap:8px;align-items:center}
-select,button,input{font:600 14px Inter;border-radius:10px;border:none;outline:none}
-select{background:#0e1522;color:#cfe7ff;padding:8px 12px;border:1px solid #1a2c45}
-.btn{background:linear-gradient(180deg,#ff8f1f,#ff7a00);color:#111;padding:12px 18px;border-radius:12px;box-shadow:0 0 0 0 rgba(255,122,0,.4);
-  transition:.2s transform, .3s box-shadow;cursor:pointer}
-.btn:hover{transform:translateY(-1px);box-shadow:0 6px 30px rgba(255,122,0,.35)}
-.btn-sec{background:linear-gradient(180deg,#1cf3a6,#04d07e);color:#041012}
+body{margin:0;background:
+ radial-gradient(900px 600px at 10% -10%,#13273c 0%,#0a0d11 50%) ,
+ radial-gradient(700px 500px at 120% 10%,#10283e 0%,#0a0d11 45%) , #0a0d11;
+ color:var(--txt);font-family:Inter,-apple-system,system-ui,Segoe UI,Roboto,Helvetica,Arial}
+a{color:var(--neon2);text-decoration:none}
+.container{max-width:1160px;margin:0 auto;padding:20px}
+.nav{display:flex;justify-content:space-between;align-items:center}
+.badge{background:#0c1422;border:1px solid #17243a;color:#9ec0ea;padding:6px 10px;border-radius:999px;font-size:12px}
+select,button,input{font:600 14px Inter;border-radius:12px;border:1px solid #1a2c45;outline:0}
+select{background:#0e1624;color:#d9ecff;padding:8px 10px}
+.btn{border:none;background:linear-gradient(180deg,#ff8f1f,#ff7a00);color:#111;padding:11px 16px;border-radius:12px;box-shadow:0 8px 30px #ff7a0033;cursor:pointer}
+.btn:hover{transform:translateY(-1px)}
+.btn-sec{background:linear-gradient(180deg,#19f0a7,#07c980);color:#041210;border:none}
 .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:22px;align-items:center}
-h1{font-size:40px;margin:8px 0 6px}
-.sub{color:#a8bbd7;line-height:1.55}
-.exchanges{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
-.chip{background:#0c1422;border:1px solid #142134;padding:6px 10px;border-radius:999px;color:#bcd2f5;font-size:12px}
-.timer{display:flex;gap:12px;margin:14px 0 8px}
-.timebox{background:#0c1422;border:1px solid #142134;border-radius:14px;padding:10px 12px;min-width:64px;text-align:center}
-.timebox b{display:block;font-size:18px}
-.card{background:linear-gradient(180deg,#0e1420,#0b1018);border:1px solid #162236;border-radius:18px;padding:16px;box-shadow:inset 0 1px 0 #20314f}
+h1{font-size:44px;margin:10px 0 8px}
+.sub{color:#a9bfd9;line-height:1.55}
+.ex{display:flex;gap:10px;flex-wrap:wrap}
+.chip{background:#0c1422;border:1px solid #17243a;color:#bcd6ff;font-size:12px;padding:6px 10px;border-radius:999px}
+.timer{display:flex;gap:10px;margin:14px 0}
+.t{background:#0c1422;border:1px solid #17243a;border-radius:14px;padding:10px 12px;min-width:66px;text-align:center}
+.t b{display:block;font-size:18px}
+.card{background:linear-gradient(180deg,#0d121a,#0a0f16);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:inset 0 1px 0 #223453}
 .panel{display:flex;flex-direction:column;gap:12px}
 .row{display:flex;gap:10px;align-items:center}
-input[type="number"],.tl{background:#0e1522;border:1px solid #1a2c45;color:#d8ecff;padding:12px;border-radius:12px;width:100%}
-.stage{width:100%}
+input[type="number"],.select{background:#0e1624;border:1px solid #1a2c45;color:#d9ecff;padding:12px;border-radius:12px;width:100%}
 .quick{display:flex;gap:8px}
-.quick .q{padding:8px 12px;border-radius:10px;background:#101a2c;border:1px solid #1a2c45;color:#9fc7f7;cursor:pointer}
-.quick .q:hover{background:#13223a}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
-.kutu{background:linear-gradient(180deg,#0e1420,#0b1018);border:1px solid #162236;border-radius:16px;padding:14px}
+.q{padding:8px 12px;border-radius:10px;background:#0f1a2b;border:1px solid #1a2c45;color:#a8cdf9;cursor:pointer}
+.q:hover{background:#13243c}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+.kutu{background:linear-gradient(180deg,#0d121a,#0a0f16);border:1px solid var(--line);border-radius:16px;padding:14px}
 .kutu h3{margin:0 0 8px;font-size:16px}
 .progress{height:10px;background:#0c1523;border:1px solid #192a44;border-radius:999px;overflow:hidden}
-.progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#18a0fb,#00f6c8)}
-.tokenomics{display:grid;grid-template-columns:1.3fr .7fr;gap:16px;margin-top:18px}
-.pill{display:inline-block;background:#0c1422;border:1px solid #142134;padding:5px 10px;border-radius:999px;margin:4px 6px 0 0;color:#c7e1ff}
-.phase{background:linear-gradient(180deg,#0e1420,#0b1018);border:1px solid #162236;border-radius:16px;padding:16px}
-.footer{margin:24px 0 10px;color:#86a1c7;text-align:center}
-.mascotWrap{display:flex;align-items:center;justify-content:center;position:relative}
-.mascotGlow{position:absolute;inset:-30px;filter:blur(40px);opacity:.45;background:radial-gradient(200px 160px at 50% 55%,#18a0fb66,#00f6c833,#0000)}
-.mascot{width:76%;max-width:360px;aspect-ratio:1;border-radius:50%;
-  background:radial-gradient(140px 120px at 50% 48%,#121a27,#0a0f16);
-  border:2px solid #1b2d46;box-shadow:0 14px 60px rgba(0,0,0,.45), inset 0 0 60px #0c1727}
+.progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#16b6ff,#00f6a9)}
+.token{display:grid;grid-template-columns:1.3fr .7fr;gap:16px;margin-top:18px}
+.pill{display:inline-block;background:#0c1422;border:1px solid #17243a;padding:5px 10px;border-radius:999px;margin:4px 6px 0 0;color:#c7e1ff}
+.phase{background:linear-gradient(180deg,#0d121a,#0a0f16);border:1px solid var(--line);border-radius:16px;padding:16px}
+.footer{margin:26px 0 12px;color:#8aa7cc;text-align:center}
+.mw{display:flex;align-items:center;justify-content:center;position:relative}
+.glow{position:absolute;inset:-30px;filter:blur(40px);opacity:.45;background:radial-gradient(200px 160px at 50% 55%,#16b6ff66,#00f6a933,#0000)}
+.face{width:78%;max-width:360px;aspect-ratio:1;border-radius:50%;background:radial-gradient(140px 120px at 50% 48%,#121a27,#0a0f16);border:2px solid #1b2d46;box-shadow:inset 0 0 60px #0c1727,0 14px 60px rgba(0,0,0,.45)}
 .eye{position:absolute;width:18px;height:18px;border-radius:50%;background:#7be7ff;left:50%;transform:translateX(-50%);animation:blink 6s infinite}
 .eye.l{margin-left:-42px;top:44%}.eye.r{margin-left:42px;top:44%}
-.mouth{position:absolute;left:50%;top:61%;width:160px;height:20px;border-radius:40px;transform:translateX(-50%);
-  background:radial-gradient(60px 40px at 50% 60%,#ff8f1f,#ff7a00);filter:drop-shadow(0 0 12px #ff7a00aa)}
-.horn{position:absolute;width:0;height:0;border-left:26px solid transparent;border-right:26px solid transparent;border-bottom:46px solid #00f6c8;filter:drop-shadow(0 0 10px #00f6c8aa)}
-.horn.l{left:32%;top:18%;transform:rotate(-12deg)}
-.horn.r{right:32%;top:18%;transform:rotate(12deg)}
+.mouth{position:absolute;left:50%;top:61%;width:160px;height:20px;border-radius:40px;transform:translateX(-50%);background:radial-gradient(60px 40px at 50% 60%,var(--orange),#ff6b00);filter:drop-shadow(0 0 12px #ff7a00aa)}
+.h{position:absolute;width:0;height:0;border-left:26px solid transparent;border-right:26px solid transparent;border-bottom:46px solid var(--neon);filter:drop-shadow(0 0 10px #00f6a9aa)}
+.h.l{left:32%;top:18%;transform:rotate(-12deg)}.h.r{right:32%;top:18%;transform:rotate(12deg)}
 @keyframes blink{0%,92%,100%{height:18px}93%,97%{height:4px}}
-.refBox{font-size:12px;color:#9fc7f7}
-.small{font-size:12px;color:#9ab7db}
-.heroTitle{font-weight:800;font-size:46px;letter-spacing:.2px}
-@media(max-width:980px){.hero{grid-template-columns:1fr}.mascot{width:58%} .tokenomics{grid-template-columns:1fr}}
+.bars{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.bar{height:6px;width:80px;border-radius:999px;background:linear-gradient(90deg,#00f6a9,#16b6ff)}
+.ref{font-size:12px;color:#a6c7ef}
+@media(max-width:980px){.hero{grid-template-columns:1fr}.face{width:60%}.token{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header class="container nav">
-  <div class="brand">
-    <span class="badge">ZUZU • AI-Powered Meme Intelligence</span>
-  </div>
-  <div class="lang-chain">
-    <select id="langSel" title="Language">
-      <option value="tr">TR</option><option value="en">EN</option>
-      <option value="pt">PT</option><option value="ru">RU</option>
-      <option value="zh">ZH</option><option value="hi">HI</option>
-    </select>
+  <span class="badge">ZUZU • AI-Powered Meme Intelligence</span>
+  <div style="display:flex;gap:8px;align-items:center">
+    <select id="langSel"><option value="tr">TR</option><option value="en">EN</option><option value="pt">PT</option><option value="ru">RU</option><option value="zh">ZH</option><option value="hi">HI</option></select>
     <button id="btnConnect" class="btn">Cüzdan Bağla</button>
   </div>
 </header>
 
 <section class="container hero">
   <div>
-    <div class="exchanges">
+    <div class="ex">
       <span class="chip">MEXC</span><span class="chip">Gate.io</span><span class="chip">BitMart</span>
-      <span class="chip">LBANK</span><span class="chip">BingX</span><span class="chip">Bybit</span>
+      <span class="chip">LBank</span><span class="chip">BingX</span><span class="chip">Bybit</span>
       <span class="chip">KuCoin</span><span class="chip">OKX</span>
     </div>
-    <h1 class="heroTitle" data-i="heroTitle">YAPAY ZEKA MEME AJANI</h1>
-    <p class="sub" data-i="heroSub">
-      ZUZU; memetik enerjiyi **AI Meme Intelligence** ile birleştirir. Presale gelirleri non-custodial hazineye gider.
-    </p>
-    <div class="timer" id="timer">
-      <div class="timebox"><b id="d">40</b><span data-i="day">Gün</span></div>
-      <div class="timebox"><b id="h">00</b><span data-i="hour">Saat</span></div>
-      <div class="timebox"><b id="m">00</b><span data-i="min">Dakika</span></div>
-      <div class="timebox"><b id="s">00</b><span data-i="sec">Saniye</span></div>
+    <h1 id="tTitle">YAPAY ZEKA MEME AJANI</h1>
+    <p class="sub" id="tSub">ZUZU; memetik enerjiyi **AI Meme Intelligence** ile birleştirir. Presale gelirleri non-custodial hazineye gider.</p>
+    <div class="timer">
+      <div class="t"><b id="d">40</b><span id="tDay">Gün</span></div>
+      <div class="t"><b id="h">00</b><span id="tHour">Saat</span></div>
+      <div class="t"><b id="m">00</b><span id="tMin">Dakika</span></div>
+      <div class="t"><b id="s">00</b><span id="tSec">Saniye</span></div>
     </div>
-    <div class="refBox" id="refBox">🔗 <span data-i="yourRef">Senin referans linkin:</span> <a id="myRef" href="#"></a></div>
+    <div class="ref">🔗 <span id="tRef">Senin referans linkin:</span> <a id="myRef" href="#"></a></div>
+    <div class="bars"><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
   </div>
 
-  <div class="mascotWrap">
-    <div class="mascotGlow"></div>
-    <div class="mascot" id="zuzu">
-      <i class="horn l"></i><i class="horn r"></i>
+  <div class="mw" id="par">
+    <div class="glow"></div>
+    <div class="face" id="face">
+      <i class="h l"></i><i class="h r"></i>
       <i class="eye l"></i><i class="eye r"></i>
       <i class="mouth"></i>
     </div>
@@ -119,71 +105,57 @@ input[type="number"],.tl{background:#0e1522;border:1px solid #1a2c45;color:#d8ec
 
 <section class="container card">
   <div class="panel">
-    <h2 data-i="presale">Ön Satış Aşaması</h2>
-    <div class="row">
-      <select class="stage" id="stageSel"></select>
-    </div>
-    <div class="quick">
-      <div class="q" data-amt="100000">100k</div>
-      <div class="q" data-amt="250000">250k</div>
-      <div class="q" data-amt="1000000">1M</div>
-    </div>
-    <div class="row"><input id="inpAmount" type="number" min="1000" step="1000" placeholder="Kaç ZUZU?" class="tl"></div>
-    <div class="row">
-      <div class="pill" id="priceInfo"></div>
-      <div class="pill" id="totalInfo"></div>
-    </div>
-    <button class="btn" id="btnBuy" data-i="buyBtn">USDT (BEP20) ile Satın Al</button>
-    <div class="small" data-i="gasNote">Ödeme USDT (BEP20) ile doğrudan hazinedir. Gas için az miktar BNB gerekir.</div>
+    <h2 id="tPresale">Ön Satış Aşaması</h2>
+    <div class="row"><select class="select" id="stageSel"></select></div>
+    <div class="quick"><div class="q" data-amt="100000">100k</div><div class="q" data-amt="250000">250k</div><div class="q" data-amt="1000000">1M</div></div>
+    <div class="row"><input id="amount" class="select" type="number" min="1000" step="1000" placeholder="Kaç ZUZU?"></div>
+    <div class="row"><span class="pill" id="priceInfo"></span><span class="pill" id="totalInfo"></span></div>
+    <button class="btn" id="btnBuy">USDT (BEP20) ile Satın Al</button>
+    <div class="ref" id="tGasNote">Ödeme USDT (BEP20) ile doğrudan hazinedir. Gas için az miktar BNB gerekir.</div>
 
     <div class="grid3">
       <div class="kutu">
         <h3>Mini Audit</h3>
-        <div class="small">✔ Sözleşme: USDT (BEP20)</div>
-        <div class="small">✔ Transfer → <span id="rcvShort"></span></div>
-        <div class="small">✔ Non-custodial, direkt kasaya</div>
+        <div class="ref">✔ Sözleşme: USDT (BEP20)</div>
+        <div class="ref">✔ Transfer → <span id="rcvShort"></span></div>
+        <div class="ref">✔ Non-custodial, direkt kasaya</div>
       </div>
       <div class="kutu">
-        <h3 data-i="transparency">Şeffaflık</h3>
-        <div class="small" data-i="transparentText">Satın alımlar USDT → Receiver olarak zincire kaydolur. Admin Panel üzerinden son işlemleri görebilirsin.</div>
+        <h3 id="tTrans">Şeffaflık</h3>
+        <div class="ref" id="tTransText">Satın alımlar on-chain receiver adresine kaydolur. Admin Panel üzerinden son işlemleri görebilirsin.</div>
         <a class="pill" href="admin.html" target="_blank">Admin Panel →</a>
       </div>
       <div class="kutu">
         <h3>Toplanan</h3>
         <div class="progress"><i id="prog"></i></div>
-        <div class="small"><b id="raised">$0</b> / <b id="cap">$300,000</b></div>
+        <div class="ref"><b id="raised">$0</b> / <b id="cap">$300,000</b></div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="container tokenomics">
+<section class="container token">
   <div class="phase">
-    <h2 data-i="about">Hakkında</h2>
-    <p class="sub" data-i="aboutText">
-      ZUZU; meme maskot enerjisiyle minimal & ciddi duruşu birleştiren topluluk odaklı bir coindir.
-      “AI Meme Intelligence” katmanı sayesinde trendleri okur, sinyal gücünü projeye taşır.
-      Presale gelirleri doğrudan hazineye (non-custodial) aktarılır. CEX başvuruları presale bitiminde başlar.
+    <h2 id="tAbout">Hakkında</h2>
+    <p class="sub" id="tAboutText">
+      ZUZU; minimal & ciddi duruşu meme maskot enerjisiyle birleştirir. AI Meme Intelligence katmanı trendleri okur ve gücü projeye taşır.
+      Presale gelirleri doğrudan hazineye (non-custodial) gider. CEX başvuruları presale bitiminde başlar.
     </p>
-    <h2 style="margin-top:16px">Tokenomi</h2>
+    <h2>Tokenomi</h2>
     <div>
-      <span class="pill">Presale: 45%</span>
-      <span class="pill">Liquidity: 25%</span>
-      <span class="pill">Marketing: 15%</span>
-      <span class="pill">Team: 10%</span>
-      <span class="pill">Airdrop: 5%</span>
-      <span class="pill">Chain: BSC (BEP20)</span>
-      <span class="pill">Symbol: ZUZU</span>
-      <span class="pill">Decimals: 18</span>
+      <span class="pill">Presale: 45%</span><span class="pill">Liquidity: 25%</span>
+      <span class="pill">Marketing: 15%</span><span class="pill">Team: 10%</span>
+      <span class="pill">Airdrop: 5%</span><span class="pill">Chain: BSC (BEP20)</span>
+      <span class="pill">Symbol: ZUZU</span><span class="pill">Decimals: 18</span>
     </div>
   </div>
   <div class="phase">
-    <h2 data-i="roadmap">Yol Haritası</h2>
-    <ul class="small">
-      <li>Phase 1 – Presale + Topluluk</li>
-      <li>Phase 2 – CEX Başvuruları (MEXC, Gate.io, BitMart, LBank, BingX, Bybit, KuCoin, OKX)</li>
-      <li>Phase 3 – Tap-to-Earn mini oyun + AI Meme Brain</li>
-      <li>Phase 4 – Referral 2.0, Staking</li>
+    <h2 id="tRoadmap">Yol Haritası</h2>
+    <ul class="ref">
+      <li>Phase 1 — Presale + Topluluk</li>
+      <li>Phase 2 — CEX Başvuruları (MEXC, Gate.io, BitMart, LBank, BingX, Bybit, KuCoin, OKX)</li>
+      <li>Phase 3 — Tap-to-Earn mini oyun + AI Meme Brain</li>
+      <li>Phase 4 — Referral 2.0 & Staking</li>
     </ul>
   </div>
 </section>
@@ -191,193 +163,111 @@ input[type="number"],.tl{background:#0e1522;border:1px solid #1a2c45;color:#d8ec
 <footer class="container footer">© 2025 ZUZU • AI-Powered Meme Intelligence</footer>
 
 <script>
-/*** CONFIG ***/
-const RECEIVER = "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3";   // senin adresin
-const USDT = "0x55d398326f99059fF775485246999027B3197955";      // BSC USDT
-const BSC_CHAIN_ID = 56;
-const HARD_CAP_USD = 300000;
-const STAGES = [
-  {label:"Stage 1 — 0.002000 USDT / ZUZU", price:0.002},
-  {label:"Stage 2 — 0.003000 USDT / ZUZU", price:0.003},
-  {label:"Stage 3 — 0.004000 USDT / ZUZU", price:0.004},
-  {label:"Stage 4 — 0.005000 USDT / ZUZU", price:0.005}
+/* ==== CONFIG ==== */
+const RECEIVER="0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3";
+const USDT="0x55d398326f99059fF775485246999027B3197955"; // BSC USDT
+const CHAIN=56;
+const HARD_CAP=300000;
+const STAGES=[
+ {label:"Stage 1 — 0.002000 USDT / ZUZU",price:0.002},
+ {label:"Stage 2 — 0.003000 USDT / ZUZU",price:0.003},
+ {label:"Stage 3 — 0.004000 USDT / ZUZU",price:0.004},
+ {label:"Stage 4 — 0.005000 USDT / ZUZU",price:0.005}
 ];
-// BscScan Key girersen toplanan barı canlı dolar bazlı hesaplar
-const BSC_SCAN_KEY = ""; // örn: "YOUR_BSCSCAN_KEY"
+const BSC_SCAN_KEY=""; // doldurursan Toplanan barı gerçek olur
 
-/*** i18n ***/
-const I = {
- tr:{heroTitle:"YAPAY ZEKA MEME AJANI",heroSub:"ZUZU; memetik enerjiyi **AI Meme Intelligence** ile birleştirir. Presale gelirleri non-custodial hazineye gider.",
-     day:"Gün",hour:"Saat",min:"Dakika",sec:"Saniye",yourRef:"Senin referans linkin:",presale:"Ön Satış Aşaması",
-     buyBtn:"USDT (BEP20) ile Satın Al",gasNote:"Ödeme USDT (BEP20) ile doğrudan hazinedir. Gas için az miktar BNB gerekir.",
-     transparency:"Şeffaflık",transparentText:"Satın alımlar USDT → Receiver olarak zincire kaydolur. Admin Panel üzerinden son işlemleri görebilirsin.",
-     about:"Hakkında",aboutText:"ZUZU; meme maskot enerjisiyle minimal & ciddi duruşu birleştiren topluluk odaklı bir coindir. “AI Meme Intelligence” katmanı sayesinde trendleri okur, sinyal gücünü projeye taşır. Presale gelirleri doğrudan hazineye (non-custodial) aktarılır. CEX başvuruları presale bitiminde başlar.",roadmap:"Yol Haritası"},
- en:{heroTitle:"AI-POWERED MEME AGENT",heroSub:"ZUZU blends memetic energy with **AI Meme Intelligence**. Presale funds go to a non-custodial treasury.",
-     day:"Day",hour:"Hour",min:"Min",sec:"Sec",yourRef:"Your ref link:",presale:"Presale Stage",
-     buyBtn:"Buy with USDT (BEP20)",gasNote:"Payment goes directly to treasury in USDT (BEP20). Small BNB for gas is required.",
-     transparency:"Transparency",transparentText:"Purchases are recorded on-chain to the receiver. See recent txs in the Admin Panel.",
-     about:"About",aboutText:"ZUZU is a community-driven coin that combines a minimal yet serious stance with a meme mascot. With the AI Meme Intelligence layer, it reads trends and carries the signal power to the project. Presale proceeds go directly to the treasury. CEX filings begin after the presale.",roadmap:"Roadmap"},
- pt:{heroTitle:"AGENTE MEME COM IA",heroSub:"ZUZU combina energia meme com **AI Meme Intelligence**. Fundos vão para tesouraria não-custodial.",
-     day:"Dia",hour:"Hora",min:"Min",sec:"Seg",yourRef:"Seu link de referência:",presale:"Fase de Pré-venda",
-     buyBtn:"Comprar com USDT (BEP20)",gasNote:"Pagamento direto à tesouraria em USDT (BEP20). Requer um pouco de BNB para gás.",
-     transparency:"Transparência",transparentText:"Compras registradas on-chain no receiver. Veja o Admin Panel.",
-     about:"Sobre",aboutText:"ZUZU é uma moeda da comunidade, combinando postura séria com mascote meme. A camada AI lê tendências e traz força ao projeto. Fundos da pré-venda vão direto à tesouraria. Listagens CEX após a pré-venda.",roadmap:"Roteiro"},
- ru:{heroTitle:"МИМ-АГЕНТ НА ИИ",heroSub:"ZUZU объединяет мем-энергию и **AI Meme Intelligence**. Средства идут в неконституционный казначейский кошелёк.",
-     day:"День",hour:"Час",min:"Мин",sec:"Сек",yourRef:"Твоя реф-ссылка:",presale:"Этап Предпродажи",
-     buyBtn:"Купить за USDT (BEP20)",gasNote:"Платёж идёт напрямую в казну. Нужен небольшой BNB на газ.",
-     transparency:"Прозрачность",transparentText:"Покупки записываются в сеть на адрес получателя. Смотри Admin Panel.",
-     about:"О проекте",aboutText:"ZUZU — коммьюнити-койн с мем-маскотом и серьёзным стилем. Слой AI читает тренды и усиливает проект. Средства идут напрямую в казну. После предпродажи — заявки в CEX.",roadmap:"Дорожная карта"},
- zh:{heroTitle:"AI 驱动的 Meme 代理",heroSub:"ZUZU 将 Meme 能量与 **AI Meme Intelligence** 结合。预售资金进入非托管金库。",
-     day:"天",hour:"时",min:"分",sec:"秒",yourRef:"你的邀请链接：",presale:"预售阶段",
-     buyBtn:"用 USDT（BEP20）购买",gasNote:"付款直接进入金库（USDT/BEP20），需少量 BNB 作为 Gas。",
-     transparency:"透明度",transparentText:"购买记录链上可查，管理员面板可查看最近交易。",
-     about:"关于",aboutText:"ZUZU 是社区驱动的代币，结合极简与严肃姿态，并有 Meme 吉祥物。AI 层读取趋势并赋能项目。预售资金直接进入金库。预售结束后提交 CEX 上市。",roadmap:"路线图"},
- hi:{heroTitle:"एआई-पावर्ड मीम एजेंट",heroSub:"ZUZU **AI Meme Intelligence** के साथ मीम ऊर्जा जोड़ता है। प्रीसेल फंड ट्रेज़री में (non-custodial) जाते हैं।",
-     day:"दिन",hour:"घंटा",min:"मि.",sec:"से.",yourRef:"तुम्हारा रेफरल लिंक:",presale:"प्रीसेल स्टेज",
-     buyBtn:"USDT (BEP20) से खरीदें",gasNote:"भुगतान सीधे ट्रेज़री में USDT (BEP20) के रूप में जाएगा। गैस के लिए थोड़ा BNB चाहिए।",
-     transparency:"पारदर्शिता",transparentText:"खरीदें ऑन-चेन रिसीवर पर रिकॉर्ड होंगी। Admin Panel देखें।",
-     about:"परिचय",aboutText:"ZUZU एक समुदाय-चालित कॉइन है जो मिनिमल और गंभीर शैली को मीम मैस्कॉट के साथ जोड़ता है। AI लेयर ट्रेंड पढ़ती है और प्रोजेक्ट को सिग्नल पावर देती है। प्रीसेल आय सीधे ट्रेज़री में जाएगी।",roadmap:"रोडमैप"}
+/* ==== Lang ==== */
+const L={
+ tr:{tTitle:"YAPAY ZEKA MEME AJANI",tSub:"ZUZU; memetik enerjiyi **AI Meme Intelligence** ile birleştirir. Presale gelirleri non-custodial hazineye gider.",
+     tDay:"Gün",tHour:"Saat",tMin:"Dakika",tSec:"Saniye",tRef:"Senin referans linkin:",
+     tPresale:"Ön Satış Aşaması",tGasNote:"Ödeme USDT (BEP20) ile doğrudan hazinedir. Gas için az miktar BNB gerekir.",
+     tTrans:"Şeffaflık",tTransText:"Satın alımlar on-chain receiver adresine kaydolur. Admin Panel üzerinden son işlemleri görebilirsin.",
+     tAbout:"Hakkında",tAboutText:"ZUZU; minimal & ciddi duruşu meme maskot enerjisiyle birleştirir. AI Meme Intelligence katmanı trendleri okur ve gücü projeye taşır. Presale gelirleri doğrudan hazineye (non-custodial) gider. CEX başvuruları presale bitiminde başlar.",tRoadmap:"Yol Haritası"},
+ en:{tTitle:"AI-POWERED MEME AGENT",tSub:"ZUZU blends memetic energy with **AI Meme Intelligence**. Presale funds go to a non-custodial treasury.",
+     tDay:"Day",tHour:"Hour",tMin:"Min",tSec:"Sec",tRef:"Your ref link:",
+     tPresale:"Presale Stage",tGasNote:"Payment goes directly to the treasury in USDT (BEP20). Small BNB for gas required.",
+     tTrans:"Transparency",tTransText:"Purchases are recorded on-chain to the receiver. See recent tx in Admin Panel.",
+     tAbout:"About",tAboutText:"ZUZU is a community-driven coin. The AI layer reads trends and powers the project. Funds go straight to treasury; CEX filings after presale.",tRoadmap:"Roadmap"},
+ pt:{tTitle:"AGENTE MEME COM IA",tSub:"ZUZU combina energia meme com **AI Meme Intelligence**. Fundos vão para tesouraria não-custodial.",
+     tDay:"Dia",tHour:"Hora",tMin:"Min",tSec:"Seg",tRef:"Seu link de referência:",
+     tPresale:"Fase de Pré-venda",tGasNote:"Pagamento direto à tesouraria (USDT/BEP20). Precisa um pouco de BNB para gás.",
+     tTrans:"Transparência",tTransText:"Compras registradas on-chain ao receiver. Veja no Admin Panel.",
+     tAbout:"Sobre",tAboutText:"Moeda orientada à comunidade. A camada de IA lê tendências e fortalece o projeto. Fundos da pré-venda vão direto à tesouraria.",tRoadmap:"Roteiro"},
+ ru:{tTitle:"МИМ-АГЕНТ НА ИИ",tSub:"ZUZU объединяет мем-энергию с **AI Meme Intelligence**. Средства идут в казначейство.",
+     tDay:"День",tHour:"Час",tMin:"Мин",tSec:"Сек",tRef:"Твоя реф-ссылка:",
+     tPresale:"Этап Предпродажи",tGasNote:"Платёж идёт напрямую в казну (USDT/BEP20). Нужен немного BNB на газ.",
+     tTrans:"Прозрачность",tTransText:"Покупки записываются on-chain на адрес получателя. Смотри Admin Panel.",
+     tAbout:"О проекте",tAboutText:"Коммьюнити-коин. Слой ИИ читает тренды и усиливает проект. Средства сразу в казну. После предпродажи — CEX.",tRoadmap:"Дорожная карта"},
+ zh:{tTitle:"AI 驱动的 Meme 代理",tSub:"ZUZU 将 Meme 能量与 **AI Meme Intelligence** 结合。预售资金进入非托管金库。",
+     tDay:"天",tHour:"时",tMin:"分",tSec:"秒",tRef:"你的邀请链接：",
+     tPresale:"预售阶段",tGasNote:"付款直接进入金库（USDT/BEP20），需少量 BNB 作为 Gas。",
+     tTrans:"透明度",tTransText:"购买记录链上可查。管理员面板可查看交易。",
+     tAbout:"关于",tAboutText:"社区驱动代币，AI 层读取趋势并赋能项目。预售资金直接进入金库。",tRoadmap:"路线图"},
+ hi:{tTitle:"एआई-पावर्ड मीम एजेंट",tSub:"ZUZU **AI Meme Intelligence** के साथ मीम ऊर्जा जोड़ता है। प्रीसेल फ़ंड ट्रेज़री में जाते हैं।",
+     tDay:"दिन",tHour:"घंटा",tMin:"मि.",tSec:"से.",tRef:"तुम्हारा रेफ लिंक:",
+     tPresale:"प्रीसेल स्टेज",tGasNote:"USDT (BEP20) सीधे ट्रेज़री में जाएगा। गैस के लिए थोड़ा BNB चाहिए।",
+     tTrans:"पारदर्शिता",tTransText:"खरीद ऑन-चेन रिसीवर पर दर्ज होगी। Admin Panel देखें।",
+     tAbout:"परिचय",tAboutText:"कम्युनिटी-ड्रिवन कॉइन, AI लेयर ट्रेंड पढ़ती है और प्रोजेक्ट को बल देती है।",tRoadmap:"रोडमैप"}
 };
-function t(id,key){const el=document.querySelector(`[data-i="${key}"]`);if(el) el.innerHTML=I[id][key];}
-function setLang(id){["heroTitle","heroSub","day","hour","min","sec","yourRef","presale","buyBtn","gasNote","transparency","transparentText","about","aboutText","roadmap"].forEach(k=>t(id,k));}
+function setLang(k){const t=L[k];for(const id in t){const el=document.getElementById(id); if(el) el.innerHTML=t[id];}}
 
-const els={stageSel:document.getElementById('stageSel'),
-           amount:document.getElementById('inpAmount'),
-           priceInfo:document.getElementById('priceInfo'),
-           totalInfo:document.getElementById('totalInfo'),
-           rcvShort:document.getElementById('rcvShort'),
-           btnBuy:document.getElementById('btnBuy'),
-           btnConnect:document.getElementById('btnConnect'),
-           prog:document.getElementById('prog'),
-           raised:document.getElementById('raised'),
-           cap:document.getElementById('cap'),
-           myRef:document.getElementById('myRef'),
-           refBox:document.getElementById('refBox')
-};
+const el={stage:document.getElementById('stageSel'),amt:document.getElementById('amount'),price:document.getElementById('priceInfo'),tot:document.getElementById('totalInfo'),
+btnBuy:document.getElementById('btnBuy'),btnCon:document.getElementById('btnConnect'),prog:document.getElementById('prog'),raised:document.getElementById('raised'),
+cap:document.getElementById('cap'),rcvShort:document.getElementById('rcvShort'),myRef:document.getElementById('myRef')};
 
-let provider, signer, myAddr=null;
+let provider,signer,myAddr=null;
+function short(a){return a?a.slice(0,6)+"…"+a.slice(-4):"";}
+function usd(x){return "$"+Number(x).toLocaleString(undefined,{maximumFractionDigits:2});}
 
-function short(a){return a? a.slice(0,6)+"…"+a.slice(-4):"";}
-function fmtUSD(x){return "$"+Number(x).toLocaleString(undefined,{maximumFractionDigits:2});}
-function g(q){return document.querySelector(q)}
-function all(q){return Array.from(document.querySelectorAll(q))}
-
-function initStages(){
-  STAGES.forEach((s,i)=>{const o=document.createElement('option');o.value=i;o.textContent=s.label;els.stageSel.appendChild(o);});
-  els.stageSel.value=0;
-}
-
-function calc(){
-  const st=STAGES[+els.stageSel.value]; const n=Number(els.amount.value||0);
-  const total = n*st.price;
-  els.priceInfo.textContent = `Fiyat: ${st.price.toFixed(6)} USDT / ZUZU`;
-  els.totalInfo.textContent = `Toplam: ${total.toFixed(6)} USDT`;
-  return {st,n,total};
-}
+function initStages(){STAGES.forEach((s,i)=>{const o=document.createElement('option');o.value=i;o.textContent=s.label;el.stage.appendChild(o)}); el.stage.value=0;}
+function calc(){const st=STAGES[+el.stage.value], n=Number(el.amt.value||0), total=n*st.price; el.price.textContent=`Fiyat: ${st.price.toFixed(6)} USDT / ZUZU`; el.tot.textContent=`Toplam: ${total.toFixed(6)} USDT`; return {n,total};}
 
 async function connect(){
-  if(!window.ethereum){alert("MetaMask/TrustWallet gerekli.");return;}
-  await ethereum.request({method:"eth_requestAccounts"});
-  provider=new ethers.providers.Web3Provider(window.ethereum);
-  signer=provider.getSigner(); myAddr=await signer.getAddress();
-  // BSC'ye geç
-  let cid = await provider.getNetwork(); 
-  if(cid.chainId!==BSC_CHAIN_ID){
-    try{
-      await ethereum.request({method:"wallet_switchEthereumChain",params:[{chainId:"0x38"}]});
-    }catch(e){
-      await ethereum.request({method:"wallet_addEthereumChain",params:[{
-        chainId:"0x38", chainName:"BNB Smart Chain", nativeCurrency:{name:"BNB",symbol:"BNB",decimals:18},
-        rpcUrls:["https://bsc-dataseed.binance.org/"], blockExplorerUrls:["https://bscscan.com"]
-      }]});
-    }
-  }
-  els.btnConnect.textContent=short(myAddr);
-  // kendi referans linkin
-  const url = new URL(location.href);
-  url.searchParams.set('ref',myAddr);
-  els.myRef.href=url.toString(); els.myRef.textContent=url.toString();
+ if(!window.ethereum){alert("MetaMask/TrustWallet gerekli.");return;}
+ await ethereum.request({method:"eth_requestAccounts"}); provider=new ethers.providers.Web3Provider(window.ethereum); signer=provider.getSigner(); myAddr=await signer.getAddress();
+ let net=await provider.getNetwork(); if(net.chainId!==CHAIN){ try{await ethereum.request({method:"wallet_switchEthereumChain",params:[{chainId:"0x38"}]});}catch(e){
+   await ethereum.request({method:"wallet_addEthereumChain",params:[{chainId:"0x38",chainName:"BNB Smart Chain",nativeCurrency:{name:"BNB",symbol:"BNB",decimals:18},rpcUrls:["https://bsc-dataseed.binance.org/"],blockExplorerUrls:["https://bscscan.com"]}]});}}
+ el.btnCon.textContent=short(myAddr);
+ // referans linki
+ const u=new URL(location.href); u.searchParams.set("ref",myAddr); el.myRef.href=u.toString(); el.myRef.textContent=u.toString();
 }
 
 async function buy(){
-  const {st,n,total} = calc();
-  if(!n || total<=0){alert("Miktar gir.");return;}
-  if(!signer){await connect();}
-  const usdt = new ethers.Contract(USDT,["function decimals() view returns (uint8)","function transfer(address to,uint256 amount) returns (bool)"], signer);
-  const dec = await usdt.decimals();
-  const amt = ethers.utils.parseUnits(total.toFixed(6), dec);
-  try{
-    const tx = await usdt.transfer(RECEIVER, amt);
-    els.btnBuy.disabled=true; els.btnBuy.textContent="Gönderiliyor…";
-    await tx.wait();
-    els.btnBuy.textContent="Tamamlandı ✓"; els.btnBuy.classList.add("btn-sec");
-    updateRaised();
-  }catch(err){
-    console.error(err); alert(err.message||"İşlem iptal/başarısız.");
-    els.btnBuy.textContent=I[langSel.value].buyBtn; els.btnBuy.disabled=false;
-  }
+ const {n,total}=calc(); if(!n||total<=0){alert("Miktar?");return;} if(!signer) await connect();
+ const usdt=new ethers.Contract(USDT,["function decimals() view returns(uint8)","function transfer(address,uint256) returns(bool)"],signer);
+ const dec=await usdt.decimals(); const amt=ethers.utils.parseUnits(total.toFixed(6),dec);
+ try{ const tx=await usdt.transfer(RECEIVER,amt); el.btnBuy.disabled=true; el.btnBuy.textContent="Gönderiliyor…"; await tx.wait(); el.btnBuy.textContent="Tamamlandı ✓"; el.btnBuy.classList.add("btn-sec"); updateRaised(); }
+ catch(err){console.error(err); alert(err.message||"İşlem iptal/başarısız."); el.btnBuy.disabled=false; el.btnBuy.textContent="USDT (BEP20) ile Satın Al";}
 }
 
-function endCountdown(){
-  const end = Date.now()+40*24*3600*1000; // 40 gün
-  setInterval(()=>{
-    let d=Math.max(0, end-Date.now());
-    const days=Math.floor(d/86400000); d-=days*86400000;
-    const h=Math.floor(d/3600000); d-=h*3600000;
-    const m=Math.floor(d/60000); d-=m*60000;
-    const s=Math.floor(d/1000);
-    g("#d").textContent=String(days).padStart(2,"0");
-    g("#h").textContent=String(h).padStart(2,"0");
-    g("#m").textContent=String(m).padStart(2,"0");
-    g("#s").textContent=String(s).padStart(2,"0");
-  },1000);
-}
+function countdown(){const end=Date.now()+40*24*3600*1000; setInterval(()=>{let d=Math.max(0,end-Date.now());
+ const D=Math.floor(d/86400000); d-=D*86400000; const H=Math.floor(d/3600000); d-=H*3600000; const M=Math.floor(d/60000); d-=M*60000; const S=Math.floor(d/1000);
+ d=document.getElementById('d').textContent=String(D).padStart(2,"0"); document.getElementById('h').textContent=String(H).padStart(2,"0"); document.getElementById('m').textContent=String(M).padStart(2,"0"); document.getElementById('s').textContent=String(S).padStart(2,"0");},1000);}
 
 async function updateRaised(){
-  els.cap.textContent = fmtUSD(HARD_CAP_USD);
-  if(!BSC_SCAN_KEY){ els.raised.textContent=fmtUSD(0); els.prog.style.width="0%"; return; }
-  try{
-    // USDT token transferlerini receiver için çek
-    const url=`https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=${USDT}&address=${RECEIVER}&page=1&offset=100&sort=desc&apikey=${BSC_SCAN_KEY}`;
-    const r=await fetch(url); const j=await r.json();
-    let sum=0; 
-    if(j.status==="1"){
-      j.result.forEach(tx=>{ if((tx.to||"").toLowerCase()===RECEIVER.toLowerCase()) sum+= Number(tx.value)/1e18; });
-    }
-    els.raised.textContent=fmtUSD(sum);
-    const p = Math.min(100, (sum/HARD_CAP_USD)*100);
-    els.prog.style.width = p+"%";
-  }catch(e){console.warn("BscScan err",e);}
+ el.cap.textContent=usd(HARD_CAP);
+ if(!BSC_SCAN_KEY){el.raised.textContent=usd(0); el.prog.style.width="0%"; return;}
+ try{const url=`https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=${USDT}&address=${RECEIVER}&page=1&offset=100&sort=desc&apikey=${BSC_SCAN_KEY}`;
+  const r=await fetch(url); const j=await r.json(); let sum=0; if(j.status==="1"){ j.result.forEach(x=>{ if((x.to||"").toLowerCase()===RECEIVER.toLowerCase()) sum+=Number(x.value)/1e18; }); }
+  el.raised.textContent=usd(sum); el.prog.style.width=Math.min(100,(sum/HARD_CAP)*100)+"%";
+ }catch(e){console.warn(e);}
 }
 
-function initRef(){
-  const url = new URL(location.href);
-  const ref = url.searchParams.get("ref");
-  if(ref) localStorage.setItem("zuzu_ref",ref);
-  const my = localStorage.getItem("zuzu_ref") || "share-this-link";
-  const me = new URL(location.href); me.searchParams.set("ref",my);
-  els.myRef.href = me.toString(); els.myRef.textContent = me.toString();
-}
+function initRef(){const u=new URL(location.href); const ref=u.searchParams.get("ref"); if(ref) localStorage.setItem("zref",ref); const me=localStorage.getItem("zref")||"share-this-link"; const link=new URL(location.href); link.searchParams.set("ref",me); el.myRef.href=link.toString(); el.myRef.textContent=link.toString();}
 
-function parallax(){
-  const wrap=g('.mascotWrap'); const el=g('#zuzu');
-  window.addEventListener('mousemove',e=>{
-    const r=wrap.getBoundingClientRect(); const x=(e.clientX-r.left)/r.width - .5; const y=(e.clientY-r.top)/r.height - .5;
-    el.style.transform=`translate(${x*6}px,${y*6}px)`;
-  });
-}
+function parallax(){const P=document.getElementById('par'), F=document.getElementById('face'); window.addEventListener('mousemove',e=>{const r=P.getBoundingClientRect(), x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5; F.style.transform=`translate(${x*6}px,${y*6}px)`;});}
 
-/*** events ***/
-document.getElementById('langSel').addEventListener('change',e=>{setLang(e.target.value);});
-document.getElementById('btnConnect').addEventListener('click',connect);
-document.getElementById('btnBuy').addEventListener('click',buy);
-els.stageSel.addEventListener('change',calc);
-els.amount.addEventListener('input',calc);
-all('.quick .q').forEach(q=>q.addEventListener('click',()=>{els.amount.value=q.dataset.amt;calc();}));
+/* events */
+document.getElementById('langSel').onchange=e=>setLang(e.target.value);
+document.getElementById('btnConnect').onclick=connect;
+document.getElementById('btnBuy').onclick=buy;
+document.getElementById('stageSel').onchange=calc;
+document.getElementById('amount').oninput=calc;
+document.querySelectorAll('.q').forEach(x=>x.onclick=()=>{el.amt.value=x.dataset.amt;calc();});
 
-/*** boot ***/
-initStages(); setLang('tr'); endCountdown(); initRef(); updateRaised(); parallax();
-els.amount.value=100000; calc(); els.rcvShort.textContent=short(RECEIVER);
+/* boot */
+initStages(); setLang('tr'); el.amt.value=100000; calc(); el.rcvShort.textContent=short(RECEIVER);
+countdown(); initRef(); updateRaised(); parallax();
 </script>
 </body>
 </html>
