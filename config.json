@@ -1,29 +1,23 @@
 {
-  "brand": "ZUZU",
-  "tagline": "AI-Powered Meme Intelligence",
+  "project": "ZUZU",
   "symbol": "ZUZU",
-  "decimals": 18,
-  "chain": {
-    "name": "BSC",
-    "chainId": 56,
-    "rpc": "https://bsc-dataseed.binance.org/"
-  },
+  "chain": "BSC",
+  "chainId": 56,
+  "usdtContract": "0x55d398326f99059fF775485246999027B3197955",
   "receiver": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",
-  "usdt": {
-    "bep20": "0x55d398326f99059fF775485246999027B3197955",
-    "decimals": 18
-  },
+
   "stages": [
-    { "label": "Stage 1", "price": 0.002000 },
-    { "label": "Stage 2", "price": 0.003000 },
-    { "label": "Stage 3", "price": 0.004000 },
-    { "label": "Stage 4", "price": 0.005000 }
+    { "name": "Stage 1 — 0.002000 USDT / ZUZU", "price": 0.002 },
+    { "name": "Stage 2 — 0.003000 USDT / ZUZU", "price": 0.003 },
+    { "name": "Stage 3 — 0.004000 USDT / ZUZU", "price": 0.004 },
+    { "name": "Stage 4 — 0.005000 USDT / ZUZU", "price": 0.005 }
   ],
-  "hardcapUSDT": 300000,
-  "presaleEndsAt": "2025-09-30T21:00:00Z",
-  "langs": ["TR","EN","PT","RU","ZH","HI"],
-  "bscscan": {
-    "apiKey": "PASTE_YOUR_BSCSCAN_KEY",
-    "base": "https://api.bscscan.com/api"
-  }
+
+  "targetUSD": 300000,
+  "countdownTo": "2025-10-30T21:00:00Z",
+
+  "bscscanApiKey": "",
+
+  "languages": ["TR","EN","PT","RU","ZH","HI"],
+  "defaultLang": "TR"
 }
