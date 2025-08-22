@@ -184,3 +184,106 @@ function initAll(){
   updateRaised().catch(()=>{});
   mountLottie(); // lottie json'ları yükle
 }
+// ========== WALLET + USDT TRANSFER (BSC) ==========
+async function loadEthers() {
+  if (window.ethers) return window.ethers;
+  await new Promise((res) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js';
+    s.onload = res; document.head.appendChild(s);
+  });
+  return window.ethers;
+}
+
+let provider, signer, userAddr;
+
+async function connectWallet() {
+  const ethers = await loadEthers();
+  if (!window.ethereum) { alert('MetaMask / Wallet eklentisi bulunamadı.'); return; }
+
+  provider = new ethers.BrowserProvider(window.ethereum);
+  const chain = await provider.getNetwork();
+
+  // BSC mainnet: chainId 56 — otomatik switch
+  if (Number(chain.chainId) !== 56) {
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: '0x38' }], // 56
+      });
+    } catch (e) {
+      // Ağ ekleme
+      await window.ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [{
+          chainId: '0x38',
+          chainName: 'BNB Smart Chain',
+          nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
+          rpcUrls: ['https://bsc-dataseed.binance.org/'],
+          blockExplorerUrls: ['https://bscscan.com']
+        }]
+      });
+    }
+  }
+
+  signer = await provider.getSigner();
+  userAddr = await signer.getAddress();
+  document.getElementById('connectBtn').textContent =
+    userAddr.slice(0,6)+'...'+userAddr.slice(-4);
+}
+
+// Minimal ERC20 ABI: transfer(address,uint256) only
+const ERC20_ABI = [
+  "function decimals() view returns (uint8)",
+  "function balanceOf(address) view returns (uint256)",
+  "function transfer(address to, uint256 value) returns (bool)"
+];
+
+async function buyWithUSDT() {
+  try {
+    const ethers = await loadEthers();
+    if (!signer) { await connectWallet(); if (!signer) return; }
+
+    const usdtAddr = CFG.usdtContract;
+    const receiver = CFG.receiver;
+    if (!usdtAddr || !receiver) { alert('USDT sözleşme / receiver adresi eksik.'); return; }
+
+    // Kaç ZUZU alınacak -> kaç USDT ödenecek
+    const zuzu = Number(document.getElementById('amountInp').value || 0);
+    const usdtPerZuzu = price(); // 0.002 vs
+    const usdtAmount = zuzu * usdtPerZuzu;
+
+    if (!usdtAmount || usdtAmount <= 0) { alert('Geçerli bir miktar gir.'); return; }
+
+    const usdt = new ethers.Contract(usdtAddr, ERC20_ABI, signer);
+    const decimals = await usdt.decimals(); // 18
+    const value = ethers.parseUnits(usdtAmount.toString(), decimals);
+
+    // Bakiyeyi kontrol et (kibar uyarı)
+    const bal = await usdt.balanceOf(userAddr);
+    if (bal < value) {
+      alert('USDT bakiyesi yetersiz.');
+      return;
+    }
+
+    const tx = await usdt.transfer(receiver, value);
+    document.getElementById('buyUsdtBtn').textContent = 'Gönderiliyor...';
+    await tx.wait();
+
+    document.getElementById('buyUsdtBtn').textContent = 'USDT (BEP20) ile Satın Al';
+    alert('Satın alma tamam! Tx: ' + tx.hash);
+    updateRaised().catch(()=>{});
+  } catch (err) {
+    console.error(err);
+    document.getElementById('buyUsdtBtn').textContent = 'USDT (BEP20) ile Satın Al';
+    alert('İşlem iptal/başarısız.');
+  }
+}
+
+// Buton bağla
+document.addEventListener('DOMContentLoaded', ()=>{
+  const c = document.getElementById('connectBtn');
+  const b = document.getElementById('buyUsdtBtn');
+  if (c) c.addEventListener('click', connectWallet);
+  if (b) b.addEventListener('click', buyWithUSDT);
+});
