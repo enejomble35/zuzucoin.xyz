@@ -1,138 +1,300 @@
 <!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>ZUZU • AI Meme Intelligence</title>
-  <link rel="stylesheet" href="/style.css?v=50">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie_light.min.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ZUZU • AI Meme Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+<style>
+:root{
+  --bg:#0b1220; --panel:#0f1828; --muted:#92a0b3; --text:#dfe7f3;
+  --brand:#24e0b6; --brand2:#27b5ff; --warn:#ff8b8b; --line:#162238;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;}
+a{color:inherit;text-decoration:none}
+.container{max-width:1180px;margin:auto;padding:18px}
+.header{display:flex;align-items:center;gap:14px;justify-content:space-between;margin-bottom:14px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{height:36px;filter:drop-shadow(0 0 8px rgba(36,224,182,.35))}
+.brand h1{font-size:20px;margin:0;font-weight:800;letter-spacing:.6px}
+.lang{display:flex;gap:8px;align-items:center}
+.lang select,.btn{background:#0d1728;border:1px solid var(--line);color:var(--text);padding:8px 12px;border-radius:10px}
+.btn.brand{background:linear-gradient(135deg,#24e0b6,#27b5ff);color:#00131c;border:none;font-weight:800}
+.section{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:16px}
+.section-title{font-weight:800;font-size:18px;margin-bottom:12px}
+.hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr}}
+.p{color:var(--muted);line-height:1.6}
+.h-title{font-size:24px;font-weight:800;margin:0 0 8px}
+.h-title .z{color:var(--brand)}
+.count-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
+.count-box{background:#0b1423;border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
+.count-n{font-size:22px;font-weight:800}
+.count-l{font-size:12px;color:#92a0b3}
+.week-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:8px}
+.week{background:#0b1423;border:1px solid var(--line);border-radius:12px;padding:10px}
+.week h4{margin:0 0 8px;font-size:14px}
+.price{font-weight:800}
+.buy{margin-top:8px;width:100%;padding:8px;border-radius:10px;border:1px solid var(--line);background:#0d1728;color:#cfe8ff}
+.buy.active{background:linear-gradient(135deg,#24e0b6,#27b5ff);color:#00131c;border:none;font-weight:800}
+.buy.disabled{opacity:.4;pointer-events:none}
+.ex-list{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.ex-list img{height:22px;opacity:.85;transition:.2s;filter:drop-shadow(0 0 6px rgba(39,181,255,.25))}
+.ex-list img:hover{opacity:1;transform:translateY(-1px)}
+/* GALERİ */
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media(max-width:1100px){.grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:850px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.grid{grid-template-columns:repeat(2,1fr)}}
+.card{background:#0b1423;border:1px solid var(--line);border-radius:14px;padding:10px;position:relative;overflow:hidden}
+.card h3{margin:0 0 8px;font-size:14px}
+.thumb{width:100%;height:170px;object-fit:cover;border-radius:10px;background:radial-gradient(ellipse at center,#112035,#091120)}
+.badge{position:absolute;bottom:8px;left:8px;background:#1a2233;border:1px solid #28354a;color:#b8c6db;padding:2px 8px;border-radius:999px;font-size:11px}
+.badge.err{background:#35181f;border-color:#6a3040;color:#ffc7ce}
+/* YOL HARİTASI */
+.road{display:grid;grid-template-columns:1fr;gap:10px}
+.phase{border:1px dashed #28405c;background:#0b1728;border-radius:14px;padding:12px}
+.phase h4{margin:0 0 6px}
+.phase ul{margin:0;padding-left:18px;color:#a7b6cc}
+/* TOKENOMİ */
+.chartBox{background:#0b1423;border:1px solid var(--line);border-radius:16px;padding:16px}
+.footer{opacity:.7;font-size:12px;text-align:center;margin:18px 0}
+</style>
 </head>
 <body>
-  <!-- ÜST BAR -->
-  <header class="topbar">
+<div class="container">
+
+  <div class="header">
     <div class="brand">
-      <img class="brand-logo" src="/assets/zuzu/svg/zuzu_logo.svg" alt="ZUZU"/>
-      <span class="brand-text">ZUZU</span>
+      <img src="/assets/zuzu/svg/zuzu_logo.svg" alt="ZUZU">
+      <h1>ZUZU • AI Meme Intelligence</h1>
     </div>
-    <div class="tools">
-      <select id="lang" class="lang">
+    <div class="lang">
+      <select id="lang">
         <option value="tr">Türkçe</option>
         <option value="en">English</option>
-        <option value="ru">Русский</option>
-        <option value="es">Español</option>
-        <option value="de">Deutsch</option>
-        <option value="fr">Français</option>
-        <option value="zh">中文</option>
-        <option value="hi">हिन्दी</option>
       </select>
-      <button id="btn-wallet" class="btn-primary" data-i18n="wallet_btn">Cüzdan Bağla</button>
-    </div>
-  </header>
-
-  <main class="stack">
-    <!-- 1) BAŞLIK BLOĞU -->
-    <section class="hero">
-      <h1 class="hero-title" data-i18n="hero_title">
-        YAPAY ZEKA <span class="c-brand">ZUZU</span> ORDUSU
-      </h1>
-      <p data-i18n="hero_desc">
-        ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> katmanıyla birleştirir.
-        Presale fonları <b>non-custodial</b> hazinede tutulur. Paylaş, <b>tap-to-earn</b> ile puan topla,
-        <b>stake</b> ile daha fazla kazanç hedefle.
-      </p>
-    </section>
-
-    <!-- 2) SAYAC + HAFTALAR + BUTONLAR -->
-    <section class="count-section">
-      <div class="counter big" id="cd">
-        <div><span id="d">--</span><small data-i18n="d">Gün</small></div>
-        <div><span id="h">--</span><small data-i18n="h">Saat</small></div>
-        <div><span id="m">--</span><small data-i18n="m">Dakika</small></div>
-        <div><span id="s">--</span><small data-i18n="s">Saniye</small></div>
-      </div>
-
-      <div class="weeks">
-        <div><b data-i18n="w1">1. Hafta</b> <span id="w1">0.0010 USDT</span></div>
-        <div><b data-i18n="w2">2. Hafta</b> <span id="w2">0.0015 USDT</span></div>
-        <div><b data-i18n="w3">3. Hafta</b> <span id="w3">0.0020 USDT</span></div>
-        <div><b data-i18n="w4">4. Hafta</b> <span id="w4">0.0025 USDT</span></div>
-      </div>
-
-      <div class="buyRow">
-        <button id="buy1" class="btn-buy" data-week="1" data-i18n="buy">Satın Al</button>
-        <button id="buy2" class="btn-buy" data-week="2" data-i18n="buy">Satın Al</button>
-        <button id="buy3" class="btn-buy" data-week="3" data-i18n="buy">Satın Al</button>
-        <button id="buy4" class="btn-buy" data-week="4" data-i18n="buy">Satın Al</button>
-      </div>
-    </section>
-
-    <!-- 3) BORSA LOGOLARI -->
-    <section class="exchanges">
-      <img src="/assets/zuzu/exchanges/mexc.svg"   alt="MEXC"/>
-      <img src="/assets/zuzu/exchanges/gateio.svg" alt="Gate.io"/>
-      <img src="/assets/zuzu/exchanges/bitmart.svg" alt="BitMart"/>
-      <img src="/assets/zuzu/exchanges/bybit.svg"  alt="Bybit"/>
-      <img src="/assets/zuzu/exchanges/kucoin.svg" alt="KuCoin"/>
-      <img src="/assets/zuzu/exchanges/okx.svg"    alt="OKX"/>
-    </section>
-
-    <!-- 4) GALERİ -->
-    <section class="wrap">
-      <h2 data-i18n="gallery_title">ZUZU Maskot Galerisi</h2>
-      <div id="zuzu-gallery" class="zuzu-grid"></div>
-    </section>
-
-    <!-- 5) YOL HARİTASI -->
-    <section class="roadmap" id="roadmap">
-      <h2 data-i18n="roadmap_title">Yol Haritası</h2>
-      <ul class="map">
-        <li>
-          <img src="/assets/zuzu/svg/zuzu_mini_bot.svg" alt="phase"/>
-          <span>Phase 1</span> <span data-i18n="phase1">Presale • Topluluk • Maskot Drop</span>
-        </li>
-        <li>
-          <img src="/assets/zuzu/svg/zuzu_mini_bot.svg" alt="phase"/>
-          <span>Phase 2</span> <span data-i18n="phase2">CEX Başvuruları • Pazarlama • Partnerlikler</span>
-        </li>
-        <li>
-          <img src="/assets/zuzu/svg/zuzu_mini_bot.svg" alt="phase"/>
-          <span>Phase 3</span> <span data-i18n="phase3">Tap-to-Earn • Staking • AI Meme Intelligence</span>
-        </li>
-      </ul>
-    </section>
-
-    <!-- 6) TOKENOMİ -->
-    <section class="tokenomics" id="tokenomics">
-      <h2 data-i18n="token_title">Tokenomi</h2>
-      <canvas id="tokenChart" width="480" height="480"></canvas>
-      <p class="muted" data-i18n="token_note">
-        Presale, likidite ve airdrop yüzdeleri <code>config.json</code>’dan gelir.
-      </p>
-    </section>
-  </main>
-
-  <!-- Cüzdan modal -->
-  <div id="wallet-modal" class="modal hidden">
-    <div class="dialog">
-      <div class="dialog-head">
-        <h3 data-i18n="wallet_head">Cüzdan Bağla</h3>
-        <button id="closeModal" class="close">×</button>
-      </div>
-      <div class="dialog-body">
-        <button id="evmConnect" class="wbtn evm" data-i18n="wallet_evm">MetaMask / OKX / Bitget</button>
-        <button id="solConnect" class="wbtn sol" data-i18n="wallet_sol">Phantom (Solana)</button>
-        <button id="tonConnect" class="wbtn ton" data-i18n="wallet_ton">TonConnect</button>
-        <p id="addrBox" class="addr" data-i18n="wallet_none">Bağlı değil</p>
-      </div>
+      <button id="btnWallet" class="btn brand">Cüzdan Bağla</button>
     </div>
   </div>
 
-  <footer class="foot">
-    <div>© 2025 <b>ZUZU</b> • AI-Powered Meme Intelligence</div>
-  </footer>
+  <!-- HERO -->
+  <section class="section hero-grid">
+    <div>
+      <h2 class="h-title">YAPAY ZEKA <span class="z">ZUZU</span> ORDUSU</h2>
+      <p class="p" id="heroText">
+        ZUZU; memetik enerjiyi AI Meme Intelligence katmanıyla birleştirir. Presale fonları non-custodial hazinede tutulur. Paylaş, tap-to-earn ile puan topla, stake ile daha fazla kazanç hedefle.
+      </p>
 
-  <script src="/script.js?v=50"></script>
-  <script src="https://unpkg.com/@tonconnect/ui@0.1.38/dist/tonconnect-ui.min.js"></script>
+      <div class="count-row" id="cdRow">
+        <div class="count-box"><div class="count-n" id="cd-d">--</div><div class="count-l">Gün</div></div>
+        <div class="count-box"><div class="count-n" id="cd-h">--</div><div class="count-l">Saat</div></div>
+        <div class="count-box"><div class="count-n" id="cd-m">--</div><div class="count-l">Dakika</div></div>
+        <div class="count-box"><div class="count-n" id="cd-s">--</div><div class="count-l">Saniye</div></div>
+      </div>
+
+      <div class="week-row" id="weeks"></div>
+
+      <div class="section" style="padding:10px;margin-top:12px">
+        <div class="ex-list" id="exList"></div>
+      </div>
+    </div>
+
+    <div class="chartBox">
+      <div class="section-title">Tokenomi</div>
+      <canvas id="donut" height="260"></canvas>
+    </div>
+  </section>
+
+  <!-- GALERİ -->
+  <section class="section">
+    <div class="section-title">ZUZU Maskot Galerisi</div>
+    <div id="zuzu-gallery" class="grid"></div>
+  </section>
+
+  <!-- YOL HARİTASI -->
+  <section class="section">
+    <div class="section-title">Yol Haritası</div>
+    <div class="road">
+      <div class="phase">
+        <h4>Phase 1 — Presale • Topluluk • Maskot Drop</h4>
+        <ul>
+          <li>Ön satış ve topluluk inşası</li>
+          <li>Maskot NFT drop</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <h4>Phase 2 — CEX Başvuruları • Pazarlama • Partnerlikler</h4>
+        <ul>
+          <li>Global pazarlama, KOL iş birlikleri</li>
+          <li>CEX listeleme başvuruları</li>
+        </ul>
+      </div>
+      <div class="phase">
+        <h4>Phase 3 — Tap-to-Earn • Staking • AI Meme Intelligence</h4>
+        <ul>
+          <li>Tap-to-Earn mini oyunlar</li>
+          <li>Stake paneli ve ödüller</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">© 2025 ZUZU • AI-Powered Meme Intelligence</div>
+</div>
+
+<script>
+/* ================= CONFIG ================= */
+const CONFIG = {
+  presaleStart: "2025-09-15T18:00:00+03:00", // TR saatiyle
+  weekPrices: [0.0010,0.0015,0.0020,0.0025], // USDT
+  tokenomics: { labels:["Presale","Liquidity","Marketing","Team","Airdrop"], data:[55,20,12,6,7] },
+  exchanges:[
+    {id:"mexc",label:"MEXC"},
+    {id:"gateio",label:"Gate.io"},
+    {id:"bitmart",label:"BitMart"},
+    {id:"bybit",label:"Bybit"},
+    {id:"kucoin",label:"KuCoin"},
+    {id:"okx",label:"OKX"},
+  ],
+  maskots:["hero","ranger","warrior","hacker","rogue","titan","sorceress","berserker","scientist","maiden"],
+  alias:{ sorceress:["sorceress","maiden"], maiden:["maiden","sorceress"] }
+};
+
+/* ============ LANG (TR/EN minimal) ============ */
+const STR = {
+  tr:{ buy:"Satın Al", soon:"Yakında", ended:"Bitti", day:"Gün", hour:"Saat", min:"Dakika", sec:"Saniye" },
+  en:{ buy:"Buy", soon:"Soon", ended:"Ended", day:"Days", hour:"Hours", min:"Minutes", sec:"Seconds" }
+};
+let LANG="tr";
+document.getElementById("lang").addEventListener("change",e=>{LANG=e.target.value; renderWeeks();});
+
+/* ============ EXCHANGE LOGOS ============ */
+function renderExchanges(){
+  const row = document.getElementById("exList"); row.innerHTML="";
+  CONFIG.exchanges.forEach(ex=>{
+    const img = document.createElement("img");
+    img.alt = ex.label;
+    // öncelik SVG → png
+    const trySrc = [`/assets/zuzu/exchanges/${ex.id}.svg`,`/assets/zuzu/exchanges/${ex.id}.png`];
+    let i=0; const next=()=>{ if(i>=trySrc.length) return; img.src=trySrc[i++]; img.onerror=next; };
+    next();
+    row.appendChild(img);
+  });
+}
+
+/* ============ TOKENOMI CHART ============ */
+function renderChart(){
+  const ctx = document.getElementById("donut").getContext("2d");
+  new Chart(ctx,{
+    type:"doughnut",
+    data:{
+      labels: CONFIG.tokenomics.labels,
+      datasets:[{data: CONFIG.tokenomics.data, backgroundColor:['#24e0b6','#31c4ff','#ffd166','#a78bfa','#ff8fab'], borderColor:'#0f1828', borderWidth:2}]
+    },
+    options:{plugins:{legend:{display:false}},cutout:'60%'}
+  });
+}
+
+/* ============ COUNTDOWN + WEEKS ============ */
+const start = new Date(CONFIG.presaleStart).getTime();
+const weekMS = 7*24*3600*1000;
+function currentWeekIndex(){
+  const now=Date.now();
+  if(now < start) return -1;
+  for(let w=0; w<4; w++){
+    const s = start + w*weekMS;
+    const e = s + weekMS;
+    if(now>=s && now<e) return w;
+  }
+  return 4; // bitti
+}
+function updateCountdown(){
+  const now=Date.now();
+  const end = start + 4*weekMS;
+  let left = end - now;
+  if(left<0) left=0;
+  const d = Math.floor(left/86400000);
+  const h = Math.floor((left%86400000)/3600000);
+  const m = Math.floor((left%3600000)/60000);
+  const s = Math.floor((left%60000)/1000);
+  document.getElementById("cd-d").textContent = d;
+  document.getElementById("cd-h").textContent = h;
+  document.getElementById("cd-m").textContent = m;
+  document.getElementById("cd-s").textContent = s;
+}
+function renderWeeks(){
+  const box = document.getElementById("weeks"); box.innerHTML="";
+  const idx = currentWeekIndex();
+  CONFIG.weekPrices.forEach((p,i)=>{
+    const el = document.createElement("div");
+    el.className="week";
+    el.innerHTML = `
+      <h4>${i+1}. Hafta</h4>
+      <div class="price">${p.toFixed(4)} USDT</div>
+      <button class="buy ${idx===i?'active': 'disabled'}" data-week="${i}">
+        ${idx===i? STR[LANG].buy : (idx<i? STR[LANG].soon: STR[LANG].ended)}
+      </button>`;
+    box.appendChild(el);
+  });
+  box.querySelectorAll(".buy.active").forEach(btn=>{
+    btn.addEventListener("click",()=>alert(`${parseInt(btn.dataset.week)+1}. hafta satın alma akışı`));
+  });
+}
+
+/* ============ GALLERY (image fallback: webp → png → jpg) ============ */
+function candidateImages(name){
+  const base="/assets/zuzu/realistic/";
+  const names = CONFIG.alias[name] ? CONFIG.alias[name] : [name];
+  const urls=[];
+  names.forEach(n=>{
+    ["webp","png","jpg","jpeg"].forEach(ext=>urls.push(`${base}${n}.${ext}`));
+  });
+  return urls;
+}
+function loadWithFallback(img, urls){
+  let i=0; const next=()=>{ if(i>=urls.length){img.remove(); return;} img.src=urls[i++]; img.onerror=next; };
+  next();
+}
+function buildGallery(){
+  const grid = document.getElementById("zuzu-gallery"); grid.innerHTML="";
+  CONFIG.maskots.forEach(key=>{
+    const card = document.createElement("div"); card.className="card";
+    const title = "ZUZU "+ key.charAt(0).toUpperCase()+key.slice(1);
+    card.innerHTML = `<h3>${title}</h3>`;
+    const img = document.createElement("img"); img.className="thumb"; img.alt=title;
+    card.appendChild(img);
+    loadWithFallback(img, candidateImages(key));
+    // eğer görsel hiç yüklenemezse rozet
+    img.addEventListener("error",()=>{
+      const bd=document.createElement("div"); bd.className="badge err"; bd.textContent="görsel/animasyon bulunamadı";
+      card.appendChild(bd);
+    },{once:true});
+    grid.appendChild(card);
+  });
+}
+
+/* ============ WALLET (basit) ============ */
+document.getElementById("btnWallet").addEventListener("click",async ()=>{
+  if(window.ethereum){
+    try{ const acc=await ethereum.request({method:"eth_requestAccounts"}); alert("EVM: "+acc[0]); }
+    catch(e){ alert("Wallet: "+e.message); }
+  }else{
+    // mobilde metamask yoksa deep link
+    location.href="https://metamask.app.link/dapp/"+location.host;
+  }
+});
+
+/* ============ INIT ============ */
+renderExchanges();
+renderChart();
+renderWeeks();
+buildGallery();
+updateCountdown();
+setInterval(updateCountdown,1000);
+</script>
 </body>
 </html>
