@@ -5,67 +5,94 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ZUZU • AI-Powered Meme Intelligence</title>
 <meta name="theme-color" content="#0b1320">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0b1320;--panel:#0e1625;--muted:#8aa0b2;--txt:#d6e6f0;--neon:#4fd1c5;--neon2:#7bd6ff;--accent:#14f195;--ring:rgba(79,209,197,.18)}
-*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto}
+:root{
+  --bg:#0b1320;--panel:#0f1828;--muted:#8aa0b2;--txt:#e5f1f7;
+  --neon:#48e1c7;--neon2:#6ecbff;--ring:rgba(78,214,202,.28);
+  --accent:#14f195;--chip:#0c1a2c;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto}
 a{color:inherit;text-decoration:none}
-.container{max-width:1250px;margin:0 auto;padding:0 16px}
-.neon{background:linear-gradient(90deg,var(--neon),var(--neon2));-webkit-background-clip:text;background-clip:text;color:transparent}
-header{position:sticky;top:0;z-index:50;background:rgba(11,19,32,.75);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.06)}
-.nav{display:flex;align-items:center;gap:14px;padding:14px 0}
-.nav .brand{font-weight:800;font-size:20px}
-.nav .spacer{flex:1}
-.tabs{display:flex;gap:8px;flex-wrap:wrap}
-.tab{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);font-weight:600}
-.btn{padding:10px 14px;border-radius:10px;background:linear-gradient(180deg,#1d3a50,#0f2232);border:1px solid rgba(255,255,255,.08);font-weight:700}
-.btn.neon{background:linear-gradient(90deg,#01c38d,#18a4ff);color:#001a23}
-.exchanges{border-bottom:1px solid rgba(255,255,255,.06)}
-.ex-row{display:flex;gap:18px;align-items:center;overflow:auto;padding:10px 0}
-.ex-chip{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;background:#0f1a2b;border:1px solid rgba(255,255,255,.08);white-space:nowrap}
-.ex-chip img{height:18px}
-.hero{padding:28px 0}
-.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:22px}
-.card{background:var(--panel);border-radius:14px;box-shadow:0 0 0 1px rgba(255,255,255,.04) inset;padding:16px}
-@media(max-width:960px){.grid{grid-template-columns:1fr}}
-.section{padding:16px 0}
-.section h2{margin:6px 0 10px 0}
+.container{max-width:1300px;margin:0 auto;padding:0 16px}
 
-/* ==== NFT style gallery ==== */
-#zuzu-gallery{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;justify-items:center}
-@media(max-width:1160px){#zuzu-gallery{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media(max-width:920px){#zuzu-gallery{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:680px){#zuzu-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.neon{background:linear-gradient(90deg,var(--neon),var(--neon2));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+
+header{position:sticky;top:0;z-index:50;background:rgba(11,19,32,.8);backdrop-filter:blur(8px);
+  border-bottom:1px solid rgba(255,255,255,.06)}
+.nav{display:flex;align-items:center;gap:12px;padding:14px 0}
+.brand{font-weight:800;font-size:20px}
+.spacer{flex:1}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);font-weight:600}
+.btn{padding:10px 14px;border-radius:10px;font-weight:800;border:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(180deg,#1a3148,#0e2232)}
+.btn.neon{background:linear-gradient(90deg,#00c78e,#1295ff);color:#001923}
+
+.ex-bar{border-bottom:1px solid rgba(255,255,255,.06)}
+.ex-row{display:flex;gap:14px;padding:10px 0;overflow:auto}
+.ex-chip{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:var(--chip);
+  border:1px solid rgba(255,255,255,.08);white-space:nowrap}
+.ex-chip img{height:18px}
+
+.hero{padding:26px 0}
+.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:22px}
+@media(max-width:992px){.grid{grid-template-columns:1fr}}
+
+.card{background:var(--panel);border-radius:14px;padding:16px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.06) inset}
+.section{padding:16px 0}
+.section h2{margin:6px 0 10px}
+
+#zuzu-gallery{
+  display:grid;gap:16px;justify-items:center;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+}
+@media(max-width:1240px){#zuzu-gallery{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:980px){#zuzu-gallery{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:680px){#zuzu-gallery{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:480px){#zuzu-gallery{grid-template-columns:1fr}}
 
-.zuzu-card{width:100%;max-width:220px;background:#0e1625;border-radius:14px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.06) inset;cursor:pointer;transition:transform .18s ease, box-shadow .18s ease}
-.zuzu-card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.35),0 0 0 1px var(--ring) inset}
-.zuzu-thumb{position:relative;aspect-ratio:3/4;background:radial-gradient(120% 120% at 50% 0%,rgba(79,209,197,.12),rgba(0,0,0,.55))}
-.zuzu-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:drop-shadow(0 0 10px rgba(79,209,197,.18))}
-.zuzu-cap{padding:10px 12px;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center}
-.zuzu-title{font-weight:700}
-.zuzu-tag{font-size:12px;opacity:.8;padding:6px 8px;border-radius:7px;background:#0e1828;border:1px solid rgba(255,255,255,.08)}
-.fallback{position:absolute;inset:0;display:flex;gap:10px;align-items:center;justify-content:center}
-.fallback .dot{width:10px;height:10px;border-radius:50%;background:#4fd1c5;opacity:.5;animation:bubble 1.2s infinite}
-.fallback .dot:nth-child(2){animation-delay:.15s}.fallback .dot:nth-child(3){animation-delay:.3s}
-@keyframes bubble{0%,80%,100%{transform:scale(.6)}40%{transform:scale(1)}}
+.nft{width:100%;max-width:320px;border-radius:16px;overflow:hidden;background:#0e1625;
+  box-shadow:0 12px 30px rgba(0,0,0,.38),0 0 0 1px rgba(255,255,255,.06) inset;
+  transition:transform .18s ease, box-shadow .18s ease;cursor:pointer}
+.nft:hover{transform:translateY(-3px);box-shadow:0 18px 46px rgba(0,0,0,.5),0 0 0 1px var(--ring) inset}
+.thumb{position:relative;aspect-ratio:2/3;background:radial-gradient(120% 120% at 50% 0%,rgba(79,209,197,.12),rgba(0,0,0,.6))}
+.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  filter:drop-shadow(0 0 10px rgba(79,209,197,.18))}
+.badges{position:absolute;left:8px;right:8px;top:8px;display:flex;gap:8px;flex-wrap:wrap}
+.b{font-size:12px;padding:6px 8px;border-radius:8px;background:rgba(14,24,40,.86);
+  border:1px solid rgba(255,255,255,.1)}
+.caption{display:flex;align-items:center;justify-content:space-between;padding:12px;border-top:1px solid rgba(255,255,255,.06)}
+.title{font-weight:800}
+.mint{font-size:12px;color:#8fb6ff}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.center{display:flex;justify-content:center}
+.notice{color:var(--muted);font-size:14px}
 
 .modal{position:fixed;inset:0;display:none;z-index:9999}
 .modal.show{display:block}
-.modal-back{position:absolute;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(2px)}
-.modal-box{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);max-width:min(92vw,1000px);width:92vw;background:#0b1320;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.55);padding:14px}
-.modal-img{width:100%;border-radius:10px}
-.modal-title{text-align:center;margin-top:10px;font-weight:600}
-.modal-close{position:absolute;right:10px;top:10px;background:rgba(255,255,255,.06);border:0;color:#fff;width:34px;height:34px;border-radius:8px;cursor:pointer}
+.back{position:absolute;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(2px)}
+.box{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#0b1320;border-radius:14px;
+  width:min(96vw,1040px);padding:14px;box-shadow:0 20px 60px rgba(0,0,0,.55)}
+.mimg{width:100%;border-radius:10px}
+.mtitle{text-align:center;margin:10px 0 6px;font-weight:700}
+.mclose{position:absolute;right:10px;top:10px;width:34px;height:34px;border:0;border-radius:8px;
+  background:rgba(255,255,255,.08);color:#fff;cursor:pointer}
 
 .token-wrap{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-@media(max-width:960px){.token-wrap{grid-template-columns:1fr}}
+@media(max-width:992px){.token-wrap{grid-template-columns:1fr}}
 .footer{padding:28px 0;color:#93a6b8}
 .badge{display:inline-block;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:#0e1828;font-weight:600}
 </style>
 </head>
 <body>
+
 <header>
   <div class="container nav">
     <div class="brand">AI • <span class="neon">ZUZU</span> ORDUSU</div>
@@ -81,7 +108,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,19,32,.75);backdrop-f
   </div>
 </header>
 
-<section class="exchanges">
+<section class="ex-bar">
   <div class="container ex-row" id="exRow"></div>
 </section>
 
@@ -90,11 +117,16 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,19,32,.75);backdrop-f
     <div class="card">
       <h1>YAPAY ZEKA <span class="neon">ZUZU</span> ORDUSU</h1>
       <p>ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> katmanıyla birleştirir. Presale fonları <b>non-custodial</b> hazinede tutulur. Paylaş, <b>tap-to-earn</b> ile puan topla, <b>stake</b> ile daha fazla kazanç hedefle.</p>
+      <div class="row">
+        <button class="btn neon" onclick="scrollToId('zuzu-gallery')">Maskotları Gör</button>
+        <button class="btn" onclick="scrollToId('stake')">Stake Paneli</button>
+      </div>
+      <p class="notice">NFT Mint ve gerçek stake kontratı – presale penceresi sırasında açılacaktır.</p>
     </div>
 
     <div class="card">
       <h2>ZUZU Maskot Galerisi</h2>
-      <div id="zuzu-gallery"></div>
+      <div id="zuzu-gallery" class="center"></div>
     </div>
   </div>
 </section>
@@ -118,25 +150,32 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,19,32,.75);backdrop-f
 <section id="roadmap" class="section container">
   <h2 class="neon">Yol Haritası</h2>
   <div class="card">
-    <div class="t-item"><b>Phase 1</b> — Presale + Topluluk + Maskot Setleri</div>
-    <div class="t-item"><b>Phase 2</b> — CEX Başvuruları, Pazarlama, Partnerlikler</div>
-    <div class="t-item"><b>Phase 3</b> — Tap-to-Earn + Staking + AI Meme Intelligence</div>
+    <div><b>Phase 1</b> — Presale + Topluluk + Maskot Setleri</div>
+    <div><b>Phase 2</b> — CEX Başvuruları, Pazarlama, Partnerlikler</div>
+    <div><b>Phase 3</b> — Tap-to-Earn + Staking + AI Meme Intelligence</div>
+  </div>
+</section>
+
+<section id="stake" class="section container">
+  <h2 class="neon">Stake & Tap-to-Earn</h2>
+  <div class="card">
+    <p>Her ZUZU NFT’si **Stake xÇarpan** ve **Tap-to-Earn Bonus** sağlar. Presale bitmeden mint edenler, kampanya boyunca **ekstra puan** toplar.</p>
+    <div class="row">
+      <button class="btn neon">Mint Yakında</button>
+      <button class="btn">Stake Kilitle (Demo)</button>
+    </div>
+    <p class="notice">Not: Cüzdan bağlama ve akıllı sözleşme etkileşimi etkinleştirildiğinde bu panel aktif olacaktır.</p>
   </div>
 </section>
 
 <section id="about" class="section container">
   <h2 class="neon">Hakkımızda</h2>
-  <div class="card">ZUZU; memetik kültürü yapay zeka ile birleştiren küresel bir oyun-ekosistemi vizyonudur. Güvenlik, şeffaflık ve eğlence odaklıdır.</div>
+  <div class="card">ZUZU; memetik kültürü yapay zekâ ile birleştiren küresel bir oyun-ekosistemi vizyonudur.</div>
 </section>
 
 <section id="community" class="section container">
   <h2 class="neon">Topluluk</h2>
-  <div class="card">Resmi sosyal bağlantılar yakında duyurulacaktır. Global çok dilli topluluk hedeflenmektedir.</div>
-</section>
-
-<section id="stake" class="section container">
-  <h2 class="neon">Stake</h2>
-  <div class="card">Stake paneli yakında. Cüzdan bağlantısı üzerinden güvenli kontrat etkileşimi sağlanacak.</div>
+  <div class="card">Resmi sosyal hesaplar ve topluluk kanalları yakında duyurulacaktır.</div>
 </section>
 
 <footer class="footer">
@@ -144,101 +183,137 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,19,32,.75);backdrop-f
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-
 <script>
-/* ========== EXCHANGE BAR ========== */
-const exchanges=[{name:'MEXC',href:'https://www.mexc.com',logo:'https://cryptologos.cc/logos/mexc-global-mexc-logo.png?v=029'},{name:'Gate.io',href:'https://www.gate.io',logo:'https://cryptologos.cc/logos/gateio-gate-logo.png?v=029'},{name:'Bitmart',href:'https://www.bitmart.com',logo:'https://cryptologos.cc/logos/bitmart-bmx-logo.png?v=029'},{name:'Bybit',href:'https://www.bybit.com',logo:'https://cryptologos.cc/logos/bybit-byt-logo.png?v=029'},{name:'KuCoin',href:'https://www.kucoin.com',logo:'https://cryptologos.cc/logos/kucoin-kcs-logo.png?v=029'},{name:'OKX',href:'https://www.okx.com',logo:'https://cryptologos.cc/logos/okb-okb-logo.png?v=029'}];
+/* small helpers */
+function scrollToId(id){document.getElementById(id)?.scrollIntoView({behavior:'smooth'})}
+
+/* exchanges row */
+const exchanges=[
+  {name:'MEXC', href:'https://www.mexc.com',  logo:'https://cryptologos.cc/logos/mexc-global-mexc-logo.png?v=029'},
+  {name:'Gate.io', href:'https://www.gate.io', logo:'https://cryptologos.cc/logos/gateio-gate-logo.png?v=029'},
+  {name:'Bitmart', href:'https://www.bitmart.com', logo:'https://cryptologos.cc/logos/bitmart-bmx-logo.png?v=029'},
+  {name:'Bybit', href:'https://www.bybit.com', logo:'https://cryptologos.cc/logos/bybit-byt-logo.png?v=029'},
+  {name:'KuCoin', href:'https://www.kucoin.com', logo:'https://cryptologos.cc/logos/kucoin-kcs-logo.png?v=029'},
+  {name:'OKX', href:'https://www.okx.com', logo:'https://cryptologos.cc/logos/okb-okb-logo.png?v=029'}
+];
 const exRow=document.getElementById('exRow');
-exchanges.forEach(x=>{const a=document.createElement('a');a.href=x.href;a.target='_blank';a.className='ex-chip';const img=document.createElement('img');img.src=x.logo;img.alt=x.name;img.onerror=()=>{a.innerHTML='<span>'+x.name+'</span>';};const span=document.createElement('span');span.textContent=x.name;a.append(img,span);exRow.appendChild(a);});
+exchanges.forEach(x=>{
+  const a=document.createElement('a');a.href=x.href;a.target='_blank';a.className='ex-chip';
+  const img=document.createElement('img');img.src=x.logo;img.alt=x.name;
+  img.onerror=()=>{a.textContent=x.name};
+  a.append(img,document.createTextNode(x.name)); exRow.appendChild(a);
+});
 
-/* ========== TOKENOMICS ========== */
-new Chart(document.getElementById('doughnut'),{type:'doughnut',data:{labels:['Presale %45','Liquidity %25','Marketing %15','Team %10','Airdrop %5'],datasets:[{data:[45,25,15,10,5],backgroundColor:['#22d1b2','#1295ff','#ff9f40','#ffd166','#ef476f'],borderWidth:0}]} ,options:{plugins:{legend:{position:'bottom',labels:{color:'#cfe3ee'}}}}});
+/* tokenomics */
+new Chart(document.getElementById('doughnut'),{
+  type:'doughnut',
+  data:{labels:['Presale %45','Liquidity %25','Marketing %15','Team %10','Airdrop %5'],
+    datasets:[{data:[45,25,15,10,5],backgroundColor:['#22d1b2','#1295ff','#ff9f40','#ffd166','#ef476f'],borderWidth:0}]},
+  options:{plugins:{legend:{position:'bottom',labels:{color:'#d4e8f3'}}}}
+});
 
-/* ========== ZUZU GALLERY with multi-fallback (webp→jpg, Local→jsDelivr→RAW) ========== */
+/* ======= GALLERY with SUPER FALLBACK (handles spaces, underscores, cases) ======= */
 (function(){
-  const VERSION="v240811"; // cache-bust
+  const V="v240812"; // cache-bust
   const ORIGIN = window.location.origin;
-  const BASE_LOCAL = ORIGIN + "/assets/zuzu/realistic/";
-  const BASE_JSDELIVR = "https://cdn.jsdelivr.net/gh/enejomble35/zuzucoin.xyz@main/assets/zuzu/realistic/";
-  const BASE_RAW = "https://raw.githubusercontent.com/enejomble35/zuzucoin.xyz/main/assets/zuzu/realistic/";
+  const L = ORIGIN + "/assets/zuzu/realistic/";            // local
+  const J = "https://cdn.jsdelivr.net/gh/enejomble35/zuzucoin.xyz@main/assets/zuzu/realistic/"; // jsDelivr
+  const R = "https://raw.githubusercontent.com/enejomble35/zuzucoin.xyz/main/assets/zuzu/realistic/"; // Github raw
 
-  const ITEMS=[
-    {base:"hero",      title:"ZUZU Hero"},
-    {base:"ranger",    title:"ZUZU Ranger"},
-    {base:"warrior",   title:"ZUZU Warrior"},
-    {base:"hacker",    title:"ZUZU Hacker"},
-    {base:"rogue",     title:"ZUZU Rogue"},
-    {base:"titan",     title:"ZUZU Titan"},
-    {base:"sorceress", title:"ZUZU Sorceress"},
-    {base:"berserker", title:"ZUZU Berserker"},
-    {base:"scientist", title:"ZUZU Scientist"}
+  const items=[
+    {title:'ZUZU Hero',       base:'hero',       mult:2.2, tap:'+12%'},
+    {title:'ZUZU Ranger',     base:'ranger',     mult:1.8, tap:'+9%'},
+    {title:'ZUZU Warrior',    base:'warrior',    mult:2.0, tap:'+10%'},
+    {title:'ZUZU Hacker',     base:'hacker',     mult:2.4, tap:'+14%'},
+    {title:'ZUZU Rogue',      base:'rogue',      mult:2.1, tap:'+11%'},
+    {title:'ZUZU Titan',      base:'titan',      mult:2.6, tap:'+15%'},
+    {title:'ZUZU Sorceress',  base:'sorceress',  mult:2.3, tap:'+13%'},
+    {title:'ZUZU Berserker',  base:'berserker',  mult:2.0, tap:'+10%'},
+    {title:'ZUZU Scientist',  base:'scientist',  mult:1.7, tap:'+8%'}
   ];
 
-  const grid = document.getElementById('zuzu-gallery');
-
-  function preload(url){
-    return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(url);i.onerror=()=>rej('fail');i.src=url;});
-  }
-
-  // sırayla şu kaynakları dene: local.webp -> local.jpg -> jsd.webp -> jsd.jpg -> raw.webp -> raw.jpg
-  async function resolveSrc(base){
-    const urls=[
-      BASE_LOCAL+base+".webp?"+VERSION,
-      BASE_LOCAL+base+".jpg?"+VERSION,
-      BASE_JSDELIVR+base+".webp",
-      BASE_JSDELIVR+base+".jpg",
-      BASE_RAW+base+".webp?"+VERSION,
-      BASE_RAW+base+".jpg?"+VERSION
+  const nameVariants = (base,title) => {
+    // hero -> [hero, HERO, Hero, zuzu_hero, ZUZU_Hero, ZUZU Hero, ZUZUHero ...]
+    const t = title.replace(/\./g,'').trim();
+    const parts = [
+      base,
+      base.toLowerCase(), base.toUpperCase(), base[0].toUpperCase()+base.slice(1),
+      'zuzu_'+base, 'ZUZU_'+base, 'ZUZU_'+(base[0].toUpperCase()+base.slice(1)),
+      'ZUZU '+(base[0].toUpperCase()+base.slice(1)),
+      t, t.replaceAll(' ','_'), t.replaceAll(' ','')
     ];
-    for(const u of urls){ try{ return await preload(u); } catch(e){} }
+    // unique
+    return [...new Set(parts)];
+  };
+
+  const exts=['.webp','.jpg','.jpeg','.png'];
+  const bases=[L,J,R];
+
+  function preload(u){return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(u);i.onerror=rej;i.src=u;});}
+
+  async function resolveSrc(base,title){
+    const cand=[];
+    for(const b of nameVariants(base,title)){
+      for(const e of exts){ for(const p of bases){
+        const url = p + encodeURIComponent(b) + e + (p===L?('?'+V):'');
+        cand.push(url);
+      }}
+    }
+    for(const u of cand){ try { return await preload(u); } catch(e){} }
     throw new Error('not-found');
   }
 
-  function card(title,src){
-    const el=document.createElement('div'); el.className='zuzu-card';
+  function makeCard(it,src){
+    const el=document.createElement('div'); el.className='nft';
     el.innerHTML=`
-      <div class="zuzu-thumb">
-        <img class="zuzu-img" src="${src}" alt="${title}" loading="lazy" decoding="async">
+      <div class="thumb">
+        <div class="badges">
+          <div class="b">Stake x${it.mult.toFixed(1)}</div>
+          <div class="b">Tap ${it.tap}</div>
+          <div class="b">Mint Yakında</div>
+        </div>
+        <img src="${src}" alt="${it.title}" loading="lazy" decoding="async">
       </div>
-      <div class="zuzu-cap">
-        <div class="zuzu-title">${title}</div>
-        <div class="zuzu-tag">Mint Yakında</div>
+      <div class="caption">
+        <div class="title">${it.title}</div>
+        <div class="mint">Detay</div>
       </div>`;
-    el.addEventListener('click',()=>openModal(title,src));
+    el.addEventListener('click',()=>openModal(it.title,src));
     return el;
   }
 
-  let modal, mImg, mTitle;
+  /* simple modal */
+  let modal,img,titleEl;
   function ensureModal(){
     if(modal) return;
-    modal=document.createElement('div'); modal.className='modal'; modal.innerHTML=
-    `<div class="modal-back"></div>
-     <div class="modal-box">
-       <button class="modal-close">✕</button>
-       <img class="modal-img" alt="">
-       <div class="modal-title"></div>
-     </div>`;
+    modal=document.createElement('div'); modal.className='modal';
+    modal.innerHTML=`<div class="back"></div>
+      <div class="box"><button class="mclose">✕</button>
+      <img class="mimg" alt=""><div class="mtitle"></div></div>`;
     document.body.appendChild(modal);
-    mImg=modal.querySelector('.modal-img'); mTitle=modal.querySelector('.modal-title');
-    modal.addEventListener('click',e=>{if(e.target.classList.contains('modal-back')||e.target.classList.contains('modal-close')) modal.classList.remove('show');});
+    img=modal.querySelector('.mimg'); titleEl=modal.querySelector('.mtitle');
+    modal.addEventListener('click',e=>{if(e.target.classList.contains('back')||e.target.classList.contains('mclose')) modal.classList.remove('show');});
   }
-  function openModal(title,src){ensureModal();mImg.src=src;mTitle.textContent=title;modal.classList.add('show');}
+  function openModal(title,src){ensureModal();img.src=src;titleEl.textContent=title;modal.classList.add('show');}
+
+  const grid=document.getElementById('zuzu-gallery');
 
   (async()=>{
-    for(const it of ITEMS){
-      const cell=document.createElement('div'); cell.className='zuzu-card';
-      cell.innerHTML=`<div class="zuzu-thumb"><div class="fallback"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
-                      <div class="zuzu-cap"><div class="zuzu-title">${it.title}</div><div class="zuzu-tag">Yükleniyor</div></div>`;
-      grid.appendChild(cell);
+    for(const it of items){
+      // yüklenmeden placeholder
+      const ph=document.createElement('div');
+      ph.className='nft'; ph.innerHTML=`<div class="thumb">
+        <div class="badges"><div class="b">Yükleniyor…</div></div></div>
+        <div class="caption"><div class="title">${it.title}</div><div class="mint">—</div></div>`;
+      grid.appendChild(ph);
+
       try{
-        const src=await resolveSrc(it.base);
-        const ready=card(it.title,src);
-        grid.replaceChild(ready,cell);
+        const src = await resolveSrc(it.base,it.title);
+        const card = makeCard(it,src);
+        grid.replaceChild(card,ph);
       }catch(e){
-        const fail=document.createElement('div'); fail.className='zuzu-card';
-        fail.innerHTML=`<div class="zuzu-thumb"><div class="fallback"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
-                        <div class="zuzu-cap"><div class="zuzu-title">${it.title}</div><div class="zuzu-tag">missing</div></div>`;
-        grid.replaceChild(fail,cell);
+        // görünmeyen kalmasın
+        ph.querySelector('.badges').innerHTML='<div class="b">missing</div>';
       }
     }
   })();
