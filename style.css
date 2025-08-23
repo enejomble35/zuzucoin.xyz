@@ -1,77 +1,18 @@
-/* ===== Temel ===== */
-:root{
-  --bg:#0b1220;
-  --panel:#111a2c;
-  --muted:#a5b4c3;
-  --text:#e6f0ff;
-  --primary:#22e0b6;
-  --accent:#31c4ff;
-  --error:#ff6b6b;
-}
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 Inter,Segoe UI,Roboto,Arial}
-a{color:#bfe1ff;text-decoration:none}
-.grad{background:linear-gradient(90deg,#22e0b6,#31c4ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* --- borsa sıra --- */
+.ex-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;margin-top:8px}
+.ex-item{background:#0e1522;border:1px solid #1c2638;border-radius:10px;padding:6px 10px;display:flex;align-items:center;justify-content:center;height:36px}
+.ex-logo{height:18px;display:block}
+.ex-name{color:#b7c7ff;font-weight:600;font-size:13px}
 
-/* ===== Nav ===== */
-.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid #12203a;background:rgba(10,15,26,.85);backdrop-filter:blur(8px);position:sticky;top:0;z-index:50}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.4px}
-.brand .zuzu-logo{height:30px;width:auto;display:block}
-.menu{display:flex;gap:14px;flex-wrap:wrap}
-.menu a{padding:7px 12px;border-radius:999px;background:#101a2d;color:#cfe6ff;border:1px solid #1b2a44}
-.btn{border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}
-.btn-primary{background:linear-gradient(90deg,#22e0b6,#31c4ff);color:#00151c}
-
-/* ===== Exchanges ===== */
-.exchanges{display:flex;gap:18px;align-items:center;justify-content:center;flex-wrap:wrap;padding:14px 16px;border-bottom:1px solid #13213b}
-.ex-logo{height:28px;width:auto;filter:drop-shadow(0 0 6px rgba(49,196,255,.3))}
-.ex-item{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#0f1728;border:1px solid #203150;border-radius:12px}
-.ex-name{font-size:.95rem;color:#d2e9ff}
-
-/* ===== Hero ===== */
-.hero{max-width:1100px;margin:26px auto;padding:0 16px}
-.hero h1{font-size:28px;margin:4px 0 10px}
-.hero p{color:var(--muted)}
-
-/* Countdown */
-.countdown{margin-top:16px}
-.cd-label{font-size:.9rem;color:#b8c9da;margin-bottom:6px}
-.cd-time{font:700 22px/1.1 Inter;padding:6px 0}
-.cd-bar{height:8px;background:#0f1a2a;border-radius:999px;overflow:hidden;border:1px solid #203150}
-.cd-bar span{display:block;height:100%;background:linear-gradient(90deg,#22e0b6,#31c4ff);width:0%}
-
-/* ===== Grid ===== */
-.wrap{max-width:1200px;margin:26px auto;padding:0 16px}
-.wrap h2{margin:4px 0 12px}
-.zuzu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-@media (max-width:960px){ .zuzu-grid{grid-template-columns:repeat(2,1fr)} }
-@media (max-width:620px){ .zuzu-grid{grid-template-columns:1fr} }
-
-.card{background:linear-gradient(180deg,#0f1829,#0d1524);border:1px solid #1b2a44;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.25);padding:10px;overflow:hidden}
-.card h3{margin:6px 6px 10px;font-size:16px;letter-spacing:.3px}
-.animBox{position:relative;aspect-ratio:4/5;background:radial-gradient(120px 60px at 50% 30%,rgba(49,196,255,.15),transparent),#0c1424;border:1px solid #1d2d4a;border-radius:12px;overflow:hidden}
+/* --- galeri kartı --- */
+.zuzu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.card{background:#0e1522;border:1px solid #1c2638;border-radius:14px;overflow:hidden}
+.card h3{font-size:16px;font-weight:700;padding:10px 12px}
+.animBox{height:280px;display:flex;align-items:center;justify-content:center;background:radial-gradient(60% 60% at 50% 40%, #19304a 0%, #0f1726 60%)}
 .thumb{width:100%;height:100%;object-fit:cover;display:block}
-.badge-error{position:absolute;right:8px;bottom:8px;background:rgba(255,82,82,.9);padding:6px 10px;border-radius:999px;font-size:.75rem}
+.badge-error{background:#3a0d12;color:#ff98a2;font-size:12px;margin:10px;border-radius:8px;padding:6px 8px}
 
-/* ===== Chart ===== */
-.chart-card{display:grid;grid-template-columns:1fr 220px;gap:20px;align-items:center}
-@media (max-width:900px){ .chart-card{grid-template-columns:1fr} }
-.legend{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(120px,1fr));gap:10px}
-.legend li{display:flex;align-items:center;gap:10px;color:#cfe5ff}
-.legend span{width:14px;height:14px;border-radius:3px;background:var(--c);display:inline-block}
-
-/* ===== Roadmap ===== */
-.roadmap{display:grid;gap:10px}
-.rm-item{background:#0f1828;border:1px solid #1c2b47;border-radius:10px;padding:12px}
-
-/* ===== Footer ===== */
-.footer{margin:30px 0;padding:16px;text-align:center;color:#93a7bd;border-top:1px solid #13213b}
-
-/* ===== Modal ===== */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center}
-.hidden{display:none}
-.modal-box{background:#0f1829;border:1px solid #1b2a44;border-radius:14px;padding:16px;min-width:300px;max-width:420px}
-.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.x{background:#13213b;border:0;color:#e6f0ff;border-radius:8px;width:28px;height:28px;cursor:pointer}
-.wallet{width:100%;border:1px solid #213150;background:#0e1727;color:#e6f0ff;border-radius:10px;padding:10px;margin:6px 0;text-align:left;cursor:pointer}
-.addr{margin-top:8px;color:#9fb3c8;font-size:.9rem}
+/* modal butonları */
+.btn-primary{background:#1ef2c0;color:#06121d;border:none;padding:9px 14px;border-radius:10px;font-weight:800}
+.btn-wide{width:100%;margin-top:10px;background:#18263b;color:#dbe9ff;border:1px solid #243651;padding:10px;border-radius:10px}
+.addr{margin-top:10px;color:#9fdcff;font-size:13px}
