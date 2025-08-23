@@ -4,8 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>ZUZU • AI Meme Intelligence</title>
-  <link rel="preload" href="/style.css?v=29" as="style">
-  <link rel="stylesheet" href="/style.css?v=29">
+  <link rel="stylesheet" href="/style.css?v=41">
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <!-- Lottie -->
@@ -13,79 +12,96 @@
 </head>
 
 <body>
+  <!-- ÜST BAR -->
   <header class="topbar">
     <div class="brand">
-      <img class="brand-logo" src="/assets/zuzu/svg/zuzu_logo.svg" alt="ZUZU" />
+      <img class="brand-logo" src="/assets/zuzu/svg/zuzu_logo.svg" alt="ZUZU"/>
       <span>ZUZU</span>
     </div>
-    <nav class="nav">
-      <a href="#community">Topluluk</a>
-      <a href="#tokenomics">Tokenomi</a>
-      <a href="#about">Hakkımızda</a>
-      <a href="#roadmap">Yol Haritası</a>
-      <a href="#stake">Stake</a>
-    </nav>
-    <button id="btn-wallet" class="btn-primary">Cüzdan Bağla</button>
+
+    <div class="tools">
+      <!-- Dil seçici -->
+      <select id="lang" class="lang">
+        <option value="tr">Türkçe</option>
+        <option value="en">English</option>
+        <option value="ru">Русский</option>
+        <option value="es">Español</option>
+        <option value="de">Deutsch</option>
+        <option value="fr">Français</option>
+        <option value="zh">中文</option>
+        <option value="hi">हिन्दी</option>
+      </select>
+      <button id="btn-wallet" class="btn-primary" data-i18n="wallet_btn">Cüzdan Bağla</button>
+    </div>
   </header>
 
-  <!-- Borsalar -->
-  <section class="exchanges">
-    <img src="/assets/zuzu/exchanges/mexc.svg"   alt="MEXC"/>
-    <img src="/assets/zuzu/exchanges/gateio.svg" alt="Gate.io"/>
-    <img src="/assets/zuzu/exchanges/bitmart.svg" alt="BitMart"/>
-    <img src="/assets/zuzu/exchanges/bybit.svg"  alt="Bybit"/>
-    <img src="/assets/zuzu/exchanges/kucoin.svg" alt="KuCoin"/>
-    <img src="/assets/zuzu/exchanges/okx.svg"    alt="OKX"/>
-  </section>
+  <main class="stack">
+    <!-- 1) BAŞLIK BLOĞU (tam genişlik) -->
+    <section class="hero">
+      <h1 data-i18n="hero_title">YAPAY ZEKA <span class="c-brand">ZUZU</span> ORDUSU</h1>
+      <p data-i18n="hero_desc">
+        ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> katmanıyla birleştirir.
+        Presale fonları <b>non-custodial</b> hazinede tutulur. Paylaş, <b>tap-to-earn</b> ile puan topla,
+        <b>stake</b> ile daha fazla kazanç hedefle.
+      </p>
+    </section>
 
-  <!-- Ana yerleşim -->
-  <main class="layout">
-    <!-- Sol panel -->
-    <section class="hero" id="about">
-      <h1>YAPAY ZEKA <span class="c-brand">ZUZU</span> ORDUSU</h1>
-      <p>ZUZU; memetik enerjiyi <strong>AI Meme Intelligence</strong> katmanıyla birleştirir.
-         Presale fonları <strong>non-custodial</strong> hazinede tutulur. Paylaş, <strong>tap-to-earn</strong> ile puan topla, 
-         <strong>stake</strong> ile daha fazla kazanç hedefle.</p>
-
-      <!-- Sayaç -->
-      <div class="count-wrap">
-        <div class="counter" id="cd">
-          <div><span id="d">--</span><small>Gün</small></div>
-          <div><span id="h">--</span><small>Saat</small></div>
-          <div><span id="m">--</span><small>Dakika</small></div>
-          <div><span id="s">--</span><small>Saniye</small></div>
-        </div>
-
-        <div class="weeks">
-          <div><b>1. Hafta</b> <span id="w1">0.0010 USDT</span></div>
-          <div><b>2. Hafta</b> <span id="w2">0.0015 USDT</span></div>
-          <div><b>3. Hafta</b> <span id="w3">0.0020 USDT</span></div>
-          <div><b>4. Hafta</b> <span id="w4">0.0025 USDT</span></div>
-        </div>
+    <!-- 2) SAYAC (tam genişlik, ortada) -->
+    <section class="count-section">
+      <div class="counter big" id="cd">
+        <div><span id="d">--</span><small data-i18n="d">Gün</small></div>
+        <div><span id="h">--</span><small data-i18n="h">Saat</small></div>
+        <div><span id="m">--</span><small data-i18n="m">Dakika</small></div>
+        <div><span id="s">--</span><small data-i18n="s">Saniye</small></div>
+      </div>
+      <div class="weeks">
+        <div><b data-i18n="w1">1. Hafta</b> <span id="w1">0.0010 USDT</span></div>
+        <div><b data-i18n="w2">2. Hafta</b> <span id="w2">0.0015 USDT</span></div>
+        <div><b data-i18n="w3">3. Hafta</b> <span id="w3">0.0020 USDT</span></div>
+        <div><b data-i18n="w4">4. Hafta</b> <span id="w4">0.0025 USDT</span></div>
       </div>
     </section>
 
-    <!-- Tokenomi (ARTIK ALTA) -->
-    <section class="tokenomics" id="tokenomics">
-      <h2>Tokenomi</h2>
-      <canvas id="tokenChart" width="420" height="420"></canvas>
-      <p class="muted">Presale, likidite ve airdrop yüzdeleri <code>config.json</code>’dan gelir.</p>
+    <!-- 3) BORSA LOGOLARI (tam genişlik, tek satır) -->
+    <section class="exchanges">
+      <img src="/assets/zuzu/exchanges/mexc.svg"   alt="MEXC"/>
+      <img src="/assets/zuzu/exchanges/gateio.svg" alt="Gate.io"/>
+      <img src="/assets/zuzu/exchanges/bitmart.svg" alt="BitMart"/>
+      <img src="/assets/zuzu/exchanges/bybit.svg"  alt="Bybit"/>
+      <img src="/assets/zuzu/exchanges/kucoin.svg" alt="KuCoin"/>
+      <img src="/assets/zuzu/exchanges/okx.svg"    alt="OKX"/>
     </section>
 
-    <!-- Galeri -->
-    <section class="wrap" id="community">
-      <h2>ZUZU Maskot Galerisi</h2>
+    <!-- 4) GALERİ (5x) -->
+    <section class="wrap">
+      <h2 data-i18n="gallery_title">ZUZU Maskot Galerisi</h2>
       <div id="zuzu-gallery" class="zuzu-grid"></div>
     </section>
 
-    <!-- Yol Haritası (hazine haritası görünüm) -->
+    <!-- 5) YOL HARİTASI (ikonlu, hazine haritası görünüm) -->
     <section class="roadmap" id="roadmap">
-      <h2>Yol Haritası</h2>
+      <h2 data-i18n="roadmap_title">Yol Haritası</h2>
       <ul class="map">
-        <li><span>Phase 1</span> — Presale • Topluluk • Maskot Drop</li>
-        <li><span>Phase 2</span> — CEX Başvuruları • Pazarlama • Partnerlikler</li>
-        <li><span>Phase 3</span> — Tap-to-Earn • Staking • AI Meme Intelligence</li>
+        <li>
+          <img src="/assets/zuzu/svg/zuzu_mini_bot.svg" alt="phase"/>
+          <span>Phase 1</span> <span data-i18n="phase1">Presale • Topluluk • Maskot Drop</span>
+        </li>
+        <li>
+          <img src="/assets/zuzu/svg/zuzu_mini_bot.svg" alt="phase"/>
+          <span>Phase 2</span> <span data-i18n="phase2">CEX Başvuruları • Pazarlama • Partnerlikler</span>
+        </li>
+        <li>
+          <img src="/assets/zuzu/svg/zuzu_mini_bot.svg" alt="phase"/>
+          <span>Phase 3</span> <span data-i18n="phase3">Tap-to-Earn • Staking • AI Meme Intelligence</span>
+        </li>
       </ul>
+    </section>
+
+    <!-- 6) TOKENOMİ (en altta) -->
+    <section class="tokenomics" id="tokenomics">
+      <h2 data-i18n="token_title">Tokenomi</h2>
+      <canvas id="tokenChart" width="480" height="480"></canvas>
+      <p class="muted" data-i18n="token_note">Presale, likidite ve airdrop yüzdeleri <code>config.json</code>’dan gelir.</p>
     </section>
   </main>
 
@@ -93,14 +109,14 @@
   <div id="wallet-modal" class="modal hidden">
     <div class="dialog">
       <div class="dialog-head">
-        <h3>Cüzdan Bağla</h3>
+        <h3 data-i18n="wallet_head">Cüzdan Bağla</h3>
         <button id="closeModal" class="close">×</button>
       </div>
       <div class="dialog-body">
-        <button id="evmConnect" class="wbtn evm">MetaMask / OKX / Bitget</button>
-        <button id="solConnect" class="wbtn sol">Phantom (Solana)</button>
-        <button id="tonConnect" class="wbtn ton">TonConnect</button>
-        <p id="addrBox" class="addr">Bağlı değil</p>
+        <button id="evmConnect" class="wbtn evm" data-i18n="wallet_evm">MetaMask / OKX / Bitget</button>
+        <button id="solConnect" class="wbtn sol" data-i18n="wallet_sol">Phantom (Solana)</button>
+        <button id="tonConnect" class="wbtn ton" data-i18n="wallet_ton">TonConnect</button>
+        <p id="addrBox" class="addr" data-i18n="wallet_none">Bağlı değil</p>
       </div>
     </div>
   </div>
@@ -109,8 +125,7 @@
     <div>© 2025 <b>ZUZU</b> • AI-Powered Meme Intelligence</div>
   </footer>
 
-  <script src="/script.js?v=29"></script>
-  <!-- TonConnect UI (hazır) -->
+  <script src="/script.js?v=41"></script>
   <script src="https://unpkg.com/@tonconnect/ui@0.1.38/dist/tonconnect-ui.min.js"></script>
 </body>
 </html>
