@@ -1,75 +1,316 @@
 <!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ZUZU • AI Meme Intelligence</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ZUZU • AI-Powered Meme Intelligence</title>
+<meta name="theme-color" content="#0b1320">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1320; --panel:#0e1625; --muted:#8aa0b2; --txt:#d6e6f0;
+  --neon:#4fd1c5; --neon2:#7bd6ff; --accent:#14f195; --danger:#ff6b6b;
+  --ring:rgba(79,209,197,.18);
+}
+*{box-sizing:border-box} html,body{margin:0;height:100%;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto;scroll-behavior:smooth}
+a{color:inherit;text-decoration:none}
+.container{max-width:1200px;margin:0 auto;padding:0 16px}
+h1,h2{letter-spacing:.2px}
+.neon{background:linear-gradient(90deg,var(--neon),var(--neon2));-webkit-background-clip:text;background-clip:text;color:transparent}
 
-  <!-- GIF üretimi için kütüphaneler -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gifshot/0.3.2/gifshot.min.js" defer></script>
+header{position:sticky;top:0;z-index:50;background:rgba(11,19,32,.75);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.06)}
+.nav{display:flex;align-items:center;gap:14px;padding:14px 0}
+.nav .brand{font-weight:800;font-size:20px;letter-spacing:.6px}
+.nav .brand b{color:#fff}
+.nav .spacer{flex:1}
+.nav .tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);font-weight:600}
+.tab:hover{box-shadow:0 0 0 1px var(--ring) inset}
+.btn{padding:10px 14px;border-radius:10px;background:linear-gradient(180deg,#1d3a50,#0f2232);border:1px solid rgba(255,255,255,.08);font-weight:700}
+.btn.neon{background:linear-gradient(90deg,#01c38d,#18a4ff);color:#001a23}
+
+.exchanges{background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);border-bottom:1px solid rgba(255,255,255,.06)}
+.ex-row{display:flex;gap:18px;align-items:center;overflow:auto;padding:10px 0}
+.ex-chip{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;background:#0f1a2b;border:1px solid rgba(255,255,255,.08);white-space:nowrap}
+.ex-chip img{height:18px;width:auto;display:block;filter:drop-shadow(0 0 4px rgba(255,255,255,.15))}
+.ex-chip span{opacity:.9;font-weight:600}
+
+.hero{padding:28px 0}
+.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:22px}
+.card{background:var(--panel);border-radius:14px;box-shadow:0 0 0 1px rgba(255,255,255,.04) inset;padding:16px}
+@media(max-width:960px){.grid{grid-template-columns:1fr}}
+
+.section{padding:16px 0}
+.section h2{margin:6px 0 10px 0}
+
+#zuzu-gallery.zuzu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.zuzu-card{background:#0e1625;border-radius:14px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.04) inset;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease}
+.zuzu-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.35),0 0 0 1px var(--ring) inset}
+.zuzu-card-inner{position:relative;aspect-ratio:16/11;display:flex;align-items:flex-end;justify-content:center;background:radial-gradient(120% 120% at 50% 0%,rgba(79,209,197,.12),rgba(0,0,0,.55))}
+.zuzu-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:drop-shadow(0 0 10px rgba(79,209,197,.18))}
+.zuzu-cap{position:relative;z-index:2;width:100%;background:linear-gradient(180deg,transparent,rgba(0,0,0,.75));padding:12px 14px}
+.zuzu-cap span{font-size:14px;color:#d6e6f0;letter-spacing:.3px}
+.zuzu-error{outline:1px dashed rgba(255,105,105,.35)}
+.zuzu-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:10px}
+.zuzu-fallback .dot{width:10px;height:10px;border-radius:50%;background:#4fd1c5;opacity:.5;animation:bubble 1.2s infinite ease-in-out}
+.zuzu-fallback .dot:nth-child(2){animation-delay:.15s}.zuzu-fallback .dot:nth-child(3){animation-delay:.3s}
+@keyframes bubble{0%,80%,100%{transform:scale(.6)}40%{transform:scale(1)}}
+
+.zuzu-modal{position:fixed;inset:0;display:none;z-index:9999}
+.zuzu-modal.show{display:block}
+.zuzu-modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(2px)}
+.zuzu-modal-box{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);max-width:min(92vw,1100px);width:92vw;background:#0b1320;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.55);padding:14px}
+.zuzu-modal-img{width:100%;height:auto;border-radius:10px;display:block}
+.zuzu-modal-title{margin-top:10px;color:#d6e6f0;text-align:center;font-weight:600}
+.zuzu-modal-close{position:absolute;right:10px;top:10px;background:rgba(255,255,255,.06);border:0;color:#fff;width:34px;height:34px;border-radius:8px;cursor:pointer}
+.zuzu-modal-close:hover{background:rgba(255,255,255,.12)}
+
+.token-wrap{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:960px){.token-wrap{grid-template-columns:1fr}}
+
+.timeline{position:relative;margin:16px 0 6px 0}
+.timeline::before{content:"";position:absolute;left:16px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,#294861,transparent)}
+.t-item{position:relative;padding-left:44px;margin:16px 0}
+.t-item::before{content:"";position:absolute;left:10px;top:6px;width:12px;height:12px;border-radius:50%;background:linear-gradient(180deg,var(--neon),var(--neon2));box-shadow:0 0 0 3px rgba(79,209,197,.25)}
+
+.footer{padding:28px 0;color:#93a6b8;opacity:.9}
+.badge{display:inline-block;padding:6px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:#0e1828;font-weight:600}
+</style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">ZUZU • <span>AI Meme Intelligence</span></div>
-    <nav class="cex-badges">
-      <span>MEXC</span><span>Gate.io</span><span>BitMart</span><span>Bybit</span><span>KuCoin</span><span>OKX</span>
+
+<header>
+  <div class="container nav">
+    <div class="brand">AI • <span class="neon">ZUZU</span> <b>ORDUSU</b></div>
+    <div class="spacer"></div>
+    <nav class="tabs">
+      <a class="tab" href="#community">Topluluk</a>
+      <a class="tab" href="#tokenomics">Tokenomi</a>
+      <a class="tab" href="#about">Hakkımızda</a>
+      <a class="tab" href="#roadmap">Yol Haritası</a>
+      <a class="tab" href="#stake">Stake</a>
     </nav>
-    <button id="connectBtn" class="btn wallet">Cüzdan Bağla</button>
-  </header>
+    <button id="btnConnect" class="btn neon">Cüzdan Bağla</button>
+  </div>
+</header>
 
-  <main class="container">
-    <section class="hero">
-      <h1>YAPAY ZEKA <span class="zuzu">ZUZU</span> ORDUSU</h1>
-      <p>ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> katmanıyla birleştirir. 
-         Presale fonları <b>non-custodial</b> hazinede tutulur. Paylaş, <b>tap-to-earn</b> ile puan topla, 
-         <b>stake</b> ile daha fazla kazanç hedefle.</p>
-    </section>
+<section class="exchanges">
+  <div class="container ex-row" id="exRow"></div>
+</section>
 
-    <!-- MASKOT GALERİSİ -->
-    <section class="panel">
-      <div class="panel-head">
-        <h2>ZUZU Maskot Galerisi</h2>
-        <p>Hepsi gerçekçi + canlı efektli. İstersen "GIF indir" ile anında gif kaydet.</p>
-      </div>
-      <div id="maskotGrid" class="grid"></div>
-    </section>
+<section class="hero container">
+  <div class="grid">
+    <div class="card">
+      <h1>YAPAY ZEKA <span class="neon">ZUZU</span> ORDUSU</h1>
+      <p>ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> katmanıyla birleştirir. Presale fonları <b>non-custodial</b> hazinede tutulur. Paylaş, <b>tap-to-earn</b> ile puan topla, <b>stake</b> ile daha fazla kazanç hedefle.</p>
+    </div>
+    <div class="card">
+      <h2>ZUZU Maskot Galerisi</h2>
+      <div id="zuzu-gallery" class="zuzu-grid"><!-- script dolduracak --></div>
+    </div>
+  </div>
+</section>
 
-    <!-- Tokenomi + Yol Haritası (mevcut sayfandaki yerleri bozmaz) -->
-    <section class="grid-2">
-      <div class="panel">
-        <div class="panel-head"><h2>Tokenomi</h2></div>
-        <div id="tokenomics" class="tokenomics">
-          <div class="donut">
-            <div style="--p:45" title="Presale 45%"></div>
-            <div style="--p:25" title="Liquidity 25%"></div>
-            <div style="--p:15" title="Marketing 15%"></div>
-            <div style="--p:10" title="Team 10%"></div>
-            <div style="--p:5"  title="Airdrop 5%"></div>
-          </div>
-          <div class="legend">
-            <span><i style="background:#34d399"></i>Presale 45%</span>
-            <span><i style="background:#60a5fa"></i>Liquidity 25%</span>
-            <span><i style="background:#f59e0b"></i>Marketing 15%</span>
-            <span><i style="background:#a78bfa"></i>Team 10%</span>
-            <span><i style="background:#f87171"></i>Airdrop 5%</span>
-          </div>
-        </div>
-      </div>
-      <div class="panel">
-        <div class="panel-head"><h2>Yol Haritası</h2></div>
-        <ul class="roadmap">
-          <li><b>Phase 1</b> – Presale + Topluluk + Maskot Setleri</li>
-          <li><b>Phase 2</b> – CEX Başvuruları, Pazarlama, Partnerlikler</li>
-          <li><b>Phase 3</b> – Tap-to-Earn + Staking + AI Meme Intelligence</li>
-        </ul>
-      </div>
-    </section>
+<section id="tokenomics" class="section container">
+  <h2 class="neon">Tokenomi</h2>
+  <div class="token-wrap">
+    <div class="card"><canvas id="doughnut" height="240"></canvas></div>
+    <div class="card">
+      <ul>
+        <li><span class="badge">Presale: %45</span></li><br>
+        <li><span class="badge">Liquidity: %25</span></li><br>
+        <li><span class="badge">Marketing: %15</span></li><br>
+        <li><span class="badge">Team: %10</span></li><br>
+        <li><span class="badge">Airdrop: %5</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
 
-    <footer class="footer">© 2025 ZUZU • AI-Powered Meme Intelligence</footer>
-  </main>
+<section id="roadmap" class="section container">
+  <h2 class="neon">Yol Haritası</h2>
+  <div class="card">
+    <div class="timeline">
+      <div class="t-item"><b>Phase 1</b> — Presale + Topluluk + Maskot Setleri</div>
+      <div class="t-item"><b>Phase 2</b> — CEX Başvuruları, Pazarlama, Partnerlikler</div>
+      <div class="t-item"><b>Phase 3</b> — Tap-to-Earn + Staking + AI Meme Intelligence</div>
+    </div>
+  </div>
+</section>
 
-  <script src="script.js"></script>
+<section id="about" class="section container">
+  <h2 class="neon">Hakkımızda</h2>
+  <div class="card">
+    ZUZU; memetik kültürü yapay zeka ile birleştiren küresel bir oyun-ekosistemi vizyonudur. Güvenlik, şeffaflık ve eğlence odaklıdır.
+  </div>
+</section>
+
+<section id="community" class="section container">
+  <h2 class="neon">Topluluk</h2>
+  <div class="card">Resmi sosyal bağlantılar yakında duyurulacaktır. Global çok dilli topluluk hedeflenmektedir.</div>
+</section>
+
+<section id="stake" class="section container">
+  <h2 class="neon">Stake</h2>
+  <div class="card">Stake paneli yakında. Cüzdan bağlantısı üzerinden güvenli kontrat etkileşimi sağlanacak.</div>
+</section>
+
+<footer class="footer">
+  <div class="container">© 2025 ZUZU • AI-Powered Meme Intelligence</div>
+</footer>
+
+<!-- libs -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.2/ethers.umd.min.js" integrity="sha512-+zvF0S6o3Kq2mYytU5w5u1jZ1h8nZ4mV6YlZ1v8b3S8N8kY+Jb7r0c1t3QvGvVxG2V0J0qv8y3Wv2dgi8Xo5yQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://unpkg.com/@web3modal/wagmi@5.1.7/dist/index.js"></script>
+
+<script>
+/* ========================
+   EXCHANGE LOGO BAR
+======================== */
+const exchanges = [
+  {name:'MEXC',   href:'https://www.mexc.com',   logo:'https://cryptologos.cc/logos/mexc-global-mexc-logo.png?v=029'},
+  {name:'Gate.io',href:'https://www.gate.io',    logo:'https://cryptologos.cc/logos/gateio-gate-logo.png?v=029'},
+  {name:'Bitmart',href:'https://www.bitmart.com',logo:'https://cryptologos.cc/logos/bitmart-bmx-logo.png?v=029'},
+  {name:'Bybit',  href:'https://www.bybit.com',  logo:'https://cryptologos.cc/logos/bybit-byt-logo.png?v=029'},
+  {name:'KuCoin', href:'https://www.kucoin.com', logo:'https://cryptologos.cc/logos/kucoin-kcs-logo.png?v=029'},
+  {name:'OKX',    href:'https://www.okx.com',    logo:'https://cryptologos.cc/logos/okb-okb-logo.png?v=029'}
+];
+const exRow = document.getElementById('exRow');
+exchanges.forEach(x=>{
+  const a = document.createElement('a'); a.href=x.href; a.target='_blank'; a.className='ex-chip';
+  const img = document.createElement('img'); img.src=x.logo; img.alt=x.name; img.onerror=()=>{a.innerHTML='<span>'+x.name+'</span>';}; 
+  const span = document.createElement('span'); span.textContent=x.name;
+  a.append(img, span); exRow.appendChild(a);
+});
+
+/* ========================
+   TOKENOMICS CHART
+======================== */
+new Chart(document.getElementById('doughnut'),{
+  type:'doughnut',
+  data:{
+    labels:['Presale %45','Liquidity %25','Marketing %15','Team %10','Airdrop %5'],
+    datasets:[{data:[45,25,15,10,5],
+      backgroundColor:['#22d1b2','#1295ff','#ff9f40','#ffd166','#ef476f'],
+      borderWidth:0,
+    }]
+  },
+  options:{plugins:{legend:{position:'bottom',labels:{color:'#cfe3ee'}}}}
+});
+
+/* ========================
+   GALLERY (realistic webp)
+   – local path + RAW fallback
+======================== */
+(function(){
+  const BASE_LOCAL = "/assets/zuzu/realistic/";
+  const BASE_RAW   = "https://raw.githubusercontent.com/enejomble35/zuzucoin.xyz/main/assets/zuzu/realistic/";
+  const VERSION    = "v240811-TR"; // cache-bust
+  const ITEMS = [
+    { key:'hero',      title:'ZUZU Hero',      file:'hero.webp' },
+    { key:'ranger',    title:'ZUZU Ranger',    file:'ranger.webp' },
+    { key:'warrior',   title:'ZUZU Warrior',   file:'warrior.webp' },
+    { key:'hacker',    title:'ZUZU Hacker',    file:'hacker.webp' },
+    { key:'rogue',     title:'ZUZU Rogue',     file:'rogue.webp' },
+    { key:'titan',     title:'ZUZU Titan',     file:'titan.webp' },
+    { key:'sorceress', title:'ZUZU Sorceress', file:'sorceress.webp' },
+    { key:'berserker', title:'ZUZU Berserker', file:'berserker.webp' },
+    { key:'scientist', title:'ZUZU Scientist', file:'scientist.webp' }
+  ];
+
+  const grid = document.getElementById('zuzu-gallery');
+  function preload(url){ return new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(url); i.onerror=rej; i.src=url; }); }
+  function pick(file){ const a=BASE_LOCAL+file+"?"+VERSION; const b=BASE_RAW+file+"?"+VERSION; return preload(a).then(()=>a).catch(()=>b); }
+
+  function card(item, src){
+    const c = document.createElement('div'); c.className='zuzu-card';
+    c.innerHTML = `
+      <div class="zuzu-card-inner">
+        <img class="zuzu-img" src="${src}" alt="${item.title}" loading="lazy" decoding="async">
+        <div class="zuzu-cap"><span>${item.title}</span></div>
+      </div>`;
+    c.addEventListener('click',()=>openModal(item.title,src));
+    const img = c.querySelector('img');
+    img.onerror = ()=>{ c.classList.add('zuzu-error'); c.querySelector('.zuzu-card-inner').innerHTML = `
+        <div class="zuzu-fallback"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div class="zuzu-cap"><span>${item.title} (missing)</span></div>`; };
+    return c;
+  }
+
+  // modal
+  let modalEl, modalImg, modalTitle;
+  function ensureModal(){
+    if(modalEl) return;
+    modalEl = document.createElement('div'); modalEl.className='zuzu-modal'; modalEl.id='zuzu-modal';
+    modalEl.innerHTML = `
+      <div class="zuzu-modal-backdrop"></div>
+      <div class="zuzu-modal-box">
+        <button class="zuzu-modal-close" aria-label="Close">✕</button>
+        <img class="zuzu-modal-img" alt="">
+        <div class="zuzu-modal-title"></div>
+      </div>`;
+    document.body.appendChild(modalEl);
+    modalImg = modalEl.querySelector('.zuzu-modal-img');
+    modalTitle = modalEl.querySelector('.zuzu-modal-title');
+    modalEl.addEventListener('click', e=>{
+      if(e.target.classList.contains('zuzu-modal-backdrop') || e.target.classList.contains('zuzu-modal-close'))
+        modalEl.classList.remove('show');
+    });
+  }
+  function openModal(title,src){ ensureModal(); modalImg.src=src; modalTitle.textContent=title; modalEl.classList.add('show'); }
+
+  // build
+  (async ()=>{
+    for(const it of ITEMS){
+      try{ const src = await pick(it.file); grid.appendChild(card(it,src)); }
+      catch(e){
+        const c=document.createElement('div'); c.className='zuzu-card zuzu-error';
+        c.innerHTML=`<div class="zuzu-card-inner">
+          <div class="zuzu-fallback"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+          <div class="zuzu-cap"><span>${it.title} (missing)</span></div></div>`;
+        grid.appendChild(c);
+      }
+    }
+  })();
+})();
+
+/* ========================
+   WALLET CONNECT (EVM)
+   Web3Modal + Ethers
+======================== */
+(async function(){
+  const btn = document.getElementById('btnConnect');
+
+  // ->>> BURAYA KENDI PROJECT ID'INI YAZ <<<-
+  const WALLETCONNECT_ID = "YOUR_WALLETCONNECT_PROJECT_ID";
+
+  if (WALLETCONNECT_ID === "YOUR_WALLETCONNECT_PROJECT_ID") {
+    btn.textContent = "Cüzdan Bağla";
+    btn.onclick = () => alert("WalletConnect Project ID ekleyin (index.html içinde). Yine de MetaMask yüklüyse tarayıcı cüzdanı bağlanır.");
+  }
+
+  // Web3Modal v5 (wagmi modülü)
+  const { createWeb3Modal, defaultWagmiConfig, WagmiCore } = window.wagmi;
+  const chains = [WagmiCore.mainnet, WagmiCore.bsc, WagmiCore.polygon];
+  const projectId = WALLETCONNECT_ID;
+
+  const metadata = { name: "ZUZU", description: "AI Meme Intelligence", url: location.origin, icons: ["https://zuzucoin.xyz/favicon.ico"] };
+  const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
+
+  const modal = createWeb3Modal({ wagmiConfig, projectId, chains, themeVariables:{ '--w3m-accent': '#14f195' }});
+
+  btn.addEventListener('click', ()=> modal.open());
+
+  // Basit: bağlandığında adresi butona yaz
+  WagmiCore.watchAccount(wagmiConfig, {
+    onChange(ac){
+      if(ac.address){ btn.textContent = ac.address.slice(0,6)+"..."+ac.address.slice(-4); }
+      else{ btn.textContent = "Cüzdan Bağla"; }
+    }
+  });
+})();
+</script>
 </body>
 </html>
