@@ -1,61 +1,72 @@
 :root{
-  --bg:#0b1220; --panel:#0e1626; --muted:#9aa4b2; --text:#e7eef7;
-  --primary:#22e0a8; --glow:#25f4ee; --accent:#7cfbff; --warning:#ff7849;
+  --bg:#0e151b;
+  --card:#131c24;
+  --muted:#7d8da1;
+  --text:#e6f0ff;
+  --accent:#2affd3;
+  --danger:#ff6b6b;
+  --chip:#0d2330;
+  --chip-border:#163142;
 }
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:400 16px/1.6 Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu}
-a{color:#8cd7ff;text-decoration:none}
-.container{max-width:1180px;margin:0 auto;padding:24px}
 
-.topbar{display:flex;gap:16px;align-items:center;justify-content:space-between;padding:14px 20px;background:#0a101c;position:sticky;top:0;z-index:50;border-bottom:1px solid #1b2438}
-.topbar .brand{font-weight:700;letter-spacing:.5px}
-.topbar .brand span{color:var(--primary)}
-.cex-badges span{display:inline-block;margin-right:8px;padding:4px 8px;border-radius:8px;background:#101a2b;color:#9fb4cf;border:1px solid #1b2a44;font-size:12px}
-.btn.wallet{background:#142440;border:1px solid #1e3355;color:#b9d2ff;border-radius:10px;padding:10px 14px;cursor:pointer}
-.btn.wallet:hover{filter:brightness(1.08)}
+html,body{background:#0b1116;color:var(--text);margin:0;padding:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:1200px;margin:24px auto;padding:0 16px}
+.section-title{font-weight:800;font-size:22px;margin:8px 0 16px 0;color:#e9f7ff;letter-spacing:.3px}
 
-.hero h1{font-size:28px;margin:10px 0 6px}
-.hero .zuzu{color:#5effcf}
-.hero p{color:var(--muted)}
+/* NAV vs. senin var olan stillerin kalsın */
 
-.panel{background:var(--panel);border:1px solid #1a2439;border-radius:16px;padding:16px;margin:18px 0}
-.panel-head{display:flex;align-items:baseline;justify-content:space-between}
-.panel-head p{color:#9fb0c8;font-size:14px}
+/* ---- GRID ---- */
+.zuzu-grid{
+  display:grid;
+  grid-gap:16px;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  align-items:stretch;
+}
+@media(min-width:1280px){
+  .zuzu-grid{ grid-template-columns:repeat(5, 1fr); }
+}
 
-.grid{display:grid;grid-template-columns:repeat(5,minmax(200px,1fr));gap:14px}
-@media(max-width:1100px){.grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:760px){.grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:480px){.grid{grid-template-columns:1fr}}
+/* ---- CARD ---- */
+.zuzu-card{
+  background:linear-gradient(180deg,#0e1821 0%,#0b1218 100%);
+  border:1px solid #172737;
+  border-radius:16px;
+  overflow:hidden;
+  position:relative;
+  box-shadow:0 10px 26px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.03);
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.zuzu-card:hover{
+  transform:translateY(-3px);
+  border-color:#214058;
+  box-shadow:0 14px 36px rgba(0,0,0,.5), 0 0 0 1px rgba(46,255,211,.08);
+}
+.zuzu-thumb{
+  width:100%;height:260px;object-fit:cover;display:block;background:#0b141b;
+}
+.zuzu-info{
+  padding:12px 14px 14px 14px;
+  display:flex;align-items:center;justify-content:space-between;gap:8px
+}
+.zuzu-title{
+  font-weight:700;letter-spacing:.2px
+}
+.badge{
+  font-size:11px;color:#a7bed3;background:var(--chip);
+  border:1px solid var(--chip-border);
+  border-radius:999px;padding:4px 8px
+}
 
-.card{position:relative;height:260px;border-radius:16px;overflow:hidden;background:#0a1220;border:1px solid #18233a;cursor:pointer;isolation:isolate}
-.card .img{position:absolute;inset:0;background-size:cover;background-position:center;filter:contrast(1.02) saturate(1.04)}
-.card::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);pointer-events:none;border-radius:inherit}
-.card .title{position:absolute;left:12px;bottom:10px;padding:8px 10px;border-radius:10px;background:rgba(7,12,22,.6);backdrop-filter:blur(4px);color:#eaf6ff;font-weight:700;letter-spacing:.3px;border:1px solid rgba(255,255,255,.06)}
-.card .gif-btn{position:absolute;right:10px;bottom:10px;padding:6px 10px;font-size:12px;border-radius:8px;border:1px solid #25405c;background:#13233c;color:#bfe2ff}
-.card .gif-btn:hover{filter:brightness(1.08)}
+/* status chips */
+.chip-ok{color:#5dffd6;background:#052620;border-color:#0a3d31}
+.chip-missing{color:#ffdede;background:#2b0f12;border-color:#5d1b22}
+.chip-loading{color:#e6f0ff;background:#0d1b26;border-color:#193144}
 
-.fx, .fx *{pointer-events:none}
-.fx{position:absolute;inset:0}
+/* title glow */
+.zuzu-title .glow{
+  color:#9afef5;
+  text-shadow:0 0 14px rgba(46,255,211,.45);
+}
 
-/* Efektler */
-@keyframes pulse {0%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.12)}100%{opacity:.5;transform:scale(1)}}
-@keyframes float {0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
-@keyframes scan {0%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
-@keyframes blink {0%,92%{opacity:1}93%,97%{opacity:.1}98%,100%{opacity:1}}
-@keyframes spark {0%{opacity:0;transform:translateY(0) scale(.7)}60%{opacity:.9}100%{opacity:0;transform:translateY(-40px) scale(1.1)}}
-
-/* Tokenomics donut (süs) */
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-@media(max-width:900px){.grid-2{grid-template-columns:1fr}}
-.tokenomics{display:flex;gap:18px;align-items:center}
-.donut{position:relative;width:240px;height:240px;border-radius:50%;background:#0a1424;display:grid;place-items:center;border:1px solid #1a2944}
-.donut div{--h:240;--w:240;width:var(--w);height:var(--h);border-radius:50%;mask:radial-gradient(circle at center, transparent 60px, black 61px);background:
-conic-gradient(#34d399 calc(var(--p)*1%),transparent 0),
-conic-gradient(#60a5fa calc((var(--p)-25)*1%),transparent 0),
-conic-gradient(#f59e0b calc((var(--p)-40)*1%),transparent 0),
-conic-gradient(#a78bfa calc((var(--p)-55)*1%),transparent 0),
-conic-gradient(#f87171 calc((var(--p)-65)*1%),transparent 0)}
-.legend span{display:block;color:#9fb0c8;margin:4px 0}
-.legend i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:6px}
-
-.footer{color:#98a9c6;text-align:center;padding:28px 0}
+/* small caption under title (örn Mint Yakında) */
+.zuzu-caption{display:block;margin-top:2px;font-size:12px;color:#8fb0c6;opacity:.85}
