@@ -4,23 +4,18 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>ZUZU • AI Meme Intelligence</title>
-  <link rel="stylesheet" href="/style.css?v=41">
-  <!-- Chart.js -->
+  <link rel="stylesheet" href="/style.css?v=50">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <!-- Lottie -->
   <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie_light.min.js"></script>
 </head>
-
 <body>
   <!-- ÜST BAR -->
   <header class="topbar">
     <div class="brand">
       <img class="brand-logo" src="/assets/zuzu/svg/zuzu_logo.svg" alt="ZUZU"/>
-      <span>ZUZU</span>
+      <span class="brand-text">ZUZU</span>
     </div>
-
     <div class="tools">
-      <!-- Dil seçici -->
       <select id="lang" class="lang">
         <option value="tr">Türkçe</option>
         <option value="en">English</option>
@@ -36,9 +31,11 @@
   </header>
 
   <main class="stack">
-    <!-- 1) BAŞLIK BLOĞU (tam genişlik) -->
+    <!-- 1) BAŞLIK BLOĞU -->
     <section class="hero">
-      <h1 data-i18n="hero_title">YAPAY ZEKA <span class="c-brand">ZUZU</span> ORDUSU</h1>
+      <h1 class="hero-title" data-i18n="hero_title">
+        YAPAY ZEKA <span class="c-brand">ZUZU</span> ORDUSU
+      </h1>
       <p data-i18n="hero_desc">
         ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> katmanıyla birleştirir.
         Presale fonları <b>non-custodial</b> hazinede tutulur. Paylaş, <b>tap-to-earn</b> ile puan topla,
@@ -46,7 +43,7 @@
       </p>
     </section>
 
-    <!-- 2) SAYAC (tam genişlik, ortada) -->
+    <!-- 2) SAYAC + HAFTALAR + BUTONLAR -->
     <section class="count-section">
       <div class="counter big" id="cd">
         <div><span id="d">--</span><small data-i18n="d">Gün</small></div>
@@ -54,15 +51,23 @@
         <div><span id="m">--</span><small data-i18n="m">Dakika</small></div>
         <div><span id="s">--</span><small data-i18n="s">Saniye</small></div>
       </div>
+
       <div class="weeks">
         <div><b data-i18n="w1">1. Hafta</b> <span id="w1">0.0010 USDT</span></div>
         <div><b data-i18n="w2">2. Hafta</b> <span id="w2">0.0015 USDT</span></div>
         <div><b data-i18n="w3">3. Hafta</b> <span id="w3">0.0020 USDT</span></div>
         <div><b data-i18n="w4">4. Hafta</b> <span id="w4">0.0025 USDT</span></div>
       </div>
+
+      <div class="buyRow">
+        <button id="buy1" class="btn-buy" data-week="1" data-i18n="buy">Satın Al</button>
+        <button id="buy2" class="btn-buy" data-week="2" data-i18n="buy">Satın Al</button>
+        <button id="buy3" class="btn-buy" data-week="3" data-i18n="buy">Satın Al</button>
+        <button id="buy4" class="btn-buy" data-week="4" data-i18n="buy">Satın Al</button>
+      </div>
     </section>
 
-    <!-- 3) BORSA LOGOLARI (tam genişlik, tek satır) -->
+    <!-- 3) BORSA LOGOLARI -->
     <section class="exchanges">
       <img src="/assets/zuzu/exchanges/mexc.svg"   alt="MEXC"/>
       <img src="/assets/zuzu/exchanges/gateio.svg" alt="Gate.io"/>
@@ -72,13 +77,13 @@
       <img src="/assets/zuzu/exchanges/okx.svg"    alt="OKX"/>
     </section>
 
-    <!-- 4) GALERİ (5x) -->
+    <!-- 4) GALERİ -->
     <section class="wrap">
       <h2 data-i18n="gallery_title">ZUZU Maskot Galerisi</h2>
       <div id="zuzu-gallery" class="zuzu-grid"></div>
     </section>
 
-    <!-- 5) YOL HARİTASI (ikonlu, hazine haritası görünüm) -->
+    <!-- 5) YOL HARİTASI -->
     <section class="roadmap" id="roadmap">
       <h2 data-i18n="roadmap_title">Yol Haritası</h2>
       <ul class="map">
@@ -97,11 +102,13 @@
       </ul>
     </section>
 
-    <!-- 6) TOKENOMİ (en altta) -->
+    <!-- 6) TOKENOMİ -->
     <section class="tokenomics" id="tokenomics">
       <h2 data-i18n="token_title">Tokenomi</h2>
       <canvas id="tokenChart" width="480" height="480"></canvas>
-      <p class="muted" data-i18n="token_note">Presale, likidite ve airdrop yüzdeleri <code>config.json</code>’dan gelir.</p>
+      <p class="muted" data-i18n="token_note">
+        Presale, likidite ve airdrop yüzdeleri <code>config.json</code>’dan gelir.
+      </p>
     </section>
   </main>
 
@@ -125,7 +132,7 @@
     <div>© 2025 <b>ZUZU</b> • AI-Powered Meme Intelligence</div>
   </footer>
 
-  <script src="/script.js?v=41"></script>
+  <script src="/script.js?v=50"></script>
   <script src="https://unpkg.com/@tonconnect/ui@0.1.38/dist/tonconnect-ui.min.js"></script>
 </body>
 </html>
