@@ -1,5 +1,11 @@
 {
-  "presaleStart": "2025-08-10T00:00:00+03:00",
-  "presaleEnd":   "2025-09-30T23:59:59+03:00",
-  "tokenomics":   [45, 25, 15, 10, 5]
+  "presaleStart": "2025-08-08T00:00:00Z",
+  "presaleEnd":   "2025-09-15T00:00:00Z",
+  "tokenomics":   [35,25,15,10,5],
+  "phases": [
+    { "name":"1. Hafta", "price":"0.0010 USDT" },
+    { "name":"2. Hafta", "price":"0.0015 USDT" },
+    { "name":"3. Hafta", "price":"0.0020 USDT" },
+    { "name":"4. Hafta", "price":"0.0025 USDT" }
+  ]
 }
