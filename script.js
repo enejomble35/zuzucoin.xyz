@@ -1,7 +1,12 @@
 /***********************
  * ZUZU v17 – local-first gallery + exchanges + countdown + wallet
  ***********************/
-
+const SRC={
+  lottie:[ "/zuzu/lottie/" ],
+  webp:[ "/assets/zuzu/realistic/" ],
+  ex:[ "/assets/zuzu/exchanges/" ],
+  logo:[ "/assets/zuzu/svg/zuzu_logo.svg" ]
+};
 // === Kaynaklar (ÖNCE YEREL) ===
 const SOURCES = {
   webp: [
