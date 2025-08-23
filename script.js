@@ -1,189 +1,176 @@
-/* ZUZU — Realistic Gallery Loader
- * v1.3 — tek parça, butonsuz, hata dayanıklı
- * enejomble35 — 2025
+/* ZUZU Realistic Gallery – v2.4
+ * Kendi konteynerini kurar, yol otomatik çözülür, cache-bust + fallback yapar.
+ * enejomble35 — 2025-08-11
  */
+(function () {
+  const DEBUG = true; // sorun olursa konsola özet düşer
 
-// ---------- Yapılandırma ----------
-const CHARACTERS = [
-  { key: "logo",      title: "ZUZU Logo",      file: "logo.webp",       optional: true }, // Varsa
-  { key: "hero",      title: "ZUZU Hero",      file: "hero.webp" },
-  { key: "ranger",    title: "ZUZU Ranger",    file: "ranger.webp" },
-  { key: "warrior",   title: "ZUZU Warrior",   file: "warrior.webp" },
-  { key: "hacker",    title: "ZUZU Hacker",    file: "hacker.webp" },
-  { key: "rogue",     title: "ZUZU Rogue",     file: "rogue.webp" },
-  { key: "titan",     title: "ZUZU Titan",     file: "titan.webp" },
-  { key: "sorceress", title: "ZUZU Sorceress", file: "sorceress.webp" },
-  { key: "berserker", title: "ZUZU Berserker", file: "berserker.webp" },
-  { key: "scientist", title: "ZUZU Scientist", file: "scientist.webp" },
-  { key: "maiden",    title: "ZUZU Maiden",    file: "maiden.webp", optional: true } // İstersen
-];
+  // ---- 1) Yapılandırma ----
+  const BASE_LOCAL = "/assets/zuzu/realistic/";
+  const BASE_RAW = "https://raw.githubusercontent.com/enejomble35/zuzucoin.xyz/main/assets/zuzu/realistic/";
+  const VERSION = "v2408111255"; // cache-bust için
 
-// Kaynak klasör (domain kökü)
-const REALISTIC_BASE = "/assets/zuzu/realistic/";
+  const ITEMS = [
+    { key: "hero",      title: "ZUZU Hero",      file: "hero.webp" },
+    { key: "ranger",    title: "ZUZU Ranger",    file: "ranger.webp" },
+    { key: "warrior",   title: "ZUZU Warrior",   file: "warrior.webp" },
+    { key: "hacker",    title: "ZUZU Hacker",    file: "hacker.webp" },
+    { key: "rogue",     title: "ZUZU Rogue",     file: "rogue.webp" },
+    { key: "titan",     title: "ZUZU Titan",     file: "titan.webp" },
+    { key: "sorceress", title: "ZUZU Sorceress", file: "sorceress.webp" },
+    { key: "berserker", title: "ZUZU Berserker", file: "berserker.webp" },
+    { key: "scientist", title: "ZUZU Scientist", file: "scientist.webp" },
+    // { key: "maiden",    title: "ZUZU Maiden",    file: "maiden.webp", optional:true },
+  ];
 
-// ---------- Yardımcılar ----------
-function $(sel, root = document) { return root.querySelector(sel); }
-function el(tag, cls, html) {
-  const e = document.createElement(tag);
-  if (cls) e.className = cls;
-  if (html) e.innerHTML = html;
-  return e;
-}
+  // ---- 2) Yardımcılar ----
+  const $ = (s, r = document) => r.querySelector(s);
+  const el = (t, c, h) => { const e = document.createElement(t); if (c) e.className = c; if (h) e.innerHTML = h; return e; };
+  const once = (fn) => { let d = false; return (...a) => { if (!d) { d = true; fn(...a); } }; };
 
-function getGalleryRoot() {
-  return $("#zuzu-gallery") || $("#gallery-grid") || $("#mascot-grid") || $(".gallery-grid");
-}
-
-function preload(imgUrl) {
-  return new Promise((resolve, reject) => {
-    const i = new Image();
-    i.onload = () => resolve(imgUrl);
-    i.onerror = (err) => reject(err);
-    i.src = imgUrl;
-  });
-}
-
-// ---------- Kart Oluşturucu ----------
-function createCard(item) {
-  const card = el("div", "zuzu-card");
-  const inner = el("div", "zuzu-card-inner");
-  const img = el("img", "zuzu-img");
-  img.alt = item.title;
-  img.loading = "lazy";
-  img.decoding = "async";
-  img.src = REALISTIC_BASE + item.file;
-
-  const cap = el("div", "zuzu-cap", `<span>${item.title}</span>`);
-
-  inner.appendChild(img);
-  inner.appendChild(cap);
-  card.appendChild(inner);
-
-  // Modal açılsın
-  card.addEventListener("click", () => openModal(item.title, img.src));
-
-  // Hata yakalama — görsel yoksa placeholder
-  img.onerror = () => {
-    card.classList.add("zuzu-error");
-    inner.innerHTML = `
-      <div class="zuzu-fallback">
-        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-      </div>
-      <div class="zuzu-cap"><span>${item.title} (missing)</span></div>
-    `;
-    console.warn("[ZUZU] Görsel bulunamadı:", item.file);
-  };
-
-  return card;
-}
-
-// ---------- Modal ----------
-let modal, modalImg, modalTitle, modalClose;
-function ensureModal() {
-  if ($("#zuzu-modal")) return;
-  modal = el("div", "zuzu-modal");
-  modal.id = "zuzu-modal";
-  modal.innerHTML = `
-    <div class="zuzu-modal-backdrop"></div>
-    <div class="zuzu-modal-box">
-      <button class="zuzu-modal-close" aria-label="Close">✕</button>
-      <img class="zuzu-modal-img" alt="">
-      <div class="zuzu-modal-title"></div>
-    </div>
-  `;
-  document.body.appendChild(modal);
-  modalImg = $(".zuzu-modal-img", modal);
-  modalTitle = $(".zuzu-modal-title", modal);
-  modalClose = $(".zuzu-modal-close", modal);
-
-  modal.addEventListener("click", (e) => {
-    if (e.target.classList.contains("zuzu-modal-backdrop") || e.target === modalClose)
-      modal.classList.remove("show");
-  });
-}
-
-function openModal(title, src) {
-  ensureModal();
-  modalImg.src = src;
-  modalTitle.textContent = title;
-  $("#zuzu-modal").classList.add("show");
-}
-
-// ---------- Galeriyi Bas ----------
-async function buildGallery() {
-  const root = getGalleryRoot();
-  if (!root) {
-    console.error("[ZUZU] Galeri kökü bulunamadı. Lütfen HTML’de id='zuzu-gallery' ekleyin.");
-    return;
+  function preload(url) {
+    return new Promise((res, rej) => {
+      const i = new Image();
+      i.onload = () => res(url);
+      i.onerror = (e) => rej(e);
+      i.src = url;
+    });
   }
 
-  // İlk boşalt
-  root.innerHTML = "";
+  function pickSource(file) {
+    // 1) site içi, 2) github raw fallback
+    const local = BASE_LOCAL + file + "?" + VERSION;
+    const raw   = BASE_RAW   + file + "?" + VERSION;
+    return preload(local).then(() => local).catch(() => raw);
+  }
 
-  // Grid sınıfını ekle, yoksa stil uygulanmıyor
-  root.classList.add("zuzu-grid");
+  function findOrCreateGalleryRoot() {
+    // Var olanlardan birini bul; hiçbiri yoksa başlığı yakalayıp altına kur
+    let root = $("#zuzu-gallery") || $("#gallery-grid") || $("#mascot-grid") || $(".gallery-grid");
+    if (root) return root;
 
-  // Logo ve Maiden opsiyonel; dosya yoksa atmıyoruz
-  const tasks = CHARACTERS.map(async (it) => {
-    const url = REALISTIC_BASE + it.file;
-
-    try {
-      await preload(url);
-      root.appendChild(createCard(it));
-    } catch (e) {
-      if (!it.optional) {
-        // Zorunlu olanlar hata olsa bile fallback’li kart basılsın
-        const c = createCard(it);
-        $(".zuzu-img", c).remove(); // fallback için temizle
-        c.querySelector(".zuzu-card-inner").innerHTML = `
-          <div class="zuzu-fallback">
-            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-          </div>
-          <div class="zuzu-cap"><span>${it.title} (missing)</span></div>
-        `;
-        root.appendChild(c);
-      } else {
-        console.warn("[ZUZU] Opsiyonel görsel yok atlandı:", it.file);
-      }
+    // Başlık metnini bularak altında alan aç
+    const headings = Array.from(document.querySelectorAll("h2,h3,h4"));
+    let anchor = headings.find(h => /maskot|galeri/i.test(h.textContent || ""));
+    if (!anchor) {
+      // Bölüm kartını ara
+      anchor = Array.from(document.querySelectorAll("section,div"))
+        .find(n => /ZUZU\s*Maskot\s*Galerisi/i.test(n.textContent || ""));
     }
+    if (!anchor) anchor = $("main") || $("body");
+
+    root = el("div");
+    root.id = "zuzu-gallery";
+    anchor.parentNode.insertBefore(root, anchor.nextSibling);
+    return root;
+  }
+
+  // ---- 3) Kart ve Modal ----
+  function card(item, src) {
+    const c = el("div", "zuzu-card");
+    const inner = el("div", "zuzu-card-inner");
+    const img = el("img", "zuzu-img");
+    img.src = src;
+    img.alt = item.title;
+    img.loading = "lazy";
+    img.decoding = "async";
+    const cap = el("div", "zuzu-cap", `<span>${item.title}</span>`);
+    inner.append(img, cap);
+    c.appendChild(inner);
+    c.addEventListener("click", () => openModal(item.title, src));
+    img.onerror = () => {
+      c.classList.add("zuzu-error");
+      inner.innerHTML = `
+        <div class="zuzu-fallback"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div class="zuzu-cap"><span>${item.title} (missing)</span></div>
+      `;
+    };
+    return c;
+  }
+
+  let modalEl, modalImg, modalTitle;
+  const ensureModal = once(() => {
+    modalEl = el("div", "zuzu-modal"); modalEl.id = "zuzu-modal";
+    modalEl.innerHTML = `
+      <div class="zuzu-modal-backdrop"></div>
+      <div class="zuzu-modal-box">
+        <button class="zuzu-modal-close" aria-label="Close">✕</button>
+        <img class="zuzu-modal-img" alt="">
+        <div class="zuzu-modal-title"></div>
+      </div>`;
+    document.body.appendChild(modalEl);
+    modalImg = $(".zuzu-modal-img", modalEl);
+    modalTitle = $(".zuzu-modal-title", modalEl);
+    modalEl.addEventListener("click", e => {
+      if (e.target.classList.contains("zuzu-modal-backdrop") || e.target.classList.contains("zuzu-modal-close"))
+        modalEl.classList.remove("show");
+    });
   });
 
-  await Promise.allSettled(tasks);
-  console.log("[ZUZU] Galeri yüklendi:", root.children.length, "öğe");
-}
+  function openModal(title, src) {
+    ensureModal();
+    modalImg.src = src;
+    modalTitle.textContent = title;
+    modalEl.classList.add("show");
+  }
 
-// ---------- Başlat ----------
-document.addEventListener("DOMContentLoaded", buildGallery);
+  // ---- 4) CSS (kritik stiller enjekte) ----
+  (function injectCSS() {
+    const css = `
+    .zuzu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-top:10px}
+    .zuzu-card{background:#0e1625;border-radius:14px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.04) inset;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease}
+    .zuzu-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.35),0 0 0 1px rgba(79,209,197,.18) inset}
+    .zuzu-card-inner{position:relative;aspect-ratio:16/11;display:flex;align-items:flex-end;justify-content:center;background:radial-gradient(120% 120% at 50% 0%,rgba(79,209,197,.12),rgba(0,0,0,.55))}
+    .zuzu-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:drop-shadow(0 0 10px rgba(79,209,197,.18))}
+    .zuzu-cap{position:relative;z-index:2;width:100%;background:linear-gradient(180deg,transparent,rgba(0,0,0,.75));padding:12px 14px}
+    .zuzu-cap span{font-size:14px;color:#d6e6f0;letter-spacing:.3px}
+    .zuzu-error{outline:1px dashed rgba(255,105,105,.35)}
+    .zuzu-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:10px}
+    .zuzu-fallback .dot{width:10px;height:10px;border-radius:50%;background:#4fd1c5;opacity:.5;animation:bubble 1.2s infinite ease-in-out}
+    .zuzu-fallback .dot:nth-child(2){animation-delay:.15s}.zuzu-fallback .dot:nth-child(3){animation-delay:.3s}
+    @keyframes bubble{0%,80%,100%{transform:scale(.6)}40%{transform:scale(1)}}
+    .zuzu-modal{position:fixed;inset:0;display:none;z-index:9999}
+    .zuzu-modal.show{display:block}
+    .zuzu-modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(2px)}
+    .zuzu-modal-box{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);max-width:min(92vw,1100px);width:92vw;background:#0b1320;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.55);padding:14px}
+    .zuzu-modal-img{width:100%;height:auto;border-radius:10px;display:block}
+    .zuzu-modal-title{margin-top:10px;color:#d6e6f0;text-align:center;font-weight:600}
+    .zuzu-modal-close{position:absolute;right:10px;top:10px;background:rgba(255,255,255,.06);border:0;color:#fff;width:34px;height:34px;border-radius:8px;cursor:pointer}
+    .zuzu-modal-close:hover{background:rgba(255,255,255,.12)}
+    `;
+    const tag = document.createElement("style");
+    tag.id = "zuzu-critical-css";
+    tag.textContent = css;
+    document.head.appendChild(tag);
+  })();
 
-// ---------- Minimum CSS (kritik stiller, sayfaya enjekte) ----------
-(function injectCriticalCSS() {
-  const css = `
-  .zuzu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
-  .zuzu-card{background:#0e1625;border-radius:14px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.04) inset;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease}
-  .zuzu-card:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(0,0,0,.35),0 0 0 1px rgba(79,209,197,.18) inset}
-  .zuzu-card-inner{position:relative;aspect-ratio:16/11;display:flex;align-items:flex-end;justify-content:center;background:radial-gradient(120% 120% at 50% 0%,rgba(79,209,197,.12),rgba(0,0,0,.5))}
-  .zuzu-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:drop-shadow(0 0 10px rgba(79,209,197,.18))}
-  .zuzu-card:hover .zuzu-img{filter:drop-shadow(0 0 16px rgba(79,209,197,.28))}
-  .zuzu-cap{position:relative;z-index:2;width:100%;background:linear-gradient(180deg,transparent,rgba(0,0,0,.75));padding:12px 14px}
-  .zuzu-cap span{font-size:14px;color:#d6e6f0;letter-spacing:.3px}
-  .zuzu-error{outline:1px dashed rgba(255,105,105,.35)}
-  .zuzu-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:10px}
-  .zuzu-fallback .dot{width:10px;height:10px;border-radius:50%;background:#4fd1c5;opacity:.5;animation:bubble 1.2s infinite ease-in-out}
-  .zuzu-fallback .dot:nth-child(2){animation-delay:.15s}.zuzu-fallback .dot:nth-child(3){animation-delay:.3s}
-  @keyframes bubble{0%,80%,100%{transform:scale(.6)}40%{transform:scale(1)}}
+  // ---- 5) Başlat ----
+  async function init() {
+    const root = findOrCreateGalleryRoot();
+    root.classList.add("zuzu-grid");
+    root.innerHTML = ""; // boşalt
 
-  /* Modal */
-  .zuzu-modal{position:fixed;inset:0;display:none;z-index:9999}
-  .zuzu-modal.show{display:block}
-  .zuzu-modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(2px)}
-  .zuzu-modal-box{position:absolute;inset:auto;left:50%;top:50%;transform:translate(-50%,-50%);max-width:min(92vw,1100px);width:92vw;background:#0b1320;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.55);padding:14px}
-  .zuzu-modal-img{width:100%;height:auto;border-radius:10px;display:block}
-  .zuzu-modal-title{margin-top:10px;color:#d6e6f0;text-align:center;font-weight:600}
-  .zuzu-modal-close{position:absolute;right:10px;top:10px;background:rgba(255,255,255,.06);border:0;color:#fff;width:34px;height:34px;border-radius:8px;cursor:pointer}
-  .zuzu-modal-close:hover{background:rgba(255,255,255,.12)}
-  `;
-  const tag = document.createElement("style");
-  tag.id = "zuzu-critical-css";
-  tag.textContent = css;
-  document.head.appendChild(tag);
+    // Her görsel için kaynak seç + kart bas
+    const results = await Promise.allSettled(ITEMS.map(async it => {
+      try {
+        const src = await pickSource(it.file);
+        root.appendChild(card(it, src));
+        return { ok: true, file: it.file, src };
+      } catch (e) {
+        // Opsiyonel değilse yine de fallback’li kart bas
+        const c = el("div", "zuzu-card zuzu-error");
+        c.innerHTML = `
+          <div class="zuzu-card-inner">
+            <div class="zuzu-fallback"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div class="zuzu-cap"><span>${it.title} (missing)</span></div>
+          </div>`;
+        root.appendChild(c);
+        return { ok: false, file: it.file, error: e?.message || e };
+      }
+    }));
+
+    if (DEBUG) console.log("[ZUZU] gallery results:", results);
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
 })();
