@@ -11,7 +11,7 @@
 :root{--bg:#0b1320;--panel:#0e1625;--muted:#8aa0b2;--txt:#d6e6f0;--neon:#4fd1c5;--neon2:#7bd6ff;--accent:#14f195;--ring:rgba(79,209,197,.18)}
 *{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto}
 a{color:inherit;text-decoration:none}
-.container{max-width:1200px;margin:0 auto;padding:0 16px}
+.container{max-width:1250px;margin:0 auto;padding:0 16px}
 .neon{background:linear-gradient(90deg,var(--neon),var(--neon2));-webkit-background-clip:text;background-clip:text;color:transparent}
 header{position:sticky;top:0;z-index:50;background:rgba(11,19,32,.75);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.06)}
 .nav{display:flex;align-items:center;gap:14px;padding:14px 0}
@@ -33,14 +33,17 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,19,32,.75);backdrop-f
 .section h2{margin:6px 0 10px 0}
 
 /* ==== NFT style gallery ==== */
-#zuzu-gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-@media(max-width:1030px){#zuzu-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:640px){#zuzu-gallery{grid-template-columns:1fr}}
-.zuzu-card{background:#0e1625;border-radius:14px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.06) inset;cursor:pointer;transition:transform .18s ease, box-shadow .18s ease}
+#zuzu-gallery{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;justify-items:center}
+@media(max-width:1160px){#zuzu-gallery{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:920px){#zuzu-gallery{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:680px){#zuzu-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){#zuzu-gallery{grid-template-columns:1fr}}
+
+.zuzu-card{width:100%;max-width:220px;background:#0e1625;border-radius:14px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.06) inset;cursor:pointer;transition:transform .18s ease, box-shadow .18s ease}
 .zuzu-card:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.35),0 0 0 1px var(--ring) inset}
 .zuzu-thumb{position:relative;aspect-ratio:3/4;background:radial-gradient(120% 120% at 50% 0%,rgba(79,209,197,.12),rgba(0,0,0,.55))}
 .zuzu-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:drop-shadow(0 0 10px rgba(79,209,197,.18))}
-.zuzu-cap{padding:12px 14px;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center}
+.zuzu-cap{padding:10px 12px;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:center}
 .zuzu-title{font-weight:700}
 .zuzu-tag{font-size:12px;opacity:.8;padding:6px 8px;border-radius:7px;background:#0e1828;border:1px solid rgba(255,255,255,.08)}
 .fallback{position:absolute;inset:0;display:flex;gap:10px;align-items:center;justify-content:center}
@@ -55,6 +58,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,19,32,.75);backdrop-f
 .modal-img{width:100%;border-radius:10px}
 .modal-title{text-align:center;margin-top:10px;font-weight:600}
 .modal-close{position:absolute;right:10px;top:10px;background:rgba(255,255,255,.06);border:0;color:#fff;width:34px;height:34px;border-radius:8px;cursor:pointer}
+
 .token-wrap{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 @media(max-width:960px){.token-wrap{grid-template-columns:1fr}}
 .footer{padding:28px 0;color:#93a6b8}
@@ -150,7 +154,7 @@ exchanges.forEach(x=>{const a=document.createElement('a');a.href=x.href;a.target
 /* ========== TOKENOMICS ========== */
 new Chart(document.getElementById('doughnut'),{type:'doughnut',data:{labels:['Presale %45','Liquidity %25','Marketing %15','Team %10','Airdrop %5'],datasets:[{data:[45,25,15,10,5],backgroundColor:['#22d1b2','#1295ff','#ff9f40','#ffd166','#ef476f'],borderWidth:0}]} ,options:{plugins:{legend:{position:'bottom',labels:{color:'#cfe3ee'}}}}});
 
-/* ========== ZUZU GALLERY with triple fallback (Local → jsDelivr → RAW) ========== */
+/* ========== ZUZU GALLERY with multi-fallback (webp→jpg, Local→jsDelivr→RAW) ========== */
 (function(){
   const VERSION="v240811"; // cache-bust
   const ORIGIN = window.location.origin;
@@ -159,32 +163,35 @@ new Chart(document.getElementById('doughnut'),{type:'doughnut',data:{labels:['Pr
   const BASE_RAW = "https://raw.githubusercontent.com/enejomble35/zuzucoin.xyz/main/assets/zuzu/realistic/";
 
   const ITEMS=[
-    {file:"hero.webp",      title:"ZUZU Hero"},
-    {file:"ranger.webp",    title:"ZUZU Ranger"},
-    {file:"warrior.webp",   title:"ZUZU Warrior"},
-    {file:"hacker.webp",    title:"ZUZU Hacker"},
-    {file:"rogue.webp",     title:"ZUZU Rogue"},
-    {file:"titan.webp",     title:"ZUZU Titan"},
-    {file:"sorceress.webp", title:"ZUZU Sorceress"},
-    {file:"berserker.webp", title:"ZUZU Berserker"},
-    {file:"scientist.webp", title:"ZUZU Scientist"}
+    {base:"hero",      title:"ZUZU Hero"},
+    {base:"ranger",    title:"ZUZU Ranger"},
+    {base:"warrior",   title:"ZUZU Warrior"},
+    {base:"hacker",    title:"ZUZU Hacker"},
+    {base:"rogue",     title:"ZUZU Rogue"},
+    {base:"titan",     title:"ZUZU Titan"},
+    {base:"sorceress", title:"ZUZU Sorceress"},
+    {base:"berserker", title:"ZUZU Berserker"},
+    {base:"scientist", title:"ZUZU Scientist"}
   ];
 
   const grid = document.getElementById('zuzu-gallery');
 
-  function trySources(file){
-    const urls=[
-      BASE_LOCAL+file+"?"+VERSION,
-      BASE_JSDELIVR+file,
-      BASE_RAW+file+"?"+VERSION
-    ];
-    // sırayla dene
-    return urls.reduce((p,url)=>p.catch(()=>preload(url)), Promise.reject())
-                .catch(()=>urls[urls.length-1]); // son çare yine son url
-  }
-
   function preload(url){
     return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(url);i.onerror=()=>rej('fail');i.src=url;});
+  }
+
+  // sırayla şu kaynakları dene: local.webp -> local.jpg -> jsd.webp -> jsd.jpg -> raw.webp -> raw.jpg
+  async function resolveSrc(base){
+    const urls=[
+      BASE_LOCAL+base+".webp?"+VERSION,
+      BASE_LOCAL+base+".jpg?"+VERSION,
+      BASE_JSDELIVR+base+".webp",
+      BASE_JSDELIVR+base+".jpg",
+      BASE_RAW+base+".webp?"+VERSION,
+      BASE_RAW+base+".jpg?"+VERSION
+    ];
+    for(const u of urls){ try{ return await preload(u); } catch(e){} }
+    throw new Error('not-found');
   }
 
   function card(title,src){
@@ -197,7 +204,6 @@ new Chart(document.getElementById('doughnut'),{type:'doughnut',data:{labels:['Pr
         <div class="zuzu-title">${title}</div>
         <div class="zuzu-tag">Mint Yakında</div>
       </div>`;
-    // modal
     el.addEventListener('click',()=>openModal(title,src));
     return el;
   }
@@ -225,7 +231,7 @@ new Chart(document.getElementById('doughnut'),{type:'doughnut',data:{labels:['Pr
                       <div class="zuzu-cap"><div class="zuzu-title">${it.title}</div><div class="zuzu-tag">Yükleniyor</div></div>`;
       grid.appendChild(cell);
       try{
-        const src=await trySources(it.file);
+        const src=await resolveSrc(it.base);
         const ready=card(it.title,src);
         grid.replaceChild(ready,cell);
       }catch(e){
