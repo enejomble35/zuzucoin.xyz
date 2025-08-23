@@ -1,364 +1,385 @@
 <!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ZUZU • AI Meme Intelligence</title>
-  <meta name="theme-color" content="#0e1522" />
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ZUZU • AI Meme Intelligence</title>
+<meta name="theme-color" content="#0b1220"/>
 
-  <!-- Lottie & Chart CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
-  <!-- TonConnect UI -->
-  <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js" defer></script>
+<!-- Kütüphaneler -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net"/>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js" defer></script>
 
-  <style>
-    :root{
-      --bg:#0b1220;
-      --panel:#0f1728;
-      --muted:#7f8aa3;
-      --primary:#20e0b6;
-      --accent:#31c4ff;
-      --danger:#ff6b6b;
-      --ring:#1c273b;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:var(--bg);color:#dfe7ff;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
-    a{color:#a5d8ff;text-decoration:none}
-    .container{max-width:1180px;margin:0 auto;padding:16px}
+<style>
+:root{
+  --bg:#0b1220; --panel:#0f1728; --ring:#172238;
+  --muted:#8ea2c7; --txt:#e8f5ff;
+  --pri:#20e0b6; --acc:#31c4ff; --warn:#ffd166; --err:#ff6b6b;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
+a{color:#a5d8ff;text-decoration:none}
+.container{max-width:1180px;margin:0 auto;padding:16px}
 
-    /* Header */
-    .topbar{display:flex;align-items:center;gap:14px;padding:10px 0}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:.4px}
-    .brand img{height:28px;width:auto;filter:drop-shadow(0 2px 6px rgba(32,224,182,.45))}
-    .nav{display:flex;flex-wrap:wrap;gap:8px;margin-left:auto;margin-right:8px}
-    .chip{background:#0f1a2d;border:1px solid #1a2740;padding:8px 12px;border-radius:14px;color:#cfe4ff;font-size:13px}
-    .chip:hover{border-color:#28406b}
-    .btn-primary{background:linear-gradient(90deg,var(--primary),#3afbd3);border:none;color:#072017;font-weight:700}
-    .btn-primary:hover{filter:brightness(1.05)}
-    .btn{padding:10px 14px;border-radius:10px;border:1px solid #193054;background:#0d1a2e;color:#e8f5ff;cursor:pointer}
-    .btn:active{transform:translateY(1px)}
+/* Header */
+.topbar{display:flex;gap:12px;align-items:center;padding:8px 0}
+.brand{display:flex;gap:10px;align-items:center;font-weight:800}
+.brand img{height:28px;filter:drop-shadow(0 2px 8px rgba(32,224,182,.45))}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto;margin-right:8px}
+.chip{padding:8px 12px;border-radius:999px;border:1px solid var(--ring);background:#0f1a2d;color:#d6e6ff;font-size:13px}
+.chip:hover{border-color:#27406c}
+.btn{padding:10px 14px;border-radius:10px;border:1px solid var(--ring);background:#0d1a2e;color:var(--txt);cursor:pointer}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:linear-gradient(90deg,var(--pri),#3afbd3);border:none;color:#04261d;font-weight:800}
 
-    /* Exchanges row */
-    .exchanges{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 20px}
-    .ex-item{background:#0f1a2d;border:1px solid #1a2740;border-radius:10px;padding:6px 10px;display:flex;align-items:center;gap:8px}
-    .ex-item img{height:18px;width:auto;display:block}
+/* Borsa logoları */
+.exchanges{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 16px}
+.ex-item{display:flex;align-items:center;gap:8px;background:#0f1a2d;border:1px solid var(--ring);padding:6px 10px;border-radius:10px}
+.ex-item img{height:18px}
 
-    /* Hero intro */
-    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
-    .card{background:var(--panel);border:1px solid #172238;border-radius:16px;padding:16px}
-    h1{margin:10px 0 10px;font-size:28px;line-height:1.25}
-    .lead{color:#cdd9ff;font-size:16px;line-height:1.6}
-    .muted{color:var(--muted)}
+/* Intro */
+.hero{display:grid;gap:16px;grid-template-columns:1.05fr .95fr}
+.card{background:var(--panel);border:1px solid var(--ring);border-radius:16px;padding:16px}
+h1{margin:10px 0;font-size:28px}
+.lead{color:#cfe0ff;line-height:1.65}
 
-    /* Countdown */
-    .count{display:flex;align-items:center;gap:12px;margin-top:12px}
-    .cd-box{font-weight:800;font-size:18px}
-    .cd-bar-wrap{height:4px;background:#112038;border-radius:999px;overflow:hidden}
-    .cd-bar{height:100%;width:0;background:linear-gradient(90deg,#31c4ff,var(--primary))}
+/* Slot tipi sayaç */
+.slot{display:flex;gap:10px;align-items:center;margin-top:8px}
+.slot .unit{display:flex;flex-direction:column;align-items:center;gap:6px}
+.slot .label{font-size:12px;color:var(--muted)}
+.slot .box{width:64px;height:56px;border-radius:10px;overflow:hidden;background:#0b1930;border:1px solid var(--ring);position:relative}
+.slot .digits{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px}
+.slot .flip{animation:flip .55s ease}
+@keyframes flip {
+  0%{transform:rotateX(0);opacity:.7}
+  50%{transform:rotateX(90deg);opacity:.2}
+  100%{transform:rotateX(0);opacity:1}
+}
+.progress{height:5px;border-radius:999px;background:#0f2242;overflow:hidden;margin-top:10px}
+.progress>span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--pri))}
 
-    /* Gallery */
-    .section-title{font-size:20px;margin:18px 0 10px}
-    .zuzu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-    @media (min-width:900px){ .zuzu-grid{grid-template-columns:repeat(5,1fr)} }
-    .zcard{background:#0f1728;border:1px solid #16223a;border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px}
-    .ztitle{font-weight:800;color:#eaf4ff}
-    .anim{position:relative;background:radial-gradient(140px 60px at 50% 60%,#13253c,#0e1522);border-radius:12px;min-height:160px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-    .anim img{max-width:100%;max-height:100%;display:block}
-    .badge-err{position:absolute;bottom:10px;left:10px;background:#361f26;border:1px solid #612c39;color:#f8b4be;border-radius:10px;padding:6px 8px;font-size:12px}
-    .hint{font-size:12px;color:#98aac4}
+/* Haftalık fiyatlar */
+.weeks{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}
+.badge{background:#0f1a2d;border:1px solid var(--ring);border-radius:10px;padding:10px 12px;display:flex;justify-content:space-between}
+.badge b{color:#8bf3da}
 
-    /* Tokenomi + footer */
-    .token-wrap{margin:24px 0}
-    footer{padding:20px 0;color:#93a7c8;border-top:1px dashed #1a2a44;margin-top:18px}
-    .row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+/* Gallery */
+.section-title{font-size:20px;margin:18px 0 10px}
+.zgrid{display:grid;gap:12px;grid-template-columns:repeat(2,1fr)}
+@media(min-width:700px){.zgrid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:960px){.zgrid{grid-template-columns:repeat(5,1fr)}}
+.zcard{background:#0f1728;border:1px solid var(--ring);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px}
+.zcard .ttl{font-weight:800}
+.anim{min-height:160px;border-radius:12px;background:radial-gradient(140px 60px at 50% 60%,#13253c,#0e1522);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.anim img{max-width:100%;max-height:100%}
+.badge-err{margin-top:6px;background:#371c22;border:1px solid #65313e;color:#ffc2c8;border-radius:8px;padding:6px 8px;font-size:12px}
 
-    /* Modal */
-    .modal-back{position:fixed;inset:0;background:rgba(0,0,0,.54);display:none;align-items:center;justify-content:center;z-index:50}
-    .modal{background:#0f1728;border:1px solid #1a2740;border-radius:16px;padding:16px;max-width:520px;width:92%}
-    .modal h3{margin:6px 0 12px}
-    .modal .row .btn{flex:1}
-    .modal-back.show{display:flex}
-  </style>
+/* Hazine haritası yol planı */
+.road{position:relative;background:#0c172b;border:1px solid var(--ring);border-radius:16px;padding:16px;overflow:hidden}
+.road svg{position:absolute;inset:0;opacity:.2}
+.road .step{position:relative;display:flex;gap:10px;align-items:center;margin:8px 0}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--warn);box-shadow:0 0 10px #ffd166}
+.step span{color:#e6f0ff}
+
+/* Modal */
+.modal-back{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:50}
+.modal-back.show{display:flex}
+.modal{background:#0f1728;border:1px solid var(--ring);border-radius:16px;padding:16px;max-width:520px;width:92%}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.modal .btn{flex:1}
+footer{color:#9fb3d4;border-top:1px dashed var(--ring);padding:20px 0;margin-top:18px}
+</style>
 </head>
 <body>
   <div class="container">
 
-    <!-- Header -->
+    <!-- TOP -->
     <div class="topbar">
-      <div class="brand">
-        <img id="zlogo" alt="ZUZU" />
-        <span>ZUZU</span>
-      </div>
-
+      <div class="brand"><img id="zlogo" alt="ZUZU"/><span>ZUZU</span></div>
       <div class="nav">
-        <a href="#community" class="chip">Topluluk</a>
-        <a href="#tokenomics" class="chip">Tokenomi</a>
-        <a href="#about" class="chip">Hakkımızda</a>
-        <a href="#roadmap" class="chip">Yol Haritası</a>
-        <a href="#stake" class="chip">Stake</a>
+        <a class="chip" href="#community">Topluluk</a>
+        <a class="chip" href="#tokenomics">Tokenomi</a>
+        <a class="chip" href="#about">Hakkımızda</a>
+        <a class="chip" href="#roadmap">Yol Haritası</a>
+        <a class="chip" href="#stake">Stake</a>
       </div>
-
-      <button id="btn-wallet" class="btn btn-primary">Cüzdan Bağla</button>
+      <button id="btnWallet" class="btn btn-primary">Cüzdan Bağla</button>
     </div>
 
-    <!-- Exchanges row (SVG logolar) -->
-    <div class="exchanges" id="exRow"></div>
+    <!-- Borsa logoları -->
+    <div id="exRow" class="exchanges"></div>
 
-    <!-- Intro + Sayaç -->
+    <!-- HERO -->
     <section class="hero">
       <div class="card">
-        <h1>YAPAY ZEKA <span style="color:var(--primary)">ZUZU</span> ORDUSU</h1>
+        <h1>YAPAY ZEKA <span style="color:var(--pri)">ZUZU</span> ORDUSU</h1>
         <p class="lead">
           ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> katmanıyla birleştirir.
           Presale fonları <b>non-custodial</b> hazinede tutulur. Paylaş, <b>tap-to-earn</b> ile puan topla,
           <b>stake</b> ile daha fazla kazanç hedefle.
         </p>
-        <div class="count">
-          <span class="muted">Ön Satış Bitiş:</span>
-          <span id="cd" class="cd-box">—</span>
+
+        <!-- SLOT Sayaç -->
+        <div class="slot" id="slot">
+          <div class="unit"><div class="box"><div class="digits" id="d"></div></div><div class="label">Gün</div></div>
+          <div class="unit"><div class="box"><div class="digits" id="h"></div></div><div class="label">Saat</div></div>
+          <div class="unit"><div class="box"><div class="digits" id="m"></div></div><div class="label">Dakika</div></div>
+          <div class="unit"><div class="box"><div class="digits" id="s"></div></div><div class="label">Saniye</div></div>
         </div>
-        <div class="cd-bar-wrap"><div id="cd-bar" class="cd-bar"></div></div>
+        <div class="progress"><span id="pbar"></span></div>
+
+        <!-- Haftalık fiyatlar -->
+        <div class="weeks" id="weeks"></div>
       </div>
 
-      <div class="card">
+      <!-- Tokenomi -->
+      <div class="card" id="tokenomics">
         <div class="section-title">Tokenomi</div>
-        <canvas id="tokenChart" height="180"></canvas>
-        <div class="hint">Presale, likidite ve airdrop yüzdeleri config’e göre otomatik gelir.</div>
+        <canvas id="tchart" height="180"></canvas>
+        <div class="badge" style="margin-top:10px"><span>Presale, likidite ve airdrop yüzdeleri</span><b>config.json</b></div>
       </div>
     </section>
 
-    <!-- Gallery -->
+    <!-- GALERİ -->
     <div class="section-title">ZUZU Maskot Galerisi</div>
-    <div id="zuzu-grid" class="zuzu-grid"></div>
+    <div id="zgrid" class="zgrid"></div>
 
-    <footer class="row">
-      <div>© 2025 ZUZU • AI-Powered Meme Intelligence</div>
-    </footer>
+    <!-- ROADMAP (hazine haritası) -->
+    <div id="roadmap" class="card road" style="margin-top:18px">
+      <svg viewBox="0 0 600 200" preserveAspectRatio="none">
+        <path d="M0,150 C100,100 150,180 250,130 S450,140 600,80"
+              stroke="#ffd166" stroke-width="3" fill="none" stroke-dasharray="8 6"/>
+      </svg>
+      <div class="step"><div class="dot"></div><span>Phase 1 – Presale + Topluluk + Maskot Drop</span></div>
+      <div class="step"><div class="dot"></div><span>Phase 2 – CEX Başvuruları + Pazarlama + Partnerlikler</span></div>
+      <div class="step"><div class="dot"></div><span>Phase 3 – Tap-to-Earn + Staking + AI Meme Intelligence</span></div>
+    </div>
+
+    <footer>© 2025 ZUZU • AI-Powered Meme Intelligence</footer>
   </div>
 
-  <!-- Wallet Modal -->
-  <div id="walletBack" class="modal-back">
+  <!-- CÜZDAN MODAL -->
+  <div id="wBack" class="modal-back">
     <div class="modal">
       <div class="row" style="justify-content:space-between">
         <h3 style="margin:0">Cüzdan Bağla</h3>
-        <button id="closeModal" class="btn">Kapat</button>
+        <button id="closeW" class="btn">Kapat</button>
       </div>
-      <div class="row" style="margin:8px 0 14px">
-        <button id="evmConnect" class="btn">EVM (MetaMask / OKX / Bitget)</button>
-        <button id="solConnect" class="btn">Solana (Phantom)</button>
-        <button id="tonConnect" class="btn">TON (TonConnect)</button>
+      <div class="row">
+        <button id="btnEVM" class="btn">EVM (MetaMask / OKX / Bitget)</button>
+        <button id="btnSOL" class="btn">Solana (Phantom)</button>
+        <button id="btnTON" class="btn">TON (TonConnect)</button>
       </div>
-      <div class="hint">Bağlı adres: <b id="addrBox">—</b></div>
+      <div style="margin-top:8px;color:#9fb3d4">Bağlı adres: <b id="addr">—</b></div>
     </div>
   </div>
 
-  <script>
-  /***********************
-   * ZUZU – Tek dosya uygulama
-   ***********************/
-  // ---- Kaynaklar (sıralı deneme) ----
-  const CDN = "https://cdn.jsdelivr.net/gh/enejomble35/zuzucoin.xyz@main/";
-  const RAW = "https://raw.githubusercontent.com/enejomble35/zuzucoin.xyz/main/";
-  const SOURCES = {
-    lottie: [ CDN+"zuzu/lottie/", RAW+"zuzu/lottie/", "/zuzu/lottie/" ],
-    webp:   [ CDN+"assets/zuzu/realistic/", RAW+"assets/zuzu/realistic/", "/assets/zuzu/realistic/" ],
-    logos:  [ CDN+"assets/zuzu/exchanges/", RAW+"assets/zuzu/exchanges/", "/assets/zuzu/exchanges/" ],
-    zlogo:  [ CDN+"assets/zuzu/svg/zuzu_logo.svg", RAW+"assets/zuzu/svg/zuzu_logo.svg", "/assets/zuzu/svg/zuzu_logo.svg" ]
-  };
+<script>
+/* ======================
+   Kaynaklar (fallback sırası)
+====================== */
+const CDN="https://cdn.jsdelivr.net/gh/enejomble35/zuzucoin.xyz@main/";
+const RAW="https://raw.githubusercontent.com/enejomble35/zuzucoin.xyz/main/";
+const SRC={
+  lottie:[ "/zuzu/lottie/", CDN+"zuzu/lottie/", RAW+"zuzu/lottie/" ],
+  webp:  [ "/assets/zuzu/realistic/", CDN+"assets/zuzu/realistic/", RAW+"assets/zuzu/realistic/" ],
+  ex:    [ "/assets/zuzu/exchanges/", CDN+"assets/zuzu/exchanges/", RAW+"assets/zuzu/exchanges/" ],
+  logo:  [ "/assets/zuzu/svg/zuzu_logo.svg", CDN+"assets/zuzu/svg/zuzu_logo.svg", RAW+"assets/zuzu/svg/zuzu_logo.svg" ]
+};
 
-  // ---- Değişmezler ----
-  const MASKS = [
-    {key:"hero",title:"ZUZU Hero"},
-    {key:"ranger",title:"ZUZU Ranger"},
-    {key:"warrior",title:"ZUZU Warrior"},
-    {key:"hacker",title:"ZUZU Hacker"},
-    {key:"rogue",title:"ZUZU Rogue"},
-    {key:"titan",title:"ZUZU Titan"},
-    {key:"sorceress",title:"ZUZU Sorceress"},
-    {key:"berserker",title:"ZUZU Berserker"},
-    {key:"scientist",title:"ZUZU Scientist"},
-    {key:"maiden",title:"ZUZU Maiden"}   // 10. kart
-  ];
+// MASKOTLAR
+const MASKS=[
+  {k:"hero",t:"ZUZU Hero"},
+  {k:"ranger",t:"ZUZU Ranger"},
+  {k:"warrior",t:"ZUZU Warrior"},
+  {k:"hacker",t:"ZUZU Hacker"},
+  {k:"rogue",t:"ZUZU Rogue"},
+  {k:"titan",t:"ZUZU Titan"},
+  {k:"sorceress",t:"ZUZU Sorceress"},
+  {k:"berserker",t:"ZUZU Berserker"},
+  {k:"scientist",t:"ZUZU Scientist"},
+  {k:"maiden",t:"ZUZU Maiden"}
+];
 
-  // alias: sorceress <-> maiden için isim toleransı
-  const FILE_ALIAS = {
-    sorceress: ["sorceress","maiden","zuzu_sorceress","zuzu_maiden"],
-    maiden:    ["maiden","sorceress","zuzu_maiden","zuzu_sorceress"]
-  };
+// alias (sorceress <-> maiden olası adlandırmalar)
+const ALIAS = {
+  sorceress: ["sorceress","maiden","zuzu_sorceress","zuzu_maiden"],
+  maiden:    ["maiden","sorceress","zuzu_maiden","zuzu_sorceress"]
+};
 
-  // ---- Yardımcılar ----
-  function imgCandidates(name){
-    // hem "key.webp" hem "zuzu_key.webp" dener
-    const list = FILE_ALIAS[name] || [name,"zuzu_"+name];
-    const out = [];
-    list.forEach(n => SOURCES.webp.forEach(b => out.push(b+n+".webp")));
-    return out;
-  }
-  function lottieCandidates(name){
-    // Lottie hep "zuzu_name.json" formatında + alias
-    const list = FILE_ALIAS[name] || ["zuzu_"+name,name,"zuzu_"+name];
-    const out = [];
-    list.forEach(n => SOURCES.lottie.forEach(b => out.push(b + (n.endsWith(".json")?n:(n+".json")))));
-    return out;
-  }
-  function loadWithFallback(urls, onOk, onFail){
-    let i=0;
-    const tryNext = ()=>{
-      if(i>=urls.length){ onFail && onFail(); return; }
-      const u = urls[i] + (urls[i].startsWith("http") ? ("?v="+Date.now()) : "");
-      i++;
-      fetch(u,{cache:"no-store"}).then(r=>{
-        if(!r.ok) throw new Error("HTTP "+r.status);
-        const ct = (r.headers.get("content-type")||"");
-        if(ct.includes("json")) return r.json().then(j=>onOk(j,u));
-        return r.blob().then(b=>onOk(URL.createObjectURL(b),u));
-      }).catch(tryNext);
-    };
-    tryNext();
-  }
+/* ========== Yardımcılar ========== */
+function tryImg(img, urls, idx=0){
+  if(idx>=urls.length){ img.dataset.fail="1"; return; }
+  img.onerror=()=>tryImg(img,urls,idx+1);
+  img.src=urls[idx] + (urls[idx].startsWith("http")?"?v="+Date.now():"");
+}
+function lottieTry(container, urls, onFail){
+  let i=0; let ok=false;
+  const tick=()=>{
+    if(i>=urls.length){ if(!ok) onFail(); return; }
+    const u=urls[i++] + (urls[i-1].startsWith("http")?"?v="+Date.now():"");
+    // lottie dosya yoksa sessiz fail olabiliyor, 1sn sonra boşsa sonraki URL
+    let anim;
+    try{ anim=lottie.loadAnimation({container,renderer:"svg",loop:true,autoplay:true,path:u}); }catch(e){}
+    setTimeout(()=>{ if(container.children.length===0){ tick(); } else ok=true; },1000);
+  }; tick();
+}
+function buildExchanges(){
+  const row=document.getElementById("exRow");
+  const list=[["mexc","MEXC"],["gateio","Gate.io"],["bitmart","BitMart"],["bybit","Bybit"],["kucoin","KuCoin"],["okx","OKX"]];
+  list.forEach(([k,t])=>{
+    const el=document.createElement("div"); el.className="ex-item";
+    const img=new Image(); const urls=SRC.ex.map(b=>b+k+".svg");
+    tryImg(img,urls);
+    const sp=document.createElement("span"); sp.textContent=t;
+    el.append(img,sp); row.appendChild(el);
+  });
+}
+function setLogo(){
+  const el=document.getElementById("zlogo");
+  let i=0; const next=()=>{ if(i>=SRC.logo.length){ el.remove(); return; } el.onerror=next; el.src=SRC.logo[i++]; };
+  next();
+}
 
-  // ---- Borsa logoları ----
-  function buildExchanges(){
-    const row = document.getElementById("exRow");
-    const list = [
-      {k:"mexc",t:"MEXC"},
-      {k:"gateio",t:"Gate.io"},
-      {k:"bitmart",t:"BitMart"},
-      {k:"bybit",t:"Bybit"},
-      {k:"kucoin",t:"KuCoin"},
-      {k:"okx",t:"OKX"}
+/* ========== Sayaç + Haftalık fiyatlar ========== */
+async function initCountdown(){
+  let start,end,tokenomics,phases;
+  try{
+    const c=await fetch("/config.json?"+Date.now()).then(r=>r.ok?r.json():Promise.reject());
+    start=new Date(c.presaleStart).getTime();
+    end=new Date(c.presaleEnd).getTime();
+    tokenomics=c.tokenomics || [45,25,15,10,5];
+    phases=c.phases || [
+      {name:"1. Hafta",price:"0.0009 USDT"},
+      {name:"2. Hafta",price:"0.0011 USDT"},
+      {name:"3. Hafta",price:"0.0013 USDT"},
+      {name:"4. Hafta",price:"0.0015 USDT"}
     ];
-    list.forEach(({k,t})=>{
-      const el=document.createElement("div"); el.className="ex-item";
-      const img=document.createElement("img");
-      // fallback zinciri
-      const urls = SOURCES.logos.map(b=>b+k+".svg");
-      let idx=0; const setNext=()=>{ if(idx>=urls.length){ el.textContent=t; return; } img.src=urls[idx++]; };
-      img.onerror=setNext; setNext();
-      const tt=document.createElement("span"); tt.textContent=t;
-      el.append(img,tt); row.appendChild(el);
-    });
+  }catch(_){
+    start=Date.now(); end=start+40*24*3600*1000;
+    tokenomics=[45,25,15,10,5];
+    phases=[
+      {name:"1. Hafta",price:"0.0009 USDT"},
+      {name:"2. Hafta",price:"0.0011 USDT"},
+      {name:"3. Hafta",price:"0.0013 USDT"},
+      {name:"4. Hafta",price:"0.0015 USDT"}
+    ];
   }
 
-  // ---- ZUZU logo ----
-  function setZLogo(){
-    const el = document.getElementById("zlogo");
-    let i=0; const tryNext=()=>{
-      if(i>=SOURCES.zlogo.length){ el.remove(); return; }
-      el.src = SOURCES.zlogo[i++] + (SOURCES.zlogo[i-1].startsWith("http")?("?v="+Date.now()):"");
-      el.onerror=tryNext;
-    }; tryNext();
-  }
-
-  // ---- Sayaç ----
-  async function initCountdown(){
-    const cd = document.getElementById("cd");
-    const bar= document.getElementById("cd-bar");
-    // config.json varsa oradan al; yoksa fallback tarih seti
-    let start, end, tokenomics;
-    try{
-      const c = await fetch("/config.json?"+Date.now()).then(r=>r.ok?r.json():Promise.reject());
-      start = new Date(c.presaleStart).getTime();
-      end   = new Date(c.presaleEnd).getTime();
-      tokenomics = c.tokenomics || [45,25,15,10,5];
-    }catch(_){
-      // fallback: bugünden itibaren 40 gün
-      start = Date.now();
-      end   = start + 40*24*3600*1000;
-      tokenomics = [45,25,15,10,5];
-    }
-    function tick(){
-      const now=Date.now();
-      const left=Math.max(0,end-now);
-      const total=end-start, done=Math.max(0,Math.min(total,now-start));
-      const d=Math.floor(left/86400000);
-      const h=Math.floor((left%86400000)/3600000);
-      const m=Math.floor((left%3600000)/60000);
-      const s=Math.floor((left%60000)/1000);
-      cd.textContent=`${d}g ${h}s ${m}d ${s}sn`;
-      bar.style.width=((done/total)*100).toFixed(2)+"%";
-    }
-    tick(); setInterval(tick,1000);
-    // Chart
-    const ctx=document.getElementById("tokenChart").getContext("2d");
-    new Chart(ctx,{type:'doughnut',data:{
-      labels:['Presale','Liquidity','Marketing','Team','Airdrop'],
-      datasets:[{data:tokenomics,backgroundColor:['#24e0b6','#31c4ff','#ffd166','#a78bfa','#ff8fab'],borderColor:'#0e1522',borderWidth:2}]
-    },options:{plugins:{legend:{display:false}},cutout:'60%'}});
-  }
-
-  // ---- Gallery ----
-  function buildGallery(){
-    const wrap=document.getElementById("zuzu-grid");
-    wrap.innerHTML="";
-    MASKS.forEach(item=>{
-      const card=document.createElement("div"); card.className="zcard";
-      const title=document.createElement("div"); title.className="ztitle"; title.textContent=item.title;
-      const anim=document.createElement("div"); anim.className="anim";
-      card.append(title,anim); wrap.appendChild(card);
-
-      // 1) Lottie dene
-      loadWithFallback(lottieCandidates(item.key), (json,src)=>{
-        try{
-          const inst = lottie.loadAnimation({container:anim,renderer:"svg",loop:true,autoplay:true,animationData:json});
-          anim.setAttribute("data-src",src);
-        }catch(e){ useWebp(); }
-      }, useWebp);
-
-      function useWebp(){
-        // 2) WebP fallback
-        loadWithFallback(imgCandidates(item.key), (blobUrl,src)=>{
-          const im=new Image(); im.src=blobUrl; im.alt=item.title; anim.appendChild(im);
-          anim.setAttribute("data-src",src);
-        }, ()=>{
-          const b=document.createElement("div"); b.className="badge-err"; b.textContent="görsel/animasyon bulunamadı";
-          anim.appendChild(b);
-        });
-      }
-    });
-  }
-
-  // ---- Cüzdan Modal ----
-  const back=document.getElementById("walletBack");
-  document.getElementById("btn-wallet").onclick=()=> back.classList.add("show");
-  document.getElementById("closeModal").onclick=()=> back.classList.remove("show");
-  function setAddr(t){ document.getElementById("addrBox").textContent=t; }
-
-  document.getElementById("evmConnect").onclick=async()=>{
-    try{
-      if(!window.ethereum){ alert("Tarayıcı EVM cüzdanı yok."); return; }
-      const accts=await window.ethereum.request({method:"eth_requestAccounts"});
-      setAddr("EVM: "+accts[0]);
-    }catch(e){ alert("EVM: "+e.message); }
-  };
-  document.getElementById("solConnect").onclick=async()=>{
-    try{
-      const p=window.solana; if(!p||!p.isPhantom){ alert("Phantom bulunamadı."); return; }
-      const r=await p.connect(); setAddr("Solana: "+r.publicKey.toString());
-    }catch(e){ alert("Solana: "+e.message); }
-  };
-  let tonUI;
-  window.addEventListener("load",()=>{
-    try{ tonUI=new TON_CONNECT_UI.TonConnectUI({manifestUrl:location.origin+"/tonconnect-manifest.json"}); }catch(_){}
+  // haftalık fiyatlar
+  const w=document.getElementById("weeks");
+  w.innerHTML=""; phases.forEach(p=>{
+    const d=document.createElement("div"); d.className="badge";
+    d.innerHTML=`<span>${p.name}</span><b>${p.price}</b>`; w.appendChild(d);
   });
-  document.getElementById("tonConnect").onclick=async()=>{
-    try{
-      if(!tonUI){ alert("TonConnect UI yüklenmedi"); return; }
-      await tonUI.openModal();
-      setAddr("TON: "+(tonUI.account?.address || "—"));
-    }catch(e){ alert("TON: "+e.message); }
-  };
 
-  // ---- Başlat ----
-  document.addEventListener("DOMContentLoaded",()=>{
-    setZLogo();
-    buildExchanges();
-    initCountdown();
-    buildGallery();
+  // donut
+  const ctx=document.getElementById("tchart").getContext("2d");
+  new Chart(ctx,{type:'doughnut',data:{
+    labels:['Presale','Liquidity','Marketing','Team','Airdrop'],
+    datasets:[{data:tokenomics,backgroundColor:['#24e0b6','#31c4ff','#ffd166','#a78bfa','#ff8fab'],borderColor:'#0e1522',borderWidth:2}]
+  },options:{plugins:{legend:{display:false}},cutout:'60%'}});
+
+  // slot sayım
+  const elD=document.getElementById("d"), elH=document.getElementById("h"), elM=document.getElementById("m"), elS=document.getElementById("s");
+  const bar=document.getElementById("pbar"); const total=end-start;
+  function put(el,val){ el.textContent=val; el.classList.remove("flip"); void el.offsetWidth; el.classList.add("flip"); }
+  function tick(){
+    const now=Date.now(); const left=Math.max(0,end-now);
+    const d=Math.floor(left/86400000);
+    const h=Math.floor((left%86400000)/3600000);
+    const m=Math.floor((left%3600000)/60000);
+    const s=Math.floor((left%60000)/1000);
+    put(elD,d); put(elH,h.toString().padStart(2,'0')); put(elM,m.toString().padStart(2,'0')); put(elS,s.toString().padStart(2,'0'));
+    const done=Math.min(total,Math.max(0,now-start)); bar.style.width=((done/total)*100).toFixed(2)+"%";
+  }
+  tick(); setInterval(tick,1000);
+}
+
+/* ========== Galeri ========== */
+function candidatesWebp(k){
+  const names = (ALIAS[k] || [k,"zuzu_"+k]).map(n=>n.replace(/^zuzu_/,''));
+  const out=[]; names.forEach(n=>SRC.webp.forEach(b=>out.push(b+n+".webp"))); return out;
+}
+function candidatesLottie(k){
+  const names = ALIAS[k] || ["zuzu_"+k,k,"zuzu_"+k];
+  const out=[]; names.forEach(n=>SRC.lottie.forEach(b=>out.push(b+(n.endsWith(".json")?n:n+".json")))); return out;
+}
+function buildGallery(){
+  const grid=document.getElementById("zgrid"); grid.innerHTML="";
+  MASKS.forEach(({k,t})=>{
+    const card=document.createElement("div"); card.className="zcard";
+    const ttl=document.createElement("div"); ttl.className="ttl"; ttl.textContent=t;
+    const anim=document.createElement("div"); anim.className="anim";
+    card.append(ttl,anim); grid.appendChild(card);
+
+    // 1) Lottie
+    lottieTry(anim,candidatesLottie(k),()=>{ // 2) WebP
+      const im=new Image(); anim.appendChild(im);
+      tryImg(im,candidatesWebp(k));
+    });
+
+    // 3) Lottie 1sn içinde element oluşmadıysa güvenli fallback
+    setTimeout(()=>{ if(anim.children.length===0){ const im=new Image(); anim.appendChild(im); tryImg(im,candidatesWebp(k)); } },1200);
   });
-  </script>
+}
+
+/* ========== Cüzdan ========== */
+const back=document.getElementById("wBack");
+document.getElementById("btnWallet").onclick=()=>back.classList.add("show");
+document.getElementById("closeW").onclick=()=>back.classList.remove("show");
+function setAddr(x){ document.getElementById("addr").textContent=x; }
+
+// EVM (MetaMask/OKX/Bitget)
+document.getElementById("btnEVM").onclick=async()=>{
+  try{
+    if(window.ethereum){
+      const a=await window.ethereum.request({method:"eth_requestAccounts"});
+      setAddr("EVM: "+a[0]); return;
+    }
+    // yoksa mobil deep link (MetaMask)
+    const dapp=encodeURIComponent(location.origin);
+    const mm=(/Android|iPhone/i.test(navigator.userAgent))
+      ? `https://metamask.app.link/dapp/${location.host}`
+      : "https://metamask.io/download/";
+    window.open(mm,"_blank");
+    alert("Tarayıcı EVM cüzdanı bulunamadı. Uygulamayı açın/kurun ve tekrar deneyin.");
+  }catch(e){ alert("EVM: "+e.message); }
+};
+// Solana (Phantom)
+document.getElementById("btnSOL").onclick=async()=>{
+  try{
+    if(window.solana && window.solana.isPhantom){
+      const r=await window.solana.connect(); setAddr("Solana: "+r.publicKey.toString()); return;
+    }
+    const link=(/Android|iPhone/i.test(navigator.userAgent))
+      ? "https://phantom.app/ul/browse/"+location.host
+      : "https://phantom.app/download";
+    window.open(link,"_blank");
+    alert("Phantom bulunamadı. Uygulamayı açın/kurun ve tekrar deneyin.");
+  }catch(e){ alert("Solana: "+e.message); }
+};
+// TON
+let tonUI;
+window.addEventListener("load",()=>{ try{ tonUI=new TON_CONNECT_UI.TonConnectUI({manifestUrl:location.origin+"/tonconnect-manifest.json"});}catch(_){} });
+document.getElementById("btnTON").onclick=async()=>{
+  try{
+    if(!tonUI){ alert("TonConnect yüklenmedi"); return; }
+    await tonUI.openModal();
+    setAddr("TON: "+(tonUI.account?.address||"—"));
+  }catch(e){ alert("TON: "+e.message); }
+};
+
+/* ========== Başlat ========== */
+document.addEventListener("DOMContentLoaded",()=>{
+  setLogo();
+  buildExchanges();
+  initCountdown();
+  buildGallery();
+});
+</script>
 </body>
 </html>
