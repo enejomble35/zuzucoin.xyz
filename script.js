@@ -1,17 +1,13 @@
 /***********************
- * ZUZU – stable gallery (WebP first) + tokenomics + wallet
+ * ZUZU – Görseller + Lottie bindirme + Sayaç + Tokenomi
  ***********************/
-const V = 35; // cache bust param
-
-// Kaynak dizinleri (tek repo)
 const SRC = {
-  lottie: [ "/zuzu/lottie/" ],
-  webp:   [ "/assets/zuzu/realistic/" ],
-  ex:     [ "/assets/zuzu/exchanges/" ],
+  lottie: "/zuzu/lottie/",
+  webp:   "/assets/zuzu/realistic/",
   logo:   "/assets/zuzu/svg/zuzu_logo.svg"
 };
 
-// Maskotlar (10 adet — Maiden dahil)
+// 10 maskot
 const ZUZU = [
   { key:"hero",      title:"ZUZU Hero" },
   { key:"ranger",    title:"ZUZU Ranger" },
@@ -22,167 +18,163 @@ const ZUZU = [
   { key:"sorceress", title:"ZUZU Sorceress" },
   { key:"berserker", title:"ZUZU Berserker" },
   { key:"scientist", title:"ZUZU Scientist" },
-  { key:"maiden",    title:"ZUZU Maiden" }
+  { key:"maiden",    title:"ZUZU Maiden" } // 10. kart
 ];
 
-// alias: bazı depolarda sorceress yerine maiden ismi
-const ALIAS = { sorceress: ["sorceress","maiden"] };
+/* ---- Yardımcılar ---- */
+function el(tag, cls){ const e=document.createElement(tag); if(cls) e.className=cls; return e; }
 
-// --- Yardımcılar ---
-function listUrls(key, ext){
-  const names = (ALIAS[key] || [key]);
-  const bases = (ext==="json" ? SRC.lottie : SRC.webp);
-  const out=[];
-  names.forEach(n => bases.forEach(b => out.push(b + (ext==="json" ? `zuzu_${n}.json` : `${n}.webp`))));
-  return out;
+/* Lottie varsa bindir; yoksa sessiz geç */
+async function tryLottie(container, key){
+  const tryKeys = key==="sorceress" ? ["sorceress","maiden"] : [key];
+  for(const k of tryKeys){
+    const url = `${SRC.lottie}zuzu_${k}.json`;
+    try{
+      const r = await fetch(url,{cache:"no-store"});
+      if(!r.ok) continue;
+      const json = await r.json();
+      const layer = el("div","lottieLayer");
+      container.appendChild(layer);
+      lottie.loadAnimation({container:layer,renderer:"svg",loop:true,autoplay:true,animationData:json});
+      return true;
+    }catch(_){}
+  }
+  return false;
 }
 
-function loadImgFallback(box, key, title){
-  const urls = listUrls(key, "webp");
-  const img  = new Image();
-  img.className="thumb";
+/* WebP mutlaka göster (alias ile) */
+function putWebp(container, key, title){
+  const img = new Image();
+  img.className="thumb"; img.alt=title;
+  const tryKeys = key==="sorceress" ? ["sorceress","maiden"] : [key];
   let i=0;
-  const next=()=>{
-    if(i>=urls.length){
-      const badge=document.createElement("div");
-      badge.className="badge-error";
+  const tryNext=()=>{
+    if(i>=tryKeys.length){
+      const badge = el("div","badge-error");
       badge.textContent="görsel/animasyon bulunamadı";
-      box.closest(".card").appendChild(badge);
+      container.parentElement.appendChild(badge);
       return;
     }
-    const u = urls[i] + `?v=${V}`; i++;
-    img.onerror = next;
-    img.onload  = ()=> box.appendChild(img);
-    img.src = u;
+    img.src = `${SRC.webp}${tryKeys[i++]}.webp?v=29`;
   };
-  next();
+  img.onerror = tryNext;
+  container.appendChild(img);
+  tryNext();
 }
 
-function loadLottieOver(box, key){
-  try{
-    const urls = listUrls(key,"json");
-    let i=0, placed=false;
-    const layer=document.createElement("div");
-    layer.className="lottie-layer";
-    box.appendChild(layer);
-
-    const attempt=()=>{
-      if(i>=urls.length){ return; }
-      const path = urls[i] + `?v=${V}`; i++;
-      fetch(path,{cache:"no-store"})
-        .then(r=> r.ok ? r.json() : Promise.reject())
-        .then(json=>{
-          lottie.loadAnimation({
-            container: layer,
-            renderer: "svg",
-            loop: true,
-            autoplay: true,
-            animationData: json
-          });
-          placed=true;
-        })
-        .catch(attempt);
-    };
-    attempt();
-
-    setTimeout(()=>{ if(!placed) layer.remove(); }, 4000);
-  }catch(_){}
-}
-
-// --- Galeri ---
+/* --- Galeri --- */
 function buildGallery(){
-  const grid=document.getElementById("zuzu-gallery");
-  grid.innerHTML="";
+  const grid = document.getElementById("zuzu-gallery");
+  grid.innerHTML = "";
   ZUZU.forEach(({key,title})=>{
-    const card=document.createElement("div");
-    card.className="card";
-    card.innerHTML=`<h3>${title}</h3><div class="animBox"></div>`;
+    const card = el("div","card");
+    card.appendChild(Object.assign(el("h3"),{textContent:title}));
+    const anim = el("div","animBox");
+    card.appendChild(anim);
     grid.appendChild(card);
-    const box=card.querySelector(".animBox");
-    loadImgFallback(box,key,title);   // her zaman webp
-    loadLottieOver(box,key);         // varsa üstüne lottie
+
+    // 1) WebP'yi koy (kesin görünür)
+    putWebp(anim,key,title);
+    // 2) Lottie varsa üzerine bindir
+    tryLottie(anim,key);
   });
 }
 
-// --- Config / Chart / Prices ---
-async function readConf(){
-  try{
-    return await fetch("/config.json?"+V).then(r=>r.json());
-  }catch(e){
-    console.warn("config.json okunamadı", e);
-    return { presaleEnd:"2025-12-31T23:59:59Z", tokenomics:[45,25,15,10,5], weekPrices:["0.0010","0.0015","0.0020","0.0025"] };
-  }
-}
-async function initChart(){
-  const conf=await readConf();
-  new Chart(document.getElementById("tokenChart").getContext("2d"),{
-    type:"doughnut",
-    data:{labels:["Presale","Liquidity","Marketing","Team","Airdrop"],
-      datasets:[{data:conf.tokenomics,backgroundColor:["#24e0b6","#31c4ff","#ffd166","#a78bfa","#ff8fab"],borderColor:"#0e1522",borderWidth:2}]},
-    options:{plugins:{legend:{display:false}},cutout:"60%"}
-  });
-  const [w1,w2,w3,w4]=conf.weekPrices||["0.0010","0.0015","0.0020","0.0025"];
-  document.getElementById("w1").textContent=`${w1} USDT`;
-  document.getElementById("w2").textContent=`${w2} USDT`;
-  document.getElementById("w3").textContent=`${w3} USDT`;
-  document.getElementById("w4").textContent=`${w4} USDT`;
-}
-
-// --- Countdown ---
+/* --- Sayaç + Haftalık fiyat --- */
 async function initCountdown(){
-  const conf=await readConf();
-  const end=new Date(conf.presaleEnd).getTime();
-  const d=document.getElementById("d"),h=document.getElementById("h"),m=document.getElementById("m"),s=document.getElementById("s");
-  function tick(){
-    const now=Date.now(); let left=Math.max(0,end-now);
-    const D=Math.floor(left/86400000); left%=86400000;
-    const H=Math.floor(left/3600000);  left%=3600000;
-    const M=Math.floor(left/60000);    left%=60000;
-    const S=Math.floor(left/1000);
-    d.textContent=String(D).padStart(2,"0");
-    h.textContent=String(H).padStart(2,"0");
-    m.textContent=String(M).padStart(2,"0");
-    s.textContent=String(S).padStart(2,"0");
-  }
-  tick(); setInterval(tick,1000);
+  try{
+    const conf = await fetch("/config.json?"+Date.now()).then(r=>r.json());
+    const start = new Date(conf.presaleStart).getTime();
+    const end   = new Date(conf.presaleEnd).getTime();
+    const ids = s=>document.getElementById(s);
+    const d=ids("d"),h=ids("h"),m=ids("m"),s=ids("s");
+    // haftalık
+    ids("w1").textContent = conf.weeks?.[0] || "0.0010 USDT";
+    ids("w2").textContent = conf.weeks?.[1] || "0.0015 USDT";
+    ids("w3").textContent = conf.weeks?.[2] || "0.0020 USDT";
+    ids("w4").textContent = conf.weeks?.[3] || "0.0025 USDT";
+
+    function tick(){
+      const now = Date.now();
+      let left = Math.max(0, end-now);
+      const DD = Math.floor(left/86400000); left%=86400000;
+      const HH = Math.floor(left/3600000);  left%=3600000;
+      const MM = Math.floor(left/60000);    left%=60000;
+      const SS = Math.floor(left/1000);
+      d.textContent=String(DD).padStart(2,"0");
+      h.textContent=String(HH).padStart(2,"0");
+      m.textContent=String(MM).padStart(2,"0");
+      s.textContent=String(SS).padStart(2,"0");
+    }
+    tick(); setInterval(tick,1000);
+  }catch(e){ console.warn("countdown init:",e); }
 }
 
-// --- Wallet (deeplink fallback’lı) ---
-const modal=document.getElementById("wallet-modal");
-document.getElementById("btn-wallet").onclick=()=>modal.classList.remove("hidden");
-document.getElementById("closeModal").onclick=()=>modal.classList.add("hidden");
-const addrBox=document.getElementById("addrBox");
-const setAddr=t=>addrBox.textContent=t;
+/* --- Tokenomi --- */
+async function initChart(){
+  try{
+    const conf = await fetch("/config.json?"+Date.now()).then(r=>r.json());
+    const ctx = document.getElementById("tokenChart");
+    new Chart(ctx,{
+      type:'doughnut',
+      data:{
+        labels:['Presale','Liquidity','Marketing','Team','Airdrop'],
+        datasets:[{
+          data: conf.tokenomics || [62,18,10,6,4],
+          backgroundColor:['#24e0b6','#31c4ff','#ffd166','#a78bfa','#ff8fab'],
+          borderColor:'#0d1729', borderWidth:2
+        }]
+      },
+      options:{ plugins:{legend:{display:false}}, cutout:'62%' }
+    });
+  }catch(e){ console.warn("chart init:",e); }
+}
 
-document.getElementById("evmConnect").onclick=async ()=>{
+/* --- Cüzdan Modal --- */
+const modal = document.getElementById("wallet-modal");
+document.getElementById("btn-wallet").onclick = ()=> modal.classList.remove("hidden");
+document.getElementById("closeModal").onclick = ()=> modal.classList.add("hidden");
+const addrBox = document.getElementById("addrBox");
+const setAddr = t => addrBox.textContent = t || "Bağlı değil";
+
+// EVM
+document.getElementById("evmConnect").onclick = async ()=>{
   try{
     if(window.ethereum){
-      const accs=await window.ethereum.request({method:"eth_requestAccounts"});
-      setAddr("EVM: "+accs[0]);
-    }else{
-      window.location.href="https://metamask.app.link/dapp/"+location.host;
-      alert("Tarayıcı cüzdanı yok. Metamask uygulaması ile açınız.");
+      const accts = await window.ethereum.request({method:"eth_requestAccounts"});
+      return setAddr("EVM: "+accts[0]);
     }
+    // Deeplink fallback
+    location.href = "https://metamask.app.link/dapp/"+location.hostname+location.pathname;
+    alert("Tarayıcı cüzdanı bulunamadı. MetaMask/OKX/Bitget yüklü olmalı.");
   }catch(e){ alert("EVM bağlantı: "+e.message); }
 };
-document.getElementById("solConnect").onclick=async ()=>{
+// Solana
+document.getElementById("solConnect").onclick = async ()=>{
   try{
-    const p=window.solana;
+    const p = window.solana;
     if(p && p.isPhantom){
-      const r=await p.connect(); setAddr("Solana: "+r.publicKey.toString());
-    }else{
-      window.location.href="https://phantom.app/ul/browse/"+location.href;
-      alert("Phantom bulunamadı. Phantom ile açınız.");
+      const r = await p.connect(); return setAddr("Solana: "+r.publicKey.toString());
     }
+    location.href = "https://phantom.app/ul/browse/"+location.href;
+    alert("Phantom cüzdan bulunamadı.");
   }catch(e){ alert("Solana bağlantı: "+e.message); }
 };
-document.getElementById("tonConnect").onclick=()=>{
-  alert("TON bağlama için uygulama içi modül eklenecek.");
+// TON
+let tonUi; window.addEventListener('load',()=>{
+  try{ tonUi = new TON_CONNECT_UI.TonConnectUI({ manifestUrl: location.origin+'/tonconnect-manifest.json' }); }catch(_){}
+});
+document.getElementById("tonConnect").onclick = async ()=>{
+  try{
+    if(!tonUi) return alert("TonConnect yüklenmedi");
+    await tonUi.openModal();
+    setAddr("TON: "+(tonUi.account?.address || "Bağlı değil"));
+  }catch(e){ alert("TON bağlantı: "+e.message); }
 };
 
-// --- Başlat ---
-window.addEventListener("DOMContentLoaded",()=>{
+/* --- Başlat --- */
+window.addEventListener('DOMContentLoaded', ()=>{
   buildGallery();
-  initChart();
   initCountdown();
+  initChart();
 });
