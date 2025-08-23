@@ -1,46 +1,11 @@
-/********************************
- * ZUZU – v15 (local-first fetch-blob + 10 mask + logo fallback)
- ********************************/
+/***********************
+ * ZUZU v17 – local-first gallery + exchanges + countdown + wallet
+ ***********************/
 
-// ====== EXCHANGES (logo yoksa sadece isim rozet) ======
-const EXCHANGES = [
-  { key:'mexc',   name:'MEXC'   },
-  { key:'gateio', name:'Gate.io'},
-  { key:'bitmart',name:'BitMart'},
-  { key:'bybit',  name:'Bybit'  },
-  { key:'kucoin', name:'KuCoin' },
-  { key:'okx',    name:'OKX'    },
-];
-
-async function buildExchangeRow(){
-  const row = document.getElementById('exchanges');
-  row.innerHTML = '';
-  for (const e of EXCHANGES){
-    const wrap = document.createElement('div');
-    wrap.className = 'ex-item';
-    row.appendChild(wrap);
-    const url = `/assets/exchanges/${e.key}.svg?v=${Date.now()}`;
-    try{
-      const r = await fetch(url, {cache:'no-store'});
-      if(!r.ok) throw 0;
-      const img = document.createElement('img');
-      img.className = 'ex-logo';
-      img.alt = e.name;
-      img.src = url;
-      wrap.appendChild(img);
-    }catch{
-      const name = document.createElement('div');
-      name.className = 'ex-name';
-      name.textContent = e.name;
-      wrap.appendChild(name);
-    }
-  }
-}
-
-// ====== SOURCES – önce yerel, sonra CDN ======
+// === Kaynaklar (ÖNCE YEREL) ===
 const SOURCES = {
   webp: [
-    "/assets/zuzu/realistic/",
+    "/assets/zuzu/realistic/", // yerel (en güvenilir)
     "https://cdn.jsdelivr.net/gh/enejomble35/zuzucoin.xyz@main/assets/zuzu/realistic/",
     "https://raw.githubusercontent.com/enejomble35/zuzucoin.xyz/main/assets/zuzu/realistic/"
   ],
@@ -51,7 +16,7 @@ const SOURCES = {
   ]
 };
 
-// ====== 10 MASKOT ======
+// Maskotlar
 const ZUZU = [
   { key:"hero",      title:"ZUZU Hero"      },
   { key:"ranger",    title:"ZUZU Ranger"    },
@@ -62,175 +27,189 @@ const ZUZU = [
   { key:"sorceress", title:"ZUZU Sorceress" },
   { key:"berserker", title:"ZUZU Berserker" },
   { key:"scientist", title:"ZUZU Scientist" },
-  { key:"maiden",    title:"ZUZU Maiden"    }  // 10. kart
+  { key:"maiden",    title:"ZUZU Maiden"    } // 10. kart
 ];
 
-// 'sorceress' ile aynı görsellerin kullanılabilmesi için alias
-const FILE_ALIAS = { sorceress:["sorceress","maiden"], maiden:["maiden","sorceress"] };
+// alias (sorceress = maiden dosyası olabilir)
+const FILE_ALIAS = {
+  sorceress: ["sorceress","maiden"]
+};
 
-function candidates(key, ext){
+// === Yardımcılar ===
+function candidateUrls(key, ext){
   const names = FILE_ALIAS[key] || [key];
-  const bases = (ext==="json") ? SOURCES.lottie : SOURCES.webp;
-  const list=[];
-  names.forEach(n=> bases.forEach(b=> list.push(b + (ext==="json" ? `zuzu_${n}.json` : `${n}.webp`))));
-  return list;
+  const srcs = (ext === "json") ? SOURCES.lottie : SOURCES.webp;
+  const out = [];
+  names.forEach(n => srcs.forEach(base => out.push(base + (ext === "json" ? `zuzu_${n}.json` : `${n}.webp`))));
+  return out;
 }
 
-// ====== FETCH→BLOB (görseli kesin göster) ======
-async function setImageByFetch(img, urls){
-  for(const u of urls){
-    const url = u + (u.startsWith('http')?`?v=${Date.now()}`:'');
-    try{
-      const r = await fetch(url, {cache:'no-store', mode:'cors'});
-      if(!r.ok) continue;
-      const blob = await r.blob();
-      img.src = URL.createObjectURL(blob);
-      return true;
-    }catch(_){}
-  }
-  return false;
-}
+function loadImageWithFallback(img, urls, onFail, onDone){
+  let i = 0;
+  const tried = [];
+  img.loading = "lazy";
+  img.decoding = "async";
+  img.referrerPolicy = "no-referrer";
+  img.crossOrigin = "anonymous";
 
-// Lottie için fallback
-function loadLottieFallback(container, key, ok, fail){
-  const urls = candidates(key,"json");
-  let i=0, killed=false;
-  const tryNext=()=>{
-    if(i>=urls.length){ fail(); return; }
-    const url = urls[i] + (urls[i].startsWith('http')?`?v=${Date.now()}`:'');
+  const next = ()=>{
+    if(i >= urls.length){
+      onFail && onFail(tried);
+      return;
+    }
+    const u = urls[i] + (urls[i].startsWith("http") ? `?v=${Date.now()}` : "");
+    tried.push(u);
     i++;
-    fetch(url,{cache:'no-store'})
-      .then(r=> r.ok ? r.json() : Promise.reject())
-      .then(json=>{
-        if(killed) return;
-        const anim = lottie.loadAnimation({container, renderer:"svg", loop:true, autoplay:true, animationData:json});
-        ok(anim);
-      })
-      .catch(tryNext);
+    img.onerror = next;
+    img.onload = ()=> onDone && onDone(tried);
+    img.src = u;
   };
-  tryNext();
-  return ()=>{ killed=true; };
+  next();
 }
 
-// ====== GALERİ ======
-function buildGallery(){
-  const grid = document.getElementById("zuzu-gallery");
-  grid.innerHTML = "";
+function loadLottieWithFallback(container, key, ok, fail){
+  const urls = candidateUrls(key, "json");
+  let i = 0;
+  const tried = [];
+  const next = ()=>{
+    if(i >= urls.length){ fail && fail(tried); return; }
+    const u = urls[i] + (urls[i].startsWith("http") ? `?v=${Date.now()}` : "");
+    tried.push(u); i++;
+    fetch(u,{cache:"no-store"}).then(r=>r.ok?r.json():Promise.reject())
+      .then(json=>{
+        const anim = lottie.loadAnimation({container,renderer:"svg",loop:true,autoplay:true,animationData:json});
+        ok && ok(anim, tried);
+      }).catch(next);
+  };
+  next();
+}
 
-  ZUZU.forEach(({key,title})=>{
-    const card = document.createElement("div");
-    card.className = "card";
-    const h = document.createElement("h3"); h.textContent = title;
-    const anim = document.createElement("div"); anim.className = "animBox";
-    card.append(h,anim);
-    grid.appendChild(card);
+// === Borsalar ===
+const EX = [
+  {k:"mexc",  n:"MEXC"},
+  {k:"gateio",n:"Gate.io"},
+  {k:"bitmart",n:"BitMart"},
+  {k:"bybit", n:"Bybit"},
+  {k:"kucoin",n:"KuCoin"},
+  {k:"okx",   n:"OKX"}
+];
 
-    let lottieOk = false;
-    loadLottieFallback(anim, key, ()=>{ lottieOk=true; }, async ()=>{
-      // Lottie yoksa WEBP'yi fetch-blob ile yükle
-      const img = document.createElement("img");
-      img.className = "thumb"; img.alt = title;
-      anim.appendChild(img);
-
-      const ok = await setImageByFetch(img, candidates(key,"webp"));
-      if(!ok){
-        const b = document.createElement("div");
-        b.className = "badge-error";
-        b.textContent = "görsel/animasyon bulunamadı";
-        card.appendChild(b);
-
-        const dbg = document.createElement("small");
-        dbg.style.display="block"; dbg.style.margin="6px 6px 0 6px"; dbg.style.color="#7da9ff";
-        dbg.textContent = "Denedi: " + candidates(key,"json").concat(candidates(key,"webp")).join(" | ");
-        card.appendChild(dbg);
-      }
-    });
-
-    // Sessiz fail güvenliği
-    setTimeout(async ()=>{
-      if(!lottieOk && anim.children.length===0){
-        const img = document.createElement("img");
-        img.className="thumb"; img.alt=title; anim.appendChild(img);
-        await setImageByFetch(img, candidates(key,"webp"));
-      }
-    }, 2200);
+function buildExchanges(){
+  const row = document.getElementById("exchanges"); row.innerHTML="";
+  EX.forEach(({k,n})=>{
+    const el = document.createElement("div"); el.className="ex-item";
+    const img = document.createElement("img"); img.className="ex-logo"; img.alt=n;
+    img.src = `/assets/zuzu/exchanges/${k}.svg`;
+    img.onerror = ()=>{ el.innerHTML = `<span class="ex-name">${n}</span>`; };
+    el.appendChild(img);
+    const name = document.createElement("span"); name.className="ex-name"; name.textContent = n;
+    el.appendChild(name);
+    row.appendChild(el);
   });
 }
 
-// ====== Sayaç ======
+// === GALERİ ===
+function buildGallery(){
+  const grid = document.getElementById("zuzu-gallery"); grid.innerHTML="";
+  ZUZU.forEach(({key,title})=>{
+    const card = document.createElement("div"); card.className="card";
+    card.innerHTML = `<h3>${title}</h3>`;
+    const animBox = document.createElement("div"); animBox.className="animBox";
+    card.appendChild(animBox); grid.appendChild(card);
+
+    let resolved = false;
+
+    // 1) Lottie dene
+    loadLottieWithFallback(animBox, key, ()=>{
+      resolved = true;
+    }, (triedLottie)=>{
+
+      // 2) WebP fallback
+      const img = document.createElement("img"); img.className="thumb"; img.alt = title;
+      animBox.appendChild(img);
+      loadImageWithFallback(img, candidateUrls(key,"webp"), (triedImg)=>{
+        // 3) Tamamen olmadı => hata rozeti + denenenler
+        const b = document.createElement("div"); b.className="badge-error";
+        b.textContent = "görsel/animasyon bulunamadı";
+        card.appendChild(b);
+        const dbg = document.createElement("div"); dbg.className="badge-try";
+        dbg.textContent = "Denedi: " + [...triedLottie,...triedImg].join(" | ");
+        card.appendChild(dbg);
+      });
+    });
+
+    // Güvenlik: 2.5 sn sonra hâlâ boş ise resme düş
+    setTimeout(()=>{
+      if(!resolved && animBox.children.length===0){
+        const img = document.createElement("img"); img.className="thumb"; img.alt = title;
+        animBox.appendChild(img);
+        loadImageWithFallback(img, candidateUrls(key,"webp"));
+      }
+    }, 2500);
+  });
+}
+
+// === Sayaç ===
 async function initCountdown(){
   try{
     const conf = await fetch("/config.json?"+Date.now()).then(r=>r.json());
     const start = new Date(conf.presaleStart).getTime();
     const end   = new Date(conf.presaleEnd).getTime();
-    const box = document.getElementById("cd");
-    const bar = document.getElementById("cd-bar");
+    const cdBox = document.getElementById("cd");
+    const cdBar = document.getElementById("cd-bar");
+
     function tick(){
       const now = Date.now();
-      const total=end-start, done=Math.max(0,Math.min(total,now-start)), left=Math.max(0,end-now);
-      const d=Math.floor(left/86400000),h=Math.floor((left%86400000)/3600000),
-            m=Math.floor((left%3600000)/60000),s=Math.floor((left%60000)/1000);
-      box.textContent = `${d}g ${h}s ${m}d ${s}sn`;
-      bar.style.width = `${(done/total)*100}%`;
-      if(left<=0){ box.textContent="Ön satış bitti"; bar.style.width="100%"; }
+      const total = end - start;
+      const done  = Math.max(0, Math.min(total, now - start));
+      const left  = Math.max(0, end - now);
+      const d = Math.floor(left/86400000);
+      const h = Math.floor((left%86400000)/3600000);
+      const m = Math.floor((left%3600000)/60000);
+      const s = Math.floor((left%60000)/1000);
+      cdBox.textContent = `${d}g ${h}s ${m}d ${s}sn`;
+      cdBar.style.width = `${(done/total)*100}%`;
+      if(left<=0) cdBox.textContent = "Ön satış bitti";
     }
     tick(); setInterval(tick,1000);
-  }catch(e){ console.warn("countdown:",e); }
+  }catch(e){ console.warn("config.json okunamadı", e); }
 }
 
-// ====== Chart ======
-async function initChart(){
-  try{
-    const conf = await fetch("/config.json?"+Date.now()).then(r=>r.json());
-    const ctx = document.getElementById('tokenChart').getContext('2d');
-    new Chart(ctx,{
-      type:'doughnut',
-      data:{
-        labels:['Presale','Liquidity','Marketing','Team','Airdrop'],
-        datasets:[{
-          data:conf.tokenomics,
-          backgroundColor:['#24e0b6','#31c4ff','#ffd166','#a78bfa','#ff8fab'],
-          borderColor:'#0e1522', borderWidth:2
-        }]
-      },
-      options:{plugins:{legend:{display:false}},cutout:'60%'}
-    });
-  }catch(e){ console.warn("chart:",e); }
-}
-
-// ====== Modal / Wallet ======
+// === Cüzdan ===
 const modal = document.getElementById("wallet-modal");
 document.getElementById("btn-wallet").onclick = ()=> modal.classList.remove("hidden");
 document.getElementById("closeModal").onclick = ()=> modal.classList.add("hidden");
-function setAddr(t){ const el=document.getElementById("addrBox"); el && (el.textContent=t); }
+function setAddr(t){ const el = document.getElementById("addrBox"); if(el) el.textContent = t; }
 
 document.getElementById("evmConnect").onclick = async ()=>{
   try{
-    if(!window.ethereum){ alert("Tarayıcı cüzdanı yok"); return; }
-    const accs = await window.ethereum.request({method:'eth_requestAccounts'});
-    setAddr("EVM: "+accs[0]);
-  }catch(e){ alert(e.message); }
+    if(!window.ethereum){ alert("Tarayıcı cüzdanı yok (MetaMask/OKX/Bitget)"); return; }
+    const accts = await window.ethereum.request({method:"eth_requestAccounts"});
+    setAddr("EVM: "+accts[0]);
+  }catch(e){ alert("EVM bağlantı: "+e.message); }
 };
 document.getElementById("solConnect").onclick = async ()=>{
   try{
-    const p=window.solana; if(!p||!p.isPhantom){ alert("Phantom yok"); return; }
-    const r=await p.connect(); setAddr("Solana: "+r.publicKey.toString());
-  }catch(e){ alert(e.message); }
+    const p = window.solana;
+    if(!p || !p.isPhantom){ alert("Phantom bulunamadı"); return; }
+    const r = await p.connect(); setAddr("Solana: "+r.publicKey.toString());
+  }catch(e){ alert("Solana bağlantı: "+e.message); }
 };
 let tonUi;
 window.addEventListener('load',()=>{
   try{ tonUi = new TON_CONNECT_UI.TonConnectUI({ manifestUrl: location.origin+'/tonconnect-manifest.json' }); }catch(_){}
 });
 document.getElementById("tonConnect").onclick = async ()=>{
-  try{ if(!tonUi){ alert("TonConnect yüklenmedi"); return; }
-    await tonUi.openModal(); setAddr("TON: "+(tonUi.account?.address||"Bağlı değil"));
-  }catch(e){ alert(e.message); }
+  try{
+    if(!tonUi){ alert("TonConnect yüklenmedi"); return; }
+    await tonUi.openModal();
+    setAddr("TON: "+(tonUi.account?.address || "Bağlı değil"));
+  }catch(e){ alert("TON bağlantı: "+e.message); }
 };
 
-// ====== Başlat ======
-window.addEventListener('DOMContentLoaded', ()=>{
-  buildExchangeRow();
+// === Başlat ===
+window.addEventListener('DOMContentLoaded',()=>{
+  buildExchanges();
   buildGallery();
   initCountdown();
-  initChart();
 });
