@@ -2,225 +2,195 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>ZUZU • AI Meme Intelligence</title>
-<meta name="color-scheme" content="dark"/>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%2300d4ff' d='M50 8c6 12 20 12 26 24-8-2-16 4-26 4S32 30 24 32C30 20 44 20 50 8z'/%3E%3C/svg%3E">
-
+<link rel="preload" href="/assets/zuzu/realistic/hero.webp" as="image" type="image/webp">
+<link rel="preload" href="/assets/zuzu/realistic/ranger.webp" as="image" type="image/webp">
+<link rel="preload" href="/assets/zuzu/realistic/warrior.webp" as="image" type="image/webp">
+<link rel="preload" href="/assets/zuzu/realistic/hacker.webp" as="image" type="image/webp">
+<link rel="preload" href="/assets/zuzu/realistic/rogue.webp" as="image" type="image/webp">
+<link rel="preload" href="/assets/zuzu/realistic/titan.webp" as="image" type="image/webp">
+<link rel="preload" href="/assets/zuzu/realistic/sorceress.webp" as="image" type="image/webp">
+<link rel="preload" href="/assets/zuzu/realistic/berserker.webp" as="image" type="image/webp">
+<link rel="preload" href="/assets/zuzu/realistic/scientist.webp" as="image" type="image/webp">
 <style>
 :root{
-  --bg:#0a1219; --panel:#0a141b; --ink:#d7e8ef; --muted:#96b6c6;
-  --primary:#00d0ff; --border:#123446; --chip:#0e2431; --glow:#19d1ff;
+  --bg:#0d141a; --card:#0f1a22; --edge:#192632; --txt:#dce7ee; --muted:#8aa3b5;
+  --accent:#1fe1b3; --glow:#2af0c5; --danger:#ff4d6d;
 }
-*{box-sizing:border-box} html,body{margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 Inter,Segoe UI,Roboto,system-ui,-apple-system,sans-serif;}
-a{color:var(--primary); text-decoration:none}
-.container{max-width:1220px; margin-inline:auto; padding:18px 16px}
-.header{display:flex; gap:10px; align-items:center; justify-content:space-between; margin-bottom:10px}
-.brand{display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.3px}
-.brand svg{width:28px;height:28px; filter:drop-shadow(0 0 8px rgba(25,209,255,.55))}
-.nav{display:flex; gap:8px; flex-wrap:wrap}
-.chip{padding:6px 10px; border-radius:999px; background:var(--chip); border:1px solid var(--border); color:#cfefff; font-weight:700}
-.connect{padding:8px 12px; border-radius:12px; border:1px solid #165a78; background:#0b2d3f; color:#dff9ff; font-weight:900}
-.hr{height:1px; background:linear-gradient(90deg,transparent,#0b3143,transparent); margin:12px 0 18px}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+a{color:inherit;text-decoration:none}
+.container{max-width:1240px;margin:24px auto;padding:0 16px}
 
-.hero{display:grid; grid-template-columns:1.1fr .9fr; gap:18px}
-.card{background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:18px}
-.title{font-size:1.9rem; margin:0 0 10px; letter-spacing:.4px}
-.lead{color:var(--muted); font-weight:600}
-.badges{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
-.xchip{padding:6px 10px; background:#0d2230; border:1px solid #103b4f; color:#bfe9ff; border-radius:999px; font-weight:800}
+.nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.nav .pill{background:#101b23;border:1px solid var(--edge);color:#bcd0dd;padding:8px 12px;border-radius:999px;font-size:13px}
+.topbar{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.panel{flex:1;min-width:320px;background:var(--card);border:1px solid var(--edge);border-radius:16px;padding:18px}
 
-.section .title{font-size:1.4rem}
+h1{font-size:28px;margin:0 0 10px}
+h1 .brand{color:var(--accent)}
+.lead{color:#c9d8e2;line-height:1.55;font-size:16px}
+.exchanges{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.tag{border:1px solid var(--edge);background:#0e1820;color:#a8c0cf;border-radius:10px;padding:6px 10px;font-size:12px}
 
-/* --- ZUZU NFT GRID --- */
-.zuzu-grid{
-  display:grid; grid-template-columns:repeat(5,minmax(180px,1fr)); gap:16px;
+.gallery-title{font-size:22px;font-weight:700;margin:0 0 12px}
+.gallery{display:grid;gap:14px}
+@media (min-width:520px){.gallery{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:780px){.gallery{grid-template-columns:repeat(3,1fr)}}
+@media (min-width:1100px){.gallery{grid-template-columns:repeat(5,1fr)}}
+
+.card{
+  position:relative;overflow:hidden;border-radius:16px;
+  border:1px solid var(--edge);background:linear-gradient(180deg,#0f1a22,#0a1217);
+  height:240px;display:flex;align-items:flex-end;justify-content:center;cursor:pointer;
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
-@media(max-width:1200px){ .zuzu-grid{ grid-template-columns:repeat(4,1fr);} }
-@media(max-width:900px){  .zuzu-grid{ grid-template-columns:repeat(3,1fr);} }
-@media(max-width:640px){  .zuzu-grid{ grid-template-columns:repeat(2,1fr);} }
-.zuzu-card{
-  position:relative; background:linear-gradient(180deg,#0c1a24,#0a141b);
-  border:1px solid #0e2d3f; border-radius:14px; overflow:hidden;
-  box-shadow:0 6px 18px rgba(0,0,0,.35); cursor:pointer;
+.card:hover{transform:translateY(-2px);border-color:#2b3c4c;box-shadow:0 10px 30px rgba(0,0,0,.45), 0 0 0 1px rgba(42,240,197,.12) inset}
+.card img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(1.05) contrast(1.03);
+  transition:transform .35s ease, filter .35s ease;backface-visibility:hidden;
 }
-.zuzu-thumb{ width:100%; aspect-ratio:4/5; object-fit:cover; display:block; filter:saturate(1.06) contrast(1.03); }
-
-/* canlı hareket efekti (CSS tabanlı; görsel statik olsa bile) */
-.zuzu-anim::before,.zuzu-anim::after{content:""; position:absolute; inset:0; pointer-events:none}
-.zuzu-anim::before{
-  background: radial-gradient(120px 80px at var(--x,50%) var(--y,30%), rgba(0,255,255,.20), transparent 55%);
-  animation: drift 6s ease-in-out infinite;
+.card:hover img{transform:scale(1.03);filter:saturate(1.12) contrast(1.08)}
+.badge{
+  position:relative;margin:0 0 10px;background:rgba(8,15,19,.65);backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.08);color:#e9f4fb;padding:8px 12px;border-radius:999px;
+  font-size:13px;letter-spacing:.2px;z-index:2;box-shadow:0 0 0 1px rgba(42,240,197,.15) inset;
 }
-.zuzu-anim::after{
-  background: repeating-linear-gradient(to bottom, rgba(255,255,255,.06), rgba(255,255,255,.06) 2px, transparent 3px, transparent 6px);
-  mix-blend-mode: overlay; animation: scan 4.8s linear infinite; opacity:.35;
-}
-@keyframes drift{0%{--x:35%;--y:25%}50%{--x:70%;--y:45%}100%{--x:35%;--y:25%}}
-@keyframes scan{0%{transform:translateY(-100%)}100%{transform:translateY(100%)}}
+.badge b{color:var(--glow)}
+.footer{margin:20px 0 60px;color:#9fb3c5}
 
-.zuzu-meta{display:flex; align-items:center; justify-content:space-between; padding:10px 12px; font-weight:800; letter-spacing:.3px; color:#dfeef3; background:rgba(3,14,20,.5); border-top:1px solid rgba(112,192,219,.12); font-size:.96rem}
-.badge{position:absolute; top:10px; left:10px; font-size:.72rem; background:#0e2a39; border:1px solid #14475f; color:#7fd2ff; padding:4px 6px; border-radius:8px}
-.badge.error{ color:#ff8e8e; border-color:#5f1c1c; background:#2a0e14}
-
-/* Modal */
-.zuzu-modal{position:fixed; inset:0; display:none; z-index:9999}
-.zuzu-modal[aria-hidden="false"]{display:block}
-.zuzu-modal-backdrop{position:absolute; inset:0; background:rgba(0,0,0,.65)}
-.zuzu-modal-box{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:#071018; border:1px solid #113246; border-radius:14px; padding:14px; width:min(96vw,720px)}
-#zuzu-modal-img{width:100%; border-radius:10px; display:block}
-.zuzu-modal-title{margin-top:10px; font-weight:900; color:#cfefff}
-.zuzu-close{margin-top:10px; padding:8px 12px; background:#0f3b52; color:#dff7ff; border:1px solid #186888; border-radius:10px; font-weight:900}
-
-.footer{opacity:.8; margin:26px 0 10px; font-weight:700; color:#a9cde0}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:99}
+.lightbox.open{display:flex}
+.lightbox .frame{position:relative;max-width:min(92vw,1040px);max-height:86vh;background:#000;border-radius:16px;overflow:hidden;border:1px solid var(--edge)}
+.lightbox img{display:block;max-width:100%;max-height:86vh;object-fit:contain}
+.lightbox .close{position:absolute;top:10px;right:10px;background:#0c141a;color:#e6f2f7;border:1px solid var(--edge);border-radius:10px;padding:8px 10px;font-size:13px;cursor:pointer}
 </style>
 </head>
 <body>
-
 <div class="container">
-  <!-- ÜST -->
-  <div class="header">
-    <div class="brand">
-      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M19 60c6-20 26-19 31-40 6 21 25 20 31 40-14-5-30 7-31 17-1-10-17-22-31-17z" fill="#19d1ff"/></svg>
-      <div>ZUZU • <span style="color:#74ffe8">AI Meme Intelligence</span></div>
-    </div>
-    <div class="nav">
-      <span class="chip">Topluluk</span>
-      <span class="chip">Tokenomi</span>
-      <span class="chip">Hakkımızda</span>
-      <span class="chip">Yol Haritası</span>
-      <span class="chip">Stake</span>
-      <button class="connect" type="button">Cüzdan Bağla</button>
-    </div>
-  </div>
-  <div class="hr"></div>
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="card">
-      <h1 class="title">YAPAY ZEKA <span style="color:#19d1ff">ZUZU</span> ORDUSU</h1>
+  <!-- Üst navigasyon -->
+  <div class="nav">
+    <span class="pill">AI • AI Meme Intelligence</span>
+    <a class="pill" href="#">Topluluk</a>
+    <a class="pill" href="#">Tokenomi</a>
+    <a class="pill" href="#">Hakkımızda</a>
+    <a class="pill" href="#">Yol Haritası</a>
+    <a class="pill" href="#">Stake</a>
+    <a class="pill" href="#" style="margin-left:auto;background:#0abf9e;border-color:#0abf9e;color:#092b24;font-weight:700">Cüzdan Bağla</a>
+  </div>
+
+  <div class="topbar">
+    <!-- Sol panel -->
+    <div class="panel">
+      <h1>YAPAY ZEKA <span class="brand">ZUZU</span> ORDUSU</h1>
       <p class="lead">
-        ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> katmanı ile birleştirir.
+        ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> katmanıyla birleştirir.
         Presale fonları <b>non-custodial</b> hazinede tutulur. Paylaş, <b>tap-to-earn</b> ile puan topla,
         <b>stake</b> ile daha fazla kazanç hedefle.
       </p>
-      <div class="badges">
-        <span class="xchip">MEXC</span><span class="xchip">Gate.io</span><span class="xchip">BitMart</span>
-        <span class="xchip">Bybit</span><span class="xchip">KuCoin</span><span class="xchip">OKX</span>
+      <div class="exchanges">
+        <span class="tag">MEXC</span>
+        <span class="tag">Gate.io</span>
+        <span class="tag">BitMart</span>
+        <span class="tag">Bybit</span>
+        <span class="tag">KuCoin</span>
+        <span class="tag">OKX</span>
       </div>
     </div>
 
-    <div class="card section">
-      <h2 class="title">ZUZU Maskot Galerisi</h2>
-      <div id="zuzu-grid" class="zuzu-grid"></div>
-    </div>
-  </div>
-
-  <!-- Modal -->
-  <div id="zuzu-modal" class="zuzu-modal" aria-hidden="true">
-    <div class="zuzu-modal-backdrop" onclick="ZUZU.closeModal()"></div>
-    <div class="zuzu-modal-box">
-      <img id="zuzu-modal-img" alt="ZUZU Preview"/>
-      <div id="zuzu-modal-title" class="zuzu-modal-title"></div>
-      <button class="zuzu-close" onclick="ZUZU.closeModal()">Kapat</button>
+    <!-- Sağ panel: GALERİ -->
+    <div class="panel">
+      <div class="gallery-title">ZUZU Maskot Galerisi</div>
+      <div class="gallery">
+        <!-- 1 -->
+        <figure class="card" data-name="ZUZU Hero" data-src="/assets/zuzu/realistic/hero.webp">
+          <img loading="eager" decoding="async" src="/assets/zuzu/realistic/hero.webp" alt="ZUZU Hero">
+          <figcaption class="badge"><b>ZUZU</b> Hero</figcaption>
+        </figure>
+        <!-- 2 -->
+        <figure class="card" data-name="ZUZU Ranger" data-src="/assets/zuzu/realistic/ranger.webp">
+          <img loading="lazy" decoding="async" src="/assets/zuzu/realistic/ranger.webp" alt="ZUZU Ranger">
+          <figcaption class="badge"><b>ZUZU</b> Ranger</figcaption>
+        </figure>
+        <!-- 3 -->
+        <figure class="card" data-name="ZUZU Warrior" data-src="/assets/zuzu/realistic/warrior.webp">
+          <img loading="lazy" decoding="async" src="/assets/zuzu/realistic/warrior.webp" alt="ZUZU Warrior">
+          <figcaption class="badge"><b>ZUZU</b> Warrior</figcaption>
+        </figure>
+        <!-- 4 -->
+        <figure class="card" data-name="ZUZU Hacker" data-src="/assets/zuzu/realistic/hacker.webp">
+          <img loading="lazy" decoding="async" src="/assets/zuzu/realistic/hacker.webp" alt="ZUZU Hacker">
+          <figcaption class="badge"><b>ZUZU</b> Hacker</figcaption>
+        </figure>
+        <!-- 5 -->
+        <figure class="card" data-name="ZUZU Rogue" data-src="/assets/zuzu/realistic/rogue.webp">
+          <img loading="lazy" decoding="async" src="/assets/zuzu/realistic/rogue.webp" alt="ZUZU Rogue">
+          <figcaption class="badge"><b>ZUZU</b> Rogue</figcaption>
+        </figure>
+        <!-- 6 -->
+        <figure class="card" data-name="ZUZU Titan" data-src="/assets/zuzu/realistic/titan.webp">
+          <img loading="lazy" decoding="async" src="/assets/zuzu/realistic/titan.webp" alt="ZUZU Titan">
+          <figcaption class="badge"><b>ZUZU</b> Titan</figcaption>
+        </figure>
+        <!-- 7 -->
+        <figure class="card" data-name="ZUZU Sorceress" data-src="/assets/zuzu/realistic/sorceress.webp">
+          <img loading="lazy" decoding="async" src="/assets/zuzu/realistic/sorceress.webp" alt="ZUZU Sorceress">
+          <figcaption class="badge"><b>ZUZU</b> Sorceress</figcaption>
+        </figure>
+        <!-- 8 -->
+        <figure class="card" data-name="ZUZU Berserker" data-src="/assets/zuzu/realistic/berserker.webp">
+          <img loading="lazy" decoding="async" src="/assets/zuzu/realistic/berserker.webp" alt="ZUZU Berserker">
+          <figcaption class="badge"><b>ZUZU</b> Berserker</figcaption>
+        </figure>
+        <!-- 9 -->
+        <figure class="card" data-name="ZUZU Scientist" data-src="/assets/zuzu/realistic/scientist.webp">
+          <img loading="lazy" decoding="async" src="/assets/zuzu/realistic/scientist.webp" alt="ZUZU Scientist">
+          <figcaption class="badge"><b>ZUZU</b> Scientist</figcaption>
+        </figure>
+      </div>
     </div>
   </div>
 
   <div class="footer">© 2025 ZUZU • AI-Powered Meme Intelligence</div>
 </div>
 
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <div class="frame">
+    <button class="close" id="lbClose">Kapat ✕</button>
+    <img id="lbImg" alt="Preview">
+  </div>
+</div>
+
 <script>
-/* ZUZU – Realistic NFT Gallery (single-file, no external deps) */
-const ZUZU = (() => {
-  const GRID_ID = 'zuzu-grid';
-  const BASE = '/assets/zuzu/realistic/';
-  const RAW = 'https://raw.githubusercontent.com/enejomble35/zuzucoin.xyz/main/assets/zuzu/realistic/';
-  const EXT = ['webp','jpg','jpeg','png'];
+(function(){
+  // Lightbox
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbClose = document.getElementById('lbClose');
 
-  const ITEMS = [
-    { id:'hero',       title:'ZUZU Hero' },
-    { id:'ranger',     title:'ZUZU Ranger' },
-    { id:'warrior',    title:'ZUZU Warrior' },
-    { id:'hacker',     title:'ZUZU Hacker' },
-    { id:'rogue',      title:'ZUZU Rogue' },
-    { id:'titan',      title:'ZUZU Titan' },
-    { id:'sorceress',  title:'ZUZU Sorceress' },
-    { id:'berserker',  title:'ZUZU Berserker' },
-    { id:'scientist',  title:'ZUZU Scientist' },
-  ];
-
-  function tryLoad(src){
-    return new Promise((resolve,reject)=>{
-      const img = new Image();
-      img.onload = () => resolve(src);
-      img.onerror = () => reject(src);
-      img.src = src;
+  document.querySelectorAll('.card').forEach(card=>{
+    card.addEventListener('click',()=>{
+      const src = card.dataset.src;
+      lbImg.src = src;
+      lb.classList.add('open');
     });
+    // Eğer görsel yüklenmezse 'missing' rozetini göster
+    const img = card.querySelector('img');
+    img.addEventListener('error', ()=>{
+      card.style.background = "linear-gradient(180deg,#101a22,#0a1217)";
+      card.innerHTML = '<div class="badge" style="background:#2a0f14;border-color:#5b1c28;color:#ffbcc7">missing • '+ (card.dataset.name||'') +'</div>';
+    }, {once:true});
+  });
+  lbClose.addEventListener('click', ()=> lb.classList.remove('open'));
+  lb.addEventListener('click', (e)=>{ if(e.target===lb) lb.classList.remove('open'); });
+
+  // Hard-refresh helper (GitHub Pages önbellek kırmak için)
+  if ('serviceWorker' in navigator && location.hostname.endsWith('zuzucoin.xyz')) {
+    // ileride PWA istersek hazır dursun; şimdilik kapalı
   }
-
-  async function resolveSrc(baseName){
-    for(const e of EXT){
-      try { return await tryLoad(`${BASE}${baseName}.${e}`); } catch(_) {}
-      try { return await tryLoad(`${RAW}${baseName}.${e}`); } catch(_) {}
-    }
-    throw new Error('missing');
-  }
-
-  function cardHTML(it){
-    const el = document.createElement('div');
-    el.className = 'zuzu-card zuzu-anim';
-    el.innerHTML = `
-      <span class="badge">Yükleniyor…</span>
-      <img class="zuzu-thumb" alt="${it.title}"/>
-      <div class="zuzu-meta">${it.title}<span></span></div>
-    `;
-    return el;
-  }
-
-  async function mount(){
-    const grid = document.getElementById(GRID_ID);
-    grid.innerHTML = '';
-    for(const it of ITEMS){
-      const card = cardHTML(it);
-      grid.appendChild(card);
-      const badge = card.querySelector('.badge');
-      const img = card.querySelector('img');
-
-      try{
-        const src = await resolveSrc(it.id);
-        img.src = src; badge.remove();
-      }catch(e){
-        badge.textContent = 'missing'; badge.classList.add('error');
-        img.remove();
-      }
-
-      // modal göster
-      card.addEventListener('click', ()=>{
-        const m = document.getElementById('zuzu-modal');
-        const mi = document.getElementById('zuzu-modal-img');
-        const mt = document.getElementById('zuzu-modal-title');
-        if(img && img.src) mi.src = img.src;
-        mt.textContent = it.title;
-        m.setAttribute('aria-hidden','false');
-      });
-    }
-
-    // mouse hareketi – ışık kaydırma
-    grid.addEventListener('mousemove', e=>{
-      const t = e.target.closest('.zuzu-anim'); if(!t) return;
-      const r = t.getBoundingClientRect();
-      const x = ((e.clientX - r.left)/r.width)*100;
-      const y = ((e.clientY - r.top)/r.height)*100;
-      t.style.setProperty('--x', x+'%'); t.style.setProperty('--y', y+'%');
-    });
-  }
-
-  function closeModal(){
-    document.getElementById('zuzu-modal').setAttribute('aria-hidden','true');
-  }
-
-  document.addEventListener('DOMContentLoaded', mount);
-  return { closeModal };
 })();
 </script>
 </body>
