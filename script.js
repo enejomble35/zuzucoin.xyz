@@ -1,8 +1,8 @@
 /********************************
- * ZUZU – v14 (local-first + fallback + debug)
+ * ZUZU – v15 (local-first fetch-blob + 10 mask + logo fallback)
  ********************************/
 
-// === EXCHANGE LOGOS (yerel dosya; yoksa placeholder) ===
+// ====== EXCHANGES (logo yoksa sadece isim rozet) ======
 const EXCHANGES = [
   { key:'mexc',   name:'MEXC'   },
   { key:'gateio', name:'Gate.io'},
@@ -12,42 +12,32 @@ const EXCHANGES = [
   { key:'okx',    name:'OKX'    },
 ];
 
-function buildExchangeRow(){
-  const host = '/assets/exchanges/';
+async function buildExchangeRow(){
   const row = document.getElementById('exchanges');
   row.innerHTML = '';
-  EXCHANGES.forEach(e=>{
-    const div = document.createElement('div');
-    div.className = 'ex-item';
-    const img = document.createElement('img');
-    img.className = 'ex-logo';
-    img.alt = e.name;
-
-    // Önce yerel SVG
-    let triedRemote = false;
-    img.onerror = ()=>{
-      if(!triedRemote){
-        triedRemote = true;
-        // küçük, şık placeholder
-        img.src = 'data:image/svg+xml;utf8,'+encodeURIComponent(
-          `<svg xmlns="http://www.w3.org/2000/svg" width="80" height="28">
-             <rect rx="6" width="80" height="28" fill="#0f1a2a"/>
-             <text x="40" y="19" font-size="12" font-family="Inter,Arial" fill="#7db8ff" text-anchor="middle">${e.name}</text>
-           </svg>`
-        );
-      }
-    };
-    img.src = `${host}${e.key}.svg?v=${Date.now()}`;
-
-    const name = document.createElement('div');
-    name.className = 'ex-name';
-    name.textContent = e.name;
-    div.append(img,name);
-    row.appendChild(div);
-  });
+  for (const e of EXCHANGES){
+    const wrap = document.createElement('div');
+    wrap.className = 'ex-item';
+    row.appendChild(wrap);
+    const url = `/assets/exchanges/${e.key}.svg?v=${Date.now()}`;
+    try{
+      const r = await fetch(url, {cache:'no-store'});
+      if(!r.ok) throw 0;
+      const img = document.createElement('img');
+      img.className = 'ex-logo';
+      img.alt = e.name;
+      img.src = url;
+      wrap.appendChild(img);
+    }catch{
+      const name = document.createElement('div');
+      name.className = 'ex-name';
+      name.textContent = e.name;
+      wrap.appendChild(name);
+    }
+  }
 }
 
-// === SOURCES – local önce, sonra CDN’ler ===
+// ====== SOURCES – önce yerel, sonra CDN ======
 const SOURCES = {
   webp: [
     "/assets/zuzu/realistic/",
@@ -61,7 +51,7 @@ const SOURCES = {
   ]
 };
 
-// Maskot listesi
+// ====== 10 MASKOT ======
 const ZUZU = [
   { key:"hero",      title:"ZUZU Hero"      },
   { key:"ranger",    title:"ZUZU Ranger"    },
@@ -71,57 +61,58 @@ const ZUZU = [
   { key:"titan",     title:"ZUZU Titan"     },
   { key:"sorceress", title:"ZUZU Sorceress" },
   { key:"berserker", title:"ZUZU Berserker" },
-  { key:"scientist", title:"ZUZU Scientist" }
+  { key:"scientist", title:"ZUZU Scientist" },
+  { key:"maiden",    title:"ZUZU Maiden"    }  // 10. kart
 ];
 
-const FILE_ALIAS = { sorceress:["sorceress","maiden"] };
+// 'sorceress' ile aynı görsellerin kullanılabilmesi için alias
+const FILE_ALIAS = { sorceress:["sorceress","maiden"], maiden:["maiden","sorceress"] };
 
 function candidates(key, ext){
   const names = FILE_ALIAS[key] || [key];
   const bases = (ext==="json") ? SOURCES.lottie : SOURCES.webp;
-  const list = [];
-  names.forEach(n=>{
-    bases.forEach(b=>{
-      list.push(b + (ext==="json" ? `zuzu_${n}.json` : `${n}.webp`));
-    });
-  });
+  const list=[];
+  names.forEach(n=> bases.forEach(b=> list.push(b + (ext==="json" ? `zuzu_${n}.json` : `${n}.webp`))));
   return list;
 }
 
-function loadImageFallback(img, urls, onFail){
-  let i=0;
-  const next=()=>{
-    if(i>=urls.length){ onFail && onFail(); return; }
-    img.src = urls[i] + (urls[i].startsWith('http')?`?v=${Date.now()}`:'');
-    i++;
-  };
-  img.onerror = next;
-  next();
+// ====== FETCH→BLOB (görseli kesin göster) ======
+async function setImageByFetch(img, urls){
+  for(const u of urls){
+    const url = u + (u.startsWith('http')?`?v=${Date.now()}`:'');
+    try{
+      const r = await fetch(url, {cache:'no-store', mode:'cors'});
+      if(!r.ok) continue;
+      const blob = await r.blob();
+      img.src = URL.createObjectURL(blob);
+      return true;
+    }catch(_){}
+  }
+  return false;
 }
 
+// Lottie için fallback
 function loadLottieFallback(container, key, ok, fail){
   const urls = candidates(key,"json");
-  let i=0, destroyed=false;
+  let i=0, killed=false;
   const tryNext=()=>{
     if(i>=urls.length){ fail(); return; }
     const url = urls[i] + (urls[i].startsWith('http')?`?v=${Date.now()}`:'');
     i++;
-    fetch(url,{cache:"no-store"})
+    fetch(url,{cache:'no-store'})
       .then(r=> r.ok ? r.json() : Promise.reject())
       .then(json=>{
-        if(destroyed) return;
-        const anim = lottie.loadAnimation({
-          container, renderer:"svg", loop:true, autoplay:true, animationData:json
-        });
+        if(killed) return;
+        const anim = lottie.loadAnimation({container, renderer:"svg", loop:true, autoplay:true, animationData:json});
         ok(anim);
       })
       .catch(tryNext);
   };
   tryNext();
-  return ()=>{ destroyed=true; };
+  return ()=>{ killed=true; };
 }
 
-// GALERİ
+// ====== GALERİ ======
 function buildGallery(){
   const grid = document.getElementById("zuzu-gallery");
   grid.innerHTML = "";
@@ -135,64 +126,59 @@ function buildGallery(){
     grid.appendChild(card);
 
     let lottieOk = false;
-
-    // önce lottie
-    loadLottieFallback(anim, key, ()=>{ lottieOk = true; }, ()=>{
-      // lottie yoksa webp
+    loadLottieFallback(anim, key, ()=>{ lottieOk=true; }, async ()=>{
+      // Lottie yoksa WEBP'yi fetch-blob ile yükle
       const img = document.createElement("img");
       img.className = "thumb"; img.alt = title;
       anim.appendChild(img);
-      loadImageFallback(img, candidates(key,"webp"), ()=>{
+
+      const ok = await setImageByFetch(img, candidates(key,"webp"));
+      if(!ok){
         const b = document.createElement("div");
         b.className = "badge-error";
-        // Debug: deneyen URL'leri göster
         b.textContent = "görsel/animasyon bulunamadı";
         card.appendChild(b);
 
         const dbg = document.createElement("small");
-        dbg.style.display="block";
-        dbg.style.margin="6px 6px 0 6px";
-        dbg.style.color="#7da9ff";
+        dbg.style.display="block"; dbg.style.margin="6px 6px 0 6px"; dbg.style.color="#7da9ff";
         dbg.textContent = "Denedi: " + candidates(key,"json").concat(candidates(key,"webp")).join(" | ");
         card.appendChild(dbg);
-      });
+      }
     });
 
-    // sessiz fail güvenliği
-    setTimeout(()=>{
+    // Sessiz fail güvenliği
+    setTimeout(async ()=>{
       if(!lottieOk && anim.children.length===0){
         const img = document.createElement("img");
         img.className="thumb"; img.alt=title; anim.appendChild(img);
-        loadImageFallback(img, candidates(key,"webp"));
+        await setImageByFetch(img, candidates(key,"webp"));
       }
     }, 2200);
   });
 }
 
-// Sayaç
+// ====== Sayaç ======
 async function initCountdown(){
   try{
     const conf = await fetch("/config.json?"+Date.now()).then(r=>r.json());
     const start = new Date(conf.presaleStart).getTime();
     const end   = new Date(conf.presaleEnd).getTime();
-    const cdBox = document.getElementById("cd");
-    const cdBar = document.getElementById("cd-bar");
+    const box = document.getElementById("cd");
+    const bar = document.getElementById("cd-bar");
     function tick(){
       const now = Date.now();
-      const total = end-start;
-      const done  = Math.max(0, Math.min(total, now-start));
-      const left  = Math.max(0, end-now);
+      const total=end-start, done=Math.max(0,Math.min(total,now-start)), left=Math.max(0,end-now);
       const d=Math.floor(left/86400000),h=Math.floor((left%86400000)/3600000),
             m=Math.floor((left%3600000)/60000),s=Math.floor((left%60000)/1000);
-      cdBox.textContent = `${d}g ${h}s ${m}d ${s}sn`;
-      cdBar.style.width = `${(done/total)*100}%`;
-      if(left<=0){ cdBox.textContent="Ön satış bitti"; cdBar.style.width="100%"; }
+      box.textContent = `${d}g ${h}s ${m}d ${s}sn`;
+      bar.style.width = `${(done/total)*100}%`;
+      if(left<=0){ box.textContent="Ön satış bitti"; bar.style.width="100%"; }
     }
     tick(); setInterval(tick,1000);
   }catch(e){ console.warn("countdown:",e); }
 }
 
-// Chart
+// ====== Chart ======
 async function initChart(){
   try{
     const conf = await fetch("/config.json?"+Date.now()).then(r=>r.json());
@@ -212,7 +198,7 @@ async function initChart(){
   }catch(e){ console.warn("chart:",e); }
 }
 
-// Cüzdan Modal
+// ====== Modal / Wallet ======
 const modal = document.getElementById("wallet-modal");
 document.getElementById("btn-wallet").onclick = ()=> modal.classList.remove("hidden");
 document.getElementById("closeModal").onclick = ()=> modal.classList.add("hidden");
@@ -227,7 +213,7 @@ document.getElementById("evmConnect").onclick = async ()=>{
 };
 document.getElementById("solConnect").onclick = async ()=>{
   try{
-    const p=window.solana; if(!p||!p.isPhantom){ alert("Phantom bulunamadı"); return; }
+    const p=window.solana; if(!p||!p.isPhantom){ alert("Phantom yok"); return; }
     const r=await p.connect(); setAddr("Solana: "+r.publicKey.toString());
   }catch(e){ alert(e.message); }
 };
@@ -241,7 +227,7 @@ document.getElementById("tonConnect").onclick = async ()=>{
   }catch(e){ alert(e.message); }
 };
 
-// Başlat
+// ====== Başlat ======
 window.addEventListener('DOMContentLoaded', ()=>{
   buildExchangeRow();
   buildGallery();
