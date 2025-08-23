@@ -1,60 +1,71 @@
 :root{
-  --bg:#0e1522; --panel:#0f1c2e; --muted:#97a6c1;
-  --c1:#24e0b6; --c2:#31c4ff; --c3:#ffd166; --c4:#a78bfa; --c5:#ff8fab;
+  --bg:#0b1320; --panel:#0e1625; --muted:#8392a5; --brand:#24e0b6;
+  --card:#101b2d; --ring:#1e2a42; --accent:#31c4ff; --danger:#ff6b6b;
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:#e6edf7;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-a{color:#b3ccff;text-decoration:none}
-.container{max-width:1200px;margin:24px auto;padding:0 12px}
-.panel{background:var(--panel);border:1px solid #1e2a3f;border-radius:14px;padding:18px;margin-bottom:18px}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-@media(max-width:900px){.grid-2{grid-template-columns:1fr}}
-
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#0b1220;border-bottom:1px solid #1e2a3f}
-.brand{display:flex;align-items:center;gap:8px;font-weight:700}
-.zuzu-logo{height:26px}
-.menu a{margin:0 8px;padding:6px 10px;background:#0f1c2e;border:1px solid #1b2840;border-radius:12px}
-.btn{background:#1b2a42;color:#e6edf7;border:1px solid #284062;border-radius:10px;padding:10px 14px}
-.btn-grad{background:linear-gradient(135deg,#20d0aa,#2cb5ff)}
-.btn-x{background:transparent;border:0;color:#fff;font-size:22px}
-.addr{margin-top:8px;color:#cde3ff}
-.c-cyan{color:var(--c1)}
-h1{margin:0 0 10px}
-h2{margin:0 0 10px}
+html,body{margin:0;padding:0;background:var(--bg);color:#e8f0ff;font:500 16px/1.5 Inter,system-ui,Segoe UI,Roboto,Arial}
+h1,h2,h3{margin:0 0 .5rem}
+h1{font-size:28px} h2{font-size:22px}
+a{color:#cfe8ff;text-decoration:none}
+.c-brand{color:var(--brand)}
 .muted{color:var(--muted)}
 
-.exchanges{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;padding:10px;background:#0b1220;border-bottom:1px solid #1e2a3f}
-.exchanges img{height:22px;filter:drop-shadow(0 0 6px rgba(49,196,255,.35))}
+.topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 16px;background:#0a1020;position:sticky;top:0;z-index:50;border-bottom:1px solid #0f1a2c}
+.brand{display:flex;gap:8px;align-items:center;font-weight:800}
+.brand-logo{height:26px}
+.nav{display:flex;gap:10px;flex-wrap:wrap}
+.nav a{padding:6px 10px;background:#0e1625;border:1px solid #15223a;border-radius:999px;font-size:13px}
+.btn-primary{background:var(--brand);color:#002b23;border:0;padding:8px 14px;border-radius:10px;font-weight:700}
 
-.countdown{display:flex;gap:10px;margin:12px 0}
-.countdown .slot{background:#0b1220;border:1px solid #20304a;border-radius:12px;width:82px;text-align:center;padding:8px 6px}
-.countdown .slot span{display:block;font-size:24px;font-weight:800;letter-spacing:2px}
-.countdown .slot small{color:#8ea7c9}
+.exchanges{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:8px 16px 0}
+.exchanges img{height:22px;display:inline-block;filter:none;opacity:.9}
 
-.weeks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
-.weeks div{background:#0b1220;border:1px solid #20304a;border-radius:12px;padding:8px 10px;display:flex;justify-content:space-between}
+.layout{display:grid;grid-template-columns:1fr;gap:16px;padding:12px 12px 40px}
+.hero,.tokenomics,.wrap,.roadmap{background:var(--panel);border:1px solid #12213a;border-radius:14px;padding:14px}
+.hero p{color:#cfe8ff}
+.count-wrap{margin-top:12px;display:grid;grid-template-columns:1fr;gap:12px}
+.counter{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.counter div{background:var(--card);border:1px solid var(--ring);border-radius:12px;padding:10px;text-align:center}
+.counter span{display:block;font-weight:900;font-size:20px}
+.counter small{color:var(--muted);font-size:11px}
+.weeks{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.weeks div{background:var(--card);border:1px solid var(--ring);border-radius:10px;padding:8px 10px}
+.weeks b{color:#bfefff}
 
-.zuzu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-@media(max-width:900px){.zuzu-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:560px){.zuzu-grid{grid-template-columns:1fr}}
-.card{background:#0f1c2e;border:1px solid #1b2840;border-radius:14px;padding:10px;position:relative;overflow:hidden}
-.card h3{margin:0 0 8px;font-size:16px}
-.animBox{position:relative;height:240px;border-radius:10px;background:radial-gradient(ellipse at center,#0f253e 0%, #0e1522 65%);display:flex;align-items:center;justify-content:center;overflow:hidden}
-.thumb{width:100%;height:100%;object-fit:cover;border-radius:10px}
-.lottie-layer{position:absolute;inset:0;pointer-events:none}
-.badge-error{position:absolute;left:10px;bottom:10px;background:#a12c3a;color:#fff;border-radius:8px;padding:4px 8px;font-size:12px}
+.tokenomics{order:3} /* her zaman altta */
+.tokenomics canvas{width:100%;height:auto;background:#0d1729;border:1px solid var(--ring);border-radius:14px;padding:4px}
 
-.roadmap ol{counter-reset:ph;list-style:none;padding:0;margin:0;display:grid;gap:8px}
-.roadmap li{position:relative;background:#0b1220;border:1px solid #20304a;border-radius:12px;padding:10px 12px 10px 42px}
-.roadmap li::before{counter-increment:ph;content:counter(ph);position:absolute;left:10px;top:50%;transform:translateY(-50%);width:22px;height:22px;background:#2cb5ff;border-radius:50%;text-align:center;line-height:22px;font-weight:800;color:#001423}
-.roadmap li span{color:#24e0b6;font-weight:700;margin-right:6px}
+.wrap h2{margin-bottom:10px}
+.zuzu-grid{display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--ring);border-radius:14px;padding:10px}
+.card h3{font-size:16px;margin-bottom:8px}
+.animBox{position:relative;aspect-ratio:1/1.1;background:radial-gradient( circle at 50% 50%,#153554 0%,#0c1728 55%,#0a1320 100% );border-radius:12px;overflow:hidden;border:1px solid #182842}
+.thumb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.lottieLayer{position:absolute;inset:0}
+.badge-error{margin-top:8px;background:#2b0d12;color:#ffb3b3;border:1px solid #6b111a;border-radius:8px;padding:6px 8px;font-size:12px;width:max-content}
 
-.footer{padding:24px 14px;text-align:center;color:#9ab0cf}
+.roadmap .map{list-style:none;margin:10px 0 0;padding:12px;background:#0c1729;border:1px dashed #254064;border-radius:12px;background-image:url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 20 L40 20 M20 0 L20 40' stroke='%23254064' stroke-width='1' stroke-dasharray='4 8'/%3E%3C/svg%3E");background-size:40px}
+.roadmap .map li{padding:8px 10px;margin:6px 0;background:#0f1e33;border:1px solid #1e3557;border-radius:10px}
+.roadmap .map li span{color:#ffe08a;font-weight:800}
 
-/* Modal */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:1000}
-.hidden{display:none}
-.modal-box{width:min(420px,92%);background:#0f1c2e;border:1px solid #23324d;border-radius:14px;padding:14px}
-.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.wallets{display:grid;gap:8px}
-.btn.w{width:100%}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center}
+.modal.hidden{display:none}
+.dialog{width:min(460px,92vw);background:#0e1625;border:1px solid #1a2b46;border-radius:14px;overflow:hidden}
+.dialog-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #15243e}
+.dialog-body{padding:14px;display:grid;gap:10px}
+.wbtn{display:block;width:100%;text-align:center;padding:10px;border-radius:10px;border:1px solid #1f2f4a;background:#0f1e33}
+.wbtn.evm{color:#ffd;}
+.wbtn.sol{color:#dff;}
+.wbtn.ton{color:#bff;}
+.addr{color:#b7c7d9}
+
+.foot{padding:18px 14px;color:#9fb1ca;text-align:center}
+
+@media (min-width:880px){
+  .layout{grid-template-columns:1.3fr 1fr}
+  .tokenomics{grid-column:1 / -1; order:3} /* altta kalsın */
+  .zuzu-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
+}
+@media (min-width:570px) and (max-width:879px){
+  .zuzu-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
