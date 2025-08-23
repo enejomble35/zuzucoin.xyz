@@ -22,7 +22,7 @@ MASKOTS.forEach(m=>{
 
   const img = document.createElement('div');
   img.className = 'img';
-  img.style.backgroundImage = `url(${m.img})`;
+  img.style.backgroundImage = `url(.${m.img})`;
   img.onerror = () => { if (m.fallback) img.style.backgroundImage = `url(${m.fallback})`; };
   card.appendChild(img);
 
