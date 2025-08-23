@@ -1,62 +1,162 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ZUZU Ordusu</title>
-  <link rel="stylesheet" href="/style.css?v=7">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ZUZU Ordusu</title>
+<style>
+  :root{
+    --bg:#0f1621;--card:#111b29;--muted:#7e90a6;--txt:#e6f1ff;--accent:#2ee6b8;--accent2:#00d4ff;--danger:#ff5964;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--txt);font:500 16px/1.5 Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  a{color:var(--accent2);text-decoration:none}
+  .nav{
+    position:sticky;top:0;z-index:10;display:flex;gap:16px;align-items:center;justify-content:space-between;
+    padding:14px 18px;background:linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,.15));
+    backdrop-filter: blur(6px); border-bottom:1px solid #1d2736;
+  }
+  .logo{font-weight:800;letter-spacing:.6px}
+  .menu{display:flex;gap:12px;flex-wrap:wrap}
+  .menu a{padding:6px 10px;border-radius:999px;background:#0e1a2a;border:1px solid #1f2a3c;color:#cfe6ff;font-size:13px}
+  .wallet{margin-left:auto;padding:8px 12px;border-radius:10px;border:none;background:linear-gradient(135deg,#00e6a8,#00a9ff);color:#001724;font-weight:800}
+  .wrap{max-width:1200px;margin:24px auto;padding:0 16px}
+  h1{margin:0 0 8px;font-size:28px}
+  .glow{color:var(--accent);text-shadow:0 0 12px rgba(46,230,184,.35)}
+  .lead{color:#c9d9ef;max-width:920px}
+  .exchanges{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .exchanges span{background:#0f1c2c;border:1px solid #203049;color:#b7cae4;padding:6px 10px;border-radius:999px;font-size:13px}
+
+  .section-title{font-weight:800;margin:28px 0 14px;font-size:20px;letter-spacing:.4px}
+  .zuzu-grid{
+    display:grid;gap:14px;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  @media(min-width:680px){.zuzu-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+  @media(min-width:980px){.zuzu-grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+
+  .card{
+    background:radial-gradient(120% 120% at 20% 0%,#142133 0%,#0f1725 60%,#0c1420 100%);
+    border:1px solid #1c2a3e;border-radius:16px;padding:10px;position:relative;overflow:hidden;min-height:230px;
+  }
+  .card h3{margin:0 0 8px;font-size:16px;letter-spacing:.3px}
+  .thumb{
+    width:100%;aspect-ratio:4/5;border-radius:12px;border:1px solid #21324a;background:#0a1420;
+    object-fit:cover;display:block;opacity:.98;box-shadow:0 0 0 1px rgba(255,255,255,.02) inset;
+  }
+  .footer-row{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+  .pill{font-size:12px;color:#a8c3e6}
+  .badge-error{
+    position:absolute;right:10px;bottom:10px;background:rgba(255,89,100,.16);
+    color:#ffd9dc;border:1px solid rgba(255,89,100,.5);padding:4px 8px;border-radius:999px;font-size:12px
+  }
+  .copy-url{cursor:pointer;text-decoration:underline;color:#ff98a0;margin-left:8px}
+  footer{opacity:.7;text-align:center;margin:38px 0 26px}
+</style>
 </head>
 <body>
-  <!-- ======== NAVBAR ======== -->
+  <!-- NAV -->
   <header class="nav">
     <div class="logo">ZUZU</div>
     <nav class="menu">
-      <a href="#">Topluluk</a>
-      <a href="#">Tokenomi</a>
-      <a href="#">Hakkımızda</a>
-      <a href="#">Yol Haritası</a>
-      <a href="#">Stake</a>
+      <a href="#">Topluluk</a><a href="#">Tokenomi</a><a href="#">Hakkımızda</a>
+      <a href="#">Yol Haritası</a><a href="#">Stake</a>
     </nav>
-    <button class="wallet-btn">Cüzdan Bağla</button>
+    <button class="wallet">Cüzdan Bağla</button>
   </header>
 
-  <!-- ======== HERO ======== -->
+  <!-- HERO -->
   <section class="wrap">
     <h1>YAPAY ZEKA <span class="glow">ZUZU</span> ORDUSU</h1>
-    <p>
-      ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> katmanıyla birleştirir.  
-      Presale fonları <b>non-custodial</b> hazinede tutulur.  
-      Paylaş, <b>tap-to-earn</b> ile puan topla, <b>stake</b> ile daha fazla kazanç hedefle.
+    <p class="lead">
+      ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> katmanıyla birleştirir. Presale fonları
+      <b>non-custodial</b> hazinede tutulur. Paylaş, <b>tap-to-earn</b> ile puan topla, <b>stake</b> ile daha fazla kazanç hedefle.
     </p>
-
-    <div class="exchanges">
-      <span>MEXC</span>
-      <span>Gate.io</span>
-      <span>BitMart</span>
-      <span>Bybit</span>
-      <span>KuCoin</span>
-      <span>OKX</span>
-    </div>
+    <div class="exchanges"><span>MEXC</span><span>Gate.io</span><span>BitMart</span><span>Bybit</span><span>KuCoin</span><span>OKX</span></div>
   </section>
 
-  <!-- ======== MASKOT GALERİSİ ======== -->
+  <!-- GALLERY -->
   <section class="wrap">
     <div class="section-title">ZUZU Maskot Galerisi</div>
     <div id="zuzu-gallery" class="zuzu-grid"></div>
   </section>
 
-  <!-- ======== TOKENOMI ======== -->
+  <!-- TOKENOMI (placeholder) -->
   <section class="wrap">
     <div class="section-title">Tokenomi</div>
-    <img src="/assets/zuzu/tokenomics_chart.png" alt="Tokenomi" style="max-width:100%;border-radius:12px;">
+    <p class="lead">Grafik eklenecek. (Presale %45 • Liquidity %25 • Marketing %15 • Team %10 • Airdrop %5)</p>
   </section>
 
-  <!-- ======== FOOTER ======== -->
-  <footer class="wrap" style="margin-top:48px;text-align:center;font-size:14px;opacity:.7">
-    © 2025 ZUZU • AI-Powered Meme Intelligence
-  </footer>
+  <footer>© 2025 ZUZU • AI-Powered Meme Intelligence</footer>
 
-  <!-- Script -->
-  <script src="/script.js?v=7"></script>
+<script>
+(function(){
+  // 🔗 Görselleri direkt GitHub deposundan CDN ile çekiyoruz (yol ve CORS sorunları biter)
+  const CDN_BASE = "https://cdn.jsdelivr.net/gh/enejomble35/zuzucoin.xyz@main/assets/zuzu/realistic/";
+
+  // Kart listesi (başlık -> dosya)
+  const CARDS = [
+    { title:"ZUZU Hero",      file:"hero.webp" },
+    { title:"ZUZU Ranger",    file:"ranger.webp" },
+    { title:"ZUZU Warrior",   file:"warrior.webp" },
+    { title:"ZUZU Hacker",    file:"hacker.webp" },
+    { title:"ZUZU Rogue",     file:"rogue.webp" },
+    { title:"ZUZU Titan",     file:"titan.webp" },
+    { title:"ZUZU Sorceress", file:"sorceress.webp" },
+    { title:"ZUZU Berserker", file:"berserker.webp" },
+    { title:"ZUZU Scientist", file:"scientist.webp" }
+  ];
+
+  const grid = document.getElementById("zuzu-gallery");
+
+  CARDS.forEach(({title,file})=>{
+    const url = CDN_BASE + file + "?v=" + Date.now(); // cache-bust
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const h = document.createElement("h3");
+    h.textContent = title;
+
+    const img = document.createElement("img");
+    img.className = "thumb";
+    img.alt = title;
+    img.loading = "lazy";
+    img.src = url;
+
+    const foot = document.createElement("div");
+    foot.className = "footer-row";
+    foot.innerHTML = `<span class="pill">${title.split(" ")[1]}</span>`;
+
+    // Hata yönetimi (roket gibi net)
+    img.onerror = async ()=>{
+      console.warn("GÖRSEL YÜKLENEMEDİ:", url);
+
+      const badge = document.createElement("div");
+      badge.className = "badge-error";
+      const copy = document.createElement("span");
+      copy.className = "copy-url";
+      copy.textContent = "🔗 kopyala";
+      copy.onclick = ()=>navigator.clipboard.writeText(url);
+
+      badge.textContent = "görsel yüklenemedi ";
+      badge.appendChild(copy);
+      card.appendChild(badge);
+
+      // 404 olup olmadığını fetch ile kontrol edelim (debug için)
+      try{
+        const res = await fetch(url, { method:"HEAD", cache:"no-store" });
+        console.log(title, "status:", res.status, res.statusText);
+      }catch(e){ console.log("HEAD error:", e) }
+    };
+
+    card.appendChild(h);
+    card.appendChild(img);
+    card.appendChild(foot);
+    grid.appendChild(card);
+  });
+
+})();
+</script>
 </body>
 </html>
