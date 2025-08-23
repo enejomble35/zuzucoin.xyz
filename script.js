@@ -1,182 +1,277 @@
-/* =========================================================
- * ZUZU — Maskot Galerisi (Güvenli Sürüm)
- * Sadece galeri içinde çalışır, diğer DOM'a dokunmaz.
- * ========================================================= */
-
+<script>
 (function () {
-  // ---- 1) Veri Seti
-  const MASKOTS = [
-    { id:'logo',      title:'ZUZU Logo',      webp:null,                                   svg:'/assets/zuzu/svg/zuzu_logo.svg'      },
-    { id:'hero',      title:'ZUZU Hero',      webp:'/assets/zuzu/realistic/hero.webp',     svg:'/assets/zuzu/svg/zuzu_hero.svg'      },
-    { id:'hacker',    title:'ZUZU Hacker',    webp:'/assets/zuzu/realistic/hacker.webp',   svg:'/assets/zuzu/svg/zuzu_hacker.svg'    },
-    { id:'warrior',   title:'ZUZU Warrior',   webp:'/assets/zuzu/realistic/warrior.webp',  svg:'/assets/zuzu/svg/zuzu_warrior.svg'   },
-    { id:'sorceress', title:'ZUZU Sorceress', webp:'/assets/zuzu/realistic/sorceress.webp',svg:'/assets/zuzu/svg/zuzu_sorceress.svg' },
-    { id:'ranger',    title:'ZUZU Ranger',    webp:'/assets/zuzu/realistic/ranger.webp',   svg:'/assets/zuzu/svg/zuzu_warrior.svg'   },
-    { id:'berserker', title:'ZUZU Berserker', webp:'/assets/zuzu/realistic/berserker.webp',svg:'/assets/zuzu/svg/zuzu_warrior.svg'   },
-    { id:'scientist', title:'ZUZU Scientist', webp:'/assets/zuzu/realistic/scientist.webp',svg:'/assets/zuzu/svg/zuzu_hacker.svg'    },
-    { id:'rogue',     title:'ZUZU Rogue',     webp:'/assets/zuzu/realistic/rogue.webp',    svg:'/assets/zuzu/svg/zuzu_hacker.svg'    },
-    { id:'titan',     title:'ZUZU Titan',     webp:'/assets/zuzu/realistic/titan.webp',    svg:'/assets/zuzu/svg/zuzu_warrior.svg'   }
+  "use strict";
+
+  /* ------------------------------
+   * 1) KURULUM / AYAR
+   * ------------------------------ */
+
+  // Görsellerin kök dizini (web sitenin kökünden erişim)
+  // Dosyaların konumu: /assets/zuzu/realistic/*.webp
+  const BASE = "./assets/zuzu/realistic/";
+
+  // Galeride göstereceğimiz karakterler
+  const CHARACTERS = [
+    { key: "hero",       title: "ZUZU Hero",       file: "hero.webp" },
+    { key: "ranger",     title: "ZUZU Ranger",     file: "ranger.webp" },
+    { key: "warrior",    title: "ZUZU Warrior",    file: "warrior.webp" },
+    { key: "hacker",     title: "ZUZU Hacker",     file: "hacker.webp" },
+    { key: "rogue",      title: "ZUZU Rogue",      file: "rogue.webp" },
+    { key: "titan",      title: "ZUZU Titan",      file: "titan.webp" },
+    { key: "sorceress",  title: "ZUZU Sorceress",  file: "sorceress.webp" },
+    { key: "berserker",  title: "ZUZU Berserker",  file: "berserker.webp" },
+    { key: "scientist",  title: "ZUZU Scientist",  file: "scientist.webp" },
   ];
 
-  // ---- 2) Yardımcılar
-  const qs  = (s, r=document) => r.querySelector(s);
-  const qsa = (s, r=document) => Array.from(r.querySelectorAll(s));
+  // Maskot galerisi için kullanılabilecek muhtemel hedefler:
+  const SELECTORS = [
+    "#zuzu-gallery",          // varsa direkt
+    ".zuzu-gallery",
+    ".maskot-grid",
+    ".maskot-gallery",
+    "#gallery",
+  ];
 
-  function loadImage(url) {
-    return new Promise((resolve, reject) => {
-      if (!url) return reject('no-url');
-      const img = new Image();
-      img.onload = () => resolve(url);
-      img.onerror = () => reject(url);
-      img.src = url + '?v=' + Date.now(); // cache kır
-    });
+  /* ------------------------------
+   * 2) CSS'İ OTOMATİK ENJEKTE ET
+   * ------------------------------ */
+  const css = `
+  /* ZUZU – Realistic Maskot Galerisi (auto-injected) */
+  .zuzu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 14px;
+  }
+  .zuzu-card {
+    position: relative;
+    aspect-ratio: 16/10;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #0d1320;
+    box-shadow: 0 10px 22px rgba(0,0,0,0.35);
+    transform: translateY(6px);
+    opacity: 0;
+    transition: opacity .5s ease, transform .5s ease, box-shadow .4s ease;
+  }
+  .zuzu-card.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .zuzu-img {
+    position: absolute; inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(.92) saturate(1.05);
+    transition: transform .6s ease, filter .6s ease;
+  }
+  .zuzu-card:hover .zuzu-img,
+  .zuzu-card:focus .zuzu-img {
+    transform: scale(1.06);
+    filter: brightness(1) saturate(1.1);
+  }
+  .zuzu-glow {
+    position: absolute; inset: 0;
+    background: radial-gradient(120px 120px at 75% 75%, rgba(0,255,255,0.15), transparent 65%),
+                radial-gradient(180px 180px at 25% 25%, rgba(0,180,255,0.12), transparent 70%);
+    mix-blend-mode: screen;
+    animation: zuzuPulse 3s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes zuzuPulse {
+    0%, 100% { opacity: .5; }
+    50% { opacity: .9; }
+  }
+  .zuzu-name {
+    position: absolute; left: 12px; bottom: 10px;
+    padding: 6px 10px;
+    color: #eaf7ff;
+    font-weight: 800;
+    letter-spacing: .4px;
+    font-size: 14px;
+    border-radius: 8px;
+    background: linear-gradient(120deg, rgba(0,0,0,.55), rgba(0,0,0,.25));
+    border: 1px solid rgba(255,255,255,.07);
+    backdrop-filter: blur(4px);
+    text-shadow: 0 1px 0 rgba(0,0,0,.6);
   }
 
-  // ---- 3) Sadece galeri alanını bul/yarat
-  function findOrCreateGallery() {
-    // Önce veri-attribute ile arayalım
-    let container = qs('[data-maskot-grid]');
-    if (container) return container;
+  /* Modal */
+  .zuzu-modal {
+    position: fixed; inset: 0; z-index: 9999;
+    display: none; align-items: center; justify-content: center;
+    background: rgba(0,0,0,.75);
+    backdrop-filter: blur(2px);
+  }
+  .zuzu-modal.show { display:flex; }
+  .zuzu-modal-imgwrap {
+    position: relative;
+    max-width: 92vw; max-height: 86vh;
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.6);
+    animation: modalIn .35s ease;
+  }
+  @keyframes modalIn {
+    from { transform: scale(.94); opacity: .6; }
+    to   { transform: scale(1);    opacity: 1;  }
+  }
+  .zuzu-modal-img {
+    display:block; max-width:100%; max-height:86vh;
+    object-fit: contain; background:#0b111b;
+  }
+  .zuzu-modal-close {
+    position:absolute; top:8px; right:8px;
+    background: rgba(0,0,0,.6); color:#dff9ff;
+    font-weight:800; border:none; border-radius:10px;
+    padding:6px 10px; cursor:pointer;
+    transition: background .2s ease;
+  }
+  .zuzu-modal-close:hover { background: rgba(0,0,0,.8); }
+  `;
 
-    // Başlığı "ZUZU Maskot Galerisi" olan bölümün içindeki ana kutuyu bul
-    const allSections = qsa('section, .section, .container, .wrap, .card');
-    for (const sec of allSections) {
-      const h = qs('h2, h3, .title, .section-title', sec);
-      if (h && /zuzu\s+maskot\s+galerisi/i.test(h.textContent || '')) {
-        // İçinde grid varsa onu kullan; yoksa biz oluştururuz
-        container = qs('.zuzu-maskot-grid, .maskot-grid, .grid', sec);
-        if (!container) {
-          container = document.createElement('div');
-          container.className = 'zuzu-maskot-grid';
-          sec.appendChild(container);
-        }
-        break;
-      }
+  const styleEl = document.createElement("style");
+  styleEl.innerHTML = css;
+  document.head.appendChild(styleEl);
+
+  /* ------------------------------
+   * 3) HEDEF BÖLÜMÜ BUL / OLUŞTUR
+   * ------------------------------ */
+  function findOrCreateGalleryMount() {
+    for (const sel of SELECTORS) {
+      const el = document.querySelector(sel);
+      if (el) return el;
     }
-
-    // Hâlâ yoksa; sayfada büyük container bul ve ekle
-    if (!container) {
-      const fallbackZone = qs('#app, main, .container, .content, body');
-      container = document.createElement('div');
-      container.className = 'zuzu-maskot-grid';
-      fallbackZone.appendChild(container);
-    }
-
-    container.setAttribute('data-maskot-grid', '1');
-    return container;
-  }
-
-  // ---- 4) Sadece galeri içinde temizlik
-  function purgeGallery(container) {
-    // Galeri içindeki lottie/canvas/svg; sadece burada kaldır
-    qsa('canvas, svg, .lottie, [data-lottie]', container).forEach(n => n.remove());
-    // "GIF indir" yazıları
-    qsa('button, a, span, div', container).forEach(n => {
-      const t = (n.textContent || '').toLowerCase();
-      if (t.includes('gif indir') || (t.includes('gif') && t.includes('indir'))) n.remove();
-    });
-  }
-
-  // ---- 5) Kart oluşturucu
-  function buildCard(mask) {
-    const card = document.createElement('div');
-    card.className = 'z-card';
-    card.setAttribute('data-id', mask.id);
-
-    const img = document.createElement('div');
-    img.className = 'z-img';
-
-    const title = document.createElement('div');
-    title.className = 'z-caption';
-    title.textContent = mask.title;
-
-    card.appendChild(img);
-    card.appendChild(title);
-
-    // Görseli yükle (webp -> svg fallback)
-    if (mask.webp) {
-      loadImage(mask.webp).then(() => {
-        img.style.backgroundImage = `url('${mask.webp}')`;
-      }).catch(() => {
-        img.style.backgroundImage = `url('${mask.svg}')`;
-      });
+    // Yoksa, "ZUZU Maskot Galerisi" başlığının altına oluştur
+    const allH2 = [...document.querySelectorAll("h2, h3")];
+    const anchor = allH2.find(h =>
+      /maskot/i.test(h.textContent || "")
+      || /gallery/i.test(h.textContent || "")
+    );
+    const mount = document.createElement("div");
+    mount.id = "zuzu-gallery";
+    mount.style.marginTop = "12px";
+    if (anchor && anchor.parentElement) {
+      anchor.parentElement.appendChild(mount);
     } else {
-      img.style.backgroundImage = `url('${mask.svg}')`;
+      document.body.appendChild(mount);
     }
-
-    return card;
+    return mount;
   }
 
-  // ---- 6) CSS'yi enjekte et (yalnızca gerekli minimum)
-  function injectStyles() {
-    if (qs('#zuzu-grid-style')) return;
-    const css = `
-      [data-maskot-grid].zuzu-maskot-grid {
-        display:grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap:14px;
-        margin-top:10px;
-      }
-      .z-card {
-        position:relative;
-        height: 160px;
-        border-radius: 14px;
-        overflow: hidden;
-        background:#0b1521;
-        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
-      }
-      .z-card .z-img{
-        position:absolute; inset:0;
-        background-size:cover; background-position:center;
-        filter: saturate(1.08) contrast(1.03);
-        opacity:0; transform: scale(1.02);
-        transition: opacity .35s ease, transform .45s ease;
-      }
-      .z-card.appear .z-img{ opacity:1; transform: scale(1); }
-      .z-card .z-caption{
-        position:absolute; left:12px; bottom:10px;
-        color:#cfe9ff; font-weight:700; font-size:13px;
-        text-shadow:0 1px 6px rgba(0,0,0,.55);
-        z-index:3;
-      }
-    `;
-    const style = document.createElement('style');
-    style.id = 'zuzu-grid-style';
-    style.textContent = css;
-    document.head.appendChild(style);
-  }
+  const mountEl = findOrCreateGalleryMount();
 
-  // ---- 7) Lazy görünüm
-  function lazyShow(container) {
-    const io = new IntersectionObserver((entries)=>{
+  // Eski Lottie/SVG placeholder’ları temizle
+  // (galeri alanında .lottie, .lottie-container, svg vb. bulursa kaldırır)
+  function cleanPlaceholders(root) {
+    const bad = root.querySelectorAll(".lottie, .lottie-container, svg, canvas");
+    bad.forEach(el => el.remove());
+  }
+  cleanPlaceholders(mountEl);
+
+  /* ------------------------------
+   * 4) GALERİYİ RENDER ET
+   * ------------------------------ */
+  function renderGallery() {
+    // Grid'i oluştur
+    const grid = document.createElement("div");
+    grid.className = "zuzu-grid";
+    mountEl.innerHTML = ""; // tamamen yenile
+    mountEl.appendChild(grid);
+
+    // IntersectionObserver (fade-in)
+    const io = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) {
-          e.target.classList.add('appear');
+          e.target.classList.add("show");
           io.unobserve(e.target);
         }
       });
-    }, {threshold:0.15});
-    qsa('.z-card', container).forEach(c => io.observe(c));
+    }, { threshold: 0.2 });
+
+    // Kartları ekle
+    CHARACTERS.forEach(ch => {
+      const url = BASE + ch.file;
+
+      const card = document.createElement("div");
+      card.className = "zuzu-card";
+      card.tabIndex = 0;
+      card.setAttribute("role", "button");
+      card.setAttribute("aria-label", ch.title);
+
+      const img = document.createElement("div");
+      img.className = "zuzu-img";
+      img.style.backgroundImage = `url('${url}')`;
+      img.dataset.src = url;
+
+      // yumuşak parıltı
+      const glow = document.createElement("div");
+      glow.className = "zuzu-glow";
+
+      const name = document.createElement("div");
+      name.className = "zuzu-name";
+      name.textContent = ch.title;
+
+      // Fallback: resim yüklenmezse arka planı gradient yap
+      const probe = new Image();
+      probe.onload = () => { /* OK */ };
+      probe.onerror = () => {
+        img.style.backgroundImage =
+          "radial-gradient(120px 120px at 70% 70%, rgba(0,255,255,.15), transparent 60%), linear-gradient(180deg,#0f172a,#0b1320)";
+      };
+      probe.src = url;
+
+      // Modal tetikleyici
+      function open() { openModal(url, ch.title); }
+      card.addEventListener("click", open);
+      card.addEventListener("keydown", (ev) => {
+        if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); open(); }
+      });
+
+      card.appendChild(img);
+      card.appendChild(glow);
+      card.appendChild(name);
+      grid.appendChild(card);
+      io.observe(card);
+    });
   }
 
-  // ---- 8) Başlat
-  function init() {
-    try {
-      injectStyles();
-      const grid = findOrCreateGallery();
-      purgeGallery(grid);
-
-      // Eğer grid boşsa doldur; doluysa kaldırıp yeniden kur (sadece grid içinde)
-      grid.innerHTML = '';
-      MASKOTS.forEach(m => grid.appendChild(buildCard(m)));
-
-      lazyShow(grid);
-      console.log('%cZUZU','color:#66f;', 'Maskot galerisi yüklendi.');
-    } catch (e) {
-      console.error('ZUZU init error:', e);
-    }
+  /* ------------------------------
+   * 5) MODAL (Büyüt – Tek tık)
+   * ------------------------------ */
+  let modalEl = null;
+  function ensureModal() {
+    if (modalEl) return modalEl;
+    modalEl = document.createElement("div");
+    modalEl.className = "zuzu-modal";
+    modalEl.innerHTML = `
+      <div class="zuzu-modal-imgwrap">
+        <button class="zuzu-modal-close" aria-label="Kapat">✕</button>
+        <img class="zuzu-modal-img" alt="ZUZU">
+      </div>
+    `;
+    document.body.appendChild(modalEl);
+    modalEl.addEventListener("click", (e) => {
+      if (e.target === modalEl) modalEl.classList.remove("show");
+    });
+    modalEl.querySelector(".zuzu-modal-close").addEventListener("click", () => {
+      modalEl.classList.remove("show");
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") modalEl.classList.remove("show");
+    });
+    return modalEl;
+  }
+  function openModal(src, title) {
+    const m = ensureModal();
+    const img = m.querySelector(".zuzu-modal-img");
+    img.src = src;
+    img.alt = title;
+    m.classList.add("show");
   }
 
-  document.addEventListener('DOMContentLoaded', init);
-  window.ZUZU = { init };
+  /* ------------------------------
+   * 6) ÇALIŞTIR
+   * ------------------------------ */
+  document.addEventListener("DOMContentLoaded", renderGallery);
+
 })();
+</script>
