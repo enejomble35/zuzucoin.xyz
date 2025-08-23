@@ -1,123 +1,109 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ZUZU • AI Meme Intelligence</title>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="style.css?v=1.0.0">
-  <!-- Kütüphaneler -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
-  <script src="https://unpkg.com/@tonconnect/ui@2.0.7/dist/tonconnect-ui.min.js" defer></script>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="/style.css?v=14" />
+  <!-- Chart / Lottie / TonConnect -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
+  <script src="https://unpkg.com/@tonconnect/ui@2.0.9/dist/tonconnect-ui.min.js"></script>
 </head>
+
 <body>
+  <!-- NAV -->
+  <header class="nav">
+    <div class="brand">
+      <img class="zuzu-logo" src="/assets/zuzu/svg/zuzu_logo.svg" alt="ZUZU" />
+      <span>ZUZU</span>
+    </div>
 
-<!-- NAV -->
-<header class="nav">
-  <div class="logo">ZUZU</div>
-  <nav class="menu">
-    <a href="#topluluk">Topluluk</a>
-    <a href="#tokenomi">Tokenomi</a>
-    <a href="#hakkimizda">Hakkımızda</a>
-    <a href="#yolharitasi">Yol Haritası</a>
-    <a href="#stake">Stake</a>
-  </nav>
-  <button id="btn-wallet" class="wallet">Cüzdan Bağla</button>
-</header>
+    <nav class="menu">
+      <a href="#topluluk">Topluluk</a>
+      <a href="#tokenomi">Tokenomi</a>
+      <a href="#hakkimizda">Hakkımızda</a>
+      <a href="#yolharitasi">Yol Haritası</a>
+      <a href="#stake">Stake</a>
+    </nav>
 
-<!-- HERO -->
-<section class="wrap hero">
-  <h1>YAPAY ZEKA <span class="glow">ZUZU</span> ORDUSU</h1>
-  <p class="lead">
-    ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> katmanıyla birleştirir. Presale fonları
-    <b>non-custodial</b> hazinede tutulur. Paylaş, <b>tap-to-earn</b> ile puan topla, <b>stake</b> ile daha fazla kazanç hedefle.
-  </p>
+    <button id="btn-wallet" class="btn btn-primary">Cüzdan Bağla</button>
+  </header>
 
-  <div class="exchanges">
-    <span><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/mexc.svg" alt> MEXC</span>
-    <span><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/gateio.svg" alt> Gate.io</span>
-    <span><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/bitmart.svg" alt> BitMart</span>
-    <span><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/bybit.svg" alt> Bybit</span>
-    <span><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/kucoin.svg" alt> KuCoin</span>
-    <span><img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/okx.svg" alt> OKX</span>
-  </div>
+  <!-- BORSALAR (logo satırı) -->
+  <section class="exchanges" id="exchanges">
+    <!-- script.js doldurur -->
+  </section>
 
-  <div class="countdown">
-    <div class="cd-title">Ön Satış Bitişine Kalan</div>
-    <div id="cd" class="cd-box">--g --s --d --sn</div>
-    <div class="progress">
-      <div id="cd-bar" class="bar"></div>
+  <!-- HERO -->
+  <section class="hero">
+    <h1>YAPAY ZEKA <span class="grad">ZUZU</span> ORDUSU</h1>
+    <p>
+      ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> katmanıyla birleştirir.
+      Presale fonları <b>non-custodial</b> hazinede tutulur. Paylaş, <b>tap-to-earn</b> ile puan topla,
+      <b>stake</b> ile daha fazla kazanç hedefle.
+    </p>
+
+    <div class="countdown">
+      <div class="cd-label">Ön Satış Bitiş:</div>
+      <div id="cd" class="cd-time">–</div>
+      <div class="cd-bar"><span id="cd-bar"></span></div>
+    </div>
+  </section>
+
+  <!-- GALERİ -->
+  <section class="wrap">
+    <h2>ZUZU Maskot Galerisi</h2>
+    <div id="zuzu-gallery" class="zuzu-grid"><!-- JS --></div>
+  </section>
+
+  <!-- TOKENOMI -->
+  <section id="tokenomi" class="wrap">
+    <h2>Tokenomi</h2>
+    <div class="card chart-card">
+      <canvas id="tokenChart" height="220"></canvas>
+      <ul class="legend">
+        <li><span style="--c:#24e0b6"></span>Presale</li>
+        <li><span style="--c:#31c4ff"></span>Liquidity</li>
+        <li><span style="--c:#ffd166"></span>Marketing</li>
+        <li><span style="--c:#a78bfa"></span>Team</li>
+        <li><span style="--c:#ff8fab"></span>Airdrop</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Yol Haritası -->
+  <section id="yolharitasi" class="wrap">
+    <h2>Yol Haritası</h2>
+    <div class="roadmap">
+      <div class="rm-item"><b>Phase 1</b> – Presale + Topluluk + Maskot Setleri</div>
+      <div class="rm-item"><b>Phase 2</b> – CEX Başvuruları, Pazarlama, Partnerlikler</div>
+      <div class="rm-item"><b>Phase 3</b> – Tap-to-Earn + Staking + AI Meme Intelligence</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    © 2025 ZUZU • AI-Powered Meme Intelligence
+  </footer>
+
+  <!-- CÜZDAN MODAL -->
+  <div id="wallet-modal" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-head">
+        <b>Cüzdan Bağla</b>
+        <button id="closeModal" class="x">×</button>
+      </div>
+      <div class="wallet-list">
+        <button id="evmConnect" class="wallet">MetaMask / OKX / Bitget (EVM)</button>
+        <button id="solConnect" class="wallet">Phantom (Solana)</button>
+        <button id="tonConnect" class="wallet">TonConnect (TON)</button>
+      </div>
+      <div id="addrBox" class="addr">Bağlı değil</div>
     </div>
   </div>
-</section>
 
-<!-- GALERİ -->
-<section class="wrap">
-  <div class="section-title">ZUZU Maskot Galerisi</div>
-  <div id="zuzu-gallery" class="zuzu-grid"></div>
-</section>
-
-<!-- TOKENOMİ -->
-<section id="tokenomi" class="wrap">
-  <div class="section-title">Tokenomi</div>
-  <div class="tokenomi">
-    <canvas id="tokenChart" width="400" height="400"></canvas>
-    <ul class="legend">
-      <li><span class="dot dot-presale"></span> Presale %45</li>
-      <li><span class="dot dot-liq"></span> Liquidity %25</li>
-      <li><span class="dot dot-mkt"></span> Marketing %15</li>
-      <li><span class="dot dot-team"></span> Team %10</li>
-      <li><span class="dot dot-air"></span> Airdrop %5</li>
-    </ul>
-  </div>
-</section>
-
-<!-- YOL HARİTASI -->
-<section id="yolharitasi" class="wrap">
-  <div class="section-title">Yol Haritası</div>
-  <div class="timeline">
-    <div class="step done">
-      <h3>Phase 1</h3>
-      <p>Presale • Topluluk • Maskot Setleri</p>
-    </div>
-    <div class="step">
-      <h3>Phase 2</h3>
-      <p>CEX Başvuruları • Pazarlama • Partnerlikler</p>
-    </div>
-    <div class="step">
-      <h3>Phase 3</h3>
-      <p>Tap-to-Earn • Staking • AI Meme Intelligence</p>
-    </div>
-  </div>
-</section>
-
-<!-- STAKE / BİLGİ -->
-<section id="stake" class="wrap">
-  <div class="section-title">Stake & Tap-to-Earn</div>
-  <p class="lead">
-    Presale sırasında belirli NFT setlerini mint eden veya stake eden kullanıcılar
-    <b>bonus airdrop</b> ve <b>erken ödül</b> kazanır. NFT’ler “ZUZU Maskotları”dır ve
-    hem <b>Solana</b> hem de <b>TON</b> ağında mint edilecektir.
-  </p>
-</section>
-
-<footer>© 2025 ZUZU • AI-Powered Meme Intelligence</footer>
-
-<!-- Cüzdan Modal (basit) -->
-<div id="wallet-modal" class="modal hidden">
-  <div class="modal-card">
-    <div class="modal-title">Cüzdan Bağla</div>
-    <div class="wallet-list">
-      <button class="wbtn" id="evmConnect">EVM (MetaMask / OKX / Bitget)</button>
-      <button class="wbtn" id="solConnect">Solana (Phantom)</button>
-      <button class="wbtn" id="tonConnect">TON (TonConnect)</button>
-    </div>
-    <div class="addr" id="addrBox">Bağlı değil</div>
-    <button id="closeModal" class="close">Kapat</button>
-  </div>
-</div>
-
-<script src="script.js?v=1.0.0" defer></script>
+  <script src="/script.js?v=14"></script>
 </body>
 </html>
