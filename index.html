@@ -4,106 +4,80 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ZUZU • AI Meme Intelligence</title>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
-  <link rel="stylesheet" href="/style.css?v=14" />
-  <!-- Chart / Lottie / TonConnect -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
-  <script src="https://unpkg.com/@tonconnect/ui@2.0.9/dist/tonconnect-ui.min.js"></script>
+  <link rel="stylesheet" href="/style.css?v=15" />
+
+  <!-- Lottie + Chart + TonConnect -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="https://unpkg.com/@tonconnect/ui@2.2.8/dist/tonconnect-ui.min.js"></script>
 </head>
 
 <body>
   <!-- NAV -->
   <header class="nav">
     <div class="brand">
-      <img class="zuzu-logo" src="/assets/zuzu/svg/zuzu_logo.svg" alt="ZUZU" />
-      <span>ZUZU</span>
+      <img src="/assets/zuzu/svg/zuzu_logo.svg" alt="ZUZU" style="height:28px" />
     </div>
-
     <nav class="menu">
-      <a href="#topluluk">Topluluk</a>
-      <a href="#tokenomi">Tokenomi</a>
-      <a href="#hakkimizda">Hakkımızda</a>
-      <a href="#yolharitasi">Yol Haritası</a>
-      <a href="#stake">Stake</a>
+      <a href="#community" class="chip">Topluluk</a>
+      <a href="#tokenomics" class="chip">Tokenomi</a>
+      <a href="#about" class="chip">Hakkımızda</a>
+      <a href="#roadmap" class="chip">Yol Haritası</a>
+      <a href="#stake" class="chip">Stake</a>
     </nav>
-
-    <button id="btn-wallet" class="btn btn-primary">Cüzdan Bağla</button>
+    <button id="btn-wallet" class="btn-primary">Cüzdan Bağla</button>
   </header>
 
-  <!-- BORSALAR (logo satırı) -->
-  <section class="exchanges" id="exchanges">
-    <!-- script.js doldurur -->
+  <!-- Borsa logoları -->
+  <section class="wrap">
+    <div id="exchanges" class="ex-row"></div>
   </section>
 
   <!-- HERO -->
-  <section class="hero">
-    <h1>YAPAY ZEKA <span class="grad">ZUZU</span> ORDUSU</h1>
-    <p>
-      ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> katmanıyla birleştirir.
-      Presale fonları <b>non-custodial</b> hazinede tutulur. Paylaş, <b>tap-to-earn</b> ile puan topla,
-      <b>stake</b> ile daha fazla kazanç hedefle.
-    </p>
+  <section class="wrap">
+    <h1>YAPAY ZEKA <span class="z">ZUZU</span> ORDUSU</h1>
+    <p>ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> katmanıyla birleştirir. Presale fonları
+       <b>non-custodial</b> hazinede tutulur. Paylaş, <b>tap-to-earn</b> ile puan topla, <b>stake</b> ile daha fazla
+       kazanç hedefle.</p>
 
     <div class="countdown">
-      <div class="cd-label">Ön Satış Bitiş:</div>
-      <div id="cd" class="cd-time">–</div>
+      <div id="cd" class="cd-text">Yükleniyor…</div>
       <div class="cd-bar"><span id="cd-bar"></span></div>
     </div>
   </section>
 
-  <!-- GALERİ -->
+  <!-- MASKOT GALERİSİ -->
   <section class="wrap">
     <h2>ZUZU Maskot Galerisi</h2>
-    <div id="zuzu-gallery" class="zuzu-grid"><!-- JS --></div>
+    <div id="zuzu-gallery" class="zuzu-grid"></div>
   </section>
 
-  <!-- TOKENOMI -->
-  <section id="tokenomi" class="wrap">
+  <!-- TOKENOMİ -->
+  <section id="tokenomics" class="wrap">
     <h2>Tokenomi</h2>
-    <div class="card chart-card">
-      <canvas id="tokenChart" height="220"></canvas>
-      <ul class="legend">
-        <li><span style="--c:#24e0b6"></span>Presale</li>
-        <li><span style="--c:#31c4ff"></span>Liquidity</li>
-        <li><span style="--c:#ffd166"></span>Marketing</li>
-        <li><span style="--c:#a78bfa"></span>Team</li>
-        <li><span style="--c:#ff8fab"></span>Airdrop</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- Yol Haritası -->
-  <section id="yolharitasi" class="wrap">
-    <h2>Yol Haritası</h2>
-    <div class="roadmap">
-      <div class="rm-item"><b>Phase 1</b> – Presale + Topluluk + Maskot Setleri</div>
-      <div class="rm-item"><b>Phase 2</b> – CEX Başvuruları, Pazarlama, Partnerlikler</div>
-      <div class="rm-item"><b>Phase 3</b> – Tap-to-Earn + Staking + AI Meme Intelligence</div>
-    </div>
+    <canvas id="tokenChart" height="220"></canvas>
   </section>
 
   <!-- FOOTER -->
-  <footer class="footer">
-    © 2025 ZUZU • AI-Powered Meme Intelligence
-  </footer>
+  <footer class="foot">© 2025 ZUZU • AI-Powered Meme Intelligence</footer>
 
-  <!-- CÜZDAN MODAL -->
+  <!-- CÜZDAN MODALI -->
   <div id="wallet-modal" class="modal hidden">
     <div class="modal-box">
       <div class="modal-head">
-        <b>Cüzdan Bağla</b>
-        <button id="closeModal" class="x">×</button>
+        <h3>Cüzdan Bağla</h3>
+        <button id="closeModal" class="btn-close">×</button>
       </div>
-      <div class="wallet-list">
-        <button id="evmConnect" class="wallet">MetaMask / OKX / Bitget (EVM)</button>
-        <button id="solConnect" class="wallet">Phantom (Solana)</button>
-        <button id="tonConnect" class="wallet">TonConnect (TON)</button>
+      <div class="modal-body">
+        <button id="evmConnect" class="btn-wide">EVM (MetaMask / OKX / Bitget)</button>
+        <button id="solConnect" class="btn-wide">Solana (Phantom)</button>
+        <button id="tonConnect" class="btn-wide">TON (TonConnect)</button>
+        <div id="addrBox" class="addr">Bağlı değil</div>
       </div>
-      <div id="addrBox" class="addr">Bağlı değil</div>
     </div>
   </div>
 
-  <script src="/script.js?v=14"></script>
+  <!-- APP -->
+  <script src="/script.js?v=15"></script>
 </body>
 </html>
