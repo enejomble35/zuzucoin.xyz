@@ -1,199 +1,183 @@
 /* =========================================================
- * ZUZU — Front Script (Maskot Galerisi + Görsel Yükleyici)
- * Tüm yollar düzeltildi, SVG fallback eklendi, GIF butonu kaldırıldı
+ * ZUZU Front Script — Realistic Maskot Görüntüleyici
+ * - Realistic WEBP yükler, SVG fallback
+ * - Kart içindeki lottie/canvas/svg katmanlarını kaldırır
+ * - "GIF indir" metinlerini yok eder
+ * - Seçici esnek: farklı HTML yapılara uyumlu
  * ========================================================= */
 
-/* ------------------------ Konfig ------------------------ */
-const ZUZU_MASKOTS = [
-  {
-    id: 'logo',
-    name: 'ZUZU Logo',
-    // Realistic klasörde logo yok, bilinçli olarak svg gösteriyoruz:
-    img: null,
-    svg: '/assets/zuzu/svg/zuzu_logo.svg',
-    fx: 'glow'
-  },
-  {
-    id: 'hero',
-    name: 'ZUZU Hero',
-    img: './assets/zuzu/realistic/hero.webp',
-    svg: '/assets/zuzu/svg/zuzu_hero.svg',
-    fx: 'aura'
-  },
-  {
-    id: 'hacker',
-    name: 'ZUZU Hacker',
-    img: './assets/zuzu/realistic/hacker.webp',
-    svg: '/assets/zuzu/svg/zuzu_hacker.svg',
-    fx: 'scan'
-  },
-  {
-    id: 'warrior',
-    name: 'ZUZU Warrior',
-    img: './assets/zuzu/realistic/warrior.webp',
-    svg: '/assets/zuzu/svg/zuzu_warrior.svg',
-    fx: 'slash'
-  },
-  {
-    id: 'sorceress',
-    name: 'ZUZU Sorceress',
-    img: './assets/zuzu/realistic/sorceress.webp',
-    svg: '/assets/zuzu/svg/zuzu_sorceress.svg',
-    fx: 'orb'
-  },
-  {
-    id: 'ranger',
-    name: 'ZUZU Ranger',
-    img: './assets/zuzu/realistic/ranger.webp',
-    svg: '/assets/zuzu/svg/zuzu_warrior.svg', // yedek olarak warrior svg kullan
-    fx: 'focus'
-  },
-  {
-    id: 'berserker',
-    name: 'ZUZU Berserker',
-    img: './assets/zuzu/realistic/berserker.webp',
-    svg: '/assets/zuzu/svg/zuzu_warrior.svg', // yedek
-    fx: 'embers'
-  },
-  {
-    id: 'scientist',
-    name: 'ZUZU Scientist',
-    img: './assets/zuzu/realistic/scientist.webp',
-    svg: '/assets/zuzu/svg/zuzu_hacker.svg', // yedek
-    fx: 'grid'
-  },
-  {
-    id: 'rogue',
-    name: 'ZUZU Rogue',
-    img: './assets/zuzu/realistic/rogue.webp',
-    svg: '/assets/zuzu/svg/zuzu_hacker.svg', // yedek
-    fx: 'pulse'
-  },
-  {
-    id: 'titan',
-    name: 'ZUZU Titan',
-    img: './assets/zuzu/realistic/titan.webp',
-    svg: '/assets/zuzu/svg/zuzu_warrior.svg', // yedek
-    fx: 'shield'
-  }
+const MASKOTS = [
+  { id:'logo',      name:'ZUZU Logo',      webp:null,                                  svg:'/assets/zuzu/svg/zuzu_logo.svg',     fx:'glow'   },
+  { id:'hero',      name:'ZUZU Hero',      webp:'/assets/zuzu/realistic/hero.webp',    svg:'/assets/zuzu/svg/zuzu_hero.svg',     fx:'aura'   },
+  { id:'hacker',    name:'ZUZU Hacker',    webp:'/assets/zuzu/realistic/hacker.webp',  svg:'/assets/zuzu/svg/zuzu_hacker.svg',   fx:'scan'   },
+  { id:'warrior',   name:'ZUZU Warrior',   webp:'/assets/zuzu/realistic/warrior.webp', svg:'/assets/zuzu/svg/zuzu_warrior.svg',  fx:'slash'  },
+  { id:'sorceress', name:'ZUZU Sorceress', webp:'/assets/zuzu/realistic/sorceress.webp',svg:'/assets/zuzu/svg/zuzu_sorceress.svg',fx:'orb'    },
+  { id:'ranger',    name:'ZUZU Ranger',    webp:'/assets/zuzu/realistic/ranger.webp',  svg:'/assets/zuzu/svg/zuzu_warrior.svg',  fx:'focus'  },
+  { id:'berserker', name:'ZUZU Berserker', webp:'/assets/zuzu/realistic/berserker.webp',svg:'/assets/zuzu/svg/zuzu_warrior.svg', fx:'embers' },
+  { id:'scientist', name:'ZUZU Scientist', webp:'/assets/zuzu/realistic/scientist.webp',svg:'/assets/zuzu/svg/zuzu_hacker.svg',  fx:'grid'   },
+  { id:'rogue',     name:'ZUZU Rogue',     webp:'/assets/zuzu/realistic/rogue.webp',   svg:'/assets/zuzu/svg/zuzu_hacker.svg',   fx:'pulse'  },
+  { id:'titan',     name:'ZUZU Titan',     webp:'/assets/zuzu/realistic/titan.webp',   svg:'/assets/zuzu/svg/zuzu_warrior.svg',  fx:'shield' }
 ];
 
-/* --------------------- Yardımcılar ---------------------- */
-function qs(sel, root = document) { return root.querySelector(sel); }
-function qsa(sel, root = document) { return [...root.querySelectorAll(sel)]; }
+// ---- Yardımcılar
+const qs  = (s, r=document)=>r.querySelector(s);
+const qsa = (s, r=document)=>[...r.querySelectorAll(s)];
 
-function findMaskotElement(id) {
-  // Farklı HTML düzenlerine uyum için birden fazla seçici:
+// Kartları olası tüm seçicilerle yakala
+function collectCards() {
   const selectors = [
-    `[data-maskot="${id}"]`,
-    `#maskot-${id}`,
-    `#${id}`,
-    `.maskot-${id}`,
-    `.card-${id}`,
-    `.zuzu-${id}`
+    '.maskot-card', '.zuzu-maskot-card', '.maskot .card', '.maskot-grid .card',
+    '.zuzu-maskots .card', '.gallery-maskots .card', '.cards .card', '.grid .card',
+    '.maskots .item', '.maskot-grid .item', '.z-grid .cell', '.z-card', '.card'
   ];
-  for (const s of selectors) {
-    const el = qs(s);
-    if (el) return el;
+  let cards = [];
+  selectors.some(sel => {
+    const arr = qsa(sel);
+    if (arr.length >= 10) { cards = arr; return true; }
+    return false;
+  });
+  if (!cards.length) cards = qsa('.card'); // son çare
+  return cards;
+}
+
+// Kartın başlığından kimlik üret (ZUZU Hero -> hero)
+function idFromTitle(text='') {
+  const t = (text || '').toLowerCase().trim();
+  for (const m of MASKOTS) {
+    const key = m.name.toLowerCase().replace('zuzu','').trim();
+    if (t.includes(key)) return m.id;
   }
   return null;
 }
 
-function setBackgroundImage(el, url, fallbackSvg) {
-  if (!el) return;
-  const img = new Image();
-  img.onload = () => {
-    el.style.backgroundImage = `url('${img.src}')`;
-    el.classList.add('loaded');
-  };
-  img.onerror = () => {
-    if (fallbackSvg) {
-      el.style.backgroundImage = `url('${fallbackSvg}')`;
+// Kart içinde lottie/canvas/svg vs’leri kaldır
+function purgeOverlays(card) {
+  if (!card) return;
+  const junkSel = [
+    '.lottie', '.lottie-animation', '[data-lottie]', '.lottie-container',
+    'canvas', 'svg'
+  ].join(',');
+  qsa(junkSel, card).forEach(node => {
+    // Sadece kartın kendi overlaylerini kaldır; ikon/badge ise dokunma:
+    if (node.closest('.caption') || node.closest('.badge')) return;
+    node.remove();
+  });
+
+  // "GIF indir" metinli buton/link/rozetleri yok et
+  qsa('button, a, span, div', card).forEach(n => {
+    const txt = (n.textContent || '').toLowerCase();
+    if (txt.includes('gif indir') || txt.includes('gif') && txt.includes('indir')) {
+      n.remove();
     }
-    el.classList.add('loaded', 'fallback');
-  };
-  if (url) {
-    img.src = url;
-  } else {
-    // hiç webp yoksa direkt svg
-    el.style.backgroundImage = `url('${fallbackSvg}')`;
-    el.classList.add('loaded', 'fallback');
-  }
+  });
 }
 
-function attachFx(el, fxName) {
-  if (!el) return;
-  // CSS tarafında karşılığı olan sınıfları ekliyoruz
-  // (ör: .fx-glow, .fx-scan, .fx-orb, .fx-grid ...)
-  el.classList.add(`fx-${fxName}`);
-}
-
-/* Görsel container'ının içinde gerçek imaj tutmak için bir iç katman ekle */
-function ensureImageLayer(el) {
-  if (!el) return null;
-  let layer = el.querySelector('.img');
+// Görsel katmanı oluştur + inline style (üstte ve tam kapla)
+function ensureImageLayer(card) {
+  let layer = qs('.img', card);
   if (!layer) {
     layer = document.createElement('div');
     layer.className = 'img';
-    el.appendChild(layer);
+    card.appendChild(layer);
   }
-  return layer;
-}
+  // Kartı konumlandır
+  card.style.position   = card.style.position || 'relative';
+  card.style.overflow   = 'hidden';
 
-/* Alt yazı (isim) sabitleme */
-function setCaption(el, name) {
-  if (!el) return;
-  let cap = el.querySelector('.caption');
+  // Görsel katmanı üstte
+  Object.assign(layer.style, {
+    position: 'absolute',
+    inset: '0',
+    width: '100%',
+    height: '100%',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    zIndex: '2',
+    borderRadius: 'inherit',
+    opacity: '1'
+  });
+
+  // Caption (isim) — en üste
+  let cap = qs('.caption', card);
   if (!cap) {
     cap = document.createElement('div');
     cap.className = 'caption';
-    el.appendChild(cap);
+    card.appendChild(cap);
   }
-  cap.textContent = name;
-}
-
-/* -------------------- Giriş Noktası --------------------- */
-function initMaskotGallery() {
-  ZUZU_MASKOTS.forEach(m => {
-    const card = findMaskotElement(m.id);
-    if (!card) return;
-
-    card.setAttribute('data-id', m.id);
-    card.setAttribute('aria-label', m.name);
-    card.classList.add('zuzu-card');
-
-    const imgLayer = ensureImageLayer(card);
-    setBackgroundImage(imgLayer, m.img, m.svg);
-    attachFx(card, m.fx);
-    setCaption(card, m.name);
-
-    // Eski kodlardan kalma "gif indir" vb. düğmeleri temizle:
-    qsa('.gif-btn, .gif-download, .btn-gif, .gif-indir', card).forEach(b => b.remove());
+  Object.assign(cap.style, {
+    position:'absolute', left:'10px', bottom:'10px', zIndex:'3',
+    color:'#cfe9ff', fontWeight:'700', fontSize:'13px',
+    letterSpacing:'0.3px', textShadow:'0 1px 6px rgba(0,0,0,.6)'
   });
 
-  // Görünümdeyken animasyon başlat (CSS'te .animate karşılığı olmalı)
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('animate');
-      }
-    });
-  }, { threshold: 0.2 });
-
-  qsa('.zuzu-card').forEach(el => io.observe(el));
+  return layer;
 }
 
-/* -------------------- Sayfa Hazır ----------------------- */
-document.addEventListener('DOMContentLoaded', () => {
-  try {
-    initMaskotGallery();
-  } catch (err) {
-    console.error('ZUZU init error:', err);
+// Resim yükle; başarısızsa svg fallback
+function setBackground(el, webp, svg) {
+  if (!el) return;
+  if (!webp) {
+    el.style.backgroundImage = `url('${svg}')`;
+    return;
   }
-});
+  const img = new Image();
+  img.onload = () => { el.style.backgroundImage = `url('${webp}')`; };
+  img.onerror = () => { el.style.backgroundImage = `url('${svg}')`; };
+  img.src = webp + `?v=${Date.now()}`; // cache kır
+}
 
-/* -------------------- Global (debug) -------------------- */
-window.ZUZU = {
-  MASKOTS: ZUZU_MASKOTS,
-  reload: initMaskotGallery
-};
+// Etkiler (opsiyonel — CSS tarafında sınıfları varsa)
+function attachFx(card, fx) {
+  if (!fx) return;
+  card.classList.add(`fx-${fx}`);
+}
+
+// Başlat
+function initZuzu() {
+  // Üst açıklama satırındaki "GIF indir ..." gibi küçük notları da temizle
+  qsa('small, .hint, .mini-hint, .note').forEach(n => {
+    const t = (n.textContent||'').toLowerCase();
+    if (t.includes('gif indir')) n.remove();
+  });
+
+  const cards = collectCards();
+  if (!cards.length) return;
+
+  // Kartları başlıklarına göre eşleştir; olmazsa sıralı dağıt
+  const used = new Set();
+  cards.forEach(card => {
+    purgeOverlays(card);
+
+    // Caption/title nerede olursa olsun yakala
+    let titleNode =
+      qs('.title, .name, .caption, .label, .card-title, .maskot-title', card) || card;
+    const id = idFromTitle(titleNode.textContent);
+
+    let mask = MASKOTS.find(m => m.id === id) || null;
+    if (!mask) {
+      // sıralı atama (kalanlardan)
+      mask = MASKOTS.find(m => !used.has(m.id));
+    }
+    if (!mask) return;
+
+    used.add(mask.id);
+
+    const layer = ensureImageLayer(card);
+    setBackground(layer, mask.webp, mask.svg);
+    attachFx(card, mask.fx);
+
+    // caption yaz
+    let cap = qs('.caption', card);
+    if (cap) cap.textContent = mask.name;
+  });
+
+  // Görünür olunca animasyon tetikle (varsa)
+  const io = new IntersectionObserver(es => {
+    es.forEach(e => e.isIntersecting && e.target.classList.add('animate'));
+  }, { threshold: 0.2 });
+  cards.forEach(c => io.observe(c));
+}
+
+document.addEventListener('DOMContentLoaded', initZuzu);
+window.ZUZU = { reload: initZuzu, MASKOTS };
