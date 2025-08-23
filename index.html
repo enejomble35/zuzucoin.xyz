@@ -1,401 +1,75 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ZUZU • AI Meme Intelligence</title>
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
-<style>
-:root{
-  --bg:#0b1119; --panel:#0f1926; --soft:#0e2132; --line:#163047;
-  --txt:#d7e9ff; --muted:#9ab4cf; --accent:#00ffd0; --good:#16e5a9; --warn:#ffb24d;
-}
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-a{color:inherit;text-decoration:none}
-.container{max-width:1200px;margin:0 auto;padding:20px}
-.nav{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,#0b1119,rgba(11,17,25,.6));border-bottom:1px solid var(--line)}
-.nav .row{display:flex;align-items:center;gap:12px;justify-content:space-between;padding:12px 20px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:700}
-.brand-badge{width:28px;height:28px;border-radius:8px;background:radial-gradient(100% 100% at 50% 0%,#0ff,#077);box-shadow:0 0 20px rgba(0,255,208,.35) inset}
-.lang{opacity:.85}
-.btn{background:var(--soft);color:var(--txt);border:1px solid var(--line);padding:10px 14px;border-radius:10px;cursor:pointer}
-.btn:hover{filter:brightness(1.08)}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px}
-.h1{font-size:28px;font-weight:800;margin:0 0 10px}
-.lead{color:var(--muted);line-height:1.6}
-.badges{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
-.tag{display:inline-block;padding:6px 10px;border-radius:10px;background:#0e2132;color:#9fd;border:1px solid #18334a;font-size:12px}
-.form-row{display:flex;gap:8px;flex-wrap:wrap}
-.input,select{background:var(--soft);border:1px solid var(--line);color:var(--txt);padding:10px;border-radius:10px;min-width:120px}
-.cta{display:flex;gap:10px;margin-top:8px}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.h2{font-size:22px;margin:0 0 10px}
-.small{color:var(--muted);font-size:14px}
-.mini-audit .point{width:8px;height:8px;background:var(--accent);border-radius:50%;margin:6px}
-.mini-audit .dots{display:flex;align-items:center}
-.copy{display:flex;gap:8px}
-.copy input{flex:1}
-.copy .btn{white-space:nowrap}
-.section{margin-top:22px}
-.maskot-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
-.maskot-card{padding:10px;background:var(--panel);border:1px solid var(--line);border-radius:14px}
-.maskot-box{position:relative;width:100%;aspect-ratio:1/1;border-radius:12px;overflow:hidden;background:linear-gradient(180deg,#0e1624,#0b1119)}
-.maskot-cover{position:absolute;inset:0}
-.maskot-anim{position:absolute;inset:0;pointer-events:none}
-.maskot-title{margin-top:10px;font-weight:700}
-.maskot-sub{color:var(--muted);font-size:12px;margin-top:4px}
-.maskot-card:hover .maskot-box{box-shadow:0 0 0 1px rgba(0,255,208,.3) inset,0 0 32px rgba(0,255,208,.08)}
-.token-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.pie{width:100%;aspect-ratio:1/1;border-radius:50%;
-  background:
-  conic-gradient(#18ffc2 0 162deg,#58a6ff 162deg 252deg,#ffb24d 252deg 306deg,#ff6f9b 306deg 342deg,#8fdfff 342deg 360deg);
-  mask: radial-gradient(circle at 50% 50%, transparent 56%, black 57%);
-  border:1px solid var(--line);background-origin:border-box}
-.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.legend .chip{display:flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
-.legend .dot{width:10px;height:10px;border-radius:3px}
-.roadmap .phase{background:var(--panel);border:1px solid var(--line);padding:12px;border-radius:12px}
-.footer{margin:30px 0 40px;color:#82a0be;text-align:center}
-@media (max-width:960px){
-  .row,.grid-2,.maskot-grid,.token-grid{grid-template-columns:1fr}
-}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ZUZU • AI Meme Intelligence</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- GIF üretimi için kütüphaneler -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gifshot/0.3.2/gifshot.min.js" defer></script>
 </head>
 <body>
+  <header class="topbar">
+    <div class="brand">ZUZU • <span>AI Meme Intelligence</span></div>
+    <nav class="cex-badges">
+      <span>MEXC</span><span>Gate.io</span><span>BitMart</span><span>Bybit</span><span>KuCoin</span><span>OKX</span>
+    </nav>
+    <button id="connectBtn" class="btn wallet">Cüzdan Bağla</button>
+  </header>
 
-<!-- NAV -->
-<div class="nav">
-  <div class="row container" style="grid-template-columns:1fr auto auto;">
-    <div class="brand"><div class="brand-badge"></div> ZUZU • <span class="muted">AI Meme Intelligence</span></div>
-    <div class="lang">TR</div>
-    <button id="connectBtn" class="btn">Cüzdan Bağla</button>
-  </div>
-</div>
+  <main class="container">
+    <section class="hero">
+      <h1>YAPAY ZEKA <span class="zuzu">ZUZU</span> ORDUSU</h1>
+      <p>ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> katmanıyla birleştirir. 
+         Presale fonları <b>non-custodial</b> hazinede tutulur. Paylaş, <b>tap-to-earn</b> ile puan topla, 
+         <b>stake</b> ile daha fazla kazanç hedefle.</p>
+    </section>
 
-<div class="container section">
-
-  <!-- HERO + PRESALE -->
-  <div class="row">
-    <div class="card">
-      <div class="h1">YAPAY ZEKA <span style="color:#34ffa9">ZU</span><span style="color:#58a6ff">ZU</span> ORDUSU</div>
-      <div class="lead">
-        ZUZU; memetik enerjiyi <b>AI Meme Intelligence</b> katmanıyla birleştirir.
-        Presale fonları non-custodial hazinede tutulur. Paylaş, tap-to-earn ile puan topla,
-        stake ile daha fazla kazanç hedefle.
+    <!-- MASKOT GALERİSİ -->
+    <section class="panel">
+      <div class="panel-head">
+        <h2>ZUZU Maskot Galerisi</h2>
+        <p>Hepsi gerçekçi + canlı efektli. İstersen "GIF indir" ile anında gif kaydet.</p>
       </div>
-      <div id="exchanges" class="badges"></div>
-      <div class="small">Referans linkin:</div>
-      <div class="copy" style="margin-top:6px">
-        <input id="refLink" class="input" readonly value="https://zuzucoin.xyz/?ref=share-this-link"/>
-        <button class="btn" onclick="navigator.clipboard.writeText(document.getElementById('refLink').value)">Kopyala</button>
-      </div>
-    </div>
+      <div id="maskotGrid" class="grid"></div>
+    </section>
 
-    <div class="card">
-      <div class="h2">$ZUZU Token Satın Al – Şimdi Ön Satışta!</div>
-      <div class="form-row">
-        <select class="input" aria-label="Aşama">
-          <option>Stage 1 — 0.002000 USDT / ZUZU</option>
-        </select>
-        <div class="input" style="flex:1">Kaç ZUZU? &nbsp;<input id="amount" style="width:120px;background:transparent;border:0;color:var(--txt)" value="100000"></div>
-      </div>
-      <div class="small" style="margin-top:8px">Fiyat: <b>0.002000</b> USDT / ZUZU &nbsp; • &nbsp; Toplam: <b id="total">200.000000</b> USDT</div>
-      <div class="cta">
-        <button class="btn" style="background:#103140;border-color:#1c4a63">Kart ile Satın Al (yakında)</button>
-        <button class="btn" style="background:#0f2b2e;border-color:#1d4b52">USDT (BEP20) ile Satın Al</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- RECEIVER + MASKOTLAR -->
-  <div class="row section">
-    <div class="card">
-      <div class="h2">Receiver</div>
-      <div class="copy">
-        <input class="input" id="receiver" readonly value="0x69014a76e2e5c8B73dAe9044dfcAd7356e74bC3"/>
-        <button class="btn" onclick="navigator.clipboard.writeText(document.getElementById('receiver').value)">Kopyala</button>
-      </div>
-
-      <div class="grid-2" style="margin-top:10px">
-        <div class="mini-audit card" style="background:var(--soft)">
-          <div class="h2">Mini Audit</div>
-          <div class="dots"><div class="point"></div><div class="point"></div><div class="point"></div><div class="point"></div></div>
-          <ul class="small">
-            <li>✔ Sözleşme: <b>USDT (BEP20)</b></li>
-            <li>✔ Transfer → receiver</li>
-            <li>✔ Non-custodial, direkt kasaya</li>
-          </ul>
-        </div>
-        <div class="card" style="background:var(--soft)">
-          <div class="h2">Şeffaflık</div>
-          <div class="small">
-            Satın alımlar on-chain receiver adresine kaydolur.
-            Admin Panel üzerinden son işlemleri görebilirsin.
+    <!-- Tokenomi + Yol Haritası (mevcut sayfandaki yerleri bozmaz) -->
+    <section class="grid-2">
+      <div class="panel">
+        <div class="panel-head"><h2>Tokenomi</h2></div>
+        <div id="tokenomics" class="tokenomics">
+          <div class="donut">
+            <div style="--p:45" title="Presale 45%"></div>
+            <div style="--p:25" title="Liquidity 25%"></div>
+            <div style="--p:15" title="Marketing 15%"></div>
+            <div style="--p:10" title="Team 10%"></div>
+            <div style="--p:5"  title="Airdrop 5%"></div>
           </div>
-          <div class="small" style="margin-top:10px"><b>Toplanan:</b> $0 / $300,000</div>
+          <div class="legend">
+            <span><i style="background:#34d399"></i>Presale 45%</span>
+            <span><i style="background:#60a5fa"></i>Liquidity 25%</span>
+            <span><i style="background:#f59e0b"></i>Marketing 15%</span>
+            <span><i style="background:#a78bfa"></i>Team 10%</span>
+            <span><i style="background:#f87171"></i>Airdrop 5%</span>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div class="card">
-      <div class="h2">ZUZU Maskot Galerisi</div>
-      <div class="small">Hepsi canlı Lottie animasyonlarıdır. Tıkla ve büyüt.</div>
-
-      <div class="maskot-grid" id="maskotGrid" style="margin-top:12px">
-        <!-- 10 kart -->
-        <!-- Her kart: data-char -> cover ve animasyonu otomatik bağlar -->
-        <div class="maskot-card" data-char="logo">
-          <div class="maskot-box">
-            <div class="maskot-cover"></div><div class="maskot-anim"></div>
-          </div><div class="maskot-title">ZUZU Logo</div><div class="maskot-sub">Temel maskot – glow</div>
-        </div>
-
-        <div class="maskot-card" data-char="hero">
-          <div class="maskot-box">
-            <div class="maskot-cover"></div><div class="maskot-anim"></div>
-          </div><div class="maskot-title">ZUZU Hero</div><div class="maskot-sub">Neon zırh + hatlar</div>
-        </div>
-
-        <div class="maskot-card" data-char="hacker">
-          <div class="maskot-box">
-            <div class="maskot-cover"></div><div class="maskot-anim"></div>
-          </div><div class="maskot-title">ZUZU Hacker</div><div class="maskot-sub">Yüz tarama + sinyal</div>
-        </div>
-
-        <div class="maskot-card" data-char="warrior">
-          <div class="maskot-box">
-            <div class="maskot-cover"></div><div class="maskot-anim"></div>
-          </div><div class="maskot-title">ZUZU Warrior</div><div class="maskot-sub">Kılıç parlaması</div>
-        </div>
-
-        <div class="maskot-card" data-char="sorceress">
-          <div class="maskot-box">
-            <div class="maskot-cover"></div><div class="maskot-anim"></div>
-          </div><div class="maskot-title">ZUZU Sorceress</div><div class="maskot-sub">Büyü küresi</div>
-        </div>
-
-        <div class="maskot-card" data-char="ranger">
-          <div class="maskot-box">
-            <div class="maskot-cover"></div><div class="maskot-anim"></div>
-          </div><div class="maskot-title">ZUZU Ranger</div><div class="maskot-sub">Vizör + kayış</div>
-        </div>
-
-        <div class="maskot-card" data-char="berserker">
-          <div class="maskot-box">
-            <div class="maskot-cover"></div><div class="maskot-anim"></div>
-          </div><div class="maskot-title">ZUZU Berserker</div><div class="maskot-sub">Kızgın aura</div>
-        </div>
-
-        <div class="maskot-card" data-char="scientist">
-          <div class="maskot-box">
-            <div class="maskot-cover"></div><div class="maskot-anim"></div>
-          </div><div class="maskot-title">ZUZU Scientist</div><div class="maskot-sub">Devre hatları</div>
-        </div>
-
-        <div class="maskot-card" data-char="rogue">
-          <div class="maskot-box">
-            <div class="maskot-cover"></div><div class="maskot-anim"></div>
-          </div><div class="maskot-title">ZUZU Rogue</div><div class="maskot-sub">Gizli bıçak</div>
-        </div>
-
-        <div class="maskot-card" data-char="titan">
-          <div class="maskot-box">
-            <div class="maskot-cover"></div><div class="maskot-anim"></div>
-          </div><div class="maskot-title">ZUZU Titan</div><div class="maskot-sub">Kalkan + pulse</div>
-        </div>
+      <div class="panel">
+        <div class="panel-head"><h2>Yol Haritası</h2></div>
+        <ul class="roadmap">
+          <li><b>Phase 1</b> – Presale + Topluluk + Maskot Setleri</li>
+          <li><b>Phase 2</b> – CEX Başvuruları, Pazarlama, Partnerlikler</li>
+          <li><b>Phase 3</b> – Tap-to-Earn + Staking + AI Meme Intelligence</li>
+        </ul>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- TOKENOMI + YOL HARITASI -->
-  <div class="row section">
-    <div class="card">
-      <div class="h2">Tokenomi</div>
-      <div class="pie"></div>
-      <div class="legend">
-        <div class="chip"><span class="dot" style="background:#18ffc2"></span> Presale: 45%</div>
-        <div class="chip"><span class="dot" style="background:#58a6ff"></span> Liquidity: 25%</div>
-        <div class="chip"><span class="dot" style="background:#ffb24d"></span> Marketing: 15%</div>
-        <div class="chip"><span class="dot" style="background:#ff6f9b"></span> Team: 10%</div>
-        <div class="chip"><span class="dot" style="background:#8fdfff"></span> Airdrop: 5%</div>
-      </div>
-      <div class="small" style="margin-top:10px">Chain: <b>BSC (BEP20)</b> • Symbol: <b>ZUZU</b> • Decimals: <b>18</b></div>
-    </div>
-    <div class="card roadmap">
-      <div class="h2">Yol Haritası</div>
-      <div class="grid-2">
-        <div class="phase"><b>Phase 1</b><br>Presale + Topluluk + Maskot Setleri</div>
-        <div class="phase"><b>Phase 2</b><br>CEX Başvuruları, Pazarlama, Partnerlikler</div>
-        <div class="phase"><b>Phase 3</b><br>Tap-to-Earn + Staking + AI Meme Intelligence</div>
-      </div>
-    </div>
-  </div>
+    <footer class="footer">© 2025 ZUZU • AI-Powered Meme Intelligence</footer>
+  </main>
 
-  <div class="footer">© 2025 ZUZU • AI-Powered Meme Intelligence</div>
-</div>
-
-<script>
-/* -------- Tek Dosya: Tüm JS burada -------- */
-
-// Basit hesap: amount * 0.002
-document.getElementById('amount').addEventListener('input', (e)=>{
-  const v = parseFloat(e.target.value||'0'); const t = (v*0.002).toFixed(6);
-  document.getElementById('total').textContent = t;
-});
-
-// Borsa rozetleri
-(function mountExchanges(){
-  const ex = ['MEXC','Gate.io','BitMart','BingX','Bybit','KuCoin','OKX'];
-  const box = document.getElementById('exchanges');
-  box.innerHTML = ex.map(n=>`<span class="tag">${n}</span>`).join('');
-})();
-
-// Cüzdan bağla (demo)
-document.getElementById('connectBtn').addEventListener('click',()=>{
-  alert('Cüzdan bağlama (demo): Gerçek bağlantı için web3 provider eklenecek.');
-});
-
-// ---- Kapak SVG üretici (gerçekçi neon hissi) ----
-function coverSVG(key){
-  // her karakter için renk paleti
-  const pal = {
-    logo:['#00ffd0','#182b3b'],
-    hero:['#00f6ff','#0e2132'],
-    hacker:['#00ffd0','#102235'],
-    warrior:['#ffb24d','#2a1f12'],
-    sorceress:['#9dffe7','#14232b'],
-    ranger:['#7fd8ff','#0f1e2f'],
-    berserker:['#ff6f9b','#2a1220'],
-    scientist:['#7af3ff','#0f1d26'],
-    rogue:['#c3ffd9','#14231d'],
-    titan:['#ffd37a','#2b2313'],
-  };
-  const [a,b]=(pal[key]||pal.logo);
-  // SVG: Horn + yüz + glow, koyu arkaplan üstünde
-  return `
-  <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <radialGradient id="g_${key}" cx="50%" cy="45%" r="60%">
-        <stop offset="0%" stop-color="${a}" stop-opacity="0.95"/>
-        <stop offset="55%" stop-color="${a}" stop-opacity="0.18"/>
-        <stop offset="100%" stop-color="${b}" stop-opacity="0"/>
-      </radialGradient>
-      <filter id="blur_${key}" x="-30%" y="-30%" width="160%" height="160%">
-        <feGaussianBlur stdDeviation="14"/>
-      </filter>
-    </defs>
-
-    <rect width="512" height="512" fill="#0b1119"/>
-    <circle cx="256" cy="256" r="210" fill="url(#g_${key})" filter="url(#blur_${key})"/>
-    <circle cx="256" cy="256" r="138" fill="#0d1623" stroke="${a}" stroke-opacity="0.25" stroke-width="3"/>
-
-    <!-- horns -->
-    <path d="M156 120 q-20 60 36 84 q-4-34 10-70 q-18 -12 -46 -14z" fill="${a}" opacity=".9"/>
-    <path d="M356 120 q20 60 -36 84 q4-34 -10-70 q18 -12 46 -14z" fill="${a}" opacity=".9"/>
-
-    <!-- eyes + smile -->
-    <circle cx="208" cy="248" r="16" fill="${a}"/>
-    <circle cx="304" cy="248" r="16" fill="${a}"/>
-    <path d="M196 308 q60 46 120 0" stroke="${a}" stroke-width="14" stroke-linecap="round" fill="none"/>
-
-    <!-- character hint (center icon) -->
-    ${iconFor(key,a)}
-  </svg>`;
-}
-
-function iconFor(key,c){
-  // karaktere göre ortada küçük ikon: kılıç, kalkan, devre vs.
-  switch(key){
-    case 'warrior':
-      return `<path d="M360 196 l-16 16 l-100 120 l14 14 l120-100 l16-16 z"
-              fill="${c}" opacity=".75"/>`;
-    case 'hacker':
-      return `<rect x="210" y="190" width="92" height="60" rx="10" fill="${c}" opacity=".35"/>
-              <rect x="230" y="258" width="132" height="40" rx="10" fill="${c}" opacity=".25"/>`;
-    case 'sorceress':
-      return `<circle cx="256" cy="206" r="22" fill="${c}" opacity=".7"/>
-              <circle cx="256" cy="206" r="32" stroke="${c}" stroke-opacity=".35" stroke-width="6" fill="none"/>`;
-    case 'ranger':
-      return `<rect x="220" y="184" width="72" height="36" rx="8" fill="${c}" opacity=".5"/>
-              <rect x="196" y="228" width="120" height="16" rx="8" fill="${c}" opacity=".35"/>`;
-    case 'berserker':
-      return `<path d="M186 330 q70 30 140 0" stroke="${c}" stroke-width="12" opacity=".55" fill="none"/>`;
-    case 'scientist':
-      return `<path d="M196 220 h120 M196 244 h120 M236 268 h80" stroke="${c}" stroke-width="6" opacity=".5"/>`;
-    case 'rogue':
-      return `<path d="M206 260 l50 50 l50-50" stroke="${c}" stroke-width="12" fill="none" opacity=".6"/>`;
-    case 'titan':
-      return `<rect x="210" y="190" width="92" height="120" rx="14" fill="${c}" opacity=".35"/>`;
-    case 'hero':
-      return `<path d="M216 340 h80 v-24 l-20-20 h-40 l-20 20 z" fill="${c}" opacity=".42"/>`;
-    default: return ``;
-  }
-}
-
-// ---- Lottie inline (dosyasız) ---------------------------------------------
-function hexToRgba01(hex){
-  const c = hex.replace('#',''); const n = parseInt(c,16);
-  const r=(n>>16)&255, g=(n>>8)&255, b=n&255; return [r/255,g/255,b/255,1];
-}
-function makeLottieData({ color = '#00ffd0', radius = 52, speed = 1 }){
-  return {
-    v:"5.7.4", fr:30*speed, ip:0, op:120, w:192, h:192, nm:"zuzu_glow", ddd:0, assets:[],
-    layers:[
-      {ddd:0, ind:1, ty:4, nm:"big_glow",
-       ks:{o:{a:1,k:[{t:0,s:30},{t:60,s:75},{t:120,s:30}]},p:{a:0,k:[96,96,0]},a:{a:0,k:[0,0,0]},s:{a:0,k:[100,100,100]}},
-       shapes:[
-         {ty:"el",p:{a:0,k:[0,0]},s:{a:0,k:[radius*2,radius*2]}},
-         {ty:"fl",c:{a:0,k:hexToRgba01(color)},o:{a:0,k:100},r:1}
-       ]},
-      {ddd:0, ind:2, ty:4, nm:"ring1",
-       ks:{o:{a:1,k:[{t:0,s:70},{t:60,s:20},{t:120,s:70}]},p:{a:0,k:[96,96,0]},a:{a:0,k:[0,0,0]},s:{a:0,k:[100,100,100]}},
-       shapes:[
-         {ty:"el",p:{a:0,k:[0,0]},s:{a:0,k:[(radius*1.5)*2,(radius*1.5)*2]}},
-         {ty:"st",c:{a:0,k:hexToRgba01(color)},o:{a:0,k:100},w:{a:0,k:2},lc:2,lj:2},
-         {ty:"tr",r:{a:1,k:[{t:0,s:0},{t:120,s:360}]}}
-       ]},
-      {ddd:0, ind:3, ty:4, nm:"ring2",
-       ks:{o:{a:1,k:[{t:0,s:55},{t:60,s:15},{t:120,s:55}]},p:{a:0,k:[96,96,0]},a:{a:0,k:[0,0,0]},s:{a:0,k:[100,100,100]}},
-       shapes:[
-         {ty:"el",p:{a:0,k:[0,0]},s:{a:0,k:[(radius*.92)*2,(radius*.92)*2]}},
-         {ty:"st",c:{a:0,k:hexToRgba01(color)},o:{a:0,k:100},w:{a:0,k:1.5},lc:2,lj:2},
-         {ty:"tr",r:{a:1,k:[{t:0,s:360},{t:120,s:0}]}}
-       ]},
-      {ddd:0, ind:4, ty:4, nm:"scan",
-       ks:{o:{a:0,k:38},p:{a:1,k:[{t:0,s:[-40,96,0]},{t:120,s:[232,96,0]}]}},
-       shapes:[{ty:"rc",d:1,s:{a:0,k:[32,5]},r:{a:0,k:2}}, {ty:"fl",c:{a:0,k:hexToRgba01(color)},o:{a:0,k:100},r:1}]
-      }
-    ]
-  };
-}
-
-// ---- Maskotları bağla ------------------------------------------------------
-(function mountMascots(){
-  const cards = Array.from(document.querySelectorAll('.maskot-card'));
-  if(!cards.length) return;
-  const palette = {
-    logo:'#00ffd0', hero:'#00eaff', hacker:'#00ffd0', warrior:'#ffb24d',
-    sorceress:'#a0ffe6', ranger:'#7fdaff', berserker:'#ff6f9b',
-    scientist:'#7af3ff', rogue:'#c3ffd9', titan:'#ffd37a'
-  };
-
-  cards.forEach(card=>{
-    const key = (card.getAttribute('data-char')||'logo').toLowerCase();
-    const cover = card.querySelector('.maskot-cover');
-    const animBox = card.querySelector('.maskot-anim');
-
-    // Kapak svg
-    cover.innerHTML = coverSVG(key);
-
-    // Lottie animasyon (inline data)
-    const color = palette[key] || '#00ffd0';
-    const data = makeLottieData({ color, radius: 50, speed: 1 });
-    lottie.loadAnimation({ container: animBox, renderer:'svg', loop:true, autoplay:true, animationData:data });
-  });
-})();
-</script>
+  <script src="script.js"></script>
 </body>
 </html>
