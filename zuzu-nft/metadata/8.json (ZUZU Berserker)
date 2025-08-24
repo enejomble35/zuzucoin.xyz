@@ -1,1 +1,19 @@
-
+{
+  "name": "ZUZU Berserker",
+  "symbol": "ZUZU",
+  "description": "ZUZU Berserker — kızıl nöral çekirdek, aşırı güç yükseltimi.",
+  "image": "ipfs://<CID_IMAGES>/berserker.png",
+  "external_url": "https://zuzucoin.xyz",
+  "seller_fee_basis_points": 750,
+  "attributes": [
+    {"trait_type": "Class", "value": "Berserker"},
+    {"trait_type": "Element", "value": "Flame"},
+    {"trait_type": "Augment", "value": "Red Neural Core"},
+    {"trait_type": "Rarity", "value": "Epic"}
+  ],
+  "properties": {
+    "files": [{"uri": "ipfs://<CID_IMAGES>/berserker.png", "type": "image/png"}],
+    "category": "image",
+    "creators": [{"address": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", "share": 100}]
+  }
+}
