@@ -1,1 +1,19 @@
-
+{
+  "name": "ZUZU Maiden",
+  "symbol": "ZUZU",
+  "description": "ZUZU Maiden — saf enerji regülatörü, mavi çekirdek dengeleyici.",
+  "image": "ipfs://<CID_IMAGES>/maiden.png",
+  "external_url": "https://zuzucoin.xyz",
+  "seller_fee_basis_points": 750,
+  "attributes": [
+    {"trait_type": "Class", "value": "Maiden"},
+    {"trait_type": "Element", "value": "Aether"},
+    {"trait_type": "Trait", "value": "Stability Field"},
+    {"trait_type": "Rarity", "value": "Rare"}
+  ],
+  "properties": {
+    "files": [{"uri": "ipfs://<CID_IMAGES>/maiden.png", "type": "image/png"}],
+    "category": "image",
+    "creators": [{"address": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", "share": 100}]
+  }
+}
