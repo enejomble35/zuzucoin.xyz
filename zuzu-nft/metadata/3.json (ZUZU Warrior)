@@ -1,1 +1,20 @@
-
+{
+  "name": "ZUZU Warrior",
+  "symbol": "ZUZU",
+  "description": "ZUZU Warrior — mecha-paladin, plazma kalkan ve gravite çekirdek.",
+  "image": "ipfs://<CID_IMAGES>/warrior.png",
+  "external_url": "https://zuzucoin.xyz",
+  "seller_fee_basis_points": 750,
+  "attributes": [
+    {"trait_type": "Class", "value": "Warrior"},
+    {"trait_type": "Element", "value": "Earth"},
+    {"trait_type": "Armor", "value": "Gravium Plate"},
+    {"trait_type": "Weapon", "value": "Pulse Halberd"},
+    {"trait_type": "Rarity", "value": "Epic"}
+  ],
+  "properties": {
+    "files": [{"uri": "ipfs://<CID_IMAGES>/warrior.png", "type": "image/png"}],
+    "category": "image",
+    "creators": [{"address": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", "share": 100}]
+  }
+}
