@@ -1,1 +1,20 @@
-
+{
+  "name": "ZUZU Ranger",
+  "symbol": "ZUZU",
+  "description": "ZUZU Ranger — siber okçu, lazer kompozit yay ile hassas vuruş.",
+  "image": "ipfs://<CID_IMAGES>/ranger.png",
+  "external_url": "https://zuzucoin.xyz",
+  "seller_fee_basis_points": 750,
+  "attributes": [
+    {"trait_type": "Class", "value": "Ranger"},
+    {"trait_type": "Element", "value": "Wind"},
+    {"trait_type": "Weapon", "value": "Photon Bow"},
+    {"trait_type": "Companion", "value": "Drone Wisp"},
+    {"trait_type": "Rarity", "value": "Epic"}
+  ],
+  "properties": {
+    "files": [{"uri": "ipfs://<CID_IMAGES>/ranger.png", "type": "image/png"}],
+    "category": "image",
+    "creators": [{"address": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", "share": 100}]
+  }
+}
