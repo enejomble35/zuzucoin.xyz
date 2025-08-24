@@ -1,1 +1,19 @@
-
+{
+  "name": "ZUZU Scientist",
+  "symbol": "ZUZU",
+  "description": "ZUZU Scientist — memetik/AI kimyageri, probiyotik nöral çözelti.",
+  "image": "ipfs://<CID_IMAGES>/scientist.png",
+  "external_url": "https://zuzucoin.xyz",
+  "seller_fee_basis_points": 750,
+  "attributes": [
+    {"trait_type": "Class", "value": "Scientist"},
+    {"trait_type": "Element", "value": "Bio-Tech"},
+    {"trait_type": "Lab", "value": "Synaptic Flask"},
+    {"trait_type": "Rarity", "value": "Rare"}
+  ],
+  "properties": {
+    "files": [{"uri": "ipfs://<CID_IMAGES>/scientist.png", "type": "image/png"}],
+    "category": "image",
+    "creators": [{"address": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", "share": 100}]
+  }
+}
