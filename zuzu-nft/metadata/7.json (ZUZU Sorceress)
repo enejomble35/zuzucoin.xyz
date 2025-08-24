@@ -1,1 +1,19 @@
-
+{
+  "name": "ZUZU Sorceress",
+  "symbol": "ZUZU",
+  "description": "ZUZU Sorceress — arcane/AI hibriti, kuantum büyü çekirdeği.",
+  "image": "ipfs://<CID_IMAGES>/sorceress.png",
+  "external_url": "https://zuzucoin.xyz",
+  "seller_fee_basis_points": 750,
+  "attributes": [
+    {"trait_type": "Class", "value": "Sorceress"},
+    {"trait_type": "Element", "value": "Arcane"},
+    {"trait_type": "Focus", "value": "Quantum Orb"},
+    {"trait_type": "Rarity", "value": "Epic"}
+  ],
+  "properties": {
+    "files": [{"uri": "ipfs://<CID_IMAGES>/sorceress.png", "type": "image/png"}],
+    "category": "image",
+    "creators": [{"address": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", "share": 100}]
+  }
+}
