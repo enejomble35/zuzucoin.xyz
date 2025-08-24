@@ -1,1 +1,8 @@
-
+{
+  "name": "ZUZU Maskots",
+  "description": "AI Meme Intelligence + memetik enerji ile yoğrulmuş robotik-anime maskotları.",
+  "image": "ipfs://<CID_IMAGES>/hero.png",
+  "external_link": "https://zuzucoin.xyz",
+  "seller_fee_basis_points": 750,
+  "fee_recipient": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3"
+}
