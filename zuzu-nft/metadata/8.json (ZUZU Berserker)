@@ -1,15 +1,13 @@
 {
   "name": "ZUZU Berserker",
-  "description": "Öfke ve güçle savaşır. Çelik yumruklarıyla önüne çıkan her şeyi parçalar.",
-  "image": "ipfs://<CID_BERSERKER>.png",
-  "external_url": "https://zuzucoin.xyz/nft/berserker",
+  "description": "ZUZU Berserker, öfke ve güçle savaşır. Çelik yumruklarıyla önüne çıkan her şeyi parçalar.",
+  "external_url": "https://zuzucoin.xyz",
+  "image": "ipfs://{BASE_CID}/zuzu_berserker.png",
   "attributes": [
     { "trait_type": "Role", "value": "Berserker" },
-    { "trait_type": "Power", "value": 94 },
+    { "trait_type": "Power", "value": "93" },
     { "trait_type": "Special", "value": "Rage Core" },
-    { "trait_type": "Rarity", "value": "Uncommon" },
-    { "trait_type": "RarityScore", "value": 60 },
-    { "trait_type": "MaxSupply", "value": 800 },
-    { "trait_type": "ChestWeight", "value": 67 }
+    { "trait_type": "Rarity", "value": "Rare" },
+    { "trait_type": "RarityScore", "value": "60" }
   ]
 }
