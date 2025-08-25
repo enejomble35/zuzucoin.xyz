@@ -1,15 +1,13 @@
 {
   "name": "ZUZU Hacker",
-  "description": "Gölgelerden sistemi ele geçirir. Siber dünyada görünmez bir suikastçı.",
-  "image": "ipfs://<CID_HACKER>.png",
-  "external_url": "https://zuzucoin.xyz/nft/hacker",
+  "description": "ZUZU Hacker, gölgelerden sistemleri ele geçirir. Sanal dünyada görünmez bir suikastçı.",
+  "external_url": "https://zuzucoin.xyz",
+  "image": "ipfs://{BASE_CID}/zuzu_hacker.png",
   "attributes": [
     { "trait_type": "Role", "value": "Hacker" },
-    { "trait_type": "Power", "value": 85 },
-    { "trait_type": "Special", "value": "Firewall Break" },
+    { "trait_type": "Power", "value": "82" },
+    { "trait_type": "Special", "value": "Quantum Hack" },
     { "trait_type": "Rarity", "value": "Rare" },
-    { "trait_type": "RarityScore", "value": 80 },
-    { "trait_type": "MaxSupply", "value": 400 },
-    { "trait_type": "ChestWeight", "value": 40 }
+    { "trait_type": "RarityScore", "value": "62" }
   ]
 }
