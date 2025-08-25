@@ -1,19 +1,15 @@
 {
   "name": "ZUZU Maiden",
-  "symbol": "ZUZU",
-  "description": "ZUZU Maiden — saf enerji regülatörü, mavi çekirdek dengeleyici.",
-  "image": "ipfs:bafybeid4yncgsfiwbxv3tqnpmybgmwv6vchiuhhni75s422djzv54ecw6a",
-  "external_url": "https://zuzucoin.xyz",
-  "seller_fee_basis_points": 750,
+  "description": "Saf enerji regülatörü, mavi çekirdek dengeleyici. Göründüğünden daha güçlü.",
+  "image": "ipfs://<CID_MAIDEN>.png",
+  "external_url": "https://zuzucoin.xyz/nft/maiden",
   "attributes": [
-    {"trait_type": "Class", "value": "Maiden"},
-    {"trait_type": "Element", "value": "Aether"},
-    {"trait_type": "Trait", "value": "Stability Field"},
-    {"trait_type": "Rarity", "value": "Rare"}
-  ],
-  "properties": {
-    "files": [{"uri": "ipfs://<CID_IMAGES>/maiden.png", "type": "image/png"}],
-    "category": "image",
-    "creators": [{"address": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", "share": 100}]
-  }
+    { "trait_type": "Role", "value": "Maiden" },
+    { "trait_type": "Power", "value": 80 },
+    { "trait_type": "Special", "value": "Healing Aura" },
+    { "trait_type": "Rarity", "value": "Uncommon" },
+    { "trait_type": "RarityScore", "value": 50 },
+    { "trait_type": "MaxSupply", "value": 700 },
+    { "trait_type": "ChestWeight", "value": 67 }
+  ]
 }
