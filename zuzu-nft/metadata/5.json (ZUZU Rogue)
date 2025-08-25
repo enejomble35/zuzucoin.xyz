@@ -1,20 +1,15 @@
 {
   "name": "ZUZU Rogue",
-  "symbol": "ZUZU",
-  "description": "ZUZU Rogue — siber suikastçı, ışın hançer ve adaptif pelerin.",
-  "image": "ipfs://<CID_IMAGES>/rogue.png",
-  "external_url": "https://zuzucoin.xyz",
-  "seller_fee_basis_points": 750,
+  "description": "Siberpunk sokaklarının sessiz savaşçısı. Hız ve çeviklik onun en büyük silahı.",
+  "image": "ipfs://<CID_ROGUE>.png",
+  "external_url": "https://zuzucoin.xyz/nft/rogue",
   "attributes": [
-    {"trait_type": "Class", "value": "Rogue"},
-    {"trait_type": "Element", "value": "Shadow"},
-    {"trait_type": "Weapon", "value": "Photon Daggers"},
-    {"trait_type": "Cloak", "value": "Adaptive Mesh"},
-    {"trait_type": "Rarity", "value": "Epic"}
-  ],
-  "properties": {
-    "files": [{"uri": "ipfs://<CID_IMAGES>/rogue.png", "type": "image/png"}],
-    "category": "image",
-    "creators": [{"address": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", "share": 100}]
-  }
+    { "trait_type": "Role", "value": "Rogue" },
+    { "trait_type": "Power", "value": 90 },
+    { "trait_type": "Special", "value": "Shadow Strike" },
+    { "trait_type": "Rarity", "value": "Rare" },
+    { "trait_type": "RarityScore", "value": 75 },
+    { "trait_type": "MaxSupply", "value": 500 },
+    { "trait_type": "ChestWeight", "value": 40 }
+  ]
 }
