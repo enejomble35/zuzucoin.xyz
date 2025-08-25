@@ -1,20 +1,15 @@
 {
   "name": "ZUZU Hacker",
-  "symbol": "ZUZU",
-  "description": "ZUZU Hacker — siber gölgelerin efendisi, kuantum maske ve nanolink sinir ağı.",
-  "image": "ipfs://<CID_IMAGES>/hacker.png",
-  "external_url": "https://zuzucoin.xyz",
-  "seller_fee_basis_points": 750,
+  "description": "Gölgelerden sistemi ele geçirir. Siber dünyada görünmez bir suikastçı.",
+  "image": "ipfs://<CID_HACKER>.png",
+  "external_url": "https://zuzucoin.xyz/nft/hacker",
   "attributes": [
-    {"trait_type": "Class", "value": "Hacker"},
-    {"trait_type": "Element", "value": "Tech"},
-    {"trait_type": "Tool", "value": "Quantum Console"},
-    {"trait_type": "Trait", "value": "Mask of Silence"},
-    {"trait_type": "Rarity", "value": "Legendary"}
-  ],
-  "properties": {
-    "files": [{"uri": "ipfs://<CID_IMAGES>/hacker.png", "type": "image/png"}],
-    "category": "image",
-    "creators": [{"address": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", "share": 100}]
-  }
+    { "trait_type": "Role", "value": "Hacker" },
+    { "trait_type": "Power", "value": 85 },
+    { "trait_type": "Special", "value": "Firewall Break" },
+    { "trait_type": "Rarity", "value": "Rare" },
+    { "trait_type": "RarityScore", "value": 80 },
+    { "trait_type": "MaxSupply", "value": 400 },
+    { "trait_type": "ChestWeight", "value": 40 }
+  ]
 }
