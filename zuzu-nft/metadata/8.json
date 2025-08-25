@@ -1,13 +1,12 @@
 {
   "name": "ZUZU Scientist",
-  "description": "ZUZU Scientist, nanoteknoloji ustası. Savaşın gidişatını bir damla serumla değiştirebilir.",
-  "external_url": "https://zuzucoin.xyz",
-  "image": "ipfs://{BASE_CID}/zuzu_scientist.png",
+  "description": "ZUZU Scientist, geleceğin icatlarını bugüne taşır. Zekasıyla savaşın gidişatını değiştirir.",
+  "image": "8.png",
   "attributes": [
     { "trait_type": "Role", "value": "Scientist" },
-    { "trait_type": "Power", "value": "80" },
-    { "trait_type": "Special", "value": "Nano Serum" },
+    { "trait_type": "Power", "value": 82 },
+    { "trait_type": "Special", "value": "Nano Bots" },
     { "trait_type": "Rarity", "value": "Uncommon" },
-    { "trait_type": "RarityScore", "value": "50" }
+    { "trait_type": "RarityScore", "value": 40 }
   ]
 }
