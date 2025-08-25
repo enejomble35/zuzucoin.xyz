@@ -1,13 +1,12 @@
 {
   "name": "ZUZU Hacker",
-  "description": "ZUZU Hacker, gölgelerden sistemleri ele geçirir. Sanal dünyada görünmez bir suikastçı.",
-  "external_url": "https://zuzucoin.xyz",
-  "image": "ipfs://{BASE_CID}/zuzu_hacker.png",
+  "description": "ZUZU Hacker, gölgelerden sistemi ele geçirir. Sanal dünyada görünmez bir suikastçı.",
+  "image": "3.png",
   "attributes": [
     { "trait_type": "Role", "value": "Hacker" },
-    { "trait_type": "Power", "value": "82" },
-    { "trait_type": "Special", "value": "Quantum Hack" },
+    { "trait_type": "Power", "value": 80 },
+    { "trait_type": "Special", "value": "Dark Net" },
     { "trait_type": "Rarity", "value": "Rare" },
-    { "trait_type": "RarityScore", "value": "62" }
+    { "trait_type": "RarityScore", "value": 60 }
   ]
 }
