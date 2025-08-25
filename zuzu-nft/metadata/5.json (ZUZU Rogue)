@@ -1,15 +1,13 @@
 {
   "name": "ZUZU Rogue",
-  "description": "Siberpunk sokaklarının sessiz savaşçısı. Hız ve çeviklik onun en büyük silahı.",
-  "image": "ipfs://<CID_ROGUE>.png",
-  "external_url": "https://zuzucoin.xyz/nft/rogue",
+  "description": "ZUZU Rogue, siberpunk sokaklarının sessiz savaşçısı. Hız ve çeviklik onun en büyük silahı.",
+  "external_url": "https://zuzucoin.xyz",
+  "image": "ipfs://{BASE_CID}/zuzu_rogue.png",
   "attributes": [
     { "trait_type": "Role", "value": "Rogue" },
-    { "trait_type": "Power", "value": 90 },
-    { "trait_type": "Special", "value": "Shadow Strike" },
-    { "trait_type": "Rarity", "value": "Rare" },
-    { "trait_type": "RarityScore", "value": 75 },
-    { "trait_type": "MaxSupply", "value": 500 },
-    { "trait_type": "ChestWeight", "value": 40 }
+    { "trait_type": "Power", "value": "88" },
+    { "trait_type": "Special", "value": "Shadow Dagger" },
+    { "trait_type": "Rarity", "value": "Epic" },
+    { "trait_type": "RarityScore", "value": "78" }
   ]
 }
