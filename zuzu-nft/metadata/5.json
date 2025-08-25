@@ -1,13 +1,12 @@
 {
   "name": "ZUZU Titan",
   "description": "ZUZU Titan, çelikten bir dev. Yıkılmaz bir duvar gibi savaşın kaderini değiştirir.",
-  "external_url": "https://zuzucoin.xyz",
-  "image": "ipfs://{BASE_CID}/zuzu_titan.png",
+  "image": "5.png",
   "attributes": [
     { "trait_type": "Role", "value": "Titan" },
-    { "trait_type": "Power", "value": "98" },
-    { "trait_type": "Special", "value": "Omega Shield" },
-    { "trait_type": "Rarity", "value": "Legendary" },
-    { "trait_type": "RarityScore", "value": "92" }
+    { "trait_type": "Power", "value": 99 },
+    { "trait_type": "Special", "value": "Mega Shield" },
+    { "trait_type": "Rarity", "value": "Epic" },
+    { "trait_type": "RarityScore", "value": 75 }
   ]
 }
