@@ -1,13 +1,12 @@
 {
   "name": "ZUZU Ranger",
   "description": "ZUZU Ranger, siber ormanların gözcüsü. Keskin nişancı yetenekleriyle karanlıkta bile hedefini bulur.",
-  "external_url": "https://zuzucoin.xyz",
-  "image": "ipfs://{BASE_CID}/zuzu_ranger.png",
+  "image": "1.png",
   "attributes": [
     { "trait_type": "Role", "value": "Ranger" },
-    { "trait_type": "Power", "value": "85" },
-    { "trait_type": "Special", "value": "Plasma Bow" },
+    { "trait_type": "Power", "value": 88 },
+    { "trait_type": "Special", "value": "Plasma Rifle" },
     { "trait_type": "Rarity", "value": "Uncommon" },
-    { "trait_type": "RarityScore", "value": "45" }
+    { "trait_type": "RarityScore", "value": 40 }
   ]
 }
