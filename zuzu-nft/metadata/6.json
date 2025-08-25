@@ -1,13 +1,12 @@
 {
   "name": "ZUZU Sorceress",
-  "description": "ZUZU Sorceress, teknolojiyle büyü arasında köprü kuran gizemli bir varlık. Siber dünyada sihir yaratır.",
-  "external_url": "https://zuzucoin.xyz",
-  "image": "ipfs://{BASE_CID}/zuzu_sorceress.png",
+  "description": "ZUZU Sorceress, teknolojiyi büyü gibi kullanan gizemli bir varlık. Siber dünyada sihir yaratır.",
+  "image": "6.png",
   "attributes": [
     { "trait_type": "Role", "value": "Sorceress" },
-    { "trait_type": "Power", "value": "87" },
-    { "trait_type": "Special", "value": "Arcane Pulse" },
-    { "trait_type": "Rarity", "value": "Epic" },
-    { "trait_type": "RarityScore", "value": "80" }
+    { "trait_type": "Power", "value": 87 },
+    { "trait_type": "Special", "value": "Arcane Code" },
+    { "trait_type": "Rarity", "value": "Rare" },
+    { "trait_type": "RarityScore", "value": 55 }
   ]
 }
