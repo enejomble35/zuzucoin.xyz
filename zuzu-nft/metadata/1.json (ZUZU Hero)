@@ -1,15 +1,13 @@
 {
   "name": "ZUZU Hero",
   "description": "ZUZU Hero, geleceğin siber savaşçısı. İnsanlık ve makineler arasındaki köprü. Koleksiyonun ilk kahramanı.",
-  "image": "ipfs://<CID_HERO>.png",
-  "external_url": "https://zuzucoin.xyz/nft/hero",
+  "external_url": "https://zuzucoin.xyz",
+  "image": "ipfs://{BASE_CID}/zuzu_hero.png",
   "attributes": [
     { "trait_type": "Role", "value": "Hero" },
-    { "trait_type": "Power", "value": 95 },
+    { "trait_type": "Power", "value": "95" },
     { "trait_type": "Special", "value": "Cyber Blade" },
     { "trait_type": "Rarity", "value": "Common" },
-    { "trait_type": "RarityScore", "value": 30 },
-    { "trait_type": "MaxSupply", "value": 2000 },
-    { "trait_type": "ChestWeight", "value": 233 }
+    { "trait_type": "RarityScore", "value": "30" }
   ]
 }
