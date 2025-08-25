@@ -1,21 +1,15 @@
 {
   "name": "ZUZU Hero",
-  "symbol": "ZUZU",
-  "description": "ZUZU Hero — memetik enerji ve AI Meme Intelligence birleşimi; robotik-anime kahraman.",
-  "image": "ipfs://<CID_IMAGES>/hero.png",
-  "external_url": "https://zuzucoin.xyz",
-  "seller_fee_basis_points": 750,
+  "description": "ZUZU Hero, geleceğin siber savaşçısı. İnsanlık ve makineler arasındaki köprü. Koleksiyonun ilk kahramanı.",
+  "image": "ipfs://<CID_HERO>.png",
+  "external_url": "https://zuzucoin.xyz/nft/hero",
   "attributes": [
-    {"trait_type": "Class", "value": "Hero"},
-    {"trait_type": "Faction", "value": "ZUZU"},
-    {"trait_type": "Element", "value": "Light"},
-    {"trait_type": "Armor", "value": "Neo-Steel"},
-    {"trait_type": "Weapon", "value": "Aurelius Blade"},
-    {"trait_type": "Rarity", "value": "Legendary"}
-  ],
-  "properties": {
-    "files": [{"uri": "ipfs://<CID_IMAGES>/hero.png", "type": "image/png"}],
-    "category": "image",
-    "creators": [{"address": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", "share": 100}]
-  }
+    { "trait_type": "Role", "value": "Hero" },
+    { "trait_type": "Power", "value": 95 },
+    { "trait_type": "Special", "value": "Cyber Blade" },
+    { "trait_type": "Rarity", "value": "Common" },
+    { "trait_type": "RarityScore", "value": 30 },
+    { "trait_type": "MaxSupply", "value": 2000 },
+    { "trait_type": "ChestWeight", "value": 233 }
+  ]
 }
