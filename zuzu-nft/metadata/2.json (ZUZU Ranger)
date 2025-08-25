@@ -1,15 +1,13 @@
 {
   "name": "ZUZU Ranger",
-  "description": "Siber ormanların gözcüsü. Keskin nişancı yetenekleriyle karanlık hedefleri bulur.",
-  "image": "ipfs://<CID_RANGER>.png",
-  "external_url": "https://zuzucoin.xyz/nft/ranger",
+  "description": "ZUZU Ranger, siber ormanların gözcüsü. Keskin nişancı yetenekleriyle karanlıkta bile hedefini bulur.",
+  "external_url": "https://zuzucoin.xyz",
+  "image": "ipfs://{BASE_CID}/zuzu_ranger.png",
   "attributes": [
     { "trait_type": "Role", "value": "Ranger" },
-    { "trait_type": "Power", "value": 88 },
+    { "trait_type": "Power", "value": "85" },
     { "trait_type": "Special", "value": "Plasma Bow" },
-    { "trait_type": "Rarity", "value": "Common" },
-    { "trait_type": "RarityScore", "value": 28 },
-    { "trait_type": "MaxSupply", "value": 1500 },
-    { "trait_type": "ChestWeight", "value": 233 }
+    { "trait_type": "Rarity", "value": "Uncommon" },
+    { "trait_type": "RarityScore", "value": "45" }
   ]
 }
