@@ -1,19 +1,15 @@
 {
   "name": "ZUZU Titan",
-  "symbol": "ZUZU",
-  "description": "ZUZU Titan — ağır zırhlı mecha, plazma yumruklar ve magneto çekirdek.",
-  "image": "ipfs://<CID_IMAGES>/titan.png",
-  "external_url": "https://zuzucoin.xyz",
-  "seller_fee_basis_points": 750,
+  "description": "Çelikten bir dev. Yıkılmaz bir duvar gibi savaşı kaderini değiştirir.",
+  "image": "ipfs://<CID_TITAN>.png",
+  "external_url": "https://zuzucoin.xyz/nft/titan",
   "attributes": [
-    {"trait_type": "Class", "value": "Titan"},
-    {"trait_type": "Element", "value": "Steel"},
-    {"trait_type": "Core", "value": "Magneto Reactor"},
-    {"trait_type": "Rarity", "value": "Legendary"}
-  ],
-  "properties": {
-    "files": [{"uri": "ipfs://<CID_IMAGES>/titan.png", "type": "image/png"}],
-    "category": "image",
-    "creators": [{"address": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", "share": 100}]
-  }
+    { "trait_type": "Role", "value": "Titan" },
+    { "trait_type": "Power", "value": 99 },
+    { "trait_type": "Special", "value": "Hyper Core" },
+    { "trait_type": "Rarity", "value": "Legendary" },
+    { "trait_type": "RarityScore", "value": 98 },
+    { "trait_type": "MaxSupply", "value": 300 },
+    { "trait_type": "ChestWeight", "value": 10 }
+  ]
 }
