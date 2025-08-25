@@ -1,15 +1,13 @@
 {
   "name": "ZUZU Scientist",
-  "description": "Nano teknolojinin efendisi. Bilimin ışığıyla savaşın kaderini değiştirir.",
-  "image": "ipfs://<CID_SCIENTIST>.png",
-  "external_url": "https://zuzucoin.xyz/nft/scientist",
+  "description": "ZUZU Scientist, nanoteknoloji ustası. Savaşın gidişatını bir damla serumla değiştirebilir.",
+  "external_url": "https://zuzucoin.xyz",
+  "image": "ipfs://{BASE_CID}/zuzu_scientist.png",
   "attributes": [
     { "trait_type": "Role", "value": "Scientist" },
-    { "trait_type": "Power", "value": 70 },
+    { "trait_type": "Power", "value": "80" },
     { "trait_type": "Special", "value": "Nano Serum" },
-    { "trait_type": "Rarity", "value": "Common" },
-    { "trait_type": "RarityScore", "value": 25 },
-    { "trait_type": "MaxSupply", "value": 1500 },
-    { "trait_type": "ChestWeight", "value": 233 }
+    { "trait_type": "Rarity", "value": "Uncommon" },
+    { "trait_type": "RarityScore", "value": "50" }
   ]
 }
