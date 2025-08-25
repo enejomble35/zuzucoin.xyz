@@ -1,19 +1,15 @@
 {
   "name": "ZUZU Scientist",
-  "symbol": "ZUZU",
-  "description": "ZUZU Scientist — memetik/AI kimyageri, probiyotik nöral çözelti.",
-  "image": "ipfs://<CID_IMAGES>/scientist.png",
-  "external_url": "https://zuzucoin.xyz",
-  "seller_fee_basis_points": 750,
+  "description": "Nano teknolojinin efendisi. Bilimin ışığıyla savaşın kaderini değiştirir.",
+  "image": "ipfs://<CID_SCIENTIST>.png",
+  "external_url": "https://zuzucoin.xyz/nft/scientist",
   "attributes": [
-    {"trait_type": "Class", "value": "Scientist"},
-    {"trait_type": "Element", "value": "Bio-Tech"},
-    {"trait_type": "Lab", "value": "Synaptic Flask"},
-    {"trait_type": "Rarity", "value": "Rare"}
-  ],
-  "properties": {
-    "files": [{"uri": "ipfs://<CID_IMAGES>/scientist.png", "type": "image/png"}],
-    "category": "image",
-    "creators": [{"address": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", "share": 100}]
-  }
+    { "trait_type": "Role", "value": "Scientist" },
+    { "trait_type": "Power", "value": 70 },
+    { "trait_type": "Special", "value": "Nano Serum" },
+    { "trait_type": "Rarity", "value": "Common" },
+    { "trait_type": "RarityScore", "value": 25 },
+    { "trait_type": "MaxSupply", "value": 1500 },
+    { "trait_type": "ChestWeight", "value": 233 }
+  ]
 }
