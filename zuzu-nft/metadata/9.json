@@ -1,13 +1,12 @@
 {
   "name": "ZUZU Maiden",
-  "description": "ZUZU Maiden — saf enerji regülatörü, mavi çekirdek dengeleyici. Masum görünümlü ama çok güçlü.",
-  "external_url": "https://zuzucoin.xyz",
-  "image": "ipfs://{BASE_CID}/zuzu_maiden.png",
+  "description": "ZUZU Maiden, güzelliği ve zekasıyla dijital dünyada eşsiz bir auraya sahiptir.",
+  "image": "9.png",
   "attributes": [
     { "trait_type": "Role", "value": "Maiden" },
-    { "trait_type": "Power", "value": "80" },
-    { "trait_type": "Special", "value": "Healing Aura" },
-    { "trait_type": "Rarity", "value": "Common" },
-    { "trait_type": "RarityScore", "value": "35" }
+    { "trait_type": "Power", "value": 78 },
+    { "trait_type": "Special", "value": "Charm Protocol" },
+    { "trait_type": "Rarity", "value": "Legendary" },
+    { "trait_type": "RarityScore", "value": 90 }
   ]
 }
