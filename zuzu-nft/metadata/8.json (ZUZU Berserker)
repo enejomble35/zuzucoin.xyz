@@ -1,19 +1,15 @@
 {
   "name": "ZUZU Berserker",
-  "symbol": "ZUZU",
-  "description": "ZUZU Berserker — kızıl nöral çekirdek, aşırı güç yükseltimi.",
-  "image": "ipfs://<CID_IMAGES>/berserker.png",
-  "external_url": "https://zuzucoin.xyz",
-  "seller_fee_basis_points": 750,
+  "description": "Öfke ve güçle savaşır. Çelik yumruklarıyla önüne çıkan her şeyi parçalar.",
+  "image": "ipfs://<CID_BERSERKER>.png",
+  "external_url": "https://zuzucoin.xyz/nft/berserker",
   "attributes": [
-    {"trait_type": "Class", "value": "Berserker"},
-    {"trait_type": "Element", "value": "Flame"},
-    {"trait_type": "Augment", "value": "Red Neural Core"},
-    {"trait_type": "Rarity", "value": "Epic"}
-  ],
-  "properties": {
-    "files": [{"uri": "ipfs://<CID_IMAGES>/berserker.png", "type": "image/png"}],
-    "category": "image",
-    "creators": [{"address": "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", "share": 100}]
-  }
+    { "trait_type": "Role", "value": "Berserker" },
+    { "trait_type": "Power", "value": 94 },
+    { "trait_type": "Special", "value": "Rage Core" },
+    { "trait_type": "Rarity", "value": "Uncommon" },
+    { "trait_type": "RarityScore", "value": 60 },
+    { "trait_type": "MaxSupply", "value": 800 },
+    { "trait_type": "ChestWeight", "value": 67 }
+  ]
 }
