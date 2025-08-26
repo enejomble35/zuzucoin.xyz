@@ -1,78 +1,64 @@
-import { useContract, useNFTs, useActiveClaimConditionForWallet, useAddress, useClaimNFT } from "@thirdweb-dev/react";
-import NFTCard from "./NFTCard";
-import { CONTRACT_ADDRESS } from "../lib/constants";
+import React from "react";
+import {
+  useContract,
+  useNFTs,
+  MediaRenderer,
+  ConnectWallet
+} from "@thirdweb-dev/react";
+import MintButton from "./MintButton";
+import { CONTRACT_ADDRESS } from "@/lib/constants";
 
 export default function Gallery() {
-  const address = useAddress();
-  const { contract, isLoading: loadingContract, error: contractError } = useContract(CONTRACT_ADDRESS);
-  const { data: nfts, isLoading: loadingNFTs, error: nftsError } = useNFTs(contract);
+  const { contract, isLoading: loadingC, error: contractError } = useContract(CONTRACT_ADDRESS);
+  const { data: nfts, isLoading: loadingN, error: nftsError } = useNFTs(contract);
 
-  const getPrice = (claimCondition) => {
-    const v = claimCondition?.price?.displayValue;
-    const s = claimCondition?.currencyMetadata?.symbol;
-    if (v && s) return `${v} ${s}`;
-    return "Mint";
-  };
-
+  if (contractError) return <div className="card">Kontrat hatası: {contractError.message}</div>;
   return (
     <div className="container">
-      {contractError && (
-        <div className="card" style={{ marginBottom: 16 }}>
-          <strong>Kontrat yüklenemedi.</strong>
-          <p>Adres: {CONTRACT_ADDRESS}</p>
-          <p style={{ color: "#ff8" }}>{String(contractError.message || contractError)}</p>
+      <header style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}>
+        <div>
+          <h1 style={{margin:0}}>ZUZU NFT Koleksiyonu</h1>
+          <p className="badge">Contract: {CONTRACT_ADDRESS?.slice(0,8)}…{CONTRACT_ADDRESS?.slice(-6)}</p>
         </div>
-      )}
+        <ConnectWallet theme="dark" btnTitle="Cüzdan Bağla" />
+      </header>
 
-      {(loadingContract || loadingNFTs) && (
+      {(loadingC || loadingN) && (
         <div className="grid">
-          {Array.from({ length: 12 }).map((_, i) => (
-            <div key={i} className="card">
-              <div className="skeleton" />
-              <div className="row"><div>Yükleniyor...</div></div>
-              <button className="btn" disabled>Mint</button>
+          {Array.from({length:8}).map((_,i)=>(
+            <div key={i} className="card" style={{height:280}}>
+              <div className="skeleton" style={{height:180,borderRadius:12,marginBottom:10}}/>
+              <div className="skeleton" style={{height:16,width:'60%',borderRadius:6,margin:'6px 0'}}/>
+              <div className="skeleton" style={{height:16,width:'40%',borderRadius:6}}/>
             </div>
           ))}
         </div>
       )}
 
-      {!loadingNFTs && nfts?.length > 0 && (
-        <div className="grid">
-          {nfts.map((nft) => {
-            const tokenId = nft?.metadata?.id;
-            const { data: cond } = useActiveClaimConditionForWallet(contract, tokenId, address);
-            const { mutate: claim, isLoading } = useClaimNFT(contract);
-
-            const onMint = async () => {
-              if (!address) {
-                alert("Lütfen önce cüzdan bağlayın.");
-                return;
-              }
-              try {
-                await claim({ to: address, tokenId, quantity: 1 });
-                alert("Mint tamam! 🎉");
-              } catch (e) {
-                alert("Mint hatası: " + (e?.message || e));
-              }
-            };
-
-            return (
-              <NFTCard
-                key={tokenId}
-                nft={nft}
-                onMint={onMint}
-                priceLabel={getPrice(cond)}
-                loading={isLoading}
-              />
-            );
-          })}
-        </div>
+      {!loadingN && nftsError && (
+        <div className="card">NFT’ler alınamadı: {nftsError.message}</div>
       )}
 
-      {!loadingNFTs && (!nfts || nfts.length === 0) && (
-        <div className="card">
-          <strong>Henüz listelenecek NFT bulunamadı.</strong>
-          <p>Kontrat adresi: {CONTRACT_ADDRESS}</p>
+      {!loadingN && nfts?.length === 0 && (
+        <div className="card">Henüz NFT yok.</div>
+      )}
+
+      {!loadingN && nfts?.length > 0 && (
+        <div className="grid">
+          {nfts.map((n)=>(
+            <div key={n.metadata.id} className="card">
+              <MediaRenderer
+                src={n?.metadata?.image}
+                alt={n?.metadata?.name || "ZUZU NFT"}
+                style={{width:'100%',aspectRatio:'1/1',objectFit:'cover',borderRadius:12}}
+              />
+              <h3 style={{margin:'10px 0 6px 0'}}>{n?.metadata?.name || `#${n.metadata.id}`}</h3>
+              <p className="badge">ID: {String(n.metadata.id)}</p>
+              <div style={{marginTop:10}}>
+                <MintButton tokenId={Number(n.metadata.id)} />
+              </div>
+            </div>
+          ))}
         </div>
       )}
     </div>
