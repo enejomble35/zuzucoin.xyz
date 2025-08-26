@@ -4,12 +4,11 @@ const nextConfig = {
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "ipfs.io" },
-      { protocol: "https", hostname: "gateway.ipfscdn.io" },
       { protocol: "https", hostname: "nftstorage.link" },
-      { protocol: "https", hostname: "arweave.net" },
-      { protocol: "https", hostname: "thirdweb-dev.imgix.net" },
-      { protocol: "https", hostname: "*.thirdweb.com" },
+      { protocol: "https", hostname: "gateway.ipfscdn.io" },
+      { protocol: "https", hostname: "cloudflare-ipfs.com" },
     ],
   },
 };
+
 module.exports = nextConfig;
