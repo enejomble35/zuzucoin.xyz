@@ -6,7 +6,7 @@ export default function ThirdwebProviderWrapper({ children }) {
   return (
     <ThirdwebProvider
       clientId={process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID}
-      activeChain={Polygon}
+      activeChain={Polygon} // 137
     >
       {children}
     </ThirdwebProvider>
