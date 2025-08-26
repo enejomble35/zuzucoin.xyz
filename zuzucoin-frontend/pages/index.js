@@ -1,10 +1,13 @@
 // pages/index.js
-import React from "react";
-import Gallery from "../components/Gallery";
+import dynamic from "next/dynamic";
+
+const Gallery = dynamic(() => import("../components/Gallery"), {
+  ssr: false,
+});
 
 export default function Home() {
   return (
-    <div style={{ background: "#0a0a0a", minHeight: "100vh" }}>
+    <div style={{ background: "#000", minHeight: "100vh" }}>
       <Gallery />
     </div>
   );
