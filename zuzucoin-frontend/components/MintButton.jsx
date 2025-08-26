@@ -13,17 +13,21 @@ export default function MintButton({ tokenId }) {
   const address = useAddress();
   const { contract } = useContract(ZUZU_COLLECTION_ADDRESS);
 
+  // Aktif claim koşulu (fiyat, para birimi vs.)
   const { data: claimCondition } = useActiveClaimConditionForWallet(
     contract,
     tokenId,
     address
   );
 
-  const { mutate: claim, isLoading, error } = useClaimNFT(contract);
+  const {
+    mutate: claim,
+    isLoading: isClaiming,
+    error,
+  } = useClaimNFT(contract);
 
-  const price =
-    claimCondition?.price?.displayValue &&
-    claimCondition?.currencyMetadata?.symbol
+  const priceLabel =
+    claimCondition?.price?.displayValue && claimCondition?.currencyMetadata?.symbol
       ? `${claimCondition.price.displayValue} ${claimCondition.currencyMetadata.symbol}`
       : "Mint";
 
@@ -32,38 +36,49 @@ export default function MintButton({ tokenId }) {
       alert("Lütfen önce cüzdan bağlayın.");
       return;
     }
+
+    // ERC1155 (Edition Drop) claim
     claim(
-      { to: address, tokenId, quantity: 1 },
       {
-        onSuccess: () => alert("Mint başarılı! 🎉"),
-        onError: (err) =>
-          alert("Mint başarısız: " + (err?.message || "Bilinmeyen hata")),
+        to: address,
+        tokenId,
+        quantity: 1,
+      },
+      {
+        onSuccess: () => {
+          alert("Mint başarılı! 🎉");
+        },
+        onError: (err) => {
+          console.error(err);
+          alert("Mint başarısız: " + (err?.message || "Bilinmeyen hata"));
+        },
       }
     );
   };
 
   return (
-    <div style={{ marginTop: 8 }}>
+    <div style={{ marginTop: 10 }}>
       {!address && (
         <div style={{ marginBottom: 10 }}>
           <ConnectWallet theme="dark" btnTitle="Cüzdan Bağla" />
         </div>
       )}
+
       <button
         onClick={onMint}
-        disabled={isLoading || !contract}
+        disabled={isClaiming || !contract}
         style={{
           width: "100%",
           padding: "10px 14px",
           borderRadius: 10,
           border: "1px solid #333",
-          background: isLoading ? "#333" : "#1a73e8",
+          background: isClaiming ? "#333" : "#1a73e8",
           color: "#fff",
           fontWeight: 700,
-          cursor: isLoading ? "not-allowed" : "pointer",
+          cursor: isClaiming ? "not-allowed" : "pointer",
         }}
       >
-        {isLoading ? "Mintleniyor..." : `Mint (${price})`}
+        {isClaiming ? "Mintleniyor..." : `Mint (${priceLabel})`}
       </button>
 
       {error && (
