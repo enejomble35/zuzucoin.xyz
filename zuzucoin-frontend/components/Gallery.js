@@ -1,25 +1,15 @@
+// components/Gallery.js
 import { useContract, useNFTs } from "@thirdweb-dev/react";
+import MintButton from "./MintButton";
 
-// ADRESİ BURAYA SABİT YAZIYORUZ
-const CONTRACT_ADDRESS = "0xFC1F2f35c20eBF86eBac74dBF6Aaf1dEa3bB277F";
-
-// ipfs:// linklerini HTTPS gateway'e çevirme (görüntü sorunu olmasın)
-const ipfsToHttp = (url) => {
-  if (!url) return "";
-  return url.startsWith("ipfs://")
-    ? `https://ipfs.io/ipfs/${url.replace("ipfs://", "")}`
-    : url;
-};
+// ADRESİ BURAYA GÖMDÜM
+const ZUZU_COLLECTION_ADDRESS = "0xFC1F2f35c20eBF86eBac74dBF6Aaf1dEa3bB277F";
 
 export default function Gallery() {
-  // Kontrata bağlan
-  const { contract, isLoading: loadingContract, error: contractError } = useContract(CONTRACT_ADDRESS);
-
-  // NFT'leri çek
+  const { contract } = useContract(ZUZU_COLLECTION_ADDRESS);
   const { data: nfts, isLoading, error } = useNFTs(contract);
 
-  if (loadingContract || isLoading) return <p>Loading NFTs...</p>;
-  if (contractError) return <p>Kontrata bağlanırken hata: {contractError?.message}</p>;
+  if (isLoading) return <p>Loading NFTs...</p>;
   if (error) return <p>Hata: {error?.message}</p>;
   if (!nfts || nfts.length === 0) return <p>Henüz NFT bulunamadı.</p>;
 
@@ -45,16 +35,19 @@ export default function Gallery() {
           }}
         >
           <img
-            src={ipfsToHttp(nft?.metadata?.image)}
-            alt={nft?.metadata?.name}
+            src={nft.metadata.image}
+            alt={nft.metadata.name}
             style={{ width: "100%", borderRadius: 8 }}
           />
           <h2 style={{ marginTop: 10, fontSize: "1.2rem" }}>
-            {nft?.metadata?.name}
+            {nft.metadata.name}
           </h2>
-          <p style={{ fontSize: "0.9rem", color: "#aaa" }}>
-            {nft?.metadata?.description}
+          <p style={{ fontSize: "0.9rem", color: "#aaa", minHeight: 48 }}>
+            {nft.metadata.description}
           </p>
+
+          {/* Mint / Buy butonu */}
+          <MintButton tokenId={nft?.metadata?.id} />
         </div>
       ))}
     </div>
