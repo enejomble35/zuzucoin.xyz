@@ -1,13 +1,12 @@
-// pages/_app.js
-import "../styles/globals.css";
+// zuzucoin-frontend/pages/_app.jsx
+"use client";
+import "../styles/global.css";
 import ThirdwebProviderWrapper from "../components/ThirdwebProviderWrapper";
 
-function MyApp({ Component, pageProps }) {
+export default function App({ Component, pageProps }) {
   return (
     <ThirdwebProviderWrapper>
       <Component {...pageProps} />
     </ThirdwebProviderWrapper>
   );
 }
-
-export default MyApp;
