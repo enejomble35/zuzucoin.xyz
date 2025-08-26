@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#00E5FF"/>
+      <stop offset="1" stop-color="#7C4DFF"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect x="0" y="0" width="256" height="256" rx="24" fill="#0B0F1A"/>
+  <g filter="url(#glow)">
+    <circle cx="128" cy="110" r="64" fill="none" stroke="url(#g)" stroke-width="6"/>
+    <path d="M78 160 L178 160 L168 196 L88 196 Z" fill="none" stroke="url(#g)" stroke-width="4"/>
+    <rect x="86" y="92" width="28" height="24" rx="6" fill="#0B0F1A" stroke="#00E5FF" stroke-width="3"/>
+    <rect x="142" y="92" width="28" height="24" rx="6" fill="#0B0F1A" stroke="#00E5FF" stroke-width="3"/>
+    <circle cx="100" cy="104" r="5" fill="#00E5FF"/>
+    <circle cx="156" cy="104" r="5" fill="#00E5FF"/>
+    <path d="M108 132 H148" stroke="#7C4DFF" stroke-width="4" stroke-linecap="round"/>
+    <path d="M128 46 v18 M62 110 h18 M194 110 h-18" stroke="url(#g)" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <text x="128" y="232" text-anchor="middle" font-family="Montserrat, Arial" font-size="20" fill="#9AA4B2">ZUZU</text>
+</svg>
