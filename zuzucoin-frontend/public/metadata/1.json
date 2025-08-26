@@ -1,9 +1,0 @@
-{
-  "name": "ZUZU #1",
-  "description": "ZUZU Genesis NFT",
-  "image": "/nft/1.png",
-  "attributes": [
-    { "trait_type": "Class", "value": "Ranger" },
-    { "trait_type": "Rarity", "value": "Epic" }
-  ]
-}
