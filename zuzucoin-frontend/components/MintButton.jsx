@@ -7,29 +7,23 @@ import {
   useActiveClaimConditionForWallet,
   ConnectWallet,
 } from "@thirdweb-dev/react";
-
-// ADRESİ BURAYA GÖMDÜM
-const ZUZU_COLLECTION_ADDRESS = "0xFC1F2f35c20eBF86eBac74dBF6Aaf1dEa3bB277F";
+import { ZUZU_COLLECTION_ADDRESS } from "../lib/constants";
 
 export default function MintButton({ tokenId }) {
   const address = useAddress();
   const { contract } = useContract(ZUZU_COLLECTION_ADDRESS);
 
-  // ERC1155 (Edition Drop) için tokenId gerekli
   const { data: claimCondition } = useActiveClaimConditionForWallet(
     contract,
     tokenId,
     address
   );
 
-  const {
-    mutate: claim,
-    isLoading: isClaiming,
-    error,
-  } = useClaimNFT(contract);
+  const { mutate: claim, isLoading, error } = useClaimNFT(contract);
 
   const price =
-    claimCondition?.price?.displayValue && claimCondition?.currencyMetadata?.symbol
+    claimCondition?.price?.displayValue &&
+    claimCondition?.currencyMetadata?.symbol
       ? `${claimCondition.price.displayValue} ${claimCondition.currencyMetadata.symbol}`
       : "Mint";
 
@@ -38,50 +32,38 @@ export default function MintButton({ tokenId }) {
       alert("Lütfen önce cüzdan bağlayın.");
       return;
     }
-
-    // Edition Drop (ERC1155) mint
     claim(
+      { to: address, tokenId, quantity: 1 },
       {
-        to: address,
-        tokenId: Number(tokenId), // string gelirse sayıya çevir
-        quantity: 1,
-      },
-      {
-        onSuccess: () => {
-          alert("Mint başarılı! 🎉");
-        },
-        onError: (err) => {
-          console.error(err);
-          alert("Mint başarısız: " + (err?.message || "Bilinmeyen hata"));
-        },
+        onSuccess: () => alert("Mint başarılı! 🎉"),
+        onError: (err) =>
+          alert("Mint başarısız: " + (err?.message || "Bilinmeyen hata")),
       }
     );
   };
 
   return (
-    <div style={{ marginTop: 10 }}>
-      {/* Cüzdan bağlama butonu */}
+    <div style={{ marginTop: 8 }}>
       {!address && (
         <div style={{ marginBottom: 10 }}>
           <ConnectWallet theme="dark" btnTitle="Cüzdan Bağla" />
         </div>
       )}
-
       <button
         onClick={onMint}
-        disabled={isClaiming || !contract}
+        disabled={isLoading || !contract}
         style={{
           width: "100%",
           padding: "10px 14px",
           borderRadius: 10,
           border: "1px solid #333",
-          background: isClaiming ? "#333" : "#1a73e8",
+          background: isLoading ? "#333" : "#1a73e8",
           color: "#fff",
           fontWeight: 700,
-          cursor: isClaiming ? "not-allowed" : "pointer",
+          cursor: isLoading ? "not-allowed" : "pointer",
         }}
       >
-        {isClaiming ? "Mintleniyor..." : `Mint (${price})`}
+        {isLoading ? "Mintleniyor..." : `Mint (${price})`}
       </button>
 
       {error && (
