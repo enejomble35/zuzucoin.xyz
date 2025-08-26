@@ -7,14 +7,15 @@ import {
   useActiveClaimConditionForWallet,
   ConnectWallet,
 } from "@thirdweb-dev/react";
-import { ZUZU_COLLECTION_ADDRESS } from "../lib/constants";
+
+// ADRESİ BURAYA GÖMDÜM
+const ZUZU_COLLECTION_ADDRESS = "0xFC1F2f35c20eBF86eBac74dBF6Aaf1dEa3bB277F";
 
 export default function MintButton({ tokenId }) {
   const address = useAddress();
   const { contract } = useContract(ZUZU_COLLECTION_ADDRESS);
 
-  // Fiyat / para birimi / kalan miktar gibi bilgileri çekelim
-  // ERC1155 (Edition Drop) için tokenId gerekir:
+  // ERC1155 (Edition Drop) için tokenId gerekli
   const { data: claimCondition } = useActiveClaimConditionForWallet(
     contract,
     tokenId,
@@ -38,11 +39,11 @@ export default function MintButton({ tokenId }) {
       return;
     }
 
-    // Edition Drop (ERC1155) – tokenId gereklidir:
+    // Edition Drop (ERC1155) mint
     claim(
       {
         to: address,
-        tokenId: tokenId,
+        tokenId: Number(tokenId), // string gelirse sayıya çevir
         quantity: 1,
       },
       {
