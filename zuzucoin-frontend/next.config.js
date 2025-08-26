@@ -2,8 +2,13 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["ipfs.thirdwebcdn.com", "gateway.ipfscdn.io", "nft-cdn.alchemy.com"],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'ipfs.io' },
+      { protocol: 'https', hostname: 'gateway.ipfscdn.io' },
+      { protocol: 'https', hostname: '**.ipfs.dweb.link' }
+    ]
   },
+  output: 'standalone'
 };
 
 module.exports = nextConfig;
