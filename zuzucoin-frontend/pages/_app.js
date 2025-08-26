@@ -2,10 +2,12 @@
 import "../styles/globals.css";
 import ThirdwebProviderWrapper from "../components/ThirdwebProviderWrapper";
 
-export default function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }) {
   return (
     <ThirdwebProviderWrapper>
       <Component {...pageProps} />
     </ThirdwebProviderWrapper>
   );
 }
+
+export default MyApp;
