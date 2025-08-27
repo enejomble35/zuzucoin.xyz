@@ -1,76 +1,58 @@
-// components/NFTCard.jsx
-import { Web3Button } from "@thirdweb-dev/react";
+import { useAddress, useContract, useClaimNFT, useNFT } from "@thirdweb-dev/react";
+import { CONTRACT_ADDRESS, CLAIM_ADDRESS } from "../lib/constants";
+import { useState } from "react";
 
-export default function NFTCard({ nft, contract }) {
-  const image =
-    nft?.metadata?.image ||
-    nft?.metadata?.imageUrl ||
-    nft?.metadata?.image_url;
+export default function NFTCard({ tokenId }) {
+  const address = useAddress();
+
+  // Edition Drop / ERC-1155 ise useContract(CONTRACT_ADDRESS, "edition-drop")
+  // ERC-721 mint ise "nft-collection"
+  const { contract } = useContract(CONTRACT_ADDRESS, "edition-drop");
+
+  const { data: nft, isLoading } = useNFT(contract, tokenId);
+  const { mutate: claim, isLoading: isClaiming } = useClaimNFT(contract);
+
+  const [txStatus, setTxStatus] = useState("");
+
+  const onClaim = async () => {
+    if (!address) {
+      setTxStatus("Cüzdan bağla!");
+      return;
+    }
+    try {
+      setTxStatus("İşlem gönderiliyor...");
+      await claim({
+        to: address,
+        tokenId,
+        quantity: 1,
+      });
+      setTxStatus("Mint başarılı!");
+    } catch (e) {
+      console.error(e);
+      setTxStatus("Mint başarısız.");
+    }
+  };
+
+  if (isLoading) return <div className="card">Yükleniyor...</div>;
 
   return (
-    <article className="card">
-      <div className="media">
-        {image ? (
-          <img src={image?.toString()} alt={nft?.metadata?.name} />
-        ) : (
-          <div className="placeholder">NFT</div>
-        )}
-      </div>
-
-      <div className="body">
-        <h3>{nft?.metadata?.name ?? "ZUZU NFT"}</h3>
-        <p className="desc">{nft?.metadata?.description ?? ""}</p>
-
-        <Web3Button
-          contractAddress={contract?.getAddress()}
-          action={async (cntr) => {
-            await cntr.erc721.claim(1); // ERC721 Drop
-          }}
-          onSuccess={() => alert("Mint başarılı! 🎉")}
-          onError={(e) => alert(`Mint hatası: ${e?.message ?? e}`)}
-          theme="dark"
-        >
-          Mint Et
-        </Web3Button>
-      </div>
-
+    <div className="card">
+      <img src={nft?.metadata?.image} alt={`ZUZU NFT #${tokenId}`} />
+      <h3>{nft?.metadata?.name || `ZUZU NFT #${tokenId}`}</h3>
+      <button onClick={onClaim} disabled={isClaiming}>
+        {isClaiming ? "Mintleniyor..." : "Mint Et"}
+      </button>
+      {!!txStatus && <p className="status">{txStatus}</p>}
       <style jsx>{`
-        .card {
-          background: #0c0c12;
-          border: 1px solid #1b1b25;
-          border-radius: 12px;
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
+        .card { padding: 16px; border-radius: 12px; background: #121212; }
+        img { width: 100%; border-radius: 10px; }
+        h3 { margin: 12px 0; }
+        button {
+          background: #8a2be2; color: #fff; border: 0; padding: 10px 16px;
+          border-radius: 10px; cursor: pointer;
         }
-        .media {
-          width: 100%;
-          aspect-ratio: 1 / 1;
-          background: #101018;
-          display: grid;
-          place-items: center;
-        }
-        .media img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-        .placeholder {
-          color: #6e6e86;
-          font-weight: 600;
-        }
-        .body {
-          padding: 12px;
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-        .desc {
-          min-height: 38px;
-          color: #bfc3d9;
-          font-size: 0.9rem;
-        }
+        .status { margin-top: 8px; font-size: 12px; color: #aaa; }
       `}</style>
-    </article>
+    </div>
   );
 }
