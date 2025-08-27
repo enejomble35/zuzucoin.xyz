@@ -1,258 +1,147 @@
-/*************************
- *  Z U Z U   P R E S A L E
- *************************/
-const RECEIVERS = {
-  evm: "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",
-  tron: "TP...REPLACED", // Tron base58 değilse otomatik alırız, aşağıda tronReceiverFromEvm()
-  ton: "UQD5Pkyp_l_O3907ri0WeLAY7fBVa-twb9nUnQ38Q1MinTND",
-  sol: "31Cjkx2PA5oMapNxxGAiZhuHDcvAyQ7hogqB8Hx6f1pW"
-};
-// Not: TRON için EVM adresinin TRON karşılığı farklıdır. Direkt TRON adresi kullanacağız.
-// Eğer TRON için farklı bir adres istiyorsan buraya TRON (T...) adresini yaz:
-RECEIVERS.tron = "TS7S3V1..."; // yoksa TronLink ekranında seçtiririz. İstemezsen bu satırı sil.
-
-/* EVM ağ bilgileri */
-const EVM_NETWORKS = {
-  bsc: {
-    chainIdHex: "0x38",
-    name: "BNB Smart Chain",
-    rpcUrls: ["https://bsc-dataseed.binance.org"],
-    nativeSymbol: "BNB",
-    usdt: "0x55d398326f99059fF775485246999027B3197955" // 18 decimals
+// ===================== I18N =====================
+const I18N = {
+  tr: {
+    "nav.about":"Hakkımızda",
+    "nav.community":"Topluluk",
+    "nav.stake":"Stake",
+    "nav.roadmap":"Yol Haritası",
+    "nav.tokenomics":"Tokonomi",
+    "wallet.evm":"MetaMask / EVM",
+    "hero.title":"Kirpinin Gücü: <span class='grad'>ZUZUCOIN</span>",
+    "hero.lead":"ZUZUCOIN; neon şehirlerin arasında dolaşan anime-robotik kirpi maskotunun ruhunu taşır. <b>Topluluk odaklı</b>, <b>oyunlaştırma</b> içeren, adil ve şeffaf bir web3 ekonomisini hedefler.",
+    "cd.days":"Gün","cd.hours":"Saat","cd.minutes":"Dakika","cd.seconds":"Saniye",
+    "phase.w1":"1. Hafta","phase.w2":"2. Hafta","phase.w3":"3. Hafta","phase.w4":"4. Hafta",
+    "btn.buy":"Satın Al",
+    "community.title":"Topluluk",
+    "community.text":"Telegram, X ve Discord’da global bir aile. Etkinlikler, airdrop’lar, mini oyunlar ve daha fazlası.",
+    "stake.title":"Stake",
+    "stake.text":"ZUZU’larını kilitle, pasif gelir kazan. Erken stakeleyenler özel rozet ve ödüller alır.",
+    "stake.cta":"Stake Paneli (yakında)",
+    "gallery.title":"ZUZU Maskot Galerisi","gallery.text":"Anime-robotik kirpi koleksiyonundan 10 özel görsel",
+    "roadmap.title":"Yol Haritamız",
+    "token.title":"Tokonomi","token.supply":"Toplam Arz:",
+    "buy.title":"Satın Alma Bilgisi",
+    "buy.desc":"Aşağıdan kullanmak istediğiniz ağı seçin. USDT gönderirken ağı doğru seçtiğinizden emin olun.",
+    "buy.note":"Not: Bu sürüm “bilgilendirme” amaçlıdır. Otomatik akıllı sözleşme ödemesi, stake ve dağıtım bir sonraki sürümde eklenecektir."
   },
-  polygon: {
-    chainIdHex: "0x89",
-    name: "Polygon",
-    rpcUrls: ["https://polygon-rpc.com"],
-    nativeSymbol: "MATIC",
-    usdt: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F" // 6 decimals
-  },
-  arbitrum: {
-    chainIdHex: "0xa4b1",
-    name: "Arbitrum One",
-    rpcUrls: ["https://arb1.arbitrum.io/rpc"],
-    nativeSymbol: "ETH",
-    usdt: "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9" // 6 decimals
+  en: {
+    "nav.about":"About",
+    "nav.community":"Community",
+    "nav.stake":"Stake",
+    "nav.roadmap":"Roadmap",
+    "nav.tokenomics":"Tokenomics",
+    "wallet.evm":"MetaMask / EVM",
+    "hero.title":"Power of the Hedgehog: <span class='grad'>ZUZUCOIN</span>",
+    "hero.lead":"ZUZUCOIN embodies the spirit of an anime-robotic hedgehog roaming neon cities. A <b>community-driven</b>, <b>gamified</b>, fair and transparent web3 economy.",
+    "cd.days":"Days","cd.hours":"Hours","cd.minutes":"Minutes","cd.seconds":"Seconds",
+    "phase.w1":"Week 1","phase.w2":"Week 2","phase.w3":"Week 3","phase.w4":"Week 4",
+    "btn.buy":"Buy",
+    "community.title":"Community",
+    "community.text":"A global family on Telegram, X and Discord. Events, airdrops, mini-games and more.",
+    "stake.title":"Stake",
+    "stake.text":"Lock your ZUZU and earn passive income. Early stakers get badges and special rewards.",
+    "stake.cta":"Staking Panel (soon)",
+    "gallery.title":"ZUZU Mascot Gallery","gallery.text":"10 exclusive visuals from our anime-robotic hedgehog collection",
+    "roadmap.title":"Roadmap",
+    "token.title":"Tokenomics","token.supply":"Total Supply:",
+    "buy.title":"Purchase Info",
+    "buy.desc":"Choose the network you want to use. Make sure you send USDT on the correct network.",
+    "buy.note":"Note: This build is informational. Automated contract payments, staking and distribution will be added in the next release."
   }
 };
 
-/* UI elemanları */
-const modal = document.getElementById('modal');
-const modalTitle = document.getElementById('modalTitle');
-const modalText  = document.getElementById('modalText');
-const modalClose = document.getElementById('modalClose');
+const langSelect = document.getElementById('langSelect');
+function applyI18n(lang){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k = el.getAttribute('data-i18n');
+    const v = I18N[lang]?.[k];
+    if(v) el.innerHTML = v;
+  });
+  localStorage.setItem('zuzu_lang', lang);
+}
+langSelect.addEventListener('change', e=>applyI18n(e.target.value));
+applyI18n(localStorage.getItem('zuzu_lang') || 'tr');
+langSelect.value = localStorage.getItem('zuzu_lang') || 'tr';
 
-const buyModal   = document.getElementById('buyModal');
-const buyChain   = document.getElementById('buyChain');
-const buyToken   = document.getElementById('buyToken');
-const buyAmount  = document.getElementById('buyAmount');
-const buyInfo    = document.getElementById('buyInfo');
-const buyConfirm = document.getElementById('buyConfirm');
-const buyCancel  = document.getElementById('buyCancel');
-
-const btnWallet  = document.getElementById('btnWallet');
-const walletMenu = document.getElementById('walletMenu');
-
-function showModal(t, html){ modalTitle.textContent=t; modalText.innerHTML=html; modal.style.display='flex'; }
-modalClose?.addEventListener('click', ()=> modal.style.display='none');
-document.addEventListener('click',(e)=>{ if(modal.style.display==='flex' && e.target===modal) modal.style.display='none'; });
-
-/* Cüzdan menüsü */
-btnWallet?.addEventListener('click', ()=> walletMenu.style.display = walletMenu.style.display==='block' ? 'none' : 'block');
-document.addEventListener('click',(e)=>{ if(!walletMenu.contains(e.target) && !btnWallet.contains(e.target)) walletMenu.style.display='none'; });
-
-walletMenu?.addEventListener('click',(e)=>{
-  if(!e.target.matches('button')) return;
-  walletMenu.style.display='none';
-  const t=e.target.getAttribute('data-wallet');
-  if(t==='evm') connectEVM('bsc');        // default BSC
-  if(t==='solana') connectSolana();
-  if(t==='ton') connectTON();
-});
-
-/* --------- COUNTDOWN / GALLERY (aynı kalsın) --------- */
-const CONFIG = { countdownTarget: '2025-09-01T21:00:00+03:00' };
-const targetDate=new Date(CONFIG.countdownTarget);
-function pad(n){return n.toString().padStart(2,'0');}
+// ===================== COUNTDOWN =====================
+const target = new Date(); // 4 haftalık presale örneği
+target.setDate(target.getDate()+28);
+function pad(n){return n.toString().padStart(2,'0')}
 function tick(){
-  const now=new Date(); let diff=Math.max(0,targetDate-now);
-  const d=Math.floor(diff/86400000); diff-=d*86400000;
-  const h=Math.floor(diff/3600000);  diff-=h*3600000;
-  const m=Math.floor(diff/60000);    diff-=m*60000;
-  const s=Math.floor(diff/1000);
-  document.getElementById('cdDays').textContent=pad(d);
-  document.getElementById('cdHours').textContent=pad(h);
-  document.getElementById('cdMinutes').textContent=pad(m);
-  document.getElementById('cdSeconds').textContent=pad(s);
+  const now = new Date();
+  let t = Math.max(0, target - now);
+  const d = Math.floor(t/86400000); t%=86400000;
+  const h = Math.floor(t/3600000);  t%=3600000;
+  const m = Math.floor(t/60000);    t%=60000;
+  const s = Math.floor(t/1000);
+  document.getElementById('d').textContent = pad(d);
+  document.getElementById('h').textContent = pad(h);
+  document.getElementById('m').textContent = pad(m);
+  document.getElementById('s').textContent = pad(s);
 }
 setInterval(tick,1000); tick();
 
-const maskNames=["Titan","Hacker","Maiden","Scientist","Berserker","Sorceress","Rogue","Warrior","Ranger","Hero"];
-(function(){
-  const g=document.getElementById('maskGrid'); if(!g) return;
-  for(let i=0;i<10;i++){
-    const box=document.createElement('div'); box.className='mask-item';
-    box.innerHTML=`<figure class="mask-card"><img src="assets/images/masks/${i}.png" alt="${maskNames[i]}"><figcaption>${maskNames[i]}</figcaption></figure>`;
-    g.appendChild(box);
-  }
-})();
-
-/* --------- BUY FLOW: Buton -> modal --------- */
-document.querySelectorAll('.buy').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    // Karttaki USDT fiyatını inputa geç
-    const priceText = btn.closest('.tier').querySelector('.price').textContent; // "0.0008 USDT"
-    const amt = Number((priceText||'0').replace(/[^\d.]/g,''));
-    buyAmount.value = amt || 0.0008;
-    buyInfo.textContent = '';
-    buyModal.style.display='flex';
-  })
-});
-
-buyCancel?.addEventListener('click',()=> buyModal.style.display='none');
-
-/* --------- BUY CONFIRM --------- */
-buyConfirm?.addEventListener('click', async ()=>{
-  const chain = buyChain.value;     // bsc | polygon | arbitrum | tron | solana | ton
-  const token = buyToken.value;     // usdt | native
-  const amount = Number(buyAmount.value||0);
-  if(!amount || amount<=0){ buyInfo.textContent='Geçerli bir miktar gir.'; return; }
-
-  try{
-    if(chain==='bsc' || chain==='polygon' || chain==='arbitrum'){
-      await evmPay(chain, token, amount);
-    }else if(chain==='tron'){
-      await tronPay(token, amount);
-    }else if(chain==='solana'){
-      await solPay(amount);
-    }else if(chain==='ton'){
-      await tonPay(amount);
-    }
-    buyInfo.textContent='İşlem gönderildi, cüzdanında onayla.';
-  }catch(err){
-    console.error(err);
-    buyInfo.textContent='Hata: '+(err?.message||err);
-  }
-});
-
-/* ===================== EVM (MetaMask) ===================== */
-async function connectEVM(pref='bsc'){
-  if(!window.ethereum){ showModal('MetaMask','MetaMask bulunamadı.'); return; }
-  const net = EVM_NETWORKS[pref];
-  try{
-    const current = await window.ethereum.request({method:'eth_chainId'});
-    if(current!==net.chainIdHex){
-      try{
-        await window.ethereum.request({method:'wallet_switchEthereumChain', params:[{chainId:net.chainIdHex}]});
-      }catch(switchErr){
-        await window.ethereum.request({method:'wallet_addEthereumChain', params:[{
-          chainId: net.chainIdHex, chainName: net.name, rpcUrls: net.rpcUrls, nativeCurrency: {name: net.nativeSymbol, symbol: net.nativeSymbol, decimals: 18}
-        }]});
-      }
-    }
-    const accs = await window.ethereum.request({method:'eth_requestAccounts'});
-    showModal('MetaMask',`Bağlandı: <code>${accs[0]}</code> (${net.name})`);
-  }catch(e){ console.error(e); showModal('MetaMask','Bağlantı hatası.'); }
-}
-
-const ERC20_ABI = [
-  {"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"type":"function"},
-  {"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"type":"function"}
+// ===================== MASKOT GRID =====================
+const maskots = [
+  {file:'0.png', name:'Titan'},
+  {file:'1.png', name:'Hacker'},
+  {file:'2.png', name:'Maiden'},
+  {file:'3.png', name:'Scientist'},
+  {file:'4.png', name:'Berserker'},
+  {file:'5.png', name:'Sorceress'},
+  {file:'6.png', name:'Rogue'},
+  {file:'7.png', name:'Warrior'},
+  {file:'8.png', name:'Ranger'},
+  {file:'9.png', name:'Hero'}
 ];
+const grid = document.getElementById('maskotGrid');
+grid.innerHTML = maskots.map(m => `
+  <div class="maskot">
+    <img src="assets/images/maskots/${m.file}" alt="${m.name}">
+    <div class="name">${m.name}</div>
+  </div>
+`).join('');
 
-async function evmPay(chainKey, payToken, amountUSDT){
-  if(!window.ethereum) throw new Error('MetaMask yok.');
-  const net = EVM_NETWORKS[chainKey];
+// ===================== BUY MODAL =====================
+const buyModal = document.getElementById('buyModal');
+window.openBuyModal = (price)=>{ buyModal.classList.add('show'); };
+window.closeBuyModal = ()=>{ buyModal.classList.remove('show'); };
 
-  // Gerekli ağa geç
-  await connectEVM(chainKey);
+// ===================== WALLETS =====================
+// 1) EVM – MetaMask
+const btnEvm = document.getElementById('btnEvm');
+btnEvm?.addEventListener('click', async ()=>{
+  if(!window.ethereum){ alert('MetaMask bulunamadı. Lütfen yükleyiniz.'); return; }
+  try{
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    const acc = accounts[0];
+    btnEvm.textContent = shorten(acc);
+  }catch(err){ console.log(err); }
+});
 
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer   = provider.getSigner();
-  const from     = await signer.getAddress();
+// 2) Solana – Phantom
+const btnSol = document.getElementById('btnSol');
+btnSol?.addEventListener('click', async ()=>{
+  const provider = window.solana;
+  if(!provider || !provider.isPhantom){ alert('Phantom cüzdanı bulunamadı.'); return; }
+  try{
+    const resp = await provider.connect();
+    btnSol.textContent = shorten(resp.publicKey.toString());
+  }catch(e){ console.log(e); }
+});
 
-  if(payToken==='native'){
-    // Native coin gönder (BNB/MATIC/ETH)
-    const valueWei = ethers.utils.parseEther(String(amountUSDT)); // USDT değerini native eşitleyerek (kampanya mantığına göre)
-    const tx = await signer.sendTransaction({to: RECEIVERS.evm, value: valueWei});
-    showModal(net.name+' • Native', `Gönderildi: <a target="_blank" href="#">Tx</a> <code>${tx.hash}</code>`);
-    return;
+// 3) TON – TonConnect UI
+const tonWrapper = document.getElementById('tonConnectWrapper');
+window.addEventListener('DOMContentLoaded', ()=>{
+  if(window.TonConnectUI){
+    const tonui = new TonConnectUI.TonConnectUI({
+      manifestUrl: window.location.origin + '/tonconnect-manifest.json',
+      buttonRootId: 'tonConnectWrapper',
+      uiPreferences: { theme: 'dark' }
+    });
   }
+});
 
-  // USDT transfer
-  const usdt = new ethers.Contract(net.usdt, ERC20_ABI, signer);
-  const decimals = await usdt.decimals(); // 6 veya 18
-  const units = ethers.utils.parseUnits(String(amountUSDT), decimals);
-  const tx = await usdt.transfer(RECEIVERS.evm, units);
-  showModal(net.name+' • USDT', `Gönderildi: <code>${tx.hash}</code>`);
-}
-
-/* ===================== TRON (TronLink) ===================== */
-async function tronPay(payToken, amountUSDT){
-  if(!window.tronWeb || !window.tronWeb.ready) throw new Error('TronLink bulunamadı.');
-  const tronWeb = window.tronWeb;
-  const from = tronWeb.defaultAddress.base58;
-
-  const to = RECEIVERS.tron && RECEIVERS.tron.startsWith('T') ? RECEIVERS.tron : tronWeb.address.fromHex(RECEIVERS.evm.replace(/^0x/,''));
-  if(payToken==='native'){
-    const sun = tronWeb.toSun(amountUSDT); // 1 TRX ≈ 1 USDT değil, ama isteğe göre native gönderim.
-    const tx = await tronWeb.trx.sendTransaction(to, sun);
-    showModal('TRON • TRX', `Gönderildi: <code>${tx.txid||''}</code>`);
-    return;
-  }
-  // USDT TRC20
-  const USDT_TRON = 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t';
-  const contract = await tronWeb.contract().at(USDT_TRON);
-  const amount = Math.round(amountUSDT * 1e6); // 6 decimals
-  const tx = await contract.transfer(to, amount).send();
-  showModal('TRON • USDT', `Gönderildi: <code>${tx}</code>`);
-}
-
-/* ===================== SOLANA (Phantom) ===================== */
-async function connectSolana(){
-  const ph = window.solana;
-  if(!ph || !ph.isPhantom){ showModal('Solana','Phantom bulunamadı.'); return; }
-  const r = await ph.connect();
-  showModal('Solana',`Bağlandı: <code>${r.publicKey.toString()}</code>`);
-}
-
-async function solPay(amountUSDT){
-  const ph = window.solana;
-  if(!ph || !ph.isPhantom) throw new Error('Phantom yok.');
-  await ph.connect();
-  const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('mainnet-beta'), 'confirmed');
-  const from = ph.publicKey;
-  const to = new solanaWeb3.PublicKey(RECEIVERS.sol);
-  // Native SOL gönderimi (USDT değil). İstersen SPL-USDT adresini ekleyip token transferi de kurarız.
-  const lamports = Math.floor(amountUSDT * 1e9 * 0.01); // örnek: 1% oranında SOL karşılığı; presale kuralına göre ayarlayabiliriz.
-  const tx = new solanaWeb3.Transaction().add(
-    solanaWeb3.SystemProgram.transfer({fromPubkey: from, toPubkey: to, lamports})
-  );
-  const sig = await ph.signAndSendTransaction(tx);
-  showModal('Solana • SOL', `Gönderildi: <code>${sig.signature}</code>`);
-}
-
-/* ===================== TON (TonConnect) ===================== */
-let tonUI;
-async function connectTON(){
-  if(!tonUI){
-    tonUI = new TonConnectUI.TonConnectUI({ manifestUrl: 'https://zuzucoin.xyz/tonconnect-manifest.json' });
-  }
-  const conn = await tonUI.connectWallet();
-  showModal('TON', `Bağlandı: <code>${conn?.account?.address || ''}</code>`);
-}
-
-async function tonPay(amountUSDT){
-  if(!tonUI){
-    tonUI = new TonConnectUI.TonConnectUI({ manifestUrl: 'https://zuzucoin.xyz/tonconnect-manifest.json' });
-  }
-  const toAddr = RECEIVERS.ton; // TON adresin
-  // 1 TON ≠ 1 USDT. Presale kurallarına göre çevrim yapmadık; raw TON gönderimi.
-  const nano = String(Math.floor(amountUSDT * 1e9 * 0.01)); // örnek: 1% TON karşılığı
-  const tx = {
-    validUntil: Math.floor(Date.now()/1000) + 300,
-    messages: [{address: toAddr, amount: nano}]
-  };
-  const r = await tonUI.sendTransaction(tx);
-  showModal('TON • TON', `Gönderildi: <code>${JSON.stringify(r)}</code>`);
+function shorten(addr){
+  return addr.slice(0,6)+'…'+addr.slice(-4);
 }
