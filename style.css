@@ -1,32 +1,3 @@
-:root {
-  --bg: #0b0b10;
-  --text: #f2f2f2;
-  --accent: #ff6b00;
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: system-ui, sans-serif;
-  line-height: 1.5;
-}
-
-.site-header, .site-footer {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,.08);
-}
-.site-footer { border-top: 1px solid rgba(255,255,255,.08); border-bottom: none; }
-
-.logo { height: 36px; }
-
-.nav a { color: var(--text); text-decoration: none; margin-left: 16px; }
-.nav a:hover { color: var(--accent); }
-
-.hero { padding: 48px 24px; text-align: center; }
-.hero h1 { font-size: 40px; margin-bottom: 12px; }
-.hero p { margin-bottom: 24px; }
-.banner { max-width: 960px; width: 100%; border-radius: 8px; }
-
-.site-footer .social img { height: 22px; margin-left: 12px; opacity: .8; }
-.site-footer .social img:hover { opacity: 1; }
+/* ... önceki style.css aynen kalsın ... */
+.right-head{display:flex;align-items:center;gap:10px}
+#langSwitch{background:#12121a;border:1px solid var(--line);color:#cfd3da;padding:8px 10px;border-radius:10px}
