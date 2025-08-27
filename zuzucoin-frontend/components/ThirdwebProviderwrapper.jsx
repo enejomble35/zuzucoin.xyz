@@ -1,11 +1,24 @@
-"use client";
+import React from "react";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
-import { Polygon } from "@thirdweb-dev/chains";
+import { CHAIN_ID, THIRDWEB_CLIENT_ID } from "../lib/constants";
+
+const activeChain = {
+  chainId: CHAIN_ID,       // 137
+  rpc: ["https://polygon-rpc.com"], // yedek rpc otomatik seçilir
+  nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },
+  shortName: "matic",
+  slug: "polygon",
+  name: "Polygon Mainnet",
+};
 
 export default function ThirdwebProviderWrapper({ children }) {
-  const clientId = process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID || "";
   return (
-    <ThirdwebProvider clientId={clientId} activeChain={Polygon}>
+    <ThirdwebProvider
+      clientId={THIRDWEB_CLIENT_ID}
+      activeChain={activeChain}
+      supportedChains={[activeChain]}
+      autoConnect
+    >
       {children}
     </ThirdwebProvider>
   );
