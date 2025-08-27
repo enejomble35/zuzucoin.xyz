@@ -5,22 +5,21 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3000",
     "lint": "next lint"
   },
   "dependencies": {
     "next": "13.4.12",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "ethers": "^6.6.4",
-    "@thirdweb-dev/react": "^4.0.0",
-    "@thirdweb-dev/sdk": "^4.0.0"
-  },
-  "devDependencies": {
-    "eslint": "8.44.0",
-    "eslint-config-next": "13.4.12"
+
+    "@thirdweb-dev/react": "4.1.13",
+    "@thirdweb-dev/sdk": "4.1.13",
+    "@thirdweb-dev/wallets": "2.1.9",
+
+    "viem": "2.9.19"
   },
   "engines": {
-    "node": "20.x"
+    "node": ">=18 <=20"
   }
 }
