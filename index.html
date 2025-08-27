@@ -4,22 +4,25 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ZUZUCOIN — Anime-Robotik Kirpi</title>
-  <meta name="description" content="ZUZUCOIN: anime-robotik kirpi ruhu, topluluk odaklı ve oyunlaştırılmış adil bir web3 ekonomisi." />
+  <meta name="description" content="ZUZUCOIN: anime-robotik kirpi maskotu, topluluk odaklı ve oyunlaştırılmış adil web3 ekonomisi." />
   <link rel="icon" href="./assets/icons/favicon.ico" />
   <link rel="manifest" href="./tonconnect-manifest.json" />
   <link rel="preload" href="./assets/fonts/custom.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="./style.css?v=7" />
-  <!-- EVM + SOL + TON (CDN) -->
+  <link rel="stylesheet" href="./style.css?v=12" />
+
+  <!-- Cüzdan CDN'leri -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js" defer></script>
   <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js" defer></script>
   <script src="https://unpkg.com/@tonconnect/ui@2.0.6/dist/tonconnect-ui.min.js" defer></script>
 </head>
 <body>
-  <!-- Header / Nav -->
+  <!-- Header -->
   <header class="header">
     <div class="container header__inner">
       <div class="brand">
-        <img class="brand__logo" src="./assets/images/logo.png" alt="ZUZU Logo" onerror="this.classList.add('img-missing');" />
+        <!-- LOGO: ./assets/images/logo.png olmalı -->
+        <img class="brand__logo" src="./assets/images/logo.png" alt="ZUZU Logo"
+             onerror="this.classList.add('img-missing');">
         <span class="brand__title">ZUZUCOIN</span>
       </div>
 
@@ -33,30 +36,25 @@
 
       <div class="actions">
         <select id="lang" class="lang">
-          <option value="tr" selected>TR</option>
-          <option value="en">EN</option>
-          <option value="ru">RU</option>
-          <option value="hi">HI</option>
-          <option value="es">ES</option>
-          <option value="de">DE</option>
-          <option value="fr">FR</option>
-          <option value="zh">ZH</option>
+          <option value="tr" selected>TR</option><option value="en">EN</option>
+          <option value="ru">RU</option><option value="hi">HI</option>
+          <option value="es">ES</option><option value="de">DE</option>
+          <option value="fr">FR</option><option value="zh">ZH</option>
         </select>
-
         <div class="wallets">
           <button id="btn-evm" class="btn small">MetaMask / EVM</button>
           <button id="btn-sol" class="btn small">Solana</button>
-          <!-- TON butonu için kapsayıcı (TonConnect UI kendisi render eder) -->
           <div id="ton-connect" class="ton-ui"></div>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Hero -->
+  <!-- HERO -->
   <section class="hero" id="about">
     <div class="container">
-      <img class="hero__logo" src="./assets/images/logo.png" alt="ZUZU Kirpi" onerror="this.classList.add('img-missing');">
+      <img class="hero__logo" src="./assets/images/logo.png" alt="ZUZU Kirpi"
+           onerror="this.classList.add('img-missing');">
       <h1 class="gradient">Kirpinin Gücü: <span>ZUZUCOIN</span></h1>
       <p class="lead">
         ZUZUCOIN; neon şehirlerin arasında dolaşan <b>anime-robotik kirpi</b> maskotunun ruhunu taşır.
@@ -68,34 +66,34 @@
         <div class="slot-group">
           <div class="label">Gün</div>
           <div class="slots" data-type="days">
-            <div class="slot"><div class="reel">0</div></div>
-            <div class="slot"><div class="reel">0</div></div>
+            <div class="slot"><div class="reel"></div></div>
+            <div class="slot"><div class="reel"></div></div>
           </div>
         </div>
         <div class="slot-group">
           <div class="label">Saat</div>
           <div class="slots" data-type="hours">
-            <div class="slot"><div class="reel">0</div></div>
-            <div class="slot"><div class="reel">0</div></div>
+            <div class="slot"><div class="reel"></div></div>
+            <div class="slot"><div class="reel"></div></div>
           </div>
         </div>
         <div class="slot-group">
           <div class="label">Dakika</div>
           <div class="slots" data-type="minutes">
-            <div class="slot"><div class="reel">0</div></div>
-            <div class="slot"><div class="reel">0</div></div>
+            <div class="slot"><div class="reel"></div></div>
+            <div class="slot"><div class="reel"></div></div>
           </div>
         </div>
         <div class="slot-group">
           <div class="label">Saniye</div>
           <div class="slots" data-type="seconds">
-            <div class="slot"><div class="reel">0</div></div>
-            <div class="slot"><div class="reel">0</div></div>
+            <div class="slot"><div class="reel"></div></div>
+            <div class="slot"><div class="reel"></div></div>
           </div>
         </div>
       </div>
 
-      <!-- Hafta kartları -->
+      <!-- Haftalık ön satış -->
       <div class="grid weeks">
         <div class="card">
           <h3>1. Hafta</h3>
@@ -121,18 +119,14 @@
     </div>
   </section>
 
-  <!-- Community -->
+  <!-- Topluluk -->
   <section class="section" id="community">
     <div class="container">
       <h2>Topluluk</h2>
       <p>Telegram, X ve Discord’da global bir aile. Etkinlikler, airdrop’lar, mini oyunlar ve daha fazlası.</p>
       <div class="btn-row">
-        <a class="btn ghost" href="#" target="_blank">
-          <img src="./assets/icons/telegram.svg" alt=""> Telegram
-        </a>
-        <a class="btn ghost" href="#" target="_blank">
-          <img src="./assets/icons/twitter.svg" alt=""> Twitter / X
-        </a>
+        <a class="btn ghost" href="#" target="_blank"><img src="./assets/icons/telegram.svg"> Telegram</a>
+        <a class="btn ghost" href="#" target="_blank"><img src="./assets/icons/twitter.svg"> Twitter / X</a>
         <a class="btn ghost" href="#" target="_blank">Discord</a>
       </div>
     </div>
@@ -147,95 +141,88 @@
     </div>
   </section>
 
-  <!-- Mascots -->
+  <!-- ZUZU Maskotları - MARQUEE -->
   <section class="section" id="mascots">
     <div class="container">
-      <h2>ZUZU Maskot Galerisi</h2>
-      <p>Anime-robotik kirpi koleksiyonundan 10 özel görsel</p>
+      <h2 class="title-fancy">ZUZU MASKOT GALERİSİ</h2>
 
-      <div class="gallery">
-        <!-- 10 kart (0..9) -->
-        <div class="gcard">
-          <img src="./assets/images/mask/0.png" alt="Titan" onerror="this.classList.add('img-missing');">
-          <div class="cap">Titan</div>
-        </div>
-        <div class="gcard">
-          <img src="./assets/images/mask/1.png" alt="Hacker" onerror="this.classList.add('img-missing');">
-          <div class="cap">Hacker</div>
-        </div>
-        <div class="gcard">
-          <img src="./assets/images/mask/2.png" alt="Maiden" onerror="this.classList.add('img-missing');">
-          <div class="cap">Maiden</div>
-        </div>
-        <div class="gcard">
-          <img src="./assets/images/mask/3.png" alt="Scientist" onerror="this.classList.add('img-missing');">
-          <div class="cap">Scientist</div>
-        </div>
-        <div class="gcard">
-          <img src="./assets/images/mask/4.png" alt="Berserker" onerror="this.classList.add('img-missing');">
-          <div class="cap">Berserker</div>
-        </div>
-        <div class="gcard">
-          <img src="./assets/images/mask/5.png" alt="Sorceress" onerror="this.classList.add('img-missing');">
-          <div class="cap">Sorceress</div>
-        </div>
-        <div class="gcard">
-          <img src="./assets/images/mask/6.png" alt="Rogue" onerror="this.classList.add('img-missing');">
-          <div class="cap">Rogue</div>
-        </div>
-        <div class="gcard">
-          <img src="./assets/images/mask/7.png" alt="Warrior" onerror="this.classList.add('img-missing');">
-          <div class="cap">Warrior</div>
-        </div>
-        <div class="gcard">
-          <img src="./assets/images/mask/8.png" alt="Ranger" onerror="this.classList.add('img-missing');">
-          <div class="cap">Ranger</div>
-        </div>
-        <div class="gcard">
-          <img src="./assets/images/mask/9.png" alt="Hero" onerror="this.classList.add('img-missing');">
-          <div class="cap">Hero</div>
+      <div class="marquee mascots">
+        <div class="track">
+          <!-- 10 maskot + tekrar (sonsuz akış için) -->
+          <div class="mcard"><img src="./assets/images/mask/0.png" alt="Titan"><span>Titan</span></div>
+          <div class="mcard"><img src="./assets/images/mask/1.png" alt="Hacker"><span>Hacker</span></div>
+          <div class="mcard"><img src="./assets/images/mask/2.png" alt="Maiden"><span>Maiden</span></div>
+          <div class="mcard"><img src="./assets/images/mask/3.png" alt="Scientist"><span>Scientist</span></div>
+          <div class="mcard"><img src="./assets/images/mask/4.png" alt="Berserker"><span>Berserker</span></div>
+          <div class="mcard"><img src="./assets/images/mask/5.png" alt="Sorceress"><span>Sorceress</span></div>
+          <div class="mcard"><img src="./assets/images/mask/6.png" alt="Rogue"><span>Rogue</span></div>
+          <div class="mcard"><img src="./assets/images/mask/7.png" alt="Warrior"><span>Warrior</span></div>
+          <div class="mcard"><img src="./assets/images/mask/8.png" alt="Ranger"><span>Ranger</span></div>
+          <div class="mcard"><img src="./assets/images/mask/9.png" alt="Hero"><span>Hero</span></div>
+
+          <!-- Kopya -->
+          <div class="mcard"><img src="./assets/images/mask/0.png" alt="Titan"><span>Titan</span></div>
+          <div class="mcard"><img src="./assets/images/mask/1.png" alt="Hacker"><span>Hacker</span></div>
+          <div class="mcard"><img src="./assets/images/mask/2.png" alt="Maiden"><span>Maiden</span></div>
+          <div class="mcard"><img src="./assets/images/mask/3.png" alt="Scientist"><span>Scientist</span></div>
+          <div class="mcard"><img src="./assets/images/mask/4.png" alt="Berserker"><span>Berserker</span></div>
+          <div class="mcard"><img src="./assets/images/mask/5.png" alt="Sorceress"><span>Sorceress</span></div>
+          <div class="mcard"><img src="./assets/images/mask/6.png" alt="Rogue"><span>Rogue</span></div>
+          <div class="mcard"><img src="./assets/images/mask/7.png" alt="Warrior"><span>Warrior</span></div>
+          <div class="mcard"><img src="./assets/images/mask/8.png" alt="Ranger"><span>Ranger</span></div>
+          <div class="mcard"><img src="./assets/images/mask/9.png" alt="Hero"><span>Hero</span></div>
         </div>
       </div>
 
-      <h3 class="mt-40">Will be listed soon</h3>
-      <div class="exchanges">
-        <img src="./assets/images/exchanges/mexc.png" alt="MEXC" onerror="this.classList.add('img-missing');">
-        <img src="./assets/images/exchanges/bybit.png" alt="Bybit" onerror="this.classList.add('img-missing');">
-        <img src="./assets/images/exchanges/kucoin.png" alt="KuCoin" onerror="this.classList.add('img-missing');">
-        <img src="./assets/images/exchanges/gateio.png" alt="Gate.io" onerror="this.classList.add('img-missing');">
-        <img src="./assets/images/exchanges/bitmart.png" alt="Bitmart" onerror="this.classList.add('img-missing');">
-        <img src="./assets/images/exchanges/okx.png" alt="OKX" onerror="this.classList.add('img-missing');">
+      <h3 class="mt-40">Will Be Listed Soon</h3>
+
+      <!-- Borsa logoları - MARQUEE -->
+      <div class="marquee exchanges">
+        <div class="track">
+          <img src="./assets/images/exchanges/mexc.png" alt="MEXC">
+          <img src="./assets/images/exchanges/bybit.png" alt="Bybit">
+          <img src="./assets/images/exchanges/kucoin.png" alt="KuCoin">
+          <img src="./assets/images/exchanges/gateio.png" alt="Gate.io">
+          <img src="./assets/images/exchanges/bitmart.png" alt="Bitmart">
+          <img src="./assets/images/exchanges/okx.png" alt="OKX">
+
+          <!-- Kopya -->
+          <img src="./assets/images/exchanges/mexc.png" alt="MEXC">
+          <img src="./assets/images/exchanges/bybit.png" alt="Bybit">
+          <img src="./assets/images/exchanges/kucoin.png" alt="KuCoin">
+          <img src="./assets/images/exchanges/gateio.png" alt="Gate.io">
+          <img src="./assets/images/exchanges/bitmart.png" alt="Bitmart">
+          <img src="./assets/images/exchanges/okx.png" alt="OKX">
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Roadmap -->
+  <!-- Yol Haritası -->
   <section class="section" id="roadmap">
     <div class="container">
-      <h2>Yol Haritamız</h2>
-      <img class="wide" src="./assets/images/map.png" alt="Roadmap" onerror="this.classList.add('img-missing');">
-      <ol class="road">
-        <li><b>Q1:</b> Marka, site, topluluk — maskot koleksiyonu</li>
-        <li><b>Q2:</b> Ön satış, stake (ödüller), mini-oyun</li>
-        <li><b>Q3:</b> Partnerlikler, borsa listelemeleri</li>
-        <li><b>Q4:</b> Global pazarlama, ekosistem genişlemesi</li>
-      </ol>
+      <h2 class="title-fancy">YOL HARİTAMIZ</h2>
+      <div class="road-cards">
+        <div class="rcard"><span>Q1</span><p>Marka, site, topluluk — maskot koleksiyonu</p></div>
+        <div class="rcard"><span>Q2</span><p>Ön satış, stake (ödüller), mini-oyun</p></div>
+        <div class="rcard"><span>Q3</span><p>Partnerlikler, borsa listelemeleri</p></div>
+        <div class="rcard"><span>Q4</span><p>Global pazarlama, ekosistem genişlemesi</p></div>
+      </div>
     </div>
   </section>
 
-  <!-- Tokenomics -->
+  <!-- Tokonomi -->
   <section class="section" id="tokenomics">
     <div class="container">
-      <h2>Tokonomi</h2>
-      <img class="wide" src="./assets/images/tokenomics.png" alt="Tokenomics" onerror="this.classList.add('img-missing');">
-      <ul class="tok-list">
-        <li><b>Toplam Arz:</b> 10,000,000,000 ZUZU</li>
-        <li><b>Ön Satış:</b> %30</li>
-        <li><b>Likidite:</b> %25</li>
-        <li><b>Topluluk & Ödüller:</b> %25</li>
-        <li><b>Ekip & Geliştirme:</b> %15</li>
-        <li><b>Rezerv:</b> %5</li>
-      </ul>
+      <h2 class="title-fancy">TOKONOMİ</h2>
+      <div class="tok-grid">
+        <div class="tcard"><b>Toplam Arz</b><span>10,000,000,000 ZUZU</span></div>
+        <div class="tcard"><b>Ön Satış</b><span>%30</span></div>
+        <div class="tcard"><b>Likidite</b><span>%25</span></div>
+        <div class="tcard"><b>Topluluk & Ödüller</b><span>%25</span></div>
+        <div class="tcard"><b>Ekip & Geliştirme</b><span>%15</span></div>
+        <div class="tcard"><b>Rezerv</b><span>%5</span></div>
+      </div>
     </div>
   </section>
 
@@ -245,14 +232,12 @@
 
   <script>
     window.ZUZU_CFG = {
-      // Senin adreslerin:
-      evmUSDTReceiver: "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",  // (BSC / Arbitrum / Polygon vs.)
+      evmUSDTReceiver: "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",
       solReceiver: "31Cjkx2PA5oMapNxxGAiZhuHDcvAyQ7hogqB8Hx6f1pW",
       tonReceiver: "UQD5Pkyp_l_O3907ri0WeLAY7fBVa-twb9nUnQ38Q1MinTND",
-      // Ön satış bitiş tarihi (countdown hedefi) — istediğin tarihe çek:
       presaleEnd: new Date(Date.now() + 27 * 24 * 60 * 60 * 1000)
     };
   </script>
-  <script src="./script.js?v=7"></script>
+  <script src="./script.js?v=12"></script>
 </body>
 </html>
