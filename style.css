@@ -8,7 +8,7 @@
 html, body {
   background: var(--bg);
   color: var(--text);
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  font-family: system-ui, sans-serif;
   line-height: 1.5;
 }
 
@@ -20,13 +20,13 @@ html, body {
 
 .logo { height: 36px; }
 
-.nav a { color: var(--text); text-decoration: none; margin-left: 16px; opacity: .9; }
-.nav a:hover { color: var(--accent); opacity: 1; }
+.nav a { color: var(--text); text-decoration: none; margin-left: 16px; }
+.nav a:hover { color: var(--accent); }
 
 .hero { padding: 48px 24px; text-align: center; }
 .hero h1 { font-size: 40px; margin-bottom: 12px; }
-.hero p { color: #cfcfcf; margin-bottom: 24px; }
+.hero p { margin-bottom: 24px; }
 .banner { max-width: 960px; width: 100%; border-radius: 8px; }
 
-.site-footer .social img { height: 22px; width: 22px; margin-left: 12px; opacity: .8; }
+.site-footer .social img { height: 22px; margin-left: 12px; opacity: .8; }
 .site-footer .social img:hover { opacity: 1; }
