@@ -1,28 +1,13 @@
-export const CHAIN_ID = Number(process.env.NEXT_PUBLIC_CHAIN_ID || 137); // Polygon
-export const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || "0x0000000000000000000000000000000000000000";
-export const CLAIM_ADDRESS = process.env.NEXT_PUBLIC_CLAIM_ADDRESS || "0x0000000000000000000000000000000000000000";
+export const CHAIN_ID = Number(process.env.NEXT_PUBLIC_CHAIN_ID || 137);
 
-// NFT sayısı (public/metadata ve public/nft altındaki dosya sayısı ile eşleşsin)
-export const NFT_COUNT = 10;
+export const CONTRACT_ADDRESS =
+  process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || "0xFC1F2f35c20eBF86eBac74dBF6Aaf1dEa3bB277F";
 
-// Roadmap / Airdrop haftalık dağıtımlar (örnek değerler)
-export const WEEKLY_REWARDS = [
-  { week: 1, amount: "1,000,000 ZUZU", note: "Ön satış katılımcıları + erken üyeler" },
-  { week: 2, amount: "2,000,000 ZUZU", note: "Sosyal görevler + referans" },
-  { week: 3, amount: "3,000,000 ZUZU", note: "Tap-to-Earn mini event" },
-  { week: 4, amount: "4,000,000 ZUZU", note: "Büyük çekiliş + topluluk oylaması" }
-];
+export const CLAIM_ADDRESS =
+  process.env.NEXT_PUBLIC_CLAIM_ADDRESS || "0x3A063B1a2bc38bEd503C2285B8cbA2f6A9520E1a";
 
-// Tokenomi örnekleri
-export const TOKENOMICS = [
-  { title: "Topluluk / Airdrop", pct: 35, color: "#00d3ff" },
-  { title: "Likidite + Borsa",  pct: 25, color: "#8a5bff" },
-  { title: "Ekip / Danışman",  pct: 15, color: "#39d98a" },
-  { title: "Ekosistem / Oyun", pct: 25, color: "#ffcd4b" }
-];
+export const OWNER_ADDRESS =
+  process.env.NEXT_PUBLIC_OWNER_ADDRESS || "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3";
 
-export const SOCIALS = [
-  { name: "Telegram", href: "https://t.me/zuzu" },
-  { name: "Twitter / X", href: "https://twitter.com/zuzu" },
-  { name: "Discord", href: "https://discord.gg/zuzu" }
-];
+export const THIRDWEB_CLIENT_ID =
+  process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID || "";
