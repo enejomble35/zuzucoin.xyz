@@ -1,47 +1,192 @@
 <!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ZUZUCOIN</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>ZUZUCOIN — Anime-Robotik Kirpi</title>
 
-  <!-- Favicon -->
-  <link rel="icon" href="assets/icons/favicon.ico" />
+  <meta name="description" content="ZUZUCOIN: anime-robotik kirpi maskotu, oyunlaştırılmış topluluk coin'i. Ön satış, stake ve borsa listeleri."/>
+  <meta property="og:title" content="ZUZUCOIN — Official"/>
+  <meta property="og:description" content="Kirpinin gücüyle topluluk coin’i. Ön satış, stake ve borsa listeleri."/>
+  <meta property="og:url" content="https://zuzucoin.xyz"/>
+  <meta property="og:image" content="https://zuzucoin.xyz/assets/images/logo.png"/>
+  <link rel="icon" href="assets/icons/favicon.ico"/>
+  <link rel="preload" href="assets/fonts/custom.woff2" as="font" type="font/woff2" crossorigin/>
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css" />
+  <!-- Wallet CDNs (build yok, direkt kullanıyoruz) -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.6/lib/index.iife.min.js" defer></script>
+  <script src="https://unpkg.com/@tonconnect/ui@0.1.38/dist/tonconnect-ui.min.js" defer></script>
 
-  <!-- Güvenli: defer ile script sonradan yüklensin -->
+  <link rel="stylesheet" href="style.css"/>
   <script defer src="script.js"></script>
 </head>
-<body>
+
+<body id="top">
+  <div id="preloader" class="preloader">
+    <div class="spin hedgehog"></div>
+    <p>Yükleniyor…</p>
+  </div>
+
+  <!-- HEADER -->
   <header class="site-header">
-    <img src="assets/images/logo.png" alt="ZUZUCOIN Logo" class="logo" />
+    <a class="brand" href="#top" aria-label="ZUZUCOIN Ana Sayfa">
+      <img src="assets/images/logo.png" class="logo" alt="ZUZUCOIN Logo"/>
+      <span>ZUZUCOIN</span>
+    </a>
+
     <nav class="nav">
-      <a href="/">Ana Sayfa</a>
-      <a href="about.html">Hakkında</a>
-      <a href="contact.html">İletişim</a>
+      <a data-i18n="nav.about" href="#about">Hakkımızda</a>
+      <a data-i18n="nav.community" href="#community">Topluluk</a>
+      <a data-i18n="nav.stake" href="#stake">Stake</a>
+      <a data-i18n="nav.roadmap" href="#roadmap">Yol Haritası</a>
+      <a data-i18n="nav.tokenomics" href="#tokenomics">Tokonomi</a>
     </nav>
+
+    <div class="right-head">
+      <select id="langSwitch" aria-label="Dil">
+        <option value="tr" selected>TR</option>
+        <option value="en">EN</option>
+      </select>
+
+      <div class="wallet">
+        <button class="btn btn-accent" id="btnWallet" aria-haspopup="true" aria-expanded="false" data-i18n="btn.wallet">Cüzdan Bağla</button>
+        <div class="wallet-menu" id="walletMenu" aria-hidden="true">
+          <button data-wallet="evm">MetaMask / EVM</button>
+          <button data-wallet="solana">Solana</button>
+          <button data-wallet="ton">TON</button>
+        </div>
+      </div>
+    </div>
   </header>
 
-  <main>
-    <section class="hero">
-      <h1>Welcome to ZUZUCOIN</h1>
-      <p>Pure static GitHub Pages test — her şey çalışıyor mu kontrol ediyoruz.</p>
-      <img src="assets/images/banner.jpg" alt="Banner" class="banner" />
-    </section>
-  </main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-art">
+      <img src="assets/images/logo.png" alt="ZUZU Hedgie" class="hero-logo"/>
+      <div class="glow"></div>
+    </div>
 
+    <div class="hero-copy">
+      <h1 data-i18n="hero.title">Kirpinin Gücü: <span class="grad">ZUZUCOIN</span></h1>
+      <p class="lead" id="about" data-i18n="hero.lead">
+        ZUZUCOIN; neon şehirlerin arasında dolaşan <strong>anime-robotik kirpi</strong> maskotunun ruhunu taşır.
+        <em>Topluluk odaklı</em>, <em>oyunlaştırma</em> içeren, adil ve şeffaf bir web3 ekonomisini hedefler.
+      </p>
+
+      <!-- Slot / Casino style countdown -->
+      <div class="slot-countdown" aria-label="Countdown">
+        <div class="slot"><span id="cdDays">--</span><small data-i18n="cd.days">Gün</small></div>
+        <div class="slot"><span id="cdHours">--</span><small data-i18n="cd.hours">Saat</small></div>
+        <div class="slot"><span id="cdMinutes">--</span><small data-i18n="cd.minutes">Dakika</small></div>
+        <div class="slot"><span id="cdSeconds">--</span><small data-i18n="cd.seconds">Saniye</small></div>
+      </div>
+
+      <!-- Haftalık satış kartları -->
+      <div class="tiers">
+        <article class="card tier" data-tier="1"><h3>1. Hafta</h3><p class="price">0.0008 USDT</p><button class="btn buy" data-i18n="btn.buy">Satın Al</button></article>
+        <article class="card tier" data-tier="2"><h3>2. Hafta</h3><p class="price">0.0010 USDT</p><button class="btn buy" data-i18n="btn.buy">Satın Al</button></article>
+        <article class="card tier" data-tier="3"><h3>3. Hafta</h3><p class="price">0.0012 USDT</p><button class="btn buy" data-i18n="btn.buy">Satın Al</button></article>
+        <article class="card tier" data-tier="4"><h3>4. Hafta</h3><p class="price">0.0015 USDT</p><button class="btn buy" data-i18n="btn.buy">Satın Al</button></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMMUNITY -->
+  <section class="pill-section" id="community">
+    <h2 data-i18n="community.title">Topluluk</h2>
+    <p data-i18n="community.lead">Telegram, X ve Discord’da global bir aile. Etkinlikler, airdrop’lar, mini oyunlar ve daha fazlası.</p>
+    <div class="socials">
+      <a class="btn" href="#" target="_blank" rel="noopener">Telegram</a>
+      <a class="btn" href="#" target="_blank" rel="noopener">Twitter / X</a>
+      <a class="btn" href="#" target="_blank" rel="noopener">Discord</a>
+    </div>
+  </section>
+
+  <!-- STAKE -->
+  <section class="pill-section" id="stake">
+    <h2 data-i18n="stake.title">Stake</h2>
+    <p data-i18n="stake.lead">ZUZU’larını kilitle, pasif gelir kazan. Erken stakleyenler özel rozet ve ödüller alır.</p>
+    <a class="btn btn-accent" href="#" target="_blank" rel="noopener" data-i18n="stake.button">Stake Paneli (yakında)</a>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="gallery" aria-labelledby="galTitle">
+    <h2 id="galTitle" data-i18n="gallery.title">ZUZU Maskot Galerisi</h2>
+    <p data-i18n="gallery.lead">Anime-robotik kirpi koleksiyonundan 10 özel görsel</p>
+    <div id="maskGrid" class="grid-5 tilt"></div>
+  </section>
+
+  <!-- EXCHANGES MARQUEE -->
+  <section class="exchanges">
+    <h2>Will be listed soon</h2>
+    <div class="marquee">
+      <div class="track">
+        <img src="assets/images/exchanges/mxc.png" alt="MEXC"/>
+        <img src="assets/images/exchanges/bybit.png" alt="Bybit"/>
+        <img src="assets/images/exchanges/gateio.png" alt="Gate.io"/>
+        <img src="assets/images/exchanges/bitmart.png" alt="Bitmart"/>
+        <img src="assets/images/exchanges/okx.png" alt="OKX"/>
+        <img src="assets/images/exchanges/kucoin.png" alt="KuCoin"/>
+        <!-- tekrarlar -->
+        <img src="assets/images/exchanges/mxc.png" alt="MEXC"/>
+        <img src="assets/images/exchanges/bybit.png" alt="Bybit"/>
+        <img src="assets/images/exchanges/gateio.png" alt="Gate.io"/>
+        <img src="assets/images/exchanges/bitmart.png" alt="Bitmart"/>
+        <img src="assets/images/exchanges/okx.png" alt="OKX"/>
+        <img src="assets/images/exchanges/kucoin.png" alt="KuCoin"/>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section class="roadmap" id="roadmap">
+    <h2 data-i18n="roadmap.title">Yol Haritamız</h2>
+    <div class="map-wrap">
+      <img src="assets/images/map.png" alt="Roadmap Map"/>
+      <ol class="steps">
+        <li data-i18n="roadmap.q1"><strong>Q1:</strong> Marka, site, topluluk — maskot koleksiyonu</li>
+        <li data-i18n="roadmap.q2"><strong>Q2:</strong> Ön satış, stake (ödüller), mini-oyun</li>
+        <li data-i18n="roadmap.q3"><strong>Q3:</strong> Partnerlikler, borsa listelemeleri için başvurular</li>
+        <li data-i18n="roadmap.q4"><strong>Q4:</strong> Global pazarlama, ekosistem genişlemesi</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- TOKENOMICS -->
+  <section class="tokenomics" id="tokenomics">
+    <h2 data-i18n="token.title">Tokonomi</h2>
+    <img class="tokenomics-img" src="assets/images/tokenomics.png" alt="Tokenomics"/>
+    <ul class="tok-list">
+      <li><strong data-i18n="token.total">Toplam Arz:</strong> 10,000,000,000 ZUZU</li>
+      <li><strong>Ön Satış:</strong> %30</li>
+      <li><strong>Likidite:</strong> %25</li>
+      <li><strong>Topluluk &amp; Ödüller:</strong> %25</li>
+      <li><strong>Ekip &amp; Geliştirme:</strong> %15 (lineer açılım)</li>
+      <li><strong>Rezerv:</strong> %5</li>
+    </ul>
+  </section>
+
+  <!-- FOOTER -->
   <footer class="site-footer">
-    <p>© 2025 ZUZUCOIN</p>
-    <div class="social">
-      <a href="#" aria-label="Telegram">
-        <img src="assets/icons/telegram.svg" alt="Telegram" />
-      </a>
-      <a href="#" aria-label="Twitter">
-        <img src="assets/icons/twitter.svg" alt="Twitter/X" />
-      </a>
+    <p>© 2025 ZUZUCOIN • All rights reserved.</p>
+    <div class="mini-links">
+      <a href="#about" data-i18n="nav.about">Hakkımızda</a>
+      <a href="#community" data-i18n="nav.community">Topluluk</a>
+      <a href="#stake" data-i18n="nav.stake">Stake</a>
+      <a href="#roadmap" data-i18n="nav.roadmap">Yol Haritası</a>
+      <a href="#tokenomics" data-i18n="nav.tokenomics">Tokonomi</a>
     </div>
   </footer>
+
+  <!-- MODAL -->
+  <div class="modal" id="modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-inner">
+      <h3 id="modalTitle">Cüzdan</h3>
+      <p id="modalText">Bu özellik demo amaçlıdır. Gerçek bağlama entegrasyonu eklenecektir.</p>
+      <button class="btn" id="modalClose" data-i18n="btn.close">Kapat</button>
+    </div>
+  </div>
+
 </body>
 </html>
