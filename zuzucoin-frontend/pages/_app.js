@@ -1,10 +1,5 @@
-import "../styles/globals.css";
-import ThirdwebProviderWrapper from "../components/ThirdwebProviderWrapper";
+import '@/styles/globals.css';
 
-export default function App({ Component, pageProps }){
-  return (
-    <ThirdwebProviderWrapper>
-      <Component {...pageProps} />
-    </ThirdwebProviderWrapper>
-  );
+export default function App({ Component, pageProps }) {
+  return <Component {...pageProps} />;
 }
