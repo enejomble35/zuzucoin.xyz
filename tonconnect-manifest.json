@@ -1,5 +1,7 @@
 {
   "url": "https://zuzucoin.xyz",
   "name": "ZUZUCOIN",
-  "iconUrl": "https://zuzucoin.xyz/assets/images/logo.png"
+  "iconUrl": "https://zuzucoin.xyz/assets/images/logo.png",
+  "termsOfUseUrl": "https://zuzucoin.xyz",
+  "privacyPolicyUrl": "https://zuzucoin.xyz"
 }
