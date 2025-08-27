@@ -3,17 +3,24 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3000",
+    "dev": "next dev",
     "build": "next build",
-    "start": "next start -p 3000"
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "next": "13.5.6",
+    "next": "13.4.12",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "@thirdweb-dev/react": "4.0.92",
-    "@thirdweb-dev/chains": "^0.1.69",
-    "viem": "^1.20.0",
-    "wagmi": "^1.4.13"
+    "ethers": "^6.6.4",
+    "@thirdweb-dev/react": "^4.0.0",
+    "@thirdweb-dev/sdk": "^4.0.0"
+  },
+  "devDependencies": {
+    "eslint": "8.44.0",
+    "eslint-config-next": "13.4.12"
+  },
+  "engines": {
+    "node": "20.x"
   }
 }
