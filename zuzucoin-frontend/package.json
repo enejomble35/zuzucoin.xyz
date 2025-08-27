@@ -16,6 +16,7 @@
     "@thirdweb-dev/react": "4.1.13",
     "@thirdweb-dev/sdk": "4.1.13",
     "@thirdweb-dev/wallets": "2.1.9",
+    "@thirdweb-dev/chains": "0.1.57",
 
     "viem": "2.9.19"
   },
