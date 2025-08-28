@@ -1,214 +1,114 @@
+/* =============== Global Base =============== */
 :root{
-  --bg:#0b0e14; --bg2:#101521; --text:#e6edf3; --muted:#9fb0c3;
-  --primary:#6ae0ff; --sec:#7a5cff; --card:#0f1420;
-  --accent:linear-gradient(90deg,#7a5cff 0%,#3bc9ff 100%);
+  --bg:#0e1522; --card:#131b2a; --text:#e6f1ff; --muted:#9fb3c8;
+  --accent:#28d1ff; --accent-2:#7a5cff;
 }
-
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Arial}
-img{max-width:100%;display:block}
-a{color:var(--primary);text-decoration:none}
-.container{width:min(1180px,92%);margin-inline:auto}
-
-/* Header */
-.header{position:sticky;top:0;z-index:50;background:rgba(11,14,20,.75);backdrop-filter:saturate(1.3) blur(10px);border-bottom:1px solid rgba(255,255,255,.06)}
-.header__inner{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0}
-.brand{display:flex;align-items:center;gap:10px}
-.brand__logo{width:40px;height:40px;object-fit:contain}
-.brand__title{font-weight:800;letter-spacing:.4px}
-.nav{display:flex;gap:18px;flex-wrap:wrap}
-.nav a{color:#cfe6ff;opacity:.9}.nav a:hover{opacity:1}
-.actions{display:flex;align-items:center;gap:10px}
-.lang{background:var(--card);color:var(--text);border:1px solid #263349;border-radius:8px;padding:6px 8px}
-.wallets{display:flex;gap:8px;align-items:center}
-
-/* Common */
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border-radius:10px;color:#0c111a;font-weight:700;cursor:pointer;border:none;background:var(--accent);transition:.2s transform}
-.btn:hover{transform:translateY(-1px)}
-.btn.small{padding:6px 10px;font-weight:600}
-.btn.ghost{background:transparent;color:#cfe6ff;border:1px solid #27405a}
-.btn.gradient{background:var(--accent);color:#0c111a}
-.btn img{width:18px;height:18px;margin-right:8px}
-
-.mt-40{margin-top:40px}
-.wide{width:100%;border-radius:12px;border:1px solid #1c2940;background:#0a0f18}
-
-.title-fancy{
-  font-size:28px;margin:0 0 14px;
-  background:var(--accent);-webkit-background-clip:text;background-clip:text;color:transparent;
-  letter-spacing:.8px;text-transform:uppercase
+html,body{height:100%}
+body{
+  margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
 }
 
-/* Hero */
-.hero{padding:36px 0 20px}
-.hero__logo{width:80px;height:80px;margin-inline:auto}
-h1{font-size:32px;margin:16px 0;text-align:center}
-h1 span{color:#9ed9ff}
-.lead{max-width:820px;margin:0 auto 22px;text-align:center;color:var(--muted)}
+/* =============== Header =============== */
+.z-nav{
+  position:sticky; top:0; z-index:50;
+  background:rgba(8,12,20,.7);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.z-nav-inner{
+  width:min(1180px,92%); margin-inline:auto; display:flex; align-items:center; justify-content:space-between; height:64px;
+}
+.brand{display:flex; align-items:center; gap:10px; color:#fff; text-decoration:none; font-weight:800; letter-spacing:.3px}
+.brand img{width:28px;height:28px;object-fit:contain}
+.z-menu{display:flex; gap:16px; align-items:center}
+.z-menu a{color:#d9e7ff; text-decoration:none; font-weight:600; padding:.45rem .7rem; border-radius:10px; border:1px solid transparent}
+.z-menu a:hover{background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.08)}
+.z-btn{display:inline-flex; align-items:center; justify-content:center; border-radius:10px; padding:.6rem 1rem; border:1px solid rgba(255,255,255,.08); text-decoration:none; color:#fff}
+.z-btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2)); border-color:transparent}
+.z-btn-ghost{background:transparent}
+@media (max-width:860px){ .z-menu{display:none} }
 
-/* Slot machine countdown */
-.slot-countdown{display:flex;justify-content:center;gap:16px;margin:14px 0 26px}
-.slot-group{display:flex;flex-direction:column;align-items:center;gap:8px}
-.slot-group .label{color:#9fb0c3;font-size:12px}
-.slots{display:flex;gap:8px;background:#0c121e;padding:10px;border-radius:12px;border:1px solid #21314a}
-.slot{width:36px;height:50px;overflow:hidden;border-radius:8px;background:#0a0f18;border:1px solid #1e2a40;position:relative;box-shadow:inset 0 0 12px rgba(122,92,255,.15), inset 0 -8px 14px rgba(59,201,255,.12)}
-.reel{position:absolute;left:0;top:0;width:100%;color:#e9f2ff;font-weight:800;font-size:28px;display:flex;flex-direction:column;align-items:center;gap:10px;transform:translateY(0);transition:transform .55s cubic-bezier(.2,.8,.2,1)}
-.reel .d{height:50px;display:flex;align-items:center;justify-content:center}
+/* =============== Scoped ZUZU Block =============== */
+#zzu { --bg:#0e1522; --card:#131b2a; --muted:#9fb3c8; --text:#e6f1ff;
+       --accent:#28d1ff; --accent-2:#7a5cff; --accent-3:#00ffa8; }
+#zzu img{max-width:100%;display:block}
+#zzu .z-container{ width:min(1180px, 92%); margin-inline:auto; }
+#zzu .flex{display:flex;gap:.75rem}
+#zzu .center-v{align-items:center}
+#zzu .between{justify-content:space-between}
+#zzu .z-grid-2{display:grid;grid-template-columns:1.1fr .9fr;gap:2rem}
+#zzu .z-section{ padding:72px 0;color:var(--text) }
+#zzu .section-head{margin-bottom:28px}
+#zzu .section-head h2{font-size:2rem;margin:0 0 .5rem}
+#zzu .section-head p{color:var(--muted)}
+#zzu .z-hero{padding:80px 0 40px;background:
+     radial-gradient(1200px 600px at 10% -20%, rgba(39,179,255,.2) 0, transparent 60%),
+     radial-gradient(600px 400px at 90% 10%, rgba(122,92,255,.2) 0, transparent 60%)}
+#zzu .z-hero h1{font-size:2.4rem;margin:0 0 .4rem}
+#zzu .z-hero .lead{color:var(--muted);font-size:1.08rem}
+#zzu .z-cta{display:flex;gap:12px;margin-top:16px}
+#zzu .full-img{border-radius:14px;border:1px solid rgba(255,255,255,.06);background:#0b1220;overflow:hidden}
+#zzu .z-chip-row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+#zzu .z-chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);padding:.4rem .7rem;border-radius:999px;text-decoration:none;color:#e9f3ff}
 
-/* Weeks */
-.grid.weeks{display:grid;gap:16px;grid-template-columns:repeat(2,1fr)}
-.card{background:var(--card);border:1px solid #1b2842;border-radius:14px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.02)}
-.card h3{margin:2px 0 6px}
-.price{font-size:26px;font-weight:800;letter-spacing:.4px}
-.price span{color:#8dbfe9;font-size:14px;margin-left:6px}
-.card .buy{margin-top:10px}
+/* Stake Pro */
+#zzu .stake-pro .stake-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:14px 0 24px}
+#zzu .stake-card{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 14px}
+#zzu .stake-card .tier{margin:.2rem 0 .4rem;font-size:1.05rem}
+#zzu .tier.silver{color:#cbd9ff}
+#zzu .tier.gold{color:#ffd86b}
+#zzu .tier.diamond{color:#9ad7ff}
+#zzu .tier.obsidian{color:#a7ffd1}
+#zzu .stake-card ul{padding:0 0 0 1rem;margin:.5rem 0 0}
+#zzu .stake-card li{margin:.25rem 0}
 
-/* Sections */
-.section{padding:46px 0}
-.section h2{margin:0 0 12px}
+/* Calculator */
+#zzu .calculator{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.005));
+  border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px 16px}
+#zzu .calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}
+#zzu .calculator label{font-size:.86rem;color:#a5b7ce}
+#zzu .calculator input,#zzu .calculator select{width:100%;background:#0c1321;border:1px solid rgba(255,255,255,.08);border-radius:10px;color:#e9f3ff;padding:.6rem .7rem}
+#zzu .calc-result{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+#zzu .stat{background:#0f1728;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px}
+#zzu .stat .label{font-size:.85rem;color:#a6b6cc}
+#zzu .stat .value{font-weight:700;font-size:1.15rem}
+#zzu .chart-wrap{margin-top:16px;border:1px dashed rgba(255,255,255,.1);border-radius:12px;padding:10px}
 
-/* MARQUEE (ortak) */
-.marquee{overflow:hidden;position:relative}
-.marquee .track{display:flex;gap:16px;width:max-content;animation:scroll 22s linear infinite}
-@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* NFT Grid */
+#zzu .nft-rewards .nft-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+#zzu .nft-card{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;color:#e6f1ff;text-decoration:none}
+#zzu .nft-card .media{aspect-ratio:1/1;background:#0b1220;display:flex;align-items:center;justify-content:center}
+#zzu .nft-card img{max-height:260px;object-fit:cover}
+#zzu .nft-card .meta{padding:10px 12px}
+#zzu .nft-card .meta h4{margin:.1rem 0 .25rem;font-size:1rem}
+#zzu .nft-card .meta p{margin:.15rem 0;color:#a8bbd2;font-size:.92rem}
+#zzu .nft-card .foot{margin-top:auto;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,.06)}
+#zzu .badge{font-size:.8rem;padding:.15rem .5rem;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06)}
+#zzu .badge.rare{color:#ffd86b;border-color:#ffd86b33;background:#ffd86b14}
+#zzu .badge.epic{color:#9ad7ff;border-color:#9ad7ff33;background:#9ad7ff14}
+#zzu .badge.legend{color:#a7ffd1;border-color:#a7ffd133;background:#a7ffd114}
 
-/* Mascot marquee */
-.mascots .mcard{width:220px;background:#0e1420;border:1px solid #20314b;border-radius:14px; overflow:hidden; position:relative}
-.mascots .mcard img{width:100%;height:240px;object-fit:cover;display:block}
-.mascots .mcard span{position:absolute;left:10px;bottom:10px;background:rgba(10,16,24,.75);border:1px solid #22324a;color:#cfe3ff;padding:6px 10px;border-radius:10px;font-weight:700;font-size:14px}
-
-/* Exchange marquee */
-.exchanges img{height:64px;object-fit:contain;background:#0a0f18;border:1px solid #1e2b40;border-radius:12px;padding:10px;filter:none;opacity:1;transition:.2s transform, .2s filter}
-.exchanges img:hover{transform:translateY(-2px);filter:drop-shadow(0 0 8px rgba(122,92,255,.3))}
-
-/* Roadmap cards */
-.road-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.rcard{background:#0d1423;border:1px solid #20314b;border-radius:16px;padding:18px;position:relative}
-.rcard span{position:absolute;top:-12px;left:12px;background:var(--accent);color:#0c111a;font-weight:900;border-radius:10px;padding:6px 10px;box-shadow:0 6px 18px rgba(59,201,255,.25)}
-.rcard p{margin:18px 0 0;color:#cfe3ff}
-
-/* Tokenomics grid */
-.tok-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.tcard{background:#0d1423;border:1px solid #20314b;border-radius:14px;padding:16px}
-.tcard b{display:block;color:#a9c8ff;margin-bottom:8px}
-.tcard span{font-size:18px;font-weight:800}
+/* Presale */
+#zzu .presale .counter{display:flex;gap:14px;justify-content:center;margin:18px 0}
+#zzu .presale .ctr{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 14px;text-align:center;min-width:90px}
+#zzu .presale .ctr span{font-size:1.6rem;font-weight:800;display:block}
+#zzu .presale .ctr small{color:#a9b9cf;font-size:.78rem}
+#zzu .presale .presale-cta{display:flex;gap:10px;justify-content:center;margin-top:12px}
 
 /* Footer */
-.footer{padding:24px 0;background:#0a1018;border-top:1px solid #19253b;color:#9fb0c3;text-align:center}
-
-/* Utils */
-.gradient{background:var(--accent);-webkit-background-clip:text;background-clip:text;color:transparent}
-.img-missing{opacity:.35;filter:contrast(.3) brightness(.6)}
+.z-footer{border-top:1px solid rgba(255,255,255,.06);padding:22px 0;background:#0b1120}
 
 /* Responsive */
-@media (max-width: 960px){
-  .grid.weeks{grid-template-columns:1fr}
-  .road-cards{grid-template-columns:1fr 1fr}
-  .tok-grid{grid-template-columns:1fr 1fr}
-  .mascots .mcard{width:180px}
-  .mascots .mcard img{height:200px}
-}
-@media (max-width: 600px){
-  .road-cards,.tok-grid{grid-template-columns:1fr}
-}
-/* =========================
-   ZUZU — Stake/NFT/Countdown
-   ========================= */
-
-:root{
-  --bg:#0e1522;
-  --card:#131b2a;
-  --muted:#9fb3c8;
-  --text:#e6f1ff;
-  --accent:#28d1ff;
-  --accent-2:#7a5cff;
-  --accent-3:#00ffa8;
-  --warning:#ffb86b;
-  --danger:#ff6b6b;
-}
-
-body.dark{ background:var(--bg); color:var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial; }
-img{max-width:100%;display:block}
-.container{ width:min(1180px, 92%); margin-inline:auto; }
-.flex{display:flex;gap:.75rem}
-.center-v{align-items:center}
-.between{justify-content:space-between}
-.grid-2{display:grid;grid-template-columns:1.1fr .9fr;gap:2rem}
-.z-section{ padding:72px 0 }
-.section-head{margin-bottom:28px}
-.section-head h2{font-size:2rem;margin:0 0 .5rem}
-.section-head p{color:var(--muted)}
-
-.z-header{position:sticky;top:0;z-index:30;background:rgba(14,21,34,.75);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.06)}
-.brand-logo{width:36px;height:36px;border-radius:10px;margin-right:.55rem}
-.brand-logo.small{width:28px;height:28px}
-.brand-title{font-weight:700;letter-spacing:.5px}
-.nav a{color:#cfe0ff;margin:0 .6rem;text-decoration:none}
-.nav a:hover{color:#fff}
-.nav .pill{background:linear-gradient(90deg,var(--accent),var(--accent-2));padding:.45rem .75rem;border-radius:999px;color:#001b2b}
-
-.z-hero{padding:80px 0 40px;background:radial-gradient(1200px 600px at 10% -20%, rgba(39,179,255,.2) 0, transparent 60%), radial-gradient(600px 400px at 90% 10%, rgba(122,92,255,.2) 0, transparent 60%)}
-.z-hero h1{font-size:2.4rem;margin:0 0 .4rem}
-.z-hero .lead{color:var(--muted);font-size:1.08rem}
-.cta-row{display:flex;gap:12px;margin-top:16px}
-.btn{display:inline-flex;align-items:center;justify-content:center;border-radius:10px;padding:.7rem 1rem;border:1px solid rgba(255,255,255,.08);text-decoration:none;color:#fff}
-.btn-ghost{background:transparent}
-.btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));border-color:transparent}
-
-.full-img{border-radius:14px;border:1px solid rgba(255,255,255,.06);background:#0b1220}
-
-.chip-row{display:flex;gap:10px;margin-top:12px}
-.chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);padding:.4rem .7rem;border-radius:999px;text-decoration:none;color:#e9f3ff}
-
-.stake-pro .stake-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:14px 0 24px}
-.stake-card{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 14px}
-.stake-card .tier{margin:.2rem 0 .4rem;font-size:1.05rem}
-.tier.silver{color:#cbd9ff}
-.tier.gold{color:#ffd86b}
-.tier.diamond{color:#9ad7ff}
-.tier.obsidian{color:#a7ffd1}
-.stake-card ul{padding:0 0 0 1rem;margin:.5rem 0 0}
-.stake-card li{margin:.25rem 0}
-
-.calculator{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.005));border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px 16px}
-.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}
-.calculator label{font-size:.86rem;color:#a5b7ce}
-.calculator input, .calculator select{width:100%;background:#0c1321;border:1px solid rgba(255,255,255,.08);border-radius:10px;color:#e9f3ff;padding:.6rem .7rem}
-.calc-result{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
-.stat{background:#0f1728;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px}
-.stat .label{font-size:.85rem;color:#a6b6cc}
-.stat .value{font-weight:700;font-size:1.15rem}
-.chart-wrap{margin-top:16px;border:1px dashed rgba(255,255,255,.1);border-radius:12px;padding:10px}
-
-.nft-rewards .nft-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
-.nft-card{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
-.nft-card .media{aspect-ratio:1/1;background:#0b1220;display:flex;align-items:center;justify-content:center}
-.nft-card img{max-height:260px;object-fit:cover}
-.nft-card .meta{padding:10px 12px}
-.nft-card .meta h4{margin:.1rem 0 .25rem;font-size:1rem}
-.nft-card .meta p{margin:.15rem 0;color:#a8bbd2;font-size:.92rem}
-.nft-card .foot{margin-top:auto;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,.06)}
-.badge{font-size:.8rem;padding:.15rem .5rem;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06)}
-.badge.rare{color:#ffd86b;border-color:#ffd86b33;background:#ffd86b14}
-.badge.epic{color:#9ad7ff;border-color:#9ad7ff33;background:#9ad7ff14}
-.badge.legend{color:#a7ffd1;border-color:#a7ffd133;background:#a7ffd114}
-
-.presale .counter{display:flex;gap:14px;justify-content:center;margin:18px 0}
-.presale .ctr{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 14px;text-align:center;min-width:90px}
-.presale .ctr span{font-size:1.6rem;font-weight:800;display:block}
-.presale .ctr small{color:#a9b9cf;font-size:.78rem}
-.presale .presale-cta{display:flex;gap:10px;justify-content:center;margin-top:12px}
-
-.z-footer{border-top:1px solid rgba(255,255,255,.06);padding:20px 0;background:rgba(255,255,255,.02)}
-/* responsive */
 @media (max-width:1024px){
-  .grid-2{grid-template-columns:1fr}
-  .stake-pro .stake-grid{grid-template-columns:repeat(3,1fr)}
-  .nft-rewards .nft-grid{grid-template-columns:repeat(3,1fr)}
-  .calc-grid{grid-template-columns:repeat(2,1fr)}
+  #zzu .z-grid-2{grid-template-columns:1fr}
+  #zzu .stake-pro .stake-grid{grid-template-columns:repeat(3,1fr)}
+  #zzu .nft-rewards .nft-grid{grid-template-columns:repeat(3,1fr)}
+  #zzu .calc-grid{grid-template-columns:repeat(2,1fr)}
 }
 @media (max-width:640px){
-  .stake-pro .stake-grid{grid-template-columns:repeat(2,1fr)}
-  .nft-rewards .nft-grid{grid-template-columns:repeat(2,1fr)}
-  .calc-result{grid-template-columns:1fr}
+  #zzu .stake-pro .stake-grid{grid-template-columns:repeat(2,1fr)}
+  #zzu .nft-rewards .nft-grid{grid-template-columns:repeat(2,1fr)}
+  #zzu .calc-result{grid-template-columns:1fr}
 }
