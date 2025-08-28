@@ -6,6 +6,12 @@
 <title>ZUZUCOIN — Neon Hedgehog</title>
 <link rel="icon" href="./assets/icons/favicon.ico">
 <link rel="manifest" href="./tonconnect-manifest.json">
+
+<!-- EVM (MetaMask) -->
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
+<!-- TON Connect UI -->
+<script src="https://unpkg.com/@tonconnect/ui@2.2.0/dist/tonconnect-ui.min.js"></script>
+
 <style>
   :root{
     --bg:#0b1420; --card:#0f1e2f; --muted:#9fd0ff; --text:#dff1ff;
@@ -21,7 +27,7 @@
   .topbar{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,rgba(10,20,32,.92),rgba(10,20,32,.70));backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.07)}
   .nav{display:flex;align-items:center;gap:18px}
   .brand{display:flex;align-items:center;gap:12px}
-  .brand-logo{height:40px;width:auto;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.6))}
+  .brand-logo{height:44px;width:auto;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.6))}
   .brand-name{font-weight:900;letter-spacing:.6px}
   .nav-links{display:flex;gap:16px;margin-left:12px;flex-wrap:wrap}
   .nav-links a{font-weight:700;color:#bfe6ff}
@@ -32,13 +38,13 @@
 
   /* Hero */
   .hero{padding:36px 0 22px}
-  .hedgehog{display:block;margin:0 auto 8px;height:54px}
+  .hedgehog{display:block;margin:0 auto 8px;height:58px;filter:drop-shadow(0 4px 14px rgba(0,0,0,.55))}
   h1{margin:10px 0 6px;text-align:center;font-size:32px}
   .lead{max-width:980px;margin:0 auto 20px;text-align:center;color:#c7e7ff;opacity:.95;line-height:1.6}
 
-  /* Flip Countdown */
+  /* Flip-like Countdown */
   .countdown{display:flex;justify-content:center;gap:16px;margin:16px auto 26px;flex-wrap:wrap}
-  .flip{position:relative;background:#13263c;border-radius:14px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.35),var(--shadow);width:120px;height:96px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:44px}
+  .flip{position:relative;background:#13263c;border-radius:14px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.35),var(--shadow);width:122px;height:96px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:44px}
   .flip:before{content:"";position:absolute;left:0;right:0;top:48px;height:2px;background:rgba(255,255,255,.08)}
   .fl{position:absolute;bottom:-20px;font-size:12px;color:var(--muted)}
 
@@ -54,22 +60,22 @@
 
   /* Carousel base */
   .carousel{position:relative;overflow:hidden;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:#0e1d2e}
-  .track{display:flex;gap:18px;animation:scroll var(--dur,18s) linear infinite;padding:14px}
+  .track{display:flex;gap:18px;animation:scroll var(--dur,16s) linear infinite;padding:14px}
   .track[data-paused="1"]{animation-play-state:paused}
   .track:hover{animation-play-state:paused}
   @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-  /* Mascots — full fit (no crop) + 2x + faster */
-  #mask-track{--dur:16s}
+  /* Mascots — bigger, full fit */
+  #mask-track{--dur:14s}
   .mcard{min-width:520px;background:#0f1f30;border:1px solid rgba(255,255,255,.07);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
   .imgbox{height:560px;background:#0b1726;display:flex;align-items:center;justify-content:center}
   .imgbox img{max-height:100%;width:auto;display:block}
   .mcap{padding:10px 14px;font-weight:900;background:#0b1726;border-top:1px solid rgba(255,255,255,.06)}
 
-  /* Exchanges — bigger & clean */
-  #exch-track{--dur:18s}
-  .ex{min-width:300px;background:#0c1a2b;border:1px solid rgba(255,255,255,.08);border-radius:16px;display:flex;align-items:center;justify-content:center;padding:28px}
-  .ex img{height:84px;filter:none}
+  /* Exchanges — bigger */
+  #exch-track{--dur:16s}
+  .ex{min-width:320px;background:#0c1a2b;border:1px solid rgba(255,255,255,.08);border-radius:16px;display:flex;align-items:center;justify-content:center;padding:30px}
+  .ex img{height:90px;filter:none}
 
   /* Roadmap timeline */
   .timeline{position:relative;padding:16px 10px}
@@ -93,7 +99,7 @@
     .mcard{min-width:360px}
     .imgbox{height:420px}
     .ex{min-width:240px}
-    .ex img{height:64px}
+    .ex img{height:68px}
   }
 </style>
 </head>
@@ -103,24 +109,28 @@
 <div class="topbar">
   <div class="wrap nav">
     <div class="brand">
-      <img class="brand-logo" src="./assets/images/logo.png" alt="ZUZU Logo" onerror="this.style.display='none'">
+      <!-- logo: png, yoksa jpg fallback -->
+      <img class="brand-logo" src="./assets/images/logo.png" alt="ZUZU Logo"
+           onerror="this.onerror=null;this.src='./assets/images/logo.jpg'">
       <div class="brand-name">ZUZUCOIN</div>
     </div>
     <div class="nav-links">
       <a href="#about">Hakkımızda</a><a href="#community">Topluluk</a>
       <a href="#stake">Stake</a><a href="#roadmap">Yol Haritası</a><a href="#tokenomics">Tokonomi</a>
+      <a href="#nft">NFT Ödülleri</a>
     </div>
     <div class="grow"></div>
     <select id="lang" class="lang"><option value="tr" selected>TR</option><option value="en">EN</option></select>
     <button class="btn" onclick="connectEVM()">MetaMask / EVM</button>
-    <button class="btn" onclick="connectSol()">Solana</button>
-    <button class="pill" onclick="connectTON()">Connect Wallet</button>
+    <button class="btn" onclick="connectSol()">Phantom (SOL)</button>
+    <button class="pill" onclick="connectTON()">TON Connect</button>
   </div>
 </div>
 
 <!-- HERO -->
 <section class="wrap hero" id="about">
-  <img class="hedgehog" src="./assets/images/logo.png" alt="ZUZU" onerror="this.style.display='none'">
+  <img class="hedgehog" src="./assets/images/logo.png" alt="ZUZU"
+       onerror="this.onerror=null;this.src='./assets/images/logo.jpg'">
   <h1><span data-i="heroTitle">Kirpinin Gücü: <span style="background:linear-gradient(90deg,var(--a2),var(--a1));-webkit-background-clip:text;background-clip:text;color:transparent">ZUZUCOIN</span></span></h1>
   <p class="lead" data-i="heroLead">
     ZUZUCOIN; neon şehirlerin arasında dolaşan <b>anime-robotik kirpi</b> maskotunun ruhunu taşır.
@@ -217,7 +227,7 @@
   </div>
 </section>
 
-<!-- ROADMAP (Timeline) -->
+<!-- ROADMAP -->
 <section class="wrap" id="roadmap">
   <h2 class="title">Yol Haritamız</h2>
   <div class="timeline">
@@ -241,7 +251,7 @@
   </div>
 </section>
 
-<!-- TOKENOMICS (bars) -->
+<!-- TOKENOMICS -->
 <section class="wrap" id="tokenomics">
   <h2 class="title">Tokonomi</h2>
   <div class="card">
@@ -252,6 +262,27 @@
       <div class="bar"><div class="lbl"><span>Topluluk & Ödüller</span><b>%25</b></div><div style="width:25%"></div></div>
       <div class="bar"><div class="lbl"><span>Ekip & Geliştirme</span><b>%15</b></div><div style="width:15%"></div></div>
       <div class="bar"><div class="lbl"><span>Rezerv</span><b>%5</b></div><div style="width:5%"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- NFT REWARDS (Thirdweb teaser) -->
+<section class="wrap" id="nft">
+  <h2 class="title">NFT Ödülleri</h2>
+  <p class="lead" style="text-align:left">
+    <b>Stake edenlere</b> özel <b>ücretsiz NFT</b> koleksiyonları. Hak kazananlar 3. çeyrekte
+    <b>Thirdweb</b> üzerindeki claim sayfasından mint edebilecek.
+  </p>
+  <div class="grid">
+    <div class="card">
+      <div class="badge">ZUZU Pass #1</div>
+      <p>Ön satış + stake erken destekçilere 1/1. Claim: Ücretsiz.</p>
+      <a class="pill" href="https://thirdweb.com/" target="_blank">Claim Sayfası (yakında)</a>
+    </div>
+    <div class="card">
+      <div class="badge">ZUZU Mask Koleksiyonu</div>
+      <p>Topluluk görevleri + stake puanına göre drop.</p>
+      <a class="pill" href="https://thirdweb.com/" target="_blank">Koleksiyon (yakında)</a>
     </div>
   </div>
 </section>
@@ -279,7 +310,7 @@ const I18N={tr:{heroTitle:"Kirpinin Gücü: <span style='background:linear-gradi
 function setLang(l){const t=I18N[l]||I18N.tr;document.querySelectorAll("[data-i]").forEach(el=>el.innerHTML=t[el.dataset.i]||el.innerHTML);}
 document.getElementById("lang").addEventListener("change",e=>setLang(e.target.value)); setLang("tr");
 
-/* === Countdown (flip-ish) === */
+/* === Countdown === */
 const ids=[["cd-days"],["cd-hours"],["cd-mins"],["cd-secs"]];
 function pad(n){return String(n).padStart(2,"0")}
 function tick(){
@@ -293,24 +324,98 @@ function tick(){
 }
 setInterval(tick,1000); tick();
 
-/* === Wallet placeholders === */
-function connectEVM(){alert("EVM (MetaMask) entegrasyonu sonraki aşamada.\nAlım için USDT cüzdan:\n"+ZUZU_CFG.wallets.evm);}
-function connectSol(){alert("Solana entegrasyonu sonraki aşamada.\nAdres:\n"+ZUZU_CFG.wallets.sol);}
-function connectTON(){alert("TON Connect entegrasyonu sonraki aşamada.\nAdres:\n"+ZUZU_CFG.wallets.ton);}
+/* === EVM (MetaMask) === */
+let evmProvider, evmSigner, evmAddress;
+const CHAINS = {
+  bsc:{chainId:'0x38', name:'BSC', usdt:'0x55d398326f99059fF775485246999027B3197955', explorer:'https://bscscan.com'},
+  polygon:{chainId:'0x89', name:'Polygon', usdt:'0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', explorer:'https://polygonscan.com'},
+  arbitrum:{chainId:'0xa4b1', name:'Arbitrum', usdt:'0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9', explorer:'https://arbiscan.io'}
+};
+const TREASURY = ZUZU_CFG.wallets.evm;
 
-/* === Buy placeholders === */
-function buyWeek(w){const p={1:"0.0008",2:"0.0010",3:"0.0012",4:"0.0015"};alert(`Hafta ${w} — ${p[w]} USDT\n\nŞimdilik yönlendirme: cüzdan adreslerinden birini kullanın.\nEVM: ${ZUZU_CFG.wallets.evm}\nTON: ${ZUZU_CFG.wallets.ton}\nSOL: ${ZUZU_CFG.wallets.sol}`);}
+async function connectEVM(){
+  if(!window.ethereum){alert('MetaMask bulunamadı.'); return;}
+  await ethereum.request({method:'eth_requestAccounts'});
+  evmProvider = new ethers.BrowserProvider(window.ethereum);
+  evmSigner = await evmProvider.getSigner();
+  evmAddress = await evmSigner.getAddress();
+  const net = await evmProvider.getNetwork(); const id='0x'+net.chainId.toString(16);
+  if(!Object.values(CHAINS).some(c=>c.chainId.toLowerCase()==id)){
+    try{ await ethereum.request({method:'wallet_switchEthereumChain', params:[{chainId:CHAINS.bsc.chainId}]}); }catch(e){}
+  }
+  alert('Bağlandı: '+evmAddress);
+}
 
-/* === Track pause/resume on hold/hover === */
+async function buyWithUSDT(usdPrice, qty){
+  try{
+    if(!evmSigner) await connectEVM();
+    const net = await evmProvider.getNetwork(); const id='0x'+net.chainId.toString(16);
+    let chain=Object.values(CHAINS).find(c=>c.chainId.toLowerCase()==id) || CHAINS.bsc;
+    const usdtAddr = chain.usdt;
+    const erc20Abi = ["function decimals() view returns(uint8)","function transfer(address to,uint256 value) returns (bool)"];
+    const usdt = new ethers.Contract(usdtAddr, erc20Abi, evmSigner);
+    const dec = await usdt.decimals(); // usually 6
+    const totalUSDT = (usdPrice*qty).toFixed(dec);
+    const amount = ethers.parseUnits(totalUSDT, dec);
+    const tx = await usdt.transfer(TREASURY, amount);
+    alert('USDT transferi gönderildi:\n'+chain.explorer+'/tx/'+tx.hash);
+  }catch(e){ console.error(e); alert('İşlem hatası: '+(e.message||e));}
+}
+
+/* === TON Connect === */
+let tonConnectUI;
+async function connectTON(){
+  if(!tonConnectUI){
+    tonConnectUI = new TON_CONNECT_UI.TonConnectUI({manifestUrl: location.origin + '/tonconnect-manifest.json'});
+  }
+  await tonConnectUI.openModal();
+}
+async function buyWithTON(usd){
+  if(!tonConnectUI) await connectTON();
+  if(!tonConnectUI.connected) await tonConnectUI.connectWallet();
+  const amountStr = prompt(`TON ile ödeme. Toplam USDT: ${usd.toFixed(6)}\nLütfen göndereceğiniz TON miktarını girin:`,`1`);
+  if(!amountStr) return;
+  const nano = BigInt(Math.floor(parseFloat(amountStr)*1e9));
+  await tonConnectUI.sendTransaction({
+    validUntil: Math.floor(Date.now()/1000)+300,
+    messages:[{address: ZUZU_CFG.wallets.ton, amount: nano.toString()}]
+  });
+  alert('TON işlemi gönderildi.');
+}
+
+/* === Phantom (Solana) === */
+async function connectSol(){
+ if(window.solana && window.solana.isPhantom){
+   const resp = await window.solana.connect(); window.solAddress = resp.publicKey.toString();
+   alert('Phantom bağlandı: '+window.solAddress);
+ } else { alert('Phantom bulunamadı.');}
+}
+async function buyWithSOL(usd){
+  if(!window.solAddress) await connectSol();
+  alert('SOL/SPL ödeme entegrasyonu sırada.\nŞimdilik cüzdana transfer: \n'+ZUZU_CFG.wallets.sol);
+}
+
+/* === Buy flow === */
+function buyWeek(week){
+  const prices={1:0.0008,2:0.0010,3:0.0012,4:0.0015};
+  const qty=parseFloat(prompt('Alınacak ZUZU miktarı (adet):','100000'));
+  if(!qty||qty<=0) return;
+  const total=prices[week]*qty;
+  const m=prompt(`Ödeme yöntemi seç:\n1) EVM/USDT (MetaMask)\n2) TON (Tonkeeper)\n3) SOL (Phantom)\n\nToplam: ${total.toFixed(6)} USDT\nSeçim (1/2/3):`,'1');
+  if(m==='1') buyWithUSDT(prices[week],qty);
+  else if(m==='2') buyWithTON(total);
+  else if(m==='3') buyWithSOL(total);
+}
+
+/* === Pause on hold for tracks + modal preview === */
 function bindHoldPause(track){
-  const set=(v)=>track.setAttribute("data-paused",v?"1":"0");
+  const set=v=>track.setAttribute("data-paused",v?"1":"0");
   ["pointerdown","touchstart","mouseenter"].forEach(ev=>track.addEventListener(ev,()=>set(true)));
   ["pointerup","touchend","mouseleave"].forEach(ev=>track.addEventListener(ev,()=>set(false)));
 }
 bindHoldPause(document.getElementById("mask-track"));
 bindHoldPause(document.getElementById("exch-track"));
 
-/* === Modal preview for mascots === */
 const modal=document.getElementById("modal"), mimg=document.getElementById("modalImg");
 document.querySelectorAll("#mask-track .imgbox img").forEach(img=>{
   img.style.cursor="zoom-in";
