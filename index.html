@@ -1,433 +1,264 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ZUZUCOIN — Neon Hedgehog</title>
-<link rel="icon" href="./assets/icons/favicon.ico">
-<link rel="manifest" href="./tonconnect-manifest.json">
-
-<!-- EVM (MetaMask) -->
-<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
-<!-- TON Connect UI -->
-<script src="https://unpkg.com/@tonconnect/ui@2.2.0/dist/tonconnect-ui.min.js"></script>
-
-<style>
-  :root{
-    --bg:#0b1420; --card:#0f1e2f; --muted:#9fd0ff; --text:#dff1ff;
-    --a1:#5fd4ff; --a2:#7a5bff; --a3:#22e3c9; --shadow:0 12px 28px rgba(0,0,0,.5);
-    --radius:16px;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial}
-  a{color:var(--a1);text-decoration:none}
-  .wrap{max-width:1200px;margin:0 auto;padding:18px}
-
-  /* Topbar */
-  .topbar{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,rgba(10,20,32,.92),rgba(10,20,32,.70));backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.07)}
-  .nav{display:flex;align-items:center;gap:18px}
-  .brand{display:flex;align-items:center;gap:12px}
-  .brand-logo{height:44px;width:auto;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.6))}
-  .brand-name{font-weight:900;letter-spacing:.6px}
-  .nav-links{display:flex;gap:16px;margin-left:12px;flex-wrap:wrap}
-  .nav-links a{font-weight:700;color:#bfe6ff}
-  .grow{flex:1}
-  .btn{background:#13263d;border:1px solid rgba(255,255,255,.1);color:#e7f6ff;padding:8px 12px;border-radius:10px;cursor:pointer}
-  .pill{background:linear-gradient(135deg,var(--a2),var(--a1));border:none;color:#001018;padding:9px 14px;border-radius:12px;font-weight:900;cursor:pointer;box-shadow:var(--shadow)}
-  .lang{background:#0f253a;color:#bfe6ff;border:1px solid rgba(255,255,255,.1);padding:8px 10px;border-radius:10px}
-
-  /* Hero */
-  .hero{padding:36px 0 22px}
-  .hedgehog{display:block;margin:0 auto 8px;height:58px;filter:drop-shadow(0 4px 14px rgba(0,0,0,.55))}
-  h1{margin:10px 0 6px;text-align:center;font-size:32px}
-  .lead{max-width:980px;margin:0 auto 20px;text-align:center;color:#c7e7ff;opacity:.95;line-height:1.6}
-
-  /* Flip-like Countdown */
-  .countdown{display:flex;justify-content:center;gap:16px;margin:16px auto 26px;flex-wrap:wrap}
-  .flip{position:relative;background:#13263c;border-radius:14px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.35),var(--shadow);width:122px;height:96px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:44px}
-  .flip:before{content:"";position:absolute;left:0;right:0;top:48px;height:2px;background:rgba(255,255,255,.08)}
-  .fl{position:absolute;bottom:-20px;font-size:12px;color:var(--muted)}
-
-  /* Presale */
-  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
-  .card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
-  .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#0e2a3f;color:#aee1ff;border:1px solid rgba(255,255,255,.06);font-weight:800}
-  .price{font-size:30px;font-weight:900}
-  .buy{margin-top:10px}
-
-  /* Section titles */
-  .title{font-size:26px;margin:34px 0 12px}
-
-  /* Carousel base */
-  .carousel{position:relative;overflow:hidden;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:#0e1d2e}
-  .track{display:flex;gap:18px;animation:scroll var(--dur,16s) linear infinite;padding:14px}
-  .track[data-paused="1"]{animation-play-state:paused}
-  .track:hover{animation-play-state:paused}
-  @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-  /* Mascots — bigger, full fit */
-  #mask-track{--dur:14s}
-  .mcard{min-width:520px;background:#0f1f30;border:1px solid rgba(255,255,255,.07);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
-  .imgbox{height:560px;background:#0b1726;display:flex;align-items:center;justify-content:center}
-  .imgbox img{max-height:100%;width:auto;display:block}
-  .mcap{padding:10px 14px;font-weight:900;background:#0b1726;border-top:1px solid rgba(255,255,255,.06)}
-
-  /* Exchanges — bigger */
-  #exch-track{--dur:16s}
-  .ex{min-width:320px;background:#0c1a2b;border:1px solid rgba(255,255,255,.08);border-radius:16px;display:flex;align-items:center;justify-content:center;padding:30px}
-  .ex img{height:90px;filter:none}
-
-  /* Roadmap timeline */
-  .timeline{position:relative;padding:16px 10px}
-  .line{position:absolute;left:24px;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--a2),var(--a1));border-radius:4px;opacity:.6}
-  .step{position:relative;margin-left:60px;margin-bottom:18px;background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
-  .dot{position:absolute;left:-42px;top:14px;width:22px;height:22px;border-radius:50%;
-       background:radial-gradient(circle at 30% 30%,#fff 0%,#9ad9ff 35%,#6f80ff 75%);border:3px solid rgba(255,255,255,.25)}
-  .s-title{font-weight:900;margin-bottom:6px;letter-spacing:.4px}
-  .s-note{color:#bfe3ff;margin:0}
-
-  /* Tokenomics bars */
-  .bars{display:grid;gap:10px}
-  .bar{background:#0e2032;border:1px solid rgba(255,255,255,.08);border-radius:12px;overflow:hidden}
-  .bar > div{height:18px;background:linear-gradient(90deg,var(--a2),var(--a1));width:0}
-  .bar .lbl{display:flex;justify-content:space-between;color:#cbe9ff;font-weight:800;padding:8px 8px 4px}
-
-  footer{padding:30px 0;text-align:center;color:#9ec9e9}
-
-  @media(max-width:980px){
-    .grid{grid-template-columns:1fr}
-    .mcard{min-width:360px}
-    .imgbox{height:420px}
-    .ex{min-width:240px}
-    .ex img{height:68px}
-  }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ZUZUCOIN — Resmî Site</title>
+  <meta name="description" content="ZUZU ekosistemi: Stake et, NFT kazan, topluluğa katıl! Global bir aile.">
+  <link rel="icon" href="assets/images/logo.png" type="image/png" />
+  <link rel="preload" href="assets/images/background.jpg" as="image">
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="dark">
 
-<!-- NAV -->
-<div class="topbar">
-  <div class="wrap nav">
-    <div class="brand">
-      <!-- logo: png, yoksa jpg fallback -->
-      <img class="brand-logo" src="./assets/images/logo.png" alt="ZUZU Logo"
-           onerror="this.onerror=null;this.src='./assets/images/logo.jpg'">
-      <div class="brand-name">ZUZUCOIN</div>
+  <!-- ===== HEADER / NAV ===== -->
+  <header class="z-header">
+    <div class="container flex between center-v">
+      <div class="brand flex center-v">
+        <img src="assets/images/logo.png" alt="ZUZU logo" class="brand-logo" />
+        <span class="brand-title">ZUZUCOIN</span>
+      </div>
+      <nav class="nav">
+        <a href="#community">Topluluk</a>
+        <a href="#stake-pro">Stake</a>
+        <a href="#nft-rewards">NFT Ödülleri</a>
+        <a href="#roadmap">Yol Haritası</a>
+        <a href="#tokenomics">Tokonomi</a>
+        <a href="#countdown" class="pill">Ön Satış</a>
+      </nav>
     </div>
-    <div class="nav-links">
-      <a href="#about">Hakkımızda</a><a href="#community">Topluluk</a>
-      <a href="#stake">Stake</a><a href="#roadmap">Yol Haritası</a><a href="#tokenomics">Tokonomi</a>
-      <a href="#nft">NFT Ödülleri</a>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="z-hero">
+    <div class="container grid-2">
+      <div>
+        <h1>ZUZU — Geleceğin Robotic Kirpisi 🦔⚡</h1>
+        <p class="lead">
+          Stake et, özel **ZUZU Maskot NFT**’lerini kazan ve topluluğun gücünü hissedip gelir elde et.
+          İlk alan kazanır — **sınırlı arz, yüksek utility**.
+        </p>
+        <div class="cta-row">
+          <a href="#stake-pro" class="btn btn-primary">Stake Etmeye Başla</a>
+          <a href="#nft-rewards" class="btn btn-ghost">NFT Ödülleri</a>
+        </div>
+      </div>
+      <div class="hero-media">
+        <img src="assets/images/banner.jpg" alt="ZUZU hero" class="hero-banner"/>
+      </div>
     </div>
-    <div class="grow"></div>
-    <select id="lang" class="lang"><option value="tr" selected>TR</option><option value="en">EN</option></select>
-    <button class="btn" onclick="connectEVM()">MetaMask / EVM</button>
-    <button class="btn" onclick="connectSol()">Phantom (SOL)</button>
-    <button class="pill" onclick="connectTON()">TON Connect</button>
-  </div>
-</div>
+  </section>
 
-<!-- HERO -->
-<section class="wrap hero" id="about">
-  <img class="hedgehog" src="./assets/images/logo.png" alt="ZUZU"
-       onerror="this.onerror=null;this.src='./assets/images/logo.jpg'">
-  <h1><span data-i="heroTitle">Kirpinin Gücü: <span style="background:linear-gradient(90deg,var(--a2),var(--a1));-webkit-background-clip:text;background-clip:text;color:transparent">ZUZUCOIN</span></span></h1>
-  <p class="lead" data-i="heroLead">
-    ZUZUCOIN; neon şehirlerin arasında dolaşan <b>anime-robotik kirpi</b> maskotunun ruhunu taşır.
-    <b>Topluluk odaklı</b>, <b>oyunlaştırma</b> içeren, adil ve şeffaf bir web3 ekonomisini hedefler.
-  </p>
-
-  <!-- COUNTDOWN -->
-  <div class="countdown">
-    <div class="flip"><span id="cd-days">00</span><span class="fl" data-i="days">Gün</span></div>
-    <div class="flip"><span id="cd-hours">00</span><span class="fl" data-i="hours">Saat</span></div>
-    <div class="flip"><span id="cd-mins">00</span><span class="fl" data-i="minutes">Dakika</span></div>
-    <div class="flip"><span id="cd-secs">00</span><span class="fl" data-i="seconds">Saniye</span></div>
-  </div>
-
-  <!-- PRESALE -->
-  <div class="grid">
-    <div class="card"><div class="badge">1. Hafta</div><div class="price">0.0008 <small>USDT</small></div><button class="pill buy" onclick="buyWeek(1)">Satın Al</button></div>
-    <div class="card"><div class="badge">2. Hafta</div><div class="price">0.0010 <small>USDT</small></div><button class="pill buy" onclick="buyWeek(2)">Satın Al</button></div>
-    <div class="card"><div class="badge">3. Hafta</div><div class="price">0.0012 <small>USDT</small></div><button class="pill buy" onclick="buyWeek(3)">Satın Al</button></div>
-    <div class="card"><div class="badge">4. Hafta</div><div class="price">0.0015 <small>USDT</small></div><button class="pill buy" onclick="buyWeek(4)">Satın Al</button></div>
-  </div>
-</section>
-
-<!-- COMMUNITY -->
-<section class="wrap" id="community">
-  <h2 class="title" data-i="communityTitle">Topluluk</h2>
-  <p class="lead" style="text-align:left" data-i="communityLead">
-    Telegram, X ve Discord’da global bir aile. Etkinlikler, airdrop’lar, mini oyunlar ve daha fazlası.
-  </p>
-  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
-    <a class="btn" href="#" target="_blank">Telegram</a>
-    <a class="btn" href="#" target="_blank">Twitter / X</a>
-    <a class="btn" href="#" target="_blank">Discord</a>
-  </div>
-</section>
-
-<!-- STAKE -->
-<section class="wrap" id="stake">
-  <h2 class="title">Stake</h2>
-  <p class="lead" style="text-align:left">ZUZU’larını kilitle, pasif gelir kazan. Erken stakeleyenler özel rozet ve ödüller alır.</p>
-  <button class="pill" onclick="alert('Stake paneli yakında!')">Stake Paneli (yakında)</button>
-</section>
-
-<!-- MASCOT GALLERY -->
-<section class="wrap" id="gallery">
-  <h2 class="title" style="letter-spacing:.6px">ZUZU MASKOT GALERİSİ</h2>
-  <div class="carousel" aria-label="ZUZU mascots">
-    <div class="track" id="mask-track">
-      <!-- set A -->
-      <div class="mcard"><div class="imgbox"><img src="./assets/images/mask/0.png" alt="Titan"></div><div class="mcap">Titan</div></div>
-      <div class="mcard"><div class="imgbox"><img src="./assets/images/mask/1.png" alt="Hacker"></div><div class="mcap">Hacker</div></div>
-      <div class="mcard"><div class="imgbox"><img src="./assets/images/mask/2.png" alt="Maiden"></div><div class="mcap">Maiden</div></div>
-      <div class="mcard"><div class="imgbox"><img src="./assets/images/mask/3.png" alt="Scientist"></div><div class="mcap">Scientist</div></div>
-      <div class="mcard"><div class="imgbox"><img src="./assets/images/mask/4.png" alt="Berserker"></div><div class="mcap">Berserker</div></div>
-      <div class="mcard"><div class="imgbox"><img src="./assets/images/mask/5.png" alt="Sorceress"></div><div class="mcap">Sorceress</div></div>
-      <div class="mcard"><div class="imgbox"><img src="./assets/images/mask/6.png" alt="Rogue"></div><div class="mcap">Rogue</div></div>
-      <div class="mcard"><div class="imgbox"><img src="./assets/images/mask/7.png" alt="Warrior"></div><div class="mcap">Warrior</div></div>
-      <div class="mcard"><div class="imgbox"><img src="./assets/images/mask/8.png" alt="Ranger"></div><div class="mcap">Ranger</div></div>
-      <div class="mcard"><div class="imgbox"><img src="./assets/images/mask/9.png" alt="Hero"></div><div class="mcap">Hero</div></div>
-      <!-- set B (loop) -->
-      <div class="mcard"><div class="imgbox"><img src="./assets/images/mask/0.png" alt="Titan"></div><div class="mcap">Titan</div></div>
-      <div class="mcard"><div class="imgbox"><img src="./assets/images/mask/1.png" alt="Hacker"></div><div class="mcap">Hacker</div></div>
-      <div class="mcard"><div class="imgbox"><img src="./assets/images/mask/2.png" alt="Maiden"></div><div class="mcap">Maiden</div></div>
-      <div class="mcard"><div class="imgbox"><img src="./assets/images/mask/3.png" alt="Scientist"></div><div class="mcap">Scientist</div></div>
-      <div class="mcard"><div class="imgbox"><img src="./assets/images/mask/4.png" alt="Berserker"></div><div class="mcap">Berserker</div></div>
-      <div class="mcard"><div class="imgbox"><img src="./assets/images/mask/5.png" alt="Sorceress"></div><div class="mcap">Sorceress</div></div>
-      <div class="mcard"><div class="imgbox"><img src="./assets/images/mask/6.png" alt="Rogue"></div><div class="mcap">Rogue</div></div>
-      <div class="mcard"><div class="imgbox"><img src="./assets/images/mask/7.png" alt="Warrior"></div><div class="mcap">Warrior</div></div>
-      <div class="mcard"><div class="imgbox"><img src="./assets/images/mask/8.png" alt="Ranger"></div><div class="mcap">Ranger</div></div>
-      <div class="mcard"><div class="imgbox"><img src="./assets/images/mask/9.png" alt="Hero"></div><div class="mcap">Hero</div></div>
+  <!-- ===== COMMUNITY (Kısa) ===== -->
+  <section id="community" class="z-section">
+    <div class="container">
+      <h2>Topluluk</h2>
+      <p>Telegram, X ve Discord’da global bir aile. Etkinlikler, airdrop’lar, mini oyunlar ve daha fazlası.</p>
+      <div class="chip-row">
+        <a class="chip" href="#" target="_blank">Telegram</a>
+        <a class="chip" href="#" target="_blank">Twitter / X</a>
+        <a class="chip" href="#" target="_blank">Discord</a>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- EXCHANGES -->
-<section class="wrap">
-  <h3 class="title" style="margin-top:28px">Will be listed soon</h3>
-  <div class="carousel" aria-label="Exchanges">
-    <div class="track" id="exch-track">
-      <div class="ex"><img src="./assets/images/exchanges/mexc.png" alt="MEXC"></div>
-      <div class="ex"><img src="./assets/images/exchanges/bybit.png" alt="Bybit"></div>
-      <div class="ex"><img src="./assets/images/exchanges/kucoin.png" alt="KuCoin"></div>
-      <div class="ex"><img src="./assets/images/exchanges/gateio.png" alt="Gate.io"></div>
-      <div class="ex"><img src="./assets/images/exchanges/bitmart.png" alt="Bitmart"></div>
-      <div class="ex"><img src="./assets/images/exchanges/okx.png" alt="OKX"></div>
-      <!-- loop -->
-      <div class="ex"><img src="./assets/images/exchanges/mexc.png" alt="MEXC"></div>
-      <div class="ex"><img src="./assets/images/exchanges/bybit.png" alt="Bybit"></div>
-      <div class="ex"><img src="./assets/images/exchanges/kucoin.png" alt="KuCoin"></div>
-      <div class="ex"><img src="./assets/images/exchanges/gateio.png" alt="Gate.io"></div>
-      <div class="ex"><img src="./assets/images/exchanges/bitmart.png" alt="Bitmart"></div>
-      <div class="ex"><img src="./assets/images/exchanges/okx.png" alt="OKX"></div>
+  <!-- ===== STAKE PRO ===== -->
+  <section id="stake-pro" class="z-section stake-pro">
+    <div class="container">
+      <div class="section-head">
+        <h2>Stake Pro — Kilitle, Kazan, NFT Kap ✨</h2>
+        <p>ZUZU’larını kilitle, **APY + NFT BOOST** ile pasif gelir elde et. Erken stake edenler özel rozet ve airdrop önceliği alır.</p>
+      </div>
+
+      <!-- APY tablosu -->
+      <div class="stake-grid">
+        <div class="stake-card">
+          <h3 class="tier">Bronz</h3>
+          <ul>
+            <li><strong>30 gün</strong> kilit</li>
+            <li><strong>12% APY</strong></li>
+            <li>Erken erişim çekilişleri</li>
+          </ul>
+        </div>
+        <div class="stake-card">
+          <h3 class="tier silver">Gümüş</h3>
+          <ul>
+            <li><strong>90 gün</strong> kilit</li>
+            <li><strong>24% APY</strong></li>
+            <li>+%5 NFT Boost fırsatı</li>
+          </ul>
+        </div>
+        <div class="stake-card">
+          <h3 class="tier gold">Altın</h3>
+          <ul>
+            <li><strong>180 gün</strong> kilit</li>
+            <li><strong>40% APY</strong></li>
+            <li>Özel whitelist + ZUZU Rozet</li>
+          </ul>
+        </div>
+        <div class="stake-card">
+          <h3 class="tier diamond">Elmas</h3>
+          <ul>
+            <li><strong>365 gün</strong> kilit</li>
+            <li><strong>65% APY</strong></li>
+            <li>+%10 NFT Boost</li>
+          </ul>
+        </div>
+        <div class="stake-card">
+          <h3 class="tier obsidian">Obsidyen</h3>
+          <ul>
+            <li><strong>540 gün</strong> kilit</li>
+            <li><strong>85% APY</strong></li>
+            <li>VIP ödüller + Airdrop önceliği</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Hesaplayıcı -->
+      <div class="calculator">
+        <h3>Kazanç Hesaplayıcı</h3>
+        <div class="calc-grid">
+          <div>
+            <label>Miktar (ZUZU)</label>
+            <input type="number" id="stakeAmount" placeholder="ör. 10,000" min="0" />
+          </div>
+          <div>
+            <label>Kilit Süresi</label>
+            <select id="stakeDuration">
+              <option value="30">30 gün (12% APY)</option>
+              <option value="90">90 gün (24% APY)</option>
+              <option value="180">180 gün (40% APY)</option>
+              <option value="365">365 gün (65% APY)</option>
+              <option value="540">540 gün (85% APY)</option>
+            </select>
+          </div>
+          <div>
+            <label>Elinde NFT var mı?</label>
+            <select id="nftBoost">
+              <option value="0">Yok</option>
+              <option value="20">Hero (+%20)</option>
+              <option value="5">Rogue (+%5)</option>
+              <option value="8">Berserker (+%8)</option>
+              <option value="6">Hacker (+%6)</option>
+              <option value="7">Sorceress (+%7)</option>
+              <option value="9">Warrior (+%9)</option>
+              <option value="10">Maiden (+%10)</option>
+              <option value="6">Ranger (+%6)</option>
+              <option value="7">Scientist (+%7)</option>
+              <option value="15">Titan (+%15)</option>
+            </select>
+          </div>
+          <div>
+            <label>Erken Katılımcı Rozeti</label>
+            <select id="earlyBoost">
+              <option value="0">Yok</option>
+              <option value="5">Var (+%5)</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="calcBtn" class="btn btn-primary">Hesapla</button>
+
+        <div class="calc-result">
+          <div class="stat">
+            <span class="label">Toplam Getiri</span>
+            <span class="value" id="resultTotal">0 ZUZU</span>
+          </div>
+          <div class="stat">
+            <span class="label">Aylık Ortalama</span>
+            <span class="value" id="resultMonthly">0 ZUZU</span>
+          </div>
+          <div class="stat">
+            <span class="label">Toplam Boost</span>
+            <span class="value" id="resultBoost">+0%</span>
+          </div>
+        </div>
+
+        <div class="chart-wrap">
+          <img src="assets/images/charts/staking-curve.png" alt="APY Eğrisi" />
+        </div>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ROADMAP -->
-<section class="wrap" id="roadmap">
-  <h2 class="title">Yol Haritamız</h2>
-  <div class="timeline">
-    <div class="line"></div>
-    <div class="step"><div class="dot"></div>
-      <div class="s-title">Q1 — 🧩 Kuruluş & Koleksiyon</div>
-      <p class="s-note">Marka, site, topluluk, maskot koleksiyonu; altyapı ve güvenlik.</p>
+  <!-- ===== NFT REWARDS ===== -->
+  <section id="nft-rewards" class="z-section nft-rewards">
+    <div class="container">
+      <div class="section-head">
+        <h2>ZUZU Maskot NFT Ödülleri 🎁</h2>
+        <p>Stake edenlerimiz, **ZUZU Maskot Koleksiyonu**‘ndan nadir NFT’ler kazanır.  
+           Koleksiyon kontratı: <code id="contractDisplay">0xF2bbb…9729</code> •
+           <a class="ext" id="contractLink" href="#" target="_blank" rel="noopener">Koleksiyon Sayfası</a>
+        </p>
+      </div>
+
+      <div id="nftGrid" class="nft-grid">
+        <!-- JS ile doldurulur -->
+      </div>
     </div>
-    <div class="step"><div class="dot"></div>
-      <div class="s-title">Q2 — 💠 Ön Satış & Stake</div>
-      <p class="s-note">Ön satış, stake ödülleri, mini-oyun prototipleri.</p>
+  </section>
+
+  <!-- ===== COUNTDOWN / PRESALE ===== -->
+  <section id="countdown" class="z-section presale">
+    <div class="container">
+      <div class="section-head">
+        <h2>Ön Satış — Geri Sayım</h2>
+        <p>ZUZU ön satışına hazırlan! **Sınırlı arz**, topluluğa özel fiyat.</p>
+      </div>
+
+      <div class="counter">
+        <div class="ctr">
+          <span id="cdDays">00</span><small>GÜN</small>
+        </div>
+        <div class="ctr">
+          <span id="cdHours">00</span><small>SAAT</small>
+        </div>
+        <div class="ctr">
+          <span id="cdMins">00</span><small>DAKİKA</small>
+        </div>
+        <div class="ctr">
+          <span id="cdSecs">00</span><small>SANİYE</small>
+        </div>
+      </div>
+
+      <div class="presale-cta">
+        <a href="#stake-pro" class="btn btn-primary">Stake ile Avantaj Yakala</a>
+        <a id="thirdwebNFTRoute" href="#" class="btn btn-ghost" target="_blank">NFT Koleksiyonunu Gör</a>
+      </div>
     </div>
-    <div class="step"><div class="dot"></div>
-      <div class="s-title">Q3 — 🤝 Partnerlikler & Listing</div>
-      <p class="s-note">Partner ağları ve borsa listelemeleri.</p>
+  </section>
+
+  <!-- ===== ROADMAP & TOKENOMICS (kısa placeholder) ===== -->
+  <section id="roadmap" class="z-section">
+    <div class="container">
+      <h2>Yol Haritamız</h2>
+      <img src="assets/images/map.png" alt="Yol haritası" class="full-img" />
     </div>
-    <div class="step"><div class="dot"></div>
-      <div class="s-title">Q4 — 🚀 Global Büyüme</div>
-      <p class="s-note">Global pazarlama, ekosistem genişlemesi ve yeni özellikler.</p>
+  </section>
+
+  <section id="tokenomics" class="z-section">
+    <div class="container">
+      <h2>Tokonomi</h2>
+      <img src="assets/images/tokonomics.png" alt="Tokonomi" class="full-img" />
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- TOKENOMICS -->
-<section class="wrap" id="tokenomics">
-  <h2 class="title">Tokonomi</h2>
-  <div class="card">
-    <div class="bars">
-      <div class="bar"><div class="lbl"><span>Toplam Arz</span><b>10,000,000,000 ZUZU</b></div><div style="width:100%"></div></div>
-      <div class="bar"><div class="lbl"><span>Ön Satış</span><b>%30</b></div><div style="width:30%"></div></div>
-      <div class="bar"><div class="lbl"><span>Likidite</span><b>%25</b></div><div style="width:25%"></div></div>
-      <div class="bar"><div class="lbl"><span>Topluluk & Ödüller</span><b>%25</b></div><div style="width:25%"></div></div>
-      <div class="bar"><div class="lbl"><span>Ekip & Geliştirme</span><b>%15</b></div><div style="width:15%"></div></div>
-      <div class="bar"><div class="lbl"><span>Rezerv</span><b>%5</b></div><div style="width:5%"></div></div>
+  <!-- ===== FOOTER ===== -->
+  <footer class="z-footer">
+    <div class="container flex between center-v">
+      <div class="brand flex center-v">
+        <img src="assets/images/logo.png" alt="ZUZU" class="brand-logo small" />
+        <span class="brand-title">ZUZUCOIN © 2025</span>
+      </div>
+      <div class="foot-links">
+        <a href="#community">Topluluk</a>
+        <a href="#stake-pro">Stake</a>
+        <a href="#nft-rewards">NFT</a>
+        <a href="#tokenomics">Tokonomi</a>
+      </div>
     </div>
-  </div>
-</section>
+  </footer>
 
-<!-- NFT REWARDS (Thirdweb teaser) -->
-<section class="wrap" id="nft">
-  <h2 class="title">NFT Ödülleri</h2>
-  <p class="lead" style="text-align:left">
-    <b>Stake edenlere</b> özel <b>ücretsiz NFT</b> koleksiyonları. Hak kazananlar 3. çeyrekte
-    <b>Thirdweb</b> üzerindeki claim sayfasından mint edebilecek.
-  </p>
-  <div class="grid">
-    <div class="card">
-      <div class="badge">ZUZU Pass #1</div>
-      <p>Ön satış + stake erken destekçilere 1/1. Claim: Ücretsiz.</p>
-      <a class="pill" href="https://thirdweb.com/" target="_blank">Claim Sayfası (yakında)</a>
-    </div>
-    <div class="card">
-      <div class="badge">ZUZU Mask Koleksiyonu</div>
-      <p>Topluluk görevleri + stake puanına göre drop.</p>
-      <a class="pill" href="https://thirdweb.com/" target="_blank">Koleksiyon (yakında)</a>
-    </div>
-  </div>
-</section>
-
-<footer>© 2025 ZUZUCOIN</footer>
-
-<!-- Modal for mascot preview -->
-<div id="modal" style="position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:60">
-  <img id="modalImg" src="" alt="ZUZU" style="max-width:92%;max-height:92%;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.6)">
-</div>
-
-<script>
-/* === Config === */
-window.ZUZU_CFG = {
-  presaleEnd: new Date(Date.now() + 27*24*60*60*1000),
-  wallets: {
-    evm:"0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",
-    ton:"UQD5Pkyp_l_O3907ri0WeLAY7fBVa-twb9nUnQ38Q1MinTND",
-    sol:"31Cjkx2PA5oMapNxxGAiZhuHDcvAyQ7hogqB8Hx6f1pW"
-  }
-};
-
-/* === i18n === */
-const I18N={tr:{heroTitle:"Kirpinin Gücü: <span style='background:linear-gradient(90deg,var(--a2),var(--a1));-webkit-background-clip:text;background-clip:text;color:transparent'>ZUZUCOIN</span>",heroLead:"ZUZUCOIN; neon şehirlerin arasında dolaşan <b>anime-robotik kirpi</b> maskotunun ruhunu taşır. <b>Topluluk odaklı</b>, <b>oyunlaştırma</b> içeren, adil ve şeffaf bir web3 ekonomisini hedefler.",days:"Gün",hours:"Saat",minutes:"Dakika",seconds:"Saniye",communityTitle:"Topluluk",communityLead:"Telegram, X ve Discord’da global bir aile. Etkinlikler, airdrop’lar, mini oyunlar ve daha fazlası."},en:{heroTitle:"Power of the Hedgehog: <span style='background:linear-gradient(90deg,var(--a2),var(--a1));-webkit-background-clip:text;background-clip:text;color:transparent'>ZUZUCOIN</span>",heroLead:"ZUZUCOIN carries the spirit of an <b>anime-robotic hedgehog</b> roaming neon cities. <b>Community-driven</b>, <b>gamified</b>, fair & transparent web3 economy.",days:"Days",hours:"Hours",minutes:"Minutes",seconds:"Seconds",communityTitle:"Community",communityLead:"A global family on Telegram, X and Discord. Events, airdrops, mini-games and more."}};
-function setLang(l){const t=I18N[l]||I18N.tr;document.querySelectorAll("[data-i]").forEach(el=>el.innerHTML=t[el.dataset.i]||el.innerHTML);}
-document.getElementById("lang").addEventListener("change",e=>setLang(e.target.value)); setLang("tr");
-
-/* === Countdown === */
-const ids=[["cd-days"],["cd-hours"],["cd-mins"],["cd-secs"]];
-function pad(n){return String(n).padStart(2,"0")}
-function tick(){
-  const end=ZUZU_CFG.presaleEnd,now=new Date();let dlt=Math.max(0,end-now);
-  const d=Math.floor(dlt/86400000); dlt-=d*86400000;
-  const h=Math.floor(dlt/3600000);  dlt-=h*3600000;
-  const m=Math.floor(dlt/60000);    dlt-=m*60000;
-  const s=Math.floor(dlt/1000);
-  const vals=[pad(d),pad(h),pad(m),pad(s)];
-  vals.forEach((v,i)=>{const el=document.getElementById(ids[i][0]); if(el && el.textContent!==v){el.animate([{transform:"scaleY(1)"},{transform:"scaleY(.85)"},{transform:"scaleY(1)"}],{duration:260}); el.textContent=v;}})
-}
-setInterval(tick,1000); tick();
-
-/* === EVM (MetaMask) === */
-let evmProvider, evmSigner, evmAddress;
-const CHAINS = {
-  bsc:{chainId:'0x38', name:'BSC', usdt:'0x55d398326f99059fF775485246999027B3197955', explorer:'https://bscscan.com'},
-  polygon:{chainId:'0x89', name:'Polygon', usdt:'0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', explorer:'https://polygonscan.com'},
-  arbitrum:{chainId:'0xa4b1', name:'Arbitrum', usdt:'0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9', explorer:'https://arbiscan.io'}
-};
-const TREASURY = ZUZU_CFG.wallets.evm;
-
-async function connectEVM(){
-  if(!window.ethereum){alert('MetaMask bulunamadı.'); return;}
-  await ethereum.request({method:'eth_requestAccounts'});
-  evmProvider = new ethers.BrowserProvider(window.ethereum);
-  evmSigner = await evmProvider.getSigner();
-  evmAddress = await evmSigner.getAddress();
-  const net = await evmProvider.getNetwork(); const id='0x'+net.chainId.toString(16);
-  if(!Object.values(CHAINS).some(c=>c.chainId.toLowerCase()==id)){
-    try{ await ethereum.request({method:'wallet_switchEthereumChain', params:[{chainId:CHAINS.bsc.chainId}]}); }catch(e){}
-  }
-  alert('Bağlandı: '+evmAddress);
-}
-
-async function buyWithUSDT(usdPrice, qty){
-  try{
-    if(!evmSigner) await connectEVM();
-    const net = await evmProvider.getNetwork(); const id='0x'+net.chainId.toString(16);
-    let chain=Object.values(CHAINS).find(c=>c.chainId.toLowerCase()==id) || CHAINS.bsc;
-    const usdtAddr = chain.usdt;
-    const erc20Abi = ["function decimals() view returns(uint8)","function transfer(address to,uint256 value) returns (bool)"];
-    const usdt = new ethers.Contract(usdtAddr, erc20Abi, evmSigner);
-    const dec = await usdt.decimals(); // usually 6
-    const totalUSDT = (usdPrice*qty).toFixed(dec);
-    const amount = ethers.parseUnits(totalUSDT, dec);
-    const tx = await usdt.transfer(TREASURY, amount);
-    alert('USDT transferi gönderildi:\n'+chain.explorer+'/tx/'+tx.hash);
-  }catch(e){ console.error(e); alert('İşlem hatası: '+(e.message||e));}
-}
-
-/* === TON Connect === */
-let tonConnectUI;
-async function connectTON(){
-  if(!tonConnectUI){
-    tonConnectUI = new TON_CONNECT_UI.TonConnectUI({manifestUrl: location.origin + '/tonconnect-manifest.json'});
-  }
-  await tonConnectUI.openModal();
-}
-async function buyWithTON(usd){
-  if(!tonConnectUI) await connectTON();
-  if(!tonConnectUI.connected) await tonConnectUI.connectWallet();
-  const amountStr = prompt(`TON ile ödeme. Toplam USDT: ${usd.toFixed(6)}\nLütfen göndereceğiniz TON miktarını girin:`,`1`);
-  if(!amountStr) return;
-  const nano = BigInt(Math.floor(parseFloat(amountStr)*1e9));
-  await tonConnectUI.sendTransaction({
-    validUntil: Math.floor(Date.now()/1000)+300,
-    messages:[{address: ZUZU_CFG.wallets.ton, amount: nano.toString()}]
-  });
-  alert('TON işlemi gönderildi.');
-}
-
-/* === Phantom (Solana) === */
-async function connectSol(){
- if(window.solana && window.solana.isPhantom){
-   const resp = await window.solana.connect(); window.solAddress = resp.publicKey.toString();
-   alert('Phantom bağlandı: '+window.solAddress);
- } else { alert('Phantom bulunamadı.');}
-}
-async function buyWithSOL(usd){
-  if(!window.solAddress) await connectSol();
-  alert('SOL/SPL ödeme entegrasyonu sırada.\nŞimdilik cüzdana transfer: \n'+ZUZU_CFG.wallets.sol);
-}
-
-/* === Buy flow === */
-function buyWeek(week){
-  const prices={1:0.0008,2:0.0010,3:0.0012,4:0.0015};
-  const qty=parseFloat(prompt('Alınacak ZUZU miktarı (adet):','100000'));
-  if(!qty||qty<=0) return;
-  const total=prices[week]*qty;
-  const m=prompt(`Ödeme yöntemi seç:\n1) EVM/USDT (MetaMask)\n2) TON (Tonkeeper)\n3) SOL (Phantom)\n\nToplam: ${total.toFixed(6)} USDT\nSeçim (1/2/3):`,'1');
-  if(m==='1') buyWithUSDT(prices[week],qty);
-  else if(m==='2') buyWithTON(total);
-  else if(m==='3') buyWithSOL(total);
-}
-
-/* === Pause on hold for tracks + modal preview === */
-function bindHoldPause(track){
-  const set=v=>track.setAttribute("data-paused",v?"1":"0");
-  ["pointerdown","touchstart","mouseenter"].forEach(ev=>track.addEventListener(ev,()=>set(true)));
-  ["pointerup","touchend","mouseleave"].forEach(ev=>track.addEventListener(ev,()=>set(false)));
-}
-bindHoldPause(document.getElementById("mask-track"));
-bindHoldPause(document.getElementById("exch-track"));
-
-const modal=document.getElementById("modal"), mimg=document.getElementById("modalImg");
-document.querySelectorAll("#mask-track .imgbox img").forEach(img=>{
-  img.style.cursor="zoom-in";
-  img.addEventListener("click",()=>{
-    mimg.src=img.src; modal.style.display="flex";
-    document.getElementById("mask-track").setAttribute("data-paused","1");
-  });
-});
-modal.addEventListener("click",()=>{
-  modal.style.display="none";
-  document.getElementById("mask-track").setAttribute("data-paused","0");
-});
-</script>
+  <script src="script.js"></script>
 </body>
 </html>
