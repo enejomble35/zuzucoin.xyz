@@ -1,96 +1,102 @@
 <!doctype html>
 <html lang="tr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>ZUZUCOIN — Stake, NFT, Ön Satış</title>
-<meta name="description" content="ZUZU — geleceğin robotik kirpisi. Stake et, pasif gelir + ZUZU Maskot NFT ödülleri. Sınırlı arz, yüksek utility." />
+<meta name="description" content="ZUZU — geleceğin robotik kirpisi. Stake et, pasif gelir + ZUZU Maskot NFT ödülleri. Sınırlı arz, yüksek utility.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0b1020;--card:#10172a;--muted:#9fb0d1;--text:#e9eef9;--acc1:#71d0ff;--acc2:#7a5cff;--acc3:#20e3b2;--line:rgba(255,255,255,.08);
-  --flipTop:#ffb703;--flipMid:#fb8500;--flipRed:#ef476f;--flipGreen:#06d6a0
+  --bg:#0b1020;--card:#10172a;--soft:#0e1530;--line:rgba(255,255,255,.08);
+  --text:#eaf1ff;--muted:#a9b8d6;
+  --a1:#67d1ff;--a2:#7a5cff;--a3:#20e3b2;
+  --digitTop:#1b2543;--digitBottom:#151e36;--accent:#76b7ff
 }
-*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-a{text-decoration:none;color:#aee2ff}.container{max-width:1200px;margin:0 auto;padding:0 20px}.section{padding:64px 0}
-.btn{display:inline-flex;gap:10px;align-items:center;border-radius:12px;padding:12px 16px;font-weight:700;background:linear-gradient(90deg,var(--acc1),var(--acc2));color:#001024;border:none;cursor:pointer;box-shadow:0 8px 24px rgba(122,92,255,.25)}
-.btn.secondary{background:#18223a;color:#cfe7ff;border:1px solid var(--line);box-shadow:none}
-.badge{display:inline-flex;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.07);color:#bcd3ff;font-weight:700;font-size:12px;border:1px solid var(--line)}
-.small{font-size:13px;color:#adc0e6}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+a{color:#bfe3ff;text-decoration:none}
+.container{max-width:1200px;margin:0 auto;padding:0 20px}
+.section{padding:64px 0;border-top:1px solid var(--line)}
+.badge{padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.05);font-size:12px;color:#cfe2ff}
+.btn{display:inline-flex;gap:10px;align-items:center;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:#17203a;color:#cfe2ff;font-weight:700;cursor:pointer}
+.btn.primary{background:linear-gradient(90deg,var(--a1),var(--a2));color:#041021;border:0;box-shadow:0 8px 24px rgba(122,92,255,.25)}
+input,select{background:#121a33;border:1px solid var(--line);color:#dbe7ff;border-radius:10px;padding:10px 12px}
+small,.small{color:#adc0e6}
 
 /* NAV */
-.nav{position:sticky;top:0;z-index:50;background:rgba(8,12,28,.72);backdrop-filter: blur(10px);border-bottom:1px solid var(--line)}
+.nav{position:sticky;top:0;z-index:40;background:rgba(10,15,30,.75);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .nav .row{display:flex;align-items:center;justify-content:space-between;height:64px}
-.brand{display:flex;align-items:center;gap:10px}.brand img{height:28px;width:auto}
-.menu{display:flex;gap:18px;align-items:center}.menu a{color:#d8e6ff;opacity:.9}.menu .btn{padding:8px 14px}
+.brand{display:flex;gap:10px;align-items:center}.brand img{height:28px}
+.menu{display:flex;gap:16px;align-items:center}
 
 /* HERO */
-.hero{position:relative;padding:56px 0 28px;background:
- radial-gradient(1200px 400px at 50% -180px, rgba(112,92,255,.35), transparent 50%),
- linear-gradient(180deg, rgba(255,255,255,.02), transparent);
- border-bottom:1px solid var(--line)}
-.hero h1{font-size:38px;line-height:1.15;margin:10px 0 12px}.hero p{color:var(--muted);font-size:18px;max-width:780px}
-.hero .cta{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}.hero .meta{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
-.hero .media{margin-top:24px;border-radius:14px;border:1px solid var(--line);overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01))}
-.hero .media img{width:100%;display:block}
+.hero{padding:56px 0 24px;background:
+ radial-gradient(1200px 420px at 50% -240px, rgba(122,92,255,.28), transparent 60%),
+ linear-gradient(180deg,rgba(255,255,255,.02),transparent)}
+.hero h1{font-size:38px;margin:12px 0}.hero p{color:var(--muted);font-size:17px;max-width:780px}
+.hero .cta{display:flex;gap:10px;margin:16px 0;flex-wrap:wrap}
+.hero .media{margin-top:18px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01))}
+.hero .media img{display:block;width:100%}
 
-/* ======== MEGA FLIP COUNTDOWN ======== */
-.mega{padding:28px 0 10px}
-.flip-container{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:end}
-@media(max-width:900px){.flip-container{grid-template-columns:repeat(2,1fr)}}
-.flip{display:flex;gap:12px;justify-content:center}
-.label{margin-top:6px;text-align:center;color:#cfe2ff;font-weight:700;letter-spacing:.5px}
-.digit{position:relative;width:min(18vw,140px);height:min(22vw,170px);perspective:1000px}
-@media(max-width:520px){.digit{width:min(26vw,130px);height:min(30vw,170px)}}
-.card{position:absolute;inset:0;border-radius:16px;background:#1f2b46;border:1px solid var(--line);box-shadow:0 8px 24px rgba(0,0,0,.25);overflow:hidden}
-.card .top,.card .bottom{position:absolute;left:0;right:0;height:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:min(13vw,110px);line-height:1}
-.card .top{top:0;border-bottom:1px solid rgba(255,255,255,.15);background:linear-gradient(#ffcf66,#ffb703)}
-.card .bottom{bottom:0;background:linear-gradient(#fb8500,#e36414)}
-/* theme colors per block */
-.flip.hours .top{background:linear-gradient(#ffd166,#ffb703)}
-.flip.minutes .top{background:linear-gradient(#ffa36c,#fb8500)}
-.flip.seconds .top{background:linear-gradient(#ff7b88,#ef476f)}
-.flip.days .top{background:linear-gradient(#42f7cc,#06d6a0)}
-/* animation */
-.flip.animate .top{animation:flipTop .7s ease both}
-.flip.animate .bottom{animation:flipBottom .7s ease both}
+/* COUNTDOWN (yan yana, 2 haneli her blok) */
+.countdown{margin-top:10px;border-top:1px solid var(--line);padding-top:16px}
+.cd-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:900px){.cd-row{grid-template-columns:repeat(2,1fr)}}
+.cd-block{display:flex;gap:10px;justify-content:center}
+.cd-label{text-align:center;margin-top:6px;color:#cfe2ff;font-weight:700;letter-spacing:.5px}
+.digit{position:relative;width:min(20vw,120px);height:min(24vw,150px);perspective:1000px}
+@media(max-width:520px){.digit{width:min(28vw,120px);height:min(32vw,150px)}}
+.card{position:absolute;inset:0;border-radius:16px;border:1px solid var(--line);overflow:hidden;background:#172140;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.card .top,.card .bottom{position:absolute;left:0;right:0;height:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:min(12vw,92px);color:#f3f7ff}
+.card .top{top:0;background:linear-gradient(180deg,var(--digitTop),#192346);border-bottom:1px solid rgba(255,255,255,.12)}
+.card .bottom{bottom:0;background:linear-gradient(180deg,#141d36,var(--digitBottom))}
+.cd-block.animate .top{animation:flipTop .65s ease both}
+.cd-block.animate .bottom{animation:flipBottom .65s ease both}
 @keyframes flipTop{0%{transform-origin:center bottom;transform:rotateX(0)}100%{transform-origin:center bottom;transform:rotateX(-90deg)}}
 @keyframes flipBottom{0%{transform-origin:center top;transform:rotateX(90deg)}100%{transform-origin:center top;transform:rotateX(0)}}
 
-/* UNDER-FLIP: WEEK RAIL (BUY) */
-.rail{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+/* PRESALE WEEK RAIL */
+.rail{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
 .rail .row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 @media(max-width:1100px){.rail .row{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:640px){.rail .row{grid-template-columns:1fr}}
-.week{background:#0f1528;border:1px solid var(--line);border-radius:12px;padding:14px}
+.week{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:14px}
 .week h4{margin:0 0 6px}.price{font-weight:800;font-size:18px}
 .mt10{margin-top:10px}
 
-/* EXCHANGES ticker (büyük) */
-.exchanges{padding:26px 0 24px}
-.ticker{--gap:80px;position:relative;overflow:hidden;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));padding:20px 0;
+/* EXCHANGES */
+.exchanges{padding:26px 0 18px}
+.ticker{--gap:80px;position:relative;overflow:hidden;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));padding:18px 0;
 -webkit-mask-image:linear-gradient(to right,transparent 0,#000 8%,#000 92%,transparent 100%);mask-image:linear-gradient(to right,transparent 0,#000 8%,#000 92%,transparent 100%)}
 .ticker__track{display:flex;gap:var(--gap);align-items:center;width:max-content;animation:ticker 22s linear infinite}
 .ticker:hover .ticker__track{animation-play-state:paused}
-.ticker__item img{height:80px;filter:grayscale(100%) contrast(1.05) brightness(1.05);opacity:.9;transition:.25s}
+.ticker__item img{height:86px;filter:grayscale(90%) contrast(1.05);opacity:.9;transition:.25s}
 .ticker__item img:hover{filter:none;opacity:1;transform:translateY(-2px) scale(1.05)}
 @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media(min-width:992px){.ticker__item img{height:120px} .ticker{--gap:120px}}
 
-/* NFT GRID, STAKE vs. (kısaltılmış görünüm) */
+/* NFT GRID */
 .nft-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px}
 @media(max-width:900px){.nft-grid{grid-template-columns:1fr}}
 .nft-card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .nft-card .img{aspect-ratio:4/5;background:#0f1528;border-bottom:1px solid var(--line);display:grid;place-items:center;position:relative}
-.nft-card .img img{width:100%;height:100%;object-fit:cover;display:block}
+.nft-card .img img{width:100%;height:100%;object-fit:cover}
 .nft-card .img .ph{position:absolute;inset:0;display:grid;place-items:center;color:#89a4d9;font-size:12px;opacity:.7}
-.nft-card .body{padding:12px}
-.nft-card .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.nft-card .body{padding:12px}.row{display:flex;justify-content:space-between;gap:8px}
 .tag{font-size:12px;padding:4px 8px;border:1px solid var(--line);border-radius:999px;background:#13203b;color:#bfe6ff}
 
-/* basic footer */
-.footer{padding:20px 0;border-top:1px solid var(--line);margin-top:40px;color:#a8b8d6}
+/* STAKE PRO */
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:1000px){.card-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.card-grid{grid-template-columns:1fr}}
+.tier{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.tier h3{margin:0 0 8px}.tier ul{margin:10px 0 0 18px;color:#cfe0ff}.tier li{margin:6px 0}
+.calc{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.res{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+@media(max-width:700px){.res{grid-template-columns:1fr}}
+
+.footer{padding:20px 0;border-top:1px solid var(--line);color:#a8b8d6}
 </style>
 </head>
 <body>
@@ -98,12 +104,10 @@ a{text-decoration:none;color:#aee2ff}.container{max-width:1200px;margin:0 auto;p
 <!-- NAV -->
 <header class="nav">
   <div class="container row">
-    <div class="brand">
-      <img src="assets/images/logo.png" alt="ZUZU" onerror="this.style.display='none'"><strong>ZUZUCOIN</strong>
-    </div>
+    <div class="brand"><img src="assets/images/logo.png" alt="ZUZU" onerror="this.style.display='none'"><strong>ZUZUCOIN</strong></div>
     <nav class="menu">
-      <a href="#community">Topluluk</a><a href="#rewards">NFT Ödülleri</a><a href="#roadmap">Yol Haritası</a><a href="#tokenomics">Tokonomi</a>
-      <button class="btn secondary" id="btnConnect">Cüzdan Bağla</button>
+      <a href="#community">Topluluk</a><a href="#stake">Stake</a><a href="#rewards">NFT Ödülleri</a><a href="#roadmap">Yol Haritası</a><a href="#tokenomics">Tokonomi</a>
+      <button class="btn" id="btnConnect">Cüzdan Bağla</button>
     </nav>
   </div>
 </header>
@@ -115,127 +119,177 @@ a{text-decoration:none;color:#aee2ff}.container{max-width:1200px;margin:0 auto;p
     <h1>ZUZU — Geleceğin Robotic Kirpisi 🦔⚡</h1>
     <p>Stake et, <strong>ZUZU Maskot NFT</strong>'lerini kap. <strong>Sınırlı arz</strong>, yüksek <strong>utility</strong>.</p>
     <div class="cta">
-      <a class="btn" href="#rewards">NFT Ödülleri</a>
-      <a class="btn secondary" target="_blank" href="https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts">Koleksiyon Sayfası</a>
-      <span class="badge">Kontrat: 0xF2bb...9729</span>
+      <a class="btn primary" href="#rewards">NFT Ödülleri</a>
+      <a class="btn" target="_blank" href="https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts">Koleksiyon Sayfası</a>
+      <span class="badge">Kontrat: 0xF2bb…9729</span>
     </div>
-    <div class="media">
-      <img src="assets/images/hero/hero-robot-hedgehog.png" alt="ZUZU hero" onerror="this.style.display='none'">
+    <div class="media"><img src="assets/images/hero/hero-robot-hedgehog.png" alt="ZUZU hero" onerror="this.style.display='none'"></div>
+
+    <!-- COUNTDOWN -->
+    <div class="countdown">
+      <div class="cd-row" id="cdRow">
+        <!-- DAYS -->
+        <div class="cd-block" data-block="days">
+          <div class="digit" data-key="d1"><div class="card"><div class="top">0</div><div class="bottom">0</div></div></div>
+          <div class="digit" data-key="d0"><div class="card"><div class="top">0</div><div class="bottom">0</div></div></div>
+        </div>
+        <div class="cd-label">GÜN</div>
+        <!-- HOURS -->
+        <div class="cd-block" data-block="hours">
+          <div class="digit" data-key="h1"><div class="card"><div class="top">0</div><div class="bottom">0</div></div></div>
+          <div class="digit" data-key="h0"><div class="card"><div class="top">0</div><div class="bottom">0</div></div></div>
+        </div>
+        <div class="cd-label">SAAT</div>
+        <!-- MINUTES -->
+        <div class="cd-block" data-block="minutes">
+          <div class="digit" data-key="m1"><div class="card"><div class="top">0</div><div class="bottom">0</div></div></div>
+          <div class="digit" data-key="m0"><div class="card"><div class="top">0</div><div class="bottom">0</div></div></div>
+        </div>
+        <div class="cd-label">DAKİKA</div>
+        <!-- SECONDS -->
+        <div class="cd-block" data-block="seconds">
+          <div class="digit" data-key="s1"><div class="card"><div class="top">0</div><div class="bottom">0</div></div></div>
+          <div class="digit" data-key="s0"><div class="card"><div class="top">0</div><div class="bottom">0</div></div></div>
+        </div>
+        <div class="cd-label">SANİYE</div>
+      </div>
+
+      <!-- PRESALE RAIL -->
+      <div class="rail">
+        <div class="small">Ön Satış — Sınırlı tahsis • İstediğin miktarı yaz, maliyet otomatik hesaplanır</div>
+        <div class="mt10" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <input id="quickAmt" type="number" placeholder="Miktar (ZUZU) ör: 10,000">
+          <span class="small">Kontrat gelince butonlar gerçek alıma dönecek.</span>
+        </div>
+        <div class="row mt10" id="weekRow"></div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ===== MEGA COUNTDOWN + WEEK BUY ===== -->
-<section class="mega">
-  <div class="container">
-
-    <!-- FLIP COUNTDOWN -->
-    <div id="flipWrap" class="flip-container">
-      <!-- Günler -->
-      <div class="flip days">
-        <div class="digit" data-key="d2"><div class="card"><div class="top">0</div><div class="bottom">0</div></div></div>
-        <div class="digit" data-key="d1"><div class="card"><div class="top">0</div><div class="bottom">0</div></div></div>
-        <div class="digit" data-key="d0"><div class="card"><div class="top">0</div><div class="bottom">0</div></div></div>
-      </div>
-      <div class="label">GÜN</div>
-
-      <!-- Saat -->
-      <div class="flip hours">
-        <div class="digit" data-key="h1"><div class="card"><div class="top">0</div><div class="bottom">0</div></div></div>
-        <div class="digit" data-key="h0"><div class="card"><div class="top">0</div><div class="bottom">0</div></div></div>
-      </div>
-      <div class="label">SAAT</div>
-
-      <!-- Dakika -->
-      <div class="flip minutes">
-        <div class="digit" data-key="m1"><div class="card"><div class="top">0</div><div class="bottom">0</div></div></div>
-        <div class="digit" data-key="m0"><div class="card"><div class="top">0</div><div class="bottom">0</div></div></div>
-      </div>
-      <div class="label">DAKİKA</div>
-
-      <!-- Saniye -->
-      <div class="flip seconds">
-        <div class="digit" data-key="s1"><div class="card"><div class="top">0</div><div class="bottom">0</div></div></div>
-        <div class="digit" data-key="s0"><div class="card"><div class="top">0</div><div class="bottom">0</div></div></div>
-      </div>
-      <div class="label">SANİYE</div>
-    </div>
-
-    <!-- HAFTALIK SATIŞ RAYI -->
-    <div class="rail">
-      <div class="small">Ön Satış — Sınırlı tahsis • İstediğin miktarı yaz, maliyet otomatik hesaplanır</div>
-      <div class="mt10" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <input id="quickAmt" class="btn secondary" style="padding:10px 14px;border-radius:10px" type="number" placeholder="Miktar (ZUZU) ör: 10,000">
-        <span class="small">Kontrat gelince butonlar gerçek alıma dönecek.</span>
-      </div>
-      <div class="row mt10" id="weekRow"></div>
-    </div>
-
-  </div>
-</section>
-
-<!-- EXCHANGES (büyük logolar) -->
+<!-- EXCHANGES -->
 <section class="exchanges">
   <div class="container">
     <div class="ticker">
       <ul class="ticker__track" id="exTrack">
-        <li class="ticker__item"><img src="assets/images/exchanges/bybit.png" alt="Bybit" loading="lazy"></li>
-        <li class="ticker__item"><img src="assets/images/exchanges/gateio.png" alt="Gate.io" loading="lazy"></li>
-        <li class="ticker__item"><img src="assets/images/exchanges/kucoin.png" alt="KuCoin" loading="lazy"></li>
-        <li class="ticker__item"><img src="assets/images/exchanges/okx.png" alt="OKX" loading="lazy"></li>
-        <li class="ticker__item"><img src="assets/images/exchanges/mxc.png" alt="MEXC" loading="lazy"></li>
-        <li class="ticker__item"><img src="assets/images/exchanges/bitmart.png" alt="Bitmart" loading="lazy"></li>
+        <li class="ticker__item"><img src="assets/images/exchanges/bybit.png" alt="Bybit"></li>
+        <li class="ticker__item"><img src="assets/images/exchanges/gateio.png" alt="Gate.io"></li>
+        <li class="ticker__item"><img src="assets/images/exchanges/kucoin.png" alt="KuCoin"></li>
+        <li class="ticker__item"><img src="assets/images/exchanges/okx.png" alt="OKX"></li>
+        <li class="ticker__item"><img src="assets/images/exchanges/mxc.png" alt="MEXC"></li>
+        <li class="ticker__item"><img src="assets/images/exchanges/bitmart.png" alt="Bitmart"></li>
       </ul>
     </div>
   </div>
 </section>
 
-<!-- NFT ÖDÜLLERİ (kısa sürüm) -->
+<!-- STAKE PRO -->
+<section class="section" id="stake">
+  <div class="container">
+    <h2>Stake Pro — Kilitle, Kazan, NFT Kap ✨</h2>
+    <p class="small">ZUZU’larını kilitle, <strong>APY + NFT BOOST</strong> ile pasif gelir elde et. Erken stake edenlere özel rozet & airdrop önceliği.</p>
+    <div class="card-grid">
+      <div class="tier"><h3>Bronz</h3><ul><li>30 gün kilit</li><li><strong>12% APY</strong></li><li>Erken erişim çekilişleri</li></ul></div>
+      <div class="tier"><h3>Gümüş</h3><ul><li>90 gün kilit</li><li><strong>24% APY</strong></li><li>+%5 NFT Boost fırsatı</li></ul></div>
+      <div class="tier"><h3>Altın</h3><ul><li>180 gün kilit</li><li><strong>40% APY</strong></li><li>Özel whitelist + ZUZU rozet</li></ul></div>
+      <div class="tier"><h3>Elmas</h3><ul><li>365 gün kilit</li><li><strong>65% APY</strong></li><li>+%10 NFT Boost</li></ul></div>
+      <div class="tier"><h3>Obsidyen</h3><ul><li>540 gün kilit</li><li><strong>85% APY</strong></li><li>VIP ödüller + airdrop önceliği</li></ul></div>
+    </div>
+
+    <!-- Kazanç Hesaplayıcı -->
+    <div class="calc">
+      <h3>Kazanç Hesaplayıcı</h3>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+        <div>
+          <label class="small">Miktar (ZUZU)</label>
+          <input id="cAmt" type="number" placeholder="ör. 10,000">
+        </div>
+        <div>
+          <label class="small">Kilit Süresi</label>
+          <select id="cPeriod">
+            <option value="30">30 gün (12%)</option>
+            <option value="90">90 gün (24%)</option>
+            <option value="180">180 gün (40%)</option>
+            <option value="365">365 gün (65%)</option>
+            <option value="540">540 gün (85%)</option>
+          </select>
+        </div>
+        <div>
+          <label class="small">Elinde NFT var mı?</label>
+          <select id="cNFT"><option>Yok</option><option>+%5 NFT Boost</option><option>+%10 NFT Boost</option></select>
+        </div>
+        <div>
+          <label class="small">Erken Katılımcı Rozeti</label>
+          <select id="cBadge"><option>Yok</option><option>+%2</option><option>+%4</option></select>
+        </div>
+      </div>
+      <div class="res">
+        <div class="tier"><div class="small">Toplam Getiri</div><h3 id="rTotal">0 ZUZU</h3></div>
+        <div class="tier"><div class="small">Aylık Ortalama</div><h3 id="rMonthly">0 ZUZU</h3></div>
+        <div class="tier"><div class="small">Toplam Boost</div><h3 id="rBoost">+0%</h3></div>
+      </div>
+      <div class="mt10"><img src="assets/images/charts/staking-curve.png" alt="APY Eğrisi" style="width:100%;border-radius:12px;border:1px solid var(--line)" onerror="this.style.display='none'"></div>
+    </div>
+  </div>
+</section>
+
+<!-- NFT ÖDÜLLERİ -->
 <section class="section" id="rewards">
   <div class="container">
     <h2>ZUZU Maskot NFT Ödülleri 🎁</h2>
-    <p>Kontrat: 0xF2bbb...9729 • <a target="_blank" href="https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts">Koleksiyon Sayfası</a></p>
+    <p>Stake edenlerimiz, <strong>ZUZU Maskot Koleksiyonu</strong>’ndan nadir NFT’ler kazanır. Kontrat: 0xF2bbb…9729 • <a target="_blank" href="https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts">Koleksiyon Sayfası</a></p>
     <div class="nft-grid" id="nftGrid"></div>
   </div>
 </section>
 
-<!-- ROADMAP / TOKENOMICS (kısa) -->
-<section class="section" id="roadmap"><div class="container"><h2>Yol Haritası</h2><p class="small">Topluluk, staking, NFT drop’ları ve listelemeler…</p></div></section>
-<section class="section" id="tokenomics"><div class="container"><h2>Tokonomi</h2><p class="small">Adil dağıtım ve sürdürülebilir ödül ekonomisi.</p></div></section>
+<!-- Yol Haritası -->
+<section class="section" id="roadmap">
+  <div class="container">
+    <h2>Yol Haritası</h2>
+    <p class="small">Topluluk, staking, NFT drop’ları ve borsa süreçlerine odaklı net bir plan.</p>
+    <img src="assets/images/charts/roadmap.png" alt="Yol haritası" style="width:100%;border:1px solid var(--line);border-radius:12px" onerror="this.src='assets/images/roadmap.png'">
+  </div>
+</section>
+
+<!-- Tokonomi -->
+<section class="section" id="tokenomics">
+  <div class="container">
+    <h2>Tokonomi</h2>
+    <p class="small">Adil dağıtım, sürdürülebilir ödül ekonomisi ve rezerv planı.</p>
+    <img src="assets/images/charts/tokenomics.png" alt="Tokonomi" style="width:100%;border:1px solid var(--line);border-radius:12px" onerror="this.src='assets/images/tokononics.png'">
+  </div>
+</section>
 
 <footer class="footer">
   <div class="container" style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
     <div>© ZUZUCOIN 2025</div>
-    <div class="small"><a href="#rewards">NFT</a> · <a href="#tokenomics">Tokonomi</a></div>
+    <div class="small"><a href="#stake">Stake</a> · <a href="#rewards">NFT</a> · <a href="#tokenomics">Tokonomi</a></div>
   </div>
 </footer>
 
-<!-- libs -->
+<!-- LIBS -->
 <script src="https://cdn.jsdelivr.net/npm/web3@1.10.4/dist/web3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/web3modal@1.9.12/dist/index.js"></script>
 
 <script>
-/* ================== Ayarlar ================== */
+/* ====== Sabitler ====== */
 const NFT_CONTRACT = "0xF2bbbEcB417725813BF5E940d678793fACDa9729";
-const PRESALE = [
-  {week:1, price:0.005, title:"1. Hafta (En Ucuz)"},
-  {week:2, price:0.0065, title:"2. Hafta"},
-  {week:3, price:0.008, title:"3. Hafta"},
-  {week:4, price:0.010, title:"4. Hafta (Son Fırsat)"}
-];
 const COUNTDOWN_UTC = "2025-09-15T18:00:00Z"; // 21:00 TRT
+const PRESALE = [
+  {week:1, price:0.0050, title:"1. Hafta (En Ucuz)"},
+  {week:2, price:0.0065, title:"2. Hafta"},
+  {week:3, price:0.0080, title:"3. Hafta"},
+  {week:4, price:0.0100, title:"4. Hafta (Son Fırsat)"}
+];
 
-/* ================== Wallet ================== */
+/* ====== Wallet ====== */
 let web3Modal, provider, web3, selectedAccount;
 async function initWallet(){
   const providerOptions = {
     walletconnect: {
       package: window.WalletConnectProvider.default,
-      options: {
-        rpc: {137:'https://polygon-rpc.com'}, chainId:137,
-        qrcodeModalOptions: { mobileLinks:['metamask','trust','rainbow','okx'] }
-      }
+      options: { rpc:{137:'https://polygon-rpc.com'}, chainId:137, qrcodeModalOptions:{mobileLinks:['metamask','trust','okx']} }
     }
   };
   web3Modal = new window.Web3Modal.default({ cacheProvider:false, providerOptions, theme:"dark" });
@@ -246,31 +300,31 @@ async function onConnect(){
     web3 = new Web3(provider);
     const accs = await web3.eth.getAccounts();
     selectedAccount = accs[0];
-    const short = selectedAccount.slice(0,6)+'…'+selectedAccount.slice(-4);
+    const short = selectedAccount.slice(0,6)+"…"+selectedAccount.slice(-4);
     document.getElementById('btnConnect').textContent = short;
   }catch(e){ alert('Bağlantı iptal edildi.'); }
 }
 document.getElementById('btnConnect').addEventListener('click', onConnect);
 initWallet();
 
-/* ================== Exchanges track duplicate ================== */
+/* ====== Exchanges track duplicate ====== */
 (function(){const t=document.getElementById('exTrack'); if(t) t.innerHTML = t.innerHTML + t.innerHTML;})();
 
-/* ================== NFT Grid (mask/masks fallback) ================== */
-const nftList = [
-  {id:0, name:"ZUZU Hero", rarity:"Epic", supply:200},
-  {id:1, name:"ZUZU Rogue", rarity:"Rare", supply:2500},
-  {id:2, name:"ZUZU Berserker", rarity:"Epic", supply:800},
-  {id:3, name:"ZUZU Hacker", rarity:"Rare", supply:600},
-  {id:4, name:"ZUZU Sorceress", rarity:"Epic", supply:750},
-  {id:5, name:"ZUZU Warrior", rarity:"Rare", supply:900},
-  {id:6, name:"ZUZU Maiden", rarity:"Rare", supply:1100},
-  {id:7, name:"ZUZU Ranger", rarity:"Rare", supply:1000},
+/* ====== NFT GRID (masks -> mask fallback) ====== */
+const nftList=[
+  {id:0,name:"ZUZU Hero",rarity:"Epic",supply:200},
+  {id:1,name:"ZUZU Rogue",rarity:"Rare",supply:2500},
+  {id:2,name:"ZUZU Berserker",rarity:"Epic",supply:800},
+  {id:3,name:"ZUZU Hacker",rarity:"Rare",supply:600},
+  {id:4,name:"ZUZU Sorceress",rarity:"Epic",supply:750},
+  {id:5,name:"ZUZU Warrior",rarity:"Rare",supply:900},
+  {id:6,name:"ZUZU Maiden",rarity:"Rare",supply:1100},
+  {id:7,name:"ZUZU Ranger",rarity:"Rare",supply:1000}
 ];
 function imgWithFallback(id){
-  const im = new Image();
-  im.src = `assets/images/masks/${id}.png`;
-  im.onerror = ()=>{ im.onerror=null; im.src = `assets/images/mask/${id}.png`; };
+  const im=new Image();
+  im.src=`assets/images/masks/${id}.png`;
+  im.onerror=()=>{im.onerror=null;im.src=`assets/images/mask/${id}.png`;};
   return im;
 }
 (function renderNFTs(){
@@ -278,72 +332,78 @@ function imgWithFallback(id){
   nftList.forEach(n=>{
     const card=document.createElement('div'); card.className='nft-card';
     card.innerHTML=`<div class="img"><div class="ph">Görsel yükleniyor…</div></div>
-      <div class="body">
-        <div class="row"><strong>${n.name}</strong><span class="tag">${n.rarity}</span></div>
-        <div class="row"><span class="small">Arz: ${n.supply}</span><a class="small" target="_blank" href="#">Görüntüle ↗</a></div>
-      </div>`;
+      <div class="body"><div class="row"><strong>${n.name}</strong><span class="tag">${n.rarity}</span></div>
+      <div class="row"><span class="small">Arz: ${n.supply}</span><a class="small" target="_blank" href="#">Görüntüle ↗</a></div></div>`;
     const holder=card.querySelector('.img'), ph=card.querySelector('.ph'); const im=imgWithFallback(n.id);
-    im.onload=()=>{holder.appendChild(im); ph.remove();}; im.onerror=()=>{ph.textContent='Görsel bulunamadı';};
+    im.onload=()=>{holder.appendChild(im);ph.remove();}; im.onerror=()=>{ph.textContent='Görsel bulunamadı';};
     grid.appendChild(card);
   });
 })();
 
-/* ================== Mega Flip Countdown ================== */
-const timeTarget = new Date(COUNTDOWN_UTC).getTime();
-const digits = {};
-document.querySelectorAll('.digit').forEach(d => {
-  const key = d.getAttribute('data-key');
-  digits[key] = d;
-});
-function setDigit(el, val){
-  const top = el.querySelector('.top'), bottom = el.querySelector('.bottom');
-  if(top.textContent === String(val)) return;
-  const flip = el.parentElement;
-  flip.classList.add('animate');
-  top.textContent = String(val);
-  setTimeout(()=>{ bottom.textContent = String(val); flip.classList.remove('animate'); }, 650);
+/* ====== Countdown (2-digit each) ====== */
+const timeTarget=new Date(COUNTDOWN_UTC).getTime();
+const digits={}; document.querySelectorAll('.digit').forEach(d=>{digits[d.getAttribute('data-key')]=d;});
+function setDigit(el,val){
+  const top=el.querySelector('.top'), bot=el.querySelector('.bottom');
+  if(top.textContent===String(val)) return;
+  const blk=el.parentElement; blk.classList.add('animate');
+  top.textContent=String(val);
+  setTimeout(()=>{bot.textContent=String(val); blk.classList.remove('animate');},630);
 }
 function tick(){
-  const now = Date.now(), diff = Math.max(0, timeTarget - now);
-  const d = Math.floor(diff/86400000);
-  const h = Math.floor((diff%86400000)/3600000);
-  const m = Math.floor((diff%3600000)/60000);
-  const s = Math.floor((diff%60000)/1000);
-  const ds = String(d).padStart(3,'0'), hs=String(h).padStart(2,'0'), ms=String(m).padStart(2,'0'), ss=String(s).padStart(2,'0');
-  setDigit(digits['d2'], ds[0]); setDigit(digits['d1'], ds[1]); setDigit(digits['d0'], ds[2]);
-  setDigit(digits['h1'], hs[0]); setDigit(digits['h0'], hs[1]);
-  setDigit(digits['m1'], ms[0]); setDigit(digits['m0'], ms[1]);
-  setDigit(digits['s1'], ss[0]); setDigit(digits['s0'], ss[1]);
+  const now=Date.now(), diff=Math.max(0,timeTarget-now);
+  let d=Math.floor(diff/86400000);
+  const h=Math.floor((diff%86400000)/3600000);
+  const m=Math.floor((diff%3600000)/60000);
+  const s=Math.floor((diff%60000)/1000);
+  if(d>99) d=99; // 2 hane sınırı
+  const ds=String(d).padStart(2,'0'), hs=String(h).padStart(2,'0'), ms=String(m).padStart(2,'0'), ss=String(s).padStart(2,'0');
+  setDigit(digits['d1'],ds[0]); setDigit(digits['d0'],ds[1]);
+  setDigit(digits['h1'],hs[0]); setDigit(digits['h0'],hs[1]);
+  setDigit(digits['m1'],ms[0]); setDigit(digits['m0'],ms[1]);
+  setDigit(digits['s1'],ss[0]); setDigit(digits['s0'],ss[1]);
 }
-tick(); setInterval(tick, 1000);
+tick(); setInterval(tick,1000);
 
-/* ================== Week Rail + Dynamic Cost ================== */
+/* ====== Presale Weeks + Dynamic Cost ====== */
 (function(){
-  const wrap = document.getElementById('weekRow');
-  const amtInput = document.getElementById('quickAmt');
-  function priceBox(p){
-    const el = document.createElement('div'); el.className='week';
-    el.innerHTML = `
-      <h4>${p.title}</h4>
+  const wrap=document.getElementById('weekRow'); const amtInput=document.getElementById('quickAmt');
+  function box(p){
+    const el=document.createElement('div'); el.className='week';
+    el.innerHTML=`<h4>${p.title}</h4>
       <div class="price">1 ZUZU = ${p.price.toFixed(4)} USDT</div>
       <div class="small mt10">Maliyet: <strong class="cost">0 USDT</strong></div>
       <div class="mt10" style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn buy">Satın Al</button>
-        <button class="btn secondary">Detay</button>
+        <button class="btn primary buy">Satın Al</button>
+        <button class="btn">Detay</button>
       </div>`;
-    const costEl = el.querySelector('.cost');
-    function recalc(){
-      const a = parseFloat(amtInput.value||'0'), cost = a * p.price;
-      costEl.textContent = cost.toLocaleString('tr-TR',{maximumFractionDigits:2})+' USDT';
-    }
-    amtInput.addEventListener('input', recalc); recalc();
-    el.querySelector('.buy').onclick = ()=> alert('Demo mod: Presale kontratı bağlanınca aktif olacak.');
+    const costEl=el.querySelector('.cost');
+    function recalc(){const a=parseFloat(amtInput.value||'0'), c=a*p.price; costEl.textContent=c.toLocaleString('tr-TR',{maximumFractionDigits:2})+' USDT';}
+    amtInput.addEventListener('input',recalc); recalc();
+    el.querySelector('.buy').onclick=()=>alert('Demo mod: Presale kontratı bağlanınca aktif olacak.');
     return el;
   }
-  PRESALE.forEach(p => wrap.appendChild(priceBox(p)));
+  PRESALE.forEach(p=>wrap.appendChild(box(p)));
 })();
 
-/* ================== Done ================== */
+/* ====== Calculator ====== */
+const APY={30:12,90:24,180:40,365:65,540:85};
+function calc(){
+  const amt=+document.getElementById('cAmt').value||0;
+  const pr = +document.getElementById('cPeriod').value;
+  const nftSel=document.getElementById('cNFT').value;
+  const badgeSel=document.getElementById('cBadge').value;
+  let boost=APY[pr];
+  if(nftSel.includes('%5')) boost+=5; if(nftSel.includes('%10')) boost+=10;
+  if(badgeSel.includes('%2')) boost+=2; if(badgeSel.includes('%4')) boost+=4;
+  const total = amt * (boost/100) * (pr/365); // basit yıllıklaştırma
+  const monthly = total / (pr/30);
+  document.getElementById('rBoost').textContent = `+${boost}%`;
+  document.getElementById('rTotal').textContent = (isFinite(total)?total:0).toLocaleString('tr-TR',{maximumFractionDigits:2})+' ZUZU';
+  document.getElementById('rMonthly').textContent = (isFinite(monthly)?monthly:0).toLocaleString('tr-TR',{maximumFractionDigits:2})+' ZUZU';
+}
+['cAmt','cPeriod','cNFT','cBadge'].forEach(id=>document.getElementById(id).addEventListener('input',calc));
+calc();
 </script>
 </body>
 </html>
