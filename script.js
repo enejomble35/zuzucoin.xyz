@@ -36,27 +36,23 @@
   ];
 
   function rarityBadge(r){
-    const c = r==="Legendary" ? "legend" : r==="Epic" ? "epic" : "rare";
-    return `<span class="badge ${c}">${r}</span>`;
-  }
+  // === Exchanges Ticker Infinite ===
+(function () {
+  const track = document.getElementById('exTrack');
+  if (!track) return;
 
-  function renderNFTGrid(){
-    const grid = document.getElementById("nftGrid");
-    if(!grid) return;
-    grid.innerHTML = ZUZU_NFTS.map(nft=>{
-      const route = `${THIRDWEB_COLLECTION_URL}?tokenId=${nft.id}`;
-      return `
-        <a class="nft-card" href="${route}" target="_blank" rel="noopener">
-          <div class="media"><img src="${nft.img}" alt="${nft.name}"></div>
-          <div class="meta">
-            <h4>${nft.name}</h4>
-            <p>Arz: <strong>${nft.supply}</strong></p>
-          </div>
-          <div class="foot">${rarityBadge(nft.rarity)}<span class="ext">Görüntüle ↗</span></div>
-        </a>`;
-    }).join("");
-  }
-  renderNFTGrid();
+  // İçeriği iki kez yan yana ekle ki animasyon "sonsuz" görünsün
+  const clone = track.cloneNode(true);
+  // cloneNode(true) tüm alt elemanlarıyla kopyalar.
+  // innerHTML ile de yapabiliriz:
+  track.innerHTML = track.innerHTML + track.innerHTML;
+
+  // Performans için: kullanıcı sekmeyi saklayınca animasyonu durdur
+  document.addEventListener('visibilitychange', () => {
+    const isHidden = document.hidden;
+    track.style.animationPlayState = isHidden ? 'paused' : 'running';
+  });
+})();
 
   // ================== Hesaplayıcı ==================
   const APR_BY_DAYS = {30:12, 90:24, 180:40, 365:65, 540:85};
