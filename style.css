@@ -147,3 +147,74 @@ img{max-width:100%;display:block} a{color:#a9c6ff;text-decoration:none}
 .z-modal__panel{position:relative;margin:8vh auto;background:#0e1522;border:1px solid #24314b;border-radius:14px;max-width:480px;padding:18px}
 .z-modal__head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .z-wallets{display:grid;gap:10px}
+/* === RESPONSIVE UPGRADE (WEB 5'li / MOBIL 2'li, NAV tek satır scroll) === */
+
+/* Header marka/logoyu büyük göster (desktop) */
+@media (min-width: 1024px) {
+  .brand img { width: 56px; height: 56px; }
+  .brand span { font-size: 1.3rem; }
+}
+
+/* Menü: mobilde tek satırda kalsın, sağa sola kaydırılabilsin */
+.z-menu {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: nowrap;          /* tek satır */
+  overflow-x: auto;           /* yatay scroll */
+  white-space: nowrap;
+  scrollbar-width: none;      /* Firefox scroll gizle */
+}
+.z-menu::-webkit-scrollbar { display: none; } /* Chrome scroll gizle */
+
+@media (max-width: 600px) {
+  .z-menu a, .lang, #connectBtn { flex: 0 0 auto; } /* sığsın */
+  .z-menu a { padding: .35rem .6rem; font-size: .9rem; }
+  #connectBtn { padding: .45rem .6rem; font-size: .9rem; }
+}
+
+/* NFT GALERİ: WEB 5'li, tablet 3'lü, mobil 2'li */
+@media (min-width: 1280px) {
+  .nft-grid { grid-template-columns: repeat(5, 1fr); }
+}
+@media (max-width: 980px) {
+  .nft-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 620px) {
+  .nft-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Borsa logoları: mobilde biraz küçült, desktop’ta net büyüklük */
+.ticker__item img { height: 46px; }
+@media (max-width: 600px) {
+  .ticker__item img { height: 36px; }
+}
+
+/* Presale kutuları mobilde tek sütun kalsın (zaten ayarlı, sağlamlaştırıyorum) */
+@media (max-width: 900px) {
+  .presale-grid { grid-template-columns: 1fr; }
+}
+
+/* Hero grid: mobilde 1 sütun (zaten vardı, kuvvetlendireyim) */
+@media (max-width: 900px) {
+  .grid-2 { grid-template-columns: 1fr; }
+}
+
+/* Sayfanın genel padding ve element boşluklarını mobilde sıkılaştır */
+@media (max-width: 600px) {
+  .z-section { padding: 28px 0; }
+  .section-head h2 { font-size: 1.4rem; }
+  .lead { font-size: .98rem; }
+}
+
+/* NFT kartları mobilde daha kompakt dursun */
+@media (max-width: 600px) {
+  .nft .meta { padding: 8px; }
+  .nft .tag { font-size: .7rem; }
+}
+
+/* Hesaplayıcı grid: mobilde tek tek */
+@media (max-width: 600px) {
+  .calc-grid { grid-template-columns: 1fr; }
+  .statwrap { grid-template-columns: 1fr; }
+}
