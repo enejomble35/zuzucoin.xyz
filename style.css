@@ -218,3 +218,114 @@ img{max-width:100%;display:block} a{color:#a9c6ff;text-decoration:none}
   .calc-grid { grid-template-columns: 1fr; }
   .statwrap { grid-template-columns: 1fr; }
 }
+/* ===============================
+   ZUZU – 5x2 NFT GRID & RESPONSIVE
+   =============================== */
+
+/* Menü: mobilde tek satır ve yatay kaydırılabilir */
+.z-menu {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: nowrap;          /* tek satır */
+  overflow-x: auto;           /* yatay scroll */
+  white-space: nowrap;
+  scrollbar-width: none;      /* Firefox scroll gizle */
+}
+.z-menu::-webkit-scrollbar { display: none; } /* Chrome scroll gizle */
+
+@media (max-width: 600px) {
+  .z-menu a, .lang, #connectBtn { flex: 0 0 auto; } /* sığsın */
+  .z-menu a { padding: .35rem .6rem; font-size: .9rem; }
+  #connectBtn { padding: .45rem .6rem; font-size: .9rem; }
+}
+
+/* =========================
+   NFT – 5x2 düzen (WEB & MOBIL)
+   ========================= */
+
+/* Bant: mobilde yatay kaydırma alanı */
+.nft-belt {
+  width: 100%;
+  overflow-x: visible;
+}
+
+/* Varsayılan (desktop): 5 sütun x otomatik satırlar */
+.nft-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(5, 1fr);
+  grid-auto-rows: auto;
+}
+
+/* 5x2 düzeni vurgula: hızlıca 10 kartı iki satırda güzel gösterir */
+@media (min-width: 1024px) {
+  .nft-grid .nft {
+    min-height: 100%;
+  }
+}
+
+/* Tablet: iki satır dursun, genişlik daralınca kartlar rahatlasın */
+@media (max-width: 1023px) and (min-width: 621px) {
+  .nft-grid {
+    grid-template-columns: repeat(5, minmax(160px, 1fr));
+  }
+}
+
+/* Mobil: 5 sütun x 2 satır düzenini koru; yatay kaydırmalı “bant” gibi çalışsın */
+@media (max-width: 620px) {
+  .nft-belt {
+    overflow-x: auto;            /* yatay kaydırma aktif */
+    -webkit-overflow-scrolling: touch;
+  }
+  .nft-grid {
+    grid-template-columns: repeat(5, 150px); /* sabit kart genişliği */
+    grid-template-rows: repeat(2, auto);     /* 2 satır */
+    grid-auto-flow: column;                  /* sütunlar yan yana dizilir */
+    width: max-content;                      /* içeriğe göre genişlik */
+    transform: scale(0.95);                  /* hafif küçült */
+    transform-origin: top left;
+  }
+  .nft { width: 150px; }                     /* kart genişliğini sabitle */
+}
+
+/* Borsa logoları: cihazlara göre okunabilir boyut */
+.ticker__item img { height: 60px; }        /* webde büyük */
+@media (max-width: 620px) {
+  .ticker__item img { height: 42px; }      /* mobilde biraz küçült */
+}
+
+/* Hero marka/logoyu webde iri göster (şık duran görünüm için) */
+@media (min-width: 1024px) {
+  .brand img { width: 56px; height: 56px; }
+  .brand span { font-size: 1.3rem; }
+}
+
+/* Genel tipografi/padding mobil sıkılaşması */
+@media (max-width: 600px) {
+  .z-section { padding: 28px 0; }
+  .section-head h2 { font-size: 1.4rem; }
+  .lead { font-size: .98rem; }
+}
+
+/* Presale grid mobil tek sütun kalır */
+@media (max-width: 900px) {
+  .presale-grid { grid-template-columns: 1fr; }
+}
+
+/* Hero grid: mobilde tek sütun */
+@media (max-width: 900px) {
+  .grid-2 { grid-template-columns: 1fr; }
+}
+
+/* NFT kartları mobilde daha kompakt dursun */
+@media (max-width: 600px) {
+  .nft .meta { padding: 8px; }
+  .nft .tag { font-size: .7rem; }
+}
+
+/* Hesaplayıcı grid: mobil tek tek */
+@media (max-width: 600px) {
+  .calc-grid { grid-template-columns: 1fr; }
+  .statwrap { grid-template-columns: 1fr; }
+}
