@@ -1,152 +1,295 @@
-:root{
-  --bg:#0b1220;
-  --card:#101a2c;
-  --muted:#7f8ca6;
-  --txt:#e6efff;
-  --primary:#6c8cff; /* mavi-mor */
-  --accent:#7dfcff;  /* aqua */
-  --chip:#152239;
-  --green:#56d364;
-  --yellow:#ffcc66;
-  --danger:#ff6b6b;
+/* =============================
+   ZUZU CONFIG
+============================= */
+const CONFIG = {
+  contractAddress:
+    "0xF2bbbEcB417725813BF5E940d678793fACDa9729",
+  collectionUrl:
+    "https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts",
+  // Şu andan itibaren ~17 gün 5 saat 10 dk sonrası:
+  launchAt: Date.now() + 1000 * (60 * 60 * 24 * 17 + 60 * 60 * 5 + 60 * 10),
+
+  // Ön satış hafta fiyatları (USDT)
+  weekPrices: [0.0050, 0.0065, 0.0080, 0.0100],
+
+  // NFT vitrin (görseli assets/images/mask/{id}.png)
+  nfts: [
+    { id: 0, name: "ZUZU Hero",       supply: 200,  rarity: "Epic" },
+    { id: 1, name: "ZUZU Rogue",      supply: 2500, rarity: "Rare" },
+    { id: 2, name: "ZUZU Berserker",  supply: 800,  rarity: "Epic" },
+    { id: 3, name: "ZUZU Hacker",     supply: 600,  rarity: "Rare" },
+    { id: 4, name: "ZUZU Sorceress",  supply: 750,  rarity: "Epic" },
+    { id: 5, name: "ZUZU Warrior",    supply: 900,  rarity: "Rare" },
+    { id: 6, name: "ZUZU Maiden",     supply: 1100, rarity: "Rare" },
+    { id: 7, name: "ZUZU Ranger",     supply: 1000, rarity: "Rare" },
+    { id: 8, name: "ZUZU Scientist",  supply: 1100, rarity: "Epic" },
+    { id: 9, name: "ZUZU Titan",      supply: 250,  rarity: "Legendary" },
+  ],
+};
+
+/* =============================
+   Helpers
+============================= */
+const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => document.querySelectorAll(sel);
+const safe = (fn) => { try { fn && fn(); } catch (_) {} }; // eleman yoksa sessiz geç
+
+/* =============================
+   Header / Linkler / Kontrat
+============================= */
+function setupContractLinks() {
+  safe(() => ($("#contractDisplay").textContent = shortAddr(CONFIG.contractAddress)));
+  safe(() => ($("#contractDisplay2").textContent = CONFIG.contractAddress));
+  safe(() => ($("#contractLink").href = CONFIG.collectionUrl));
+  safe(() => ($("#thirdwebNFTRoute").href = CONFIG.collectionUrl));
+  safe(() => ($("#thirdwebNFTRoute2").href = CONFIG.collectionUrl));
 }
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto}
-img{max-width:100%;display:block}
-a{color:var(--accent);text-decoration:none}
-.mono{font-family:ui-monospace,Consolas,monaco,monospace}
-
-/* NAV */
-.z-nav{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(11,18,32,.9),rgba(11,18,32,.7));backdrop-filter: blur(10px);border-bottom:1px solid #15213a}
-.z-nav-inner{max-width:1200px;margin:0 auto;display:flex;gap:16px;align-items:center;justify-content:space-between;padding:10px 16px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800;color:#fff;font-size:18px}
-.brand-logo{height:28px;width:auto}
-.z-menu{display:flex;gap:12px;align-items:center}
-.z-menu a{padding:8px 10px;border-radius:8px;color:#cfe1ff}
-.z-menu a:hover{background:#0f1b31}
-.z-controls{display:flex;align-items:center;gap:10px}
-.z-select{background:#0f1b31;border:1px solid #223357;color:#cfe1ff;border-radius:8px;padding:8px}
-
-/* Buttons */
-.z-btn{padding:10px 14px;border-radius:10px;border:1px solid #20345b;background:#14203a;color:#cfe1ff;font-weight:600}
-.z-btn:hover{background:#0f1a31}
-.z-btn-primary{background:linear-gradient(135deg,#6c8cff,#7dfcff);color:#08101f;border:none}
-.z-btn-primary:hover{opacity:.92}
-.z-btn-outline{background: transparent;border:1px solid #304a7d}
-.z-btn-ghost{background:#0f1b31;color:#b9cfff;border:1px solid #1f2f53}
-
-/* Sections */
-.z-section{padding:56px 0;border-top:1px solid #101a2c}
-.z-container{max-width:1200px;margin:0 auto;padding:0 16px}
-.z-grid-2{display:grid;grid-template-columns:1.1fr .9fr;gap:28px}
-.section-head h2{margin:0 0 8px}
-.section-head p{color:var(--muted);margin:6px 0 0}
-.full-img{border-radius:16px;overflow:hidden;border:1px solid #1a2947;background:#0f1830}
-.z-badge{display:inline-block;padding:6px 10px;background:#11203a;border:1px solid #223357;color:#a9c3ff;border-radius:999px;margin-bottom:10px}
-
-/* HERO */
-.z-hero h1{font-size:36px;margin:8px 0 10px}
-.z-hero .lead{color:#c4d6ff}
-
-/* Chip row */
-.z-chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.z-chip{background:var(--chip);border:1px solid #1f2e4d;color:#cfe1ff;padding:8px 10px;border-radius:999px}
-
-/* Presale counter */
-.counter{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0 10px}
-.ctr{background:#0f1b31;border:1px solid #24385f;border-radius:12px;padding:10px 8px;text-align:center}
-.ctr span{display:block;font-size:38px;font-weight:800;letter-spacing:1px;background:linear-gradient(180deg,#12223e,#0a152a);border:1px solid #1f304f;border-radius:12px;padding:12px 0}
-.ctr small{display:block;margin-top:6px;color:#a6b9da;font-weight:700;letter-spacing:.5px}
-
-.presale-input{margin:14px 0 10px;display:grid;grid-template-columns:1fr;gap:6px}
-.presale-input input{background:#0f1b31;border:1px solid #223357;color:#cfe1ff;border-radius:10px;padding:10px}
-.presale-input small{color:#8297bf}
-
-.week-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:12px}
-.week-card{background:#0f1b31;border:1px solid #24385f;border-radius:14px;padding:14px}
-.week-card .w-title{font-weight:800;margin-bottom:6px}
-.week-card .w-price{color:#bfe4ff;margin:6px 0}
-.week-card .w-cost{color:#9ab3d8;margin:6px 0}
-.w-actions{display:flex;gap:8px;margin-top:8px}
-
-/* Exchanges marquee */
-.exchanges{padding-top:34px}
-.section-title{margin:0 0 10px}
-.ticker{position:relative;overflow:hidden;border:1px solid #1c2c4d;border-radius:12px;background:#0f1b31}
-.ticker__track{display:flex;gap:50px;align-items:center;animation:scroll 35s linear infinite;padding:12px 24px}
-.ticker__item img{height:100px; /* 4× büyütüldü */ filter:drop-shadow(0 6px 16px rgba(0,0,0,.45))}
-@keyframes scroll{
-  from{transform:translateX(0)}
-  to{transform:translateX(-50%)}
+function shortAddr(a) {
+  if (!a) return "—";
+  return a.slice(0, 6) + "..." + a.slice(-4);
 }
 
-/* Stake */
-.stake-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:12px}
-.stake-card{background:#0f1b31;border:1px solid #24385f;border-radius:14px;padding:14px}
-.tier{font-weight:800;margin-bottom:8px}
-.tier.silver{color:#cfe5ff}
-.tier.gold{color:#ffd98c}
-.tier.diamond{color:#a9e4ff}
-.tier.obsidian{color:#c1b0ff}
+/* =============================
+   NFT Vitrini
+============================= */
+function renderNfts() {
+  const grid = $("#nftGrid");
+  if (!grid) return;
 
-/* Calculator */
-.calculator{margin-top:18px;background:#0f1b31;border:1px solid #24385f;border-radius:14px;padding:16px}
-.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.calc-grid input,.calc-grid select{width:100%;background:#0c1830;border:1px solid #20345b;color:#d9e7ff;border-radius:10px;padding:10px}
-.flex{margin-top:8px}
-.calc-result{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
-.stat{background:#0c1830;border:1px solid #20345b;border-radius:12px;padding:12px}
-.stat .label{color:#a6b9da}
-.stat .value{font-size:18px;font-weight:800;margin-top:6px}
-.chart-wrap{margin-top:10px;border:1px dashed #20345b;border-radius:10px;overflow:hidden}
-
-/* NFT grid */
-.nft-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.nft-card{background:#0f1b31;border:1px solid #24385f;border-radius:14px;overflow:hidden}
-.nft-card .cap{padding:12px;border-top:1px solid #223357;display:flex;align-items:center;justify-content:space-between}
-.badge{font-size:12px;padding:4px 8px;border-radius:999px;border:1px solid #2a3f6a;background:#122240;color:#bfe4ff}
-
-/* Roadmap */
-.roadmap-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:6px}
-.rm-card{background:#0f1b31;border:1px solid #24385f;border-radius:14px;padding:14px;position:relative}
-.rm-dot{position:absolute;left:10px;top:10px;width:10px;height:10px;background:#7dfcff;border-radius:50%}
-.margin-top{margin-top:12px}
-
-/* Tokenomics */
-.tok-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
-.tok-card{background:#0f1b31;border:1px solid #24385f;border-radius:14px;padding:14px}
-.tok-card .big{font-size:28px;font-weight:800;margin:6px 0 10px}
-.tok-img{max-width:420px;margin:0 auto}
-
-/* Footer */
-.z-footer{padding:20px 0;border-top:1px solid #15213a;background:#0b1220;color:#9ab3d8}
-
-/* Modal */
-.modal[hidden]{display:none}
-.modal{position:fixed;inset:0;z-index:80}
-.modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.55)}
-.modal-box{position:relative;z-index:1;max-width:560px;margin:10vh auto;background:#0f1b31;border:1px solid #24385f;border-radius:14px;padding:16px}
-.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.modal-x{background:#14223c;border:1px solid #2e497e;color:#cfe1ff;border-radius:8px;padding:6px 8px}
-.wallet-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.wallet-item{display:flex;flex-direction:column;align-items:center;gap:8px;background:#0c1830;border:1px solid #20345b;border-radius:12px;padding:14px;color:#d9e7ff}
-.wallet-item img{width:34px;height:34px}
-.modal-foot{margin-top:8px;color:#9ab3d8}
-
-/* Responsive */
-@media (max-width:1024px){
-  .z-grid-2{grid-template-columns:1fr}
-  .stake-grid{grid-template-columns:repeat(3,1fr)}
-  .calc-grid{grid-template-columns:repeat(2,1fr)}
-  .calc-result{grid-template-columns:1fr}
-  .week-grid{grid-template-columns:repeat(2,1fr)}
-  .nft-grid{grid-template-columns:repeat(2,1fr)}
-  .roadmap-cards{grid-template-columns:repeat(2,1fr)}
-  .tok-grid{grid-template-columns:1fr}
+  grid.innerHTML = "";
+  CONFIG.nfts.forEach((n) => {
+    const card = document.createElement("div");
+    card.className = "nft-card";
+    card.innerHTML = `
+      <div class="nft-media">
+        <img src="assets/images/mask/${n.id}.png" alt="${n.name}"
+             onerror="this.src='assets/images/mask/placeholder.png'">
+      </div>
+      <div class="nft-body">
+        <div class="nft-title">${n.name}</div>
+        <div class="nft-sub">
+          <span>Arz: ${n.supply}</span>
+          <span class="rarity ${n.rarity.toLowerCase()}">${n.rarity}</span>
+        </div>
+        <a class="nft-link" target="_blank" rel="noopener"
+           href="${CONFIG.collectionUrl}?tokenId=${n.id}">
+           Görüntüle ↗
+        </a>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
 }
-@media (max-width:600px){
-  .counter{grid-template-columns:repeat(2,1fr)}
-  .stake-grid{grid-template-columns:repeat(2,1fr)}
-  .week-grid{grid-template-columns:1fr}
-  .nft-grid{grid-template-columns:1fr}
+
+/* =============================
+   Geri Sayım
+============================= */
+function startCountdown() {
+  const d = $("#cdDays"), h = $("#cdHours"), m = $("#cdMins"), s = $("#cdSecs");
+  if (!d || !h || !m || !s) return;
+
+  const tick = () => {
+    const now = Date.now();
+    let diff = CONFIG.launchAt - now;
+    if (diff < 0) diff = 0;
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const mins = Math.floor((diff / (1000 * 60)) % 60);
+    const secs = Math.floor((diff / 1000) % 60);
+
+    d.textContent = String(days).padStart(2, "0");
+    h.textContent = String(hours).padStart(2, "0");
+    m.textContent = String(mins).padStart(2, "0");
+    s.textContent = String(secs).padStart(2, "0");
+  };
+
+  tick();
+  setInterval(tick, 1000);
 }
+
+/* =============================
+   Ön Satış – Maliyet Hesabı
+============================= */
+function setupPresaleCalc() {
+  const amount = $("#buyAmount");
+  const costWeekEls = [$("#costW1"), $("#costW2"), $("#costW3"), $("#costW4")];
+  const buyBtns = [$("#buyW1"), $("#buyW2"), $("#buyW3"), $("#buyW4")];
+
+  if (!amount) return;
+
+  const recalc = () => {
+    const qty = parseFloat((amount.value || "0").toString().replace(/[^\d.]/g, "")) || 0;
+    CONFIG.weekPrices.forEach((p, i) => {
+      const c = (qty * p).toFixed(2);
+      if (costWeekEls[i]) costWeekEls[i].textContent = `${c} USDT`;
+    });
+  };
+  amount.addEventListener("input", recalc);
+  recalc();
+
+  // Butonlar şimdilik mock – kontrat canlıya geçince gerçek tx'e bağlanır
+  buyBtns.forEach((btn, i) => {
+    if (!btn) return;
+    btn.addEventListener("click", () => {
+      const qty = parseFloat((amount.value || "0").toString().replace(/[^\d.]/g, "")) || 0;
+      if (!qty) return alert("Lütfen almak istediğin ZUZU miktarını yaz.");
+      alert(
+        `Hafta ${i + 1} ön satış: ${qty} ZUZU x ${CONFIG.weekPrices[i]} USDT\n` +
+        `Toplam: ${(qty * CONFIG.weekPrices[i]).toFixed(2)} USDT\n\n` +
+        "Kontrat canlı olduğunda buton gerçek alıma dönecek."
+      );
+    });
+  });
+}
+
+/* =============================
+   Staking Kazanç Hesaplayıcı
+============================= */
+function setupStakeCalculator() {
+  const amountEl = $("#stakeAmount");
+  if (!amountEl) return;
+
+  const durationEl = $("#stakeDuration");
+  const nftBoostEl = $("#nftBoost");
+  const earlyBoostEl = $("#earlyBoost");
+  const totalEl = $("#resultTotal");
+  const monthEl = $("#resultMonthly");
+  const boostEl = $("#resultBoost");
+  const btn = $("#calcBtn");
+
+  const apyMap = { 30: 12, 90: 24, 180: 40, 365: 65, 540: 85 };
+
+  const calc = () => {
+    const amount = parseFloat((amountEl.value || "0").toString().replace(/[^\d.]/g, "")) || 0;
+    const days = parseInt(durationEl.value, 10);
+    const baseApy = apyMap[days] || 0;
+    const nftBoost = parseFloat(nftBoostEl.value || "0");
+    const earlyBoost = parseFloat(earlyBoostEl.value || "0");
+    const totalBoost = nftBoost + earlyBoost;
+
+    // Basit yıllık yüzde -> gün sayısına göre oransal getiri
+    const gross = amount * ((baseApy + totalBoost) / 100) * (days / 365);
+    const monthly = gross / (days / 30);
+
+    totalEl.textContent = `${comma(gross.toFixed(2))} ZUZU`;
+    monthEl.textContent = `${comma(monthly.toFixed(2))} ZUZU`;
+    boostEl.textContent = `+${totalBoost}%`;
+  };
+
+  btn.addEventListener("click", calc);
+  calc();
+}
+
+function comma(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+/* =============================
+   Borsa Logoları – Ticker
+============================= */
+function setupTicker() {
+  const track = $("#exTrack");
+  if (!track) return;
+
+  // Sürekli akış için elemanları klonla
+  const items = Array.from(track.children);
+  items.forEach((li) => track.appendChild(li.cloneNode(true)));
+}
+
+/* =============================
+   Cüzdan Bağlama
+   (EVM/MetaMask, Phantom/Solana, TonConnect/TON)
+============================= */
+function setupWallets() {
+  // MetaMask / EVM
+  safe(() => {
+    const evmBtn = $("#btnMetamask");
+    if (!evmBtn) return;
+    evmBtn.addEventListener("click", async () => {
+      if (!window.ethereum) return alert("MetaMask bulunamadı.");
+      try {
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+        const chainId = await window.ethereum.request({ method: "eth_chainId" });
+        // Polygon 137 değilse teklif et
+        if (chainId !== "0x89") {
+          try {
+            await window.ethereum.request({
+              method: "wallet_switchEthereumChain",
+              params: [{ chainId: "0x89" }],
+            });
+          } catch (e) {
+            // Ağa ekleme
+            await window.ethereum.request({
+              method: "wallet_addEthereumChain",
+              params: [{
+                chainId: "0x89",
+                rpcUrls: ["https://polygon-rpc.com/"],
+                chainName: "Polygon Mainnet",
+                nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },
+                blockExplorerUrls: ["https://polygonscan.com/"],
+              }],
+            });
+          }
+        }
+        notify("MetaMask bağlı!");
+      } catch (e) {
+        alert("Bağlanılamadı: " + (e?.message || e));
+      }
+    });
+  });
+
+  // Phantom / Solana
+  safe(() => {
+    const phBtn = $("#btnPhantom");
+    if (!phBtn) return;
+    phBtn.addEventListener("click", async () => {
+      const provider = window?.phantom?.solana;
+      if (!provider?.isPhantom) return window.open("https://phantom.app/", "_blank");
+      try {
+        await provider.connect();
+        notify("Phantom cüzdan bağlandı!");
+      } catch (e) {
+        alert("Phantom bağlantısı başarısız: " + (e?.message || e));
+      }
+    });
+  });
+
+  // TonConnect / TON
+  safe(() => {
+    const tonBtn = $("#btnTon");
+    if (!tonBtn) return;
+
+    // CDN ile TonConnect UI yükleyebiliyorsan:
+    // const connector = new TON_CONNECT_UI.TonConnectUI({ manifestUrl: '/tonconnect-manifest.json' });
+
+    tonBtn.addEventListener("click", () => {
+      // Basit fallback (manifest ve UI eklediğinde gerçek bağlama çalışır)
+      window.open("https://tonkeeper.com/connect", "_blank");
+      notify("TON bağlantısı için uygulama açıldı.");
+    });
+  });
+}
+function notify(msg) {
+  console.log(msg);
+  const n = document.createElement("div");
+  n.className = "toast";
+  n.textContent = msg;
+  document.body.appendChild(n);
+  setTimeout(() => n.classList.add("show"), 10);
+  setTimeout(() => n.classList.remove("show"), 2500);
+  setTimeout(() => n.remove(), 3000);
+}
+
+/* =============================
+   DOM Ready
+============================= */
+document.addEventListener("DOMContentLoaded", () => {
+  setupContractLinks();
+  renderNfts();
+  startCountdown();
+  setupPresaleCalc();
+  setupStakeCalculator();
+  setupTicker();
+  setupWallets();
+});
