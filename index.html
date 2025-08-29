@@ -1,341 +1,528 @@
 <!doctype html>
-<html lang="en"> <!-- ilk açılış EN -->
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ZUZUCOIN — Pre-Sale, Stake & NFT Rewards</title>
-  <meta name="theme-color" content="#0e1522">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ZUZUCOIN — Pre-Sale • Stake • NFT Rewards</title>
+<meta name="theme-color" content="#0e1522">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<!-- TonConnect UI (for TON) -->
+<script src="https://unpkg.com/@tonconnect/ui@2.0.9/dist/tonconnect-ui.min.js"></script>
+<style>
+:root{
+  --bg:#0C1320;--panel:#0f1828;--muted:#8aa2c9;--txt:#e8f1ff;--brand:#7f9cff;
+  --chip:#1c2840;--pri:#6a8cff;--pri2:#9aaeff;--ok:#16d2a6;--warn:#ffb347;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+a{color:#b8c7ff;text-decoration:none}
+img{max-width:100%;display:block}
+.z-container{width:min(1180px,92%);margin:0 auto}
+.z-nav{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(10,15,25,.9),rgba(10,15,25,.75));backdrop-filter:saturate(1.2) blur(8px);border-bottom:1px solid #16223a}
+.z-nav-inner{display:flex;align-items:center;justify-content:space-between;padding:.7rem 0}
+.brand{display:flex;gap:.6rem;align-items:center;font-weight:800;letter-spacing:.3px}
+.brand img{width:34px;height:34px}
+.z-menu{display:flex;gap:14px;align-items:center}
+.z-menu a{padding:.45rem .75rem;border-radius:10px;background:transparent}
+.z-menu a:hover{background:#12203a}
+.lang{background:#0f1b31;border:1px solid #1c2a46;color:var(--txt);border-radius:10px;padding:.35rem .6rem}
+.z-btn{display:inline-flex;gap:.5rem;align-items:center;border:0;border-radius:12px;padding:.7rem 1.0rem;font-weight:700;cursor:pointer}
+.z-btn-primary{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#08101d}
+.z-btn-ghost{background:#12203a;color:#cfe2ff}
+.section-head h2{margin:.2rem 0 0;font-size:clamp(1.4rem,3.2vw,2rem)}
+.section-head p{color:var(--muted)}
+.z-section{padding:38px 0;border-top:1px solid #15243f}
+.z-chip{display:inline-flex;align-items:center;gap:.35rem;background:var(--chip);color:#cfe2ff;border:1px solid #1f2f50;border-radius:999px;padding:.4rem .7rem;font-size:.9rem}
+.z-chip-row{display:flex;gap:.5rem;flex-wrap:wrap}
+.badge{background:#172748;border:1px solid #263a63;color:#9eb9ff;padding:.3rem .55rem;border-radius:999px;font-size:.8rem}
+.grid-2{display:grid;grid-template-columns:1.2fr .8fr;gap:24px}
+@media(max-width:900px){.grid-2{grid-template-columns:1fr}}
+.hero{padding:34px 0 18px;background:radial-gradient(1200px 400px at 0% -10%,rgba(74,100,255,.18),transparent 45%),radial-gradient(800px 300px at 90% -20%,rgba(148,198,255,.16),transparent 40%)}
+.hero h1{font-size:clamp(2rem,4.6vw,3.2rem);margin:.2rem 0 .6rem;letter-spacing:.4px}
+.lead{color:#bfd2ff;font-size:1.05rem}
+.hero-cta{display:flex;gap:.6rem;margin:.8rem 0 1rem}
+.hero .full-img{border-radius:18px;overflow:hidden;background:#0f1727;border:1px solid #1c2b4d}
+.hero .full-img img{aspect-ratio:16/12;object-fit:cover}
+
+/* Flip countdown (simple) */
+.counter{display:flex;gap:14px;flex-wrap:wrap}
+.flip{width:92px;background:#13213a;border:1px solid #24385f;border-radius:14px;box-shadow:inset 0 -50px 60px rgba(0,0,0,.18);text-align:center}
+.flip .num{font-size:2rem;font-weight:800;padding:.6rem 0;color:#e9f2ff}
+.flip small{display:block;color:#9db3db;border-top:1px solid #203458;padding:.35rem 0 .5rem;font-weight:700;letter-spacing:1px}
+@media(max-width:520px){.flip{width:76px}.flip .num{font-size:1.7rem}}
+
+.presale{padding-top:8px}
+.presale-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:900px){.presale-grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid #1b2a49;border-radius:16px;padding:16px}
+.buybox h4{margin:.2rem 0 .6rem}
+.buybox .price{color:#bcd1ff;font-weight:800}
+.buybox .cost{margin-top:.4rem;color:#8fb7ff}
+.buybox .row{display:flex; gap:.5rem}
+.buybox .row>*{flex:1}
+.input{width:100%;padding:.7rem;border-radius:12px;background:#0f1c33;border:1px solid #23395d;color:var(--txt)}
+.buy{display:flex;gap:.5rem;margin-top:.6rem}
+.buy .z-btn{flex:1;justify-content:center}
+
+/* Exchanges ticker (single row, big) */
+.ticker{overflow:hidden;border:1px solid #1a2b4c;border-radius:16px;background:#0f1a30;padding:10px}
+.ticker__track{display:flex;gap:22px;align-items:center;animation:t 28s linear infinite}
+.ticker__item img{height:46px;opacity:.95;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
+@keyframes t{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ex-note{color:#8ea7d3;font-style:italic;text-align:center;margin-top:8px}
+
+/* Stake Pro */
+.stake-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:980px){.stake-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.stake-grid{grid-template-columns:1fr}}
+.stake-card{background:var(--panel);border:1px solid #1b2a49;border-radius:16px;padding:16px}
+.stake-card .tier{font-weight:800;margin-bottom:.6rem}
+.stake-card .tier.silver{color:#cfe6ff}
+.stake-card .tier.gold{color:#ffd77c}
+.stake-card .tier.diamond{color:#9defff}
+.stake-card .tier.obsidian{color:#b3a8ff}
+
+/* Calculator */
+.calc{margin-top:8px}
+.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:980px){.calc-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.calc-grid{grid-template-columns:1fr}}
+.statwrap{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+.stat{background:#0f1a30;border:1px solid #22365a;border-radius:14px;padding:12px}
+.stat .label{color:#90a9d6}
+.chart-wrap img{width:100%;border-radius:12px;border:1px solid #1d2d50;margin-top:10px}
+
+/* NFT grid */
+.nft-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:980px){.nft-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.nft-grid{grid-template-columns:1fr}}
+.nft{background:#0f1a30;border:1px solid #1d2d50;border-radius:14px;overflow:hidden}
+.nft .meta{display:flex;justify-content:space-between;padding:10px}
+.nft .tag{font-size:.75rem;background:#152748;color:#a8c2ff;border:1px solid #274075;border-radius:999px;padding:.25rem .5rem}
+
+/* Tokenomics donut */
+.tk{display:grid;grid-template-columns:1.1fr .9fr;gap:20px}
+@media(max-width:900px){.tk{grid-template-columns:1fr}}
+.legend{display:grid;gap:.45rem}
+.legend div{display:flex;align-items:center;gap:.55rem}
+.dot{width:12px;height:12px;border-radius:3px}
+
+/* Footer */
+.z-footer{border-top:1px solid #15243f;padding:16px 0;color:#9cb6e6}
+.between{display:flex;justify-content:space-between}
+.center-v{align-items:center}
+</style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="z-nav">
-    <div class="z-nav-inner">
-      <a href="#" class="brand">
-        <img class="brand-logo" src="assets/images/logo.png" alt="ZUZU">
-        <span>ZUZUCOIN</span>
-      </a>
 
-      <nav class="z-menu">
-        <a href="#presale">Pre-Sale</a>
-        <a href="#stake">Stake</a>
-        <a href="#nft">NFT Rewards</a>
-        <a href="#roadmap">Roadmap</a>
-        <a href="#tokenomics">Tokenomics</a>
-      </nav>
-<!-- Dil seçici + Cüzdan -->
-<div class="z-nav-actions">
-  <select id="langSelect" class="z-lang">
-    <option value="en">EN</option>
-    <option value="tr">TR</option>
-    <option value="ru">RU</option>
-    <option value="hi">HI</option>
-    <option value="zh">中文</option>
-    <option value="es">ES</option>
-    <option value="pt">PT</option>
-  </select>
-  <button id="connectWallet" class="z-btn z-btn-outline">Connect Wallet</button>
-</div>
-      <div class="z-actions">
-        <select id="langSel" class="lang">
-          <option value="en" selected>EN</option>
-          <option value="tr">TR</option>
-          <option value="hi">HI</option>
-          <option value="zh">中文</option>
-          <option value="ru">RU</option>
-          <option value="pt">PT</option>
-          <option value="es">ES</option>
-        </select>
+<header class="z-nav">
+  <div class="z-container z-nav-inner">
+    <a class="brand" href="#"><img src="assets/images/logo.png" alt="ZUZU"><span>ZUZUCOIN</span></a>
+    <nav class="z-menu">
+      <a href="#presale" data-i="nav_presale">Pre-Sale</a>
+      <a href="#stake"   data-i="nav_stake">Stake</a>
+      <a href="#nft"     data-i="nav_nft">NFT Rewards</a>
+      <a href="#roadmap" data-i="nav_roadmap">Roadmap</a>
+      <a href="#tokenomics" data-i="nav_token">Tokenomics</a>
+      <select id="langSel" class="lang">
+        <option value="en" selected>EN</option>
+        <option value="tr">TR</option>
+        <option value="fr">FR</option>
+        <option value="es">ES</option>
+      </select>
+      <button id="connectBtn" class="z-btn z-btn-primary" data-i="connect">Connect Wallet</button>
+    </nav>
+  </div>
+</header>
 
-        <div class="wallet-dd">
-          <button class="z-btn z-btn-primary">Connect Wallet</button>
-          <div class="wallet-panel">
-            <button id="btnMetamask" class="z-btn w100">MetaMask (Polygon)</button>
-            <button id="btnPhantom" class="z-btn w100">Phantom (Solana)</button>
-            <button id="btnTon" class="z-btn w100">TON (Tonkeeper)</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
+<main>
 
-  <!-- Ana içerik -->
-  <main id="zzu">
-    <!-- HERO -->
-    <section class="z-hero">
-    <section class="z-hero-2" id="home">
-  <div class="z-container">
-    <div class="hero-head">
-      <h1 data-i18n="heroTitle">ZUZU — Robotic Hedgehog</h1>
-      <p class="lead" data-i18n="heroSub">
-        Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high utility.
+<!-- HERO + COUNTDOWN -->
+<section class="z-section hero">
+  <div class="z-container grid-2">
+    <div>
+      <div class="badge" data-i="hero_badge">Pre-Sale • Stake to Win NFT</div>
+      <h1 data-i="hero_title">ZUZU — Robotic Hedgehog 🦔⚡</h1>
+      <p class="lead" data-i="hero_lead">
+        Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high <b>utility</b>.
       </p>
-      <div class="hero-actions">
-        <a href="#nft" class="z-btn z-btn-primary" data-i18n="btnNft">NFT Rewards</a>
-        <a href="#" id="thirdwebNFTRoute" class="z-btn z-btn-ghost" target="_blank" rel="noopener" data-i18n="btnCollection">Collection Page</a>
-        <span class="z-chip"><span data-i18n="contract">Contract</span>: <b id="contractDisplay">—</b></span>
+      <div class="hero-cta">
+        <a href="#stake" class="z-btn z-btn-primary" data-i="cta_stake">Start Staking</a>
+        <a href="#nft" class="z-btn z-btn-ghost" data-i="cta_nft">NFT Rewards</a>
+      </div>
+      <div class="z-chip-row">
+        <a id="thirdwebNFTRoute" class="z-chip" href="#" target="_blank" rel="noopener" data-i="collection_page">Collection Page</a>
+        <span class="z-chip" data-i="contract">Contract:</span> <span class="z-chip" id="contractDisplay">—</span>
+      </div>
+      <div class="counter" style="margin-top:14px">
+        <div class="flip"><div id="cdDays" class="num">00</div><small data-i="days">DAYS</small></div>
+        <div class="flip"><div id="cdHours" class="num">00</div><small data-i="hours">HOURS</small></div>
+        <div class="flip"><div id="cdMins" class="num">00</div><small data-i="mins">MINUTES</small></div>
+        <div class="flip"><div id="cdSecs" class="num">00</div><small data-i="secs">SECONDS</small></div>
       </div>
     </div>
-
-    <div class="hero-body">
-      <!-- Büyük ZUZU logosu -->
-      <div class="hero-logo">
-        <img src="assets/images/branding/zuzu-coin-3d.png" alt="ZUZU" />
-      </div>
-
-      <!-- Flip sayaç -->
-      <div class="flip-counter" aria-label="Pre-sale countdown">
-        <div class="flip">
-          <div class="flip__num" id="cdDays">00</div>
-          <div class="flip__label" data-i18n="days">DAYS</div>
-        </div>
-        <div class="flip">
-          <div class="flip__num" id="cdHours">00</div>
-          <div class="flip__label" data-i18n="hours">HOURS</div>
-        </div>
-        <div class="flip">
-          <div class="flip__num" id="cdMins">00</div>
-          <div class="flip__label" data-i18n="minutes">MINUTES</div>
-        </div>
-        <div class="flip">
-          <div class="flip__num" id="cdSecs">00</div>
-          <div class="flip__label" data-i18n="seconds">SECONDS</div>
-        </div>
-      </div>
-    </div>
+    <div class="full-img"><img src="assets/images/banner.jpg" alt="ZUZU hero"></div>
   </div>
 </section>
 
-    <!-- PRE-SALE COUNTDOWN (Borsaların üstünde) -->
-    <section class="z-section presale" id="presale">
-      <div class="z-container">
-        <div class="section-head">
-          <h2>Pre-Sale — Countdown</h2>
-          <p>Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.</p>
-        </div>
-        <div class="counter inline">
-          <div class="ctr"><span id="cdDays">00</span><small>DAYS</small></div>
-          <div class="ctr"><span id="cdHours">00</span><small>HOURS</small></div>
-          <div class="ctr"><span id="cdMins">00</span><small>MINUTES</small></div>
-          <div class="ctr"><span id="cdSecs">00</span><small>SECONDS</small></div>
-        </div>
-      </div>
-
-      <!-- Ön satış haftaları -->
-      <div class="z-container">
-        <div class="precalc">
-          <label>Amount (ZUZU)</label>
-          <input id="buyAmount" value="10000" inputmode="decimal">
-          <small>Buttons switch to live transaction when sale contract is live.</small>
-        </div>
-
-        <div class="weeks">
-          <div class="week">
-            <div class="w-title">Week 1 (Cheapest)</div>
-            <div class="w-price">1 ZUZU = <b>0.0050</b> USDT</div>
-            <div class="w-cost">Cost: <b id="costW1">0 USDT</b></div>
-            <div class="w-actions">
-              <button id="buyW1" class="z-btn z-btn-primary">Buy</button>
-              <button class="z-btn z-btn-ghost">Details</button>
-            </div>
-          </div>
-          <div class="week">
-            <div class="w-title">Week 2</div>
-            <div class="w-price">1 ZUZU = <b>0.0065</b> USDT</div>
-            <div class="w-cost">Cost: <b id="costW2">0 USDT</b></div>
-            <div class="w-actions">
-              <button id="buyW2" class="z-btn z-btn-primary">Buy</button>
-              <button class="z-btn z-btn-ghost">Details</button>
-            </div>
-          </div>
-          <div class="week">
-            <div class="w-title">Week 3</div>
-            <div class="w-price">1 ZUZU = <b>0.0080</b> USDT</div>
-            <div class="w-cost">Cost: <b id="costW3">0 USDT</b></div>
-            <div class="w-actions">
-              <button id="buyW3" class="z-btn z-btn-primary">Buy</button>
-              <button class="z-btn z-btn-ghost">Details</button>
-            </div>
-          </div>
-          <div class="week">
-            <div class="w-title">Week 4 (Last Chance)</div>
-            <div class="w-price">1 ZUZU = <b>0.0100</b> USDT</div>
-            <div class="w-cost">Cost: <b id="costW4">0 USDT</b></div>
-            <div class="w-actions">
-              <button id="buyW4" class="z-btn z-btn-primary">Buy</button>
-              <button class="z-btn z-btn-ghost">Details</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- EXCHANGES – Desteklenen Borsalar (4x büyük ve kayar) -->
-    <section id="exchanges" class="exchanges">
-  <div class="z-container">
-    <h3 class="section-title" data-i18n="supportedEx">Supported Exchanges</h3>
-
-    <div class="ticker">
-      <ul class="ticker__track" id="exTrack">
-        <li class="ticker__item"><img src="assets/images/exchanges/gateio.png"  alt="gate.io"></li>
-        <li class="ticker__item"><img src="assets/images/exchanges/kucoin.png"  alt="KuCoin"></li>
-        <li class="ticker__item"><img src="assets/images/exchanges/okx.png"     alt="OKX"></li>
-        <li class="ticker__item"><img src="assets/images/exchanges/mxc.png"     alt="MEXC"></li>
-        <li class="ticker__item"><img src="assets/images/exchanges/bitmart.png" alt="Bitmart"></li>
-        <li class="ticker__item"><img src="assets/images/exchanges/bybit.png"   alt="Bybit"></li>
-      </ul>
-    </div>
-
-    <p class="soon" data-i18n="willBeListed">Will be listed soon</p>
-  </div>
-</section>
-
-    <!-- COMMUNITY -->
-    <section class="z-section" id="topluluk">
-      <div class="z-container">
-        <div class="section-head">
-          <h2>Community</h2>
-          <p>Join our global family on Telegram, X and Discord. Events, airdrops, mini-games and more.</p>
-        </div>
-        <div class="z-chip-row">
-          <a class="z-chip" href="https://t.me/" target="_blank" rel="noopener">Telegram</a>
-          <a class="z-chip" href="https://twitter.com/" target="_blank" rel="noopener">Twitter / X</a>
-          <a class="z-chip" href="https://discord.com/" target="_blank" rel="noopener">Discord</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- STAKE PRO -->
-    <section class="z-section stake-pro" id="stake">
-      <div class="z-container">
-        <div class="section-head">
-          <h2>Stake Pro — Lock, Earn, Get NFT ✨</h2>
-          <p>Lock your ZUZU, earn <b>APY + NFT boost</b>. Early stakers get special badge & airdrop priority.</p>
-        </div>
-
-        <div class="stake-grid">
-          <div class="stake-card"><div class="tier">Bronze</div><ul><li>30 days lock</li><li><b>12% APY</b></li><li>Early access raffles</li></ul></div>
-          <div class="stake-card"><div class="tier silver">Silver</div><ul><li>90 days lock</li><li><b>24% APY</b></li><li>+5% NFT boost</li></ul></div>
-          <div class="stake-card"><div class="tier gold">Gold</div><ul><li>180 days lock</li><li><b>40% APY</b></li><li>Whitelist + ZUZU badge</li></ul></div>
-          <div class="stake-card"><div class="tier diamond">Diamond</div><ul><li>365 days lock</li><li><b>65% APY</b></li><li>+10% NFT boost</li></ul></div>
-          <div class="stake-card"><div class="tier obsidian">Obsidian</div><ul><li>540 days lock</li><li><b>85% APY</b></li><li>VIP rewards + airdrop priority</li></ul></div>
-        </div>
-
-        <!-- Calculator -->
-        <div class="calculator">
-          <h3>Earnings Calculator</h3>
-          <div class="calc-grid">
-            <div><label>Amount (ZUZU)</label><input id="stakeAmount" placeholder="e.g. 10,000" inputmode="decimal"></div>
-            <div><label>Lock Period</label>
-              <select id="stakeDuration">
-                <option value="30">30 days (12% APY)</option>
-                <option value="90">90 days (24% APY)</option>
-                <option value="180">180 days (40% APY)</option>
-                <option value="365">365 days (65% APY)</option>
-                <option value="540">540 days (85% APY)</option>
-              </select>
-            </div>
-            <div><label>Have NFT?</label>
-              <select id="nftBoost">
-                <option value="0">No</option>
-                <option value="5">ZUZU Hero (+5%)</option>
-                <option value="8">ZUZU Rogue (+8%)</option>
-                <option value="10">ZUZU Berserker (+10%)</option>
-                <option value="6">ZUZU Hacker (+6%)</option>
-                <option value="9">ZUZU Sorceress (+9%)</option>
-                <option value="7">ZUZU Warrior (+7%)</option>
-                <option value="5">ZUZU Maiden (+5%)</option>
-                <option value="9">ZUZU Scientist (+9%)</option>
-                <option value="12">ZUZU Titan (+12%)</option>
-              </select>
-            </div>
-            <div><label>Early Badge</label>
-              <select id="earlyBoost">
-                <option value="0">None</option>
-                <option value="3">Badge: +3%</option>
-                <option value="5">Badge+: +5%</option>
-              </select>
-            </div>
-          </div>
-          <div class="flex"><button class="z-btn z-btn-primary" id="calcBtn">Calculate</button></div>
-          <div class="calc-result">
-            <div class="stat"><div class="label">Total Return</div><div class="value" id="resultTotal">0 ZUZU</div></div>
-            <div class="stat"><div class="label">Monthly Avg</div><div class="value" id="resultMonthly">0 ZUZU</div></div>
-            <div class="stat"><div class="label">Total Boost</div><div class="value" id="resultBoost">+0%</div></div>
-          </div>
-          <div class="chart-wrap"><img src="assets/images/charts/staking-curve.png" alt="APY Curve"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- NFT REWARDS -->
-    <section class="z-section nft-rewards" id="nft">
-      <div class="z-container">
-        <div class="section-head">
-          <h2>ZUZU Maskot NFT Rewards 🎁</h2>
-          <p>Stakers win rare NFTs from the collection. •
-            <a id="thirdwebNFTRoute2" target="_blank" rel="noopener">Collection Page</a>
-          </p>
-        </div>
-        <div class="nft-grid" id="nftGrid"></div>
-      </div>
-    </section>
-
-    <!-- ROADMAP -->
-    <section class="z-section" id="roadmap">
-      <div class="z-container">
-        <div class="section-head">
-          <h2>Roadmap</h2>
-          <p>Clear plan focused on community, staking, NFT drops, listings.</p>
-        </div>
-        <ul class="roadlist">
-          <li><b>Q1 — Core Setup</b> · Web, contract tests, community channels, security.</li>
-          <li><b>Q2 — Pre-Sale & Stake</b> · Sale rounds, staking launch, Maskot NFT rewards.</li>
-          <li><b>Q3 — Listings</b> · Liquidity, first CEX/DEX listings, market-maker.</li>
-          <li><b>Q4 — Ecosystem</b> · In-game integrations, partnerships, mobile mini-app.</li>
-        </ul>
-        <div class="full-img"><img src="assets/images/map.png" alt="Roadmap visual"></div>
-      </div>
-    </section>
-
-    <!-- TOKENOMICS -->
-<section class="z-section" id="tokenomics">
+<!-- PRE-SALE -->
+<section id="presale" class="z-section presale">
   <div class="z-container">
     <div class="section-head">
-      <h2 data-i18n="tokenomics">Tokenomics (Visualized)</h2>
-      <p data-i18n="tokenomicsDesc">Fair distribution, sustainable reward economy & reserve plan.</p>
+      <h2 data-i="presale_title">Pre-Sale — Countdown</h2>
+      <p  data-i="presale_lead">Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.</p>
     </div>
 
-    <div class="tokenomics-wrap">
-      <canvas id="tokenomicsChart" width="520" height="320"></canvas>
+    <div class="card" style="margin-bottom:12px">
+      <label data-i="amount">Amount (ZUZU)</label>
+      <input class="input" id="buyAmount" value="10000" inputmode="decimal">
+    </div>
 
-      <ul class="legend">
-        <li><span class="dot c1"></span><b data-i18n="legCommunity">Community</b> — 35%</li>
-        <li><span class="dot c2"></span><b data-i18n="legLiquidity">Liquidity</b> — 20%</li>
-        <li><span class="dot c3"></span><b data-i18n="legTeam">Team</b> — 15% <small>(12 mo lock)</small></li>
-        <li><span class="dot c4"></span><b data-i18n="legTreasury">Treasury</b> — 10%</li>
-        <li><span class="dot c5"></span><b data-i18n="legStaking">Staking Rewards</b> — 15%</li>
-        <li><span class="dot c6"></span><b data-i18n="legPartners">Advisors/Partners</b> — 5%</li>
+    <div class="presale-grid">
+      <div class="card buybox">
+        <h4 data-i="w1">Week 1 (Cheapest)</h4>
+        <div class="price">1 ZUZU = <b id="p0">0.0050</b> USDT</div>
+        <div class="cost" data-i="cost">Cost:</div> <div class="cost"><b id="c0">0</b> USDT</div>
+        <div class="buy"><button class="z-btn z-btn-primary" data-i="buy">Buy</button><button class="z-btn z-btn-ghost">Details</button></div>
+      </div>
+      <div class="card buybox">
+        <h4 data-i="w2">Week 2</h4>
+        <div class="price">1 ZUZU = <b id="p1">0.0065</b> USDT</div>
+        <div class="cost" data-i="cost">Cost:</div> <div class="cost"><b id="c1">0</b> USDT</div>
+        <div class="buy"><button class="z-btn z-btn-primary" data-i="buy">Buy</button><button class="z-btn z-btn-ghost">Details</button></div>
+      </div>
+      <div class="card buybox">
+        <h4 data-i="w3">Week 3</h4>
+        <div class="price">1 ZUZU = <b id="p2">0.0080</b> USDT</div>
+        <div class="cost" data-i="cost">Cost:</div> <div class="cost"><b id="c2">0</b> USDT</div>
+        <div class="buy"><button class="z-btn z-btn-primary" data-i="buy">Buy</button><button class="z-btn z-btn-ghost">Details</button></div>
+      </div>
+      <div class="card buybox">
+        <h4 data-i="w4">Week 4 (Last Chance)</h4>
+        <div class="price">1 ZUZU = <b id="p3">0.0100</b> USDT</div>
+        <div class="cost" data-i="cost">Cost:</div> <div class="cost"><b id="c3">0</b> USDT</div>
+        <div class="buy"><button class="z-btn z-btn-primary" data-i="buy">Buy</button><button class="z-btn z-btn-ghost">Details</button></div>
+      </div>
+    </div>
+
+    <!-- Exchanges -->
+    <div class="card" style="margin-top:16px">
+      <h3 style="margin:0 0 10px" data-i="exchanges">Supported Exchanges</h3>
+      <div class="ticker">
+        <div class="ticker__track" id="exTrack">
+          <div class="ticker__item"><img src="assets/images/exchanges/gateio.png" alt="gate" loading="lazy"></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/kucoin.png" alt="kucoin" loading="lazy"></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/okx.png" alt="okx" loading="lazy"></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/mxc.png" alt="mexc" loading="lazy"></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/bitmart.png" alt="bitmart" loading="lazy"></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/bybit.png" alt="bybit" loading="lazy"></div>
+          <!-- duplicate for infinite loop -->
+          <div class="ticker__item"><img src="assets/images/exchanges/gateio.png" alt=""></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/kucoin.png" alt=""></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/okx.png" alt=""></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/mxc.png" alt=""></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/bitmart.png" alt=""></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/bybit.png" alt=""></div>
+        </div>
+      </div>
+      <div class="ex-note">Will Be Listed Soon</div>
+    </div>
+  </div>
+</section>
+
+<!-- STAKE -->
+<section id="stake" class="z-section">
+  <div class="z-container">
+    <div class="section-head">
+      <h2 data-i="stake_title">Stake Pro — Lock, Earn, Get NFT ✨</h2>
+      <p data-i="stake_lead">Lock your ZUZU, earn <b>APY + NFT BOOST</b>. Early stakers get badge & airdrop priority.</p>
+    </div>
+
+    <div class="stake-grid">
+      <div class="stake-card"><div class="tier">Bronze</div><ul>
+        <li>30 days lock</li><li><b>12% APY</b></li><li>Early access raffles</li></ul></div>
+      <div class="stake-card"><div class="tier silver">Silver</div><ul>
+        <li>90 days lock</li><li><b>24% APY</b></li><li>+5% NFT boost</li></ul></div>
+      <div class="stake-card"><div class="tier gold">Gold</div><ul>
+        <li>180 days lock</li><li><b>40% APY</b></li><li>Whitelist + ZUZU badge</li></ul></div>
+      <div class="stake-card"><div class="tier diamond">Diamond</div><ul>
+        <li>365 days lock</li><li><b>65% APY</b></li><li>+10% NFT boost</li></ul></div>
+      <div class="stake-card"><div class="tier obsidian">Obsidian</div><ul>
+        <li>540 days lock</li><li><b>85% APY</b></li><li>VIP rewards + airdrop priority</li></ul></div>
+    </div>
+
+    <div class="card calc">
+      <h3 data-i="calc_title">Earnings Calculator</h3>
+      <div class="calc-grid">
+        <div><label data-i="amount2">Amount (ZUZU)</label><input class="input" id="stakeAmount" placeholder="e.g., 10,000"></div>
+        <div><label data-i="lock">Lock Period</label>
+          <select id="stakeDuration" class="input">
+            <option value="30">30 days (12% APY)</option>
+            <option value="90">90 days (24% APY)</option>
+            <option value="180">180 days (40% APY)</option>
+            <option value="365">365 days (65% APY)</option>
+            <option value="540">540 days (85% APY)</option>
+          </select></div>
+        <div><label data-i="nft_have">Have NFT?</label>
+          <select id="nftBoost" class="input">
+            <option value="0">No</option>
+            <option value="5">ZUZU Hero (+5%)</option>
+            <option value="8">ZUZU Rogue (+8%)</option>
+            <option value="10">ZUZU Berserker (+10%)</option>
+            <option value="6">ZUZU Hacker (+6%)</option>
+            <option value="9">ZUZU Sorceress (+9%)</option>
+            <option value="7">ZUZU Warrior (+7%)</option>
+            <option value="5">ZUZU Maiden (+5%)</option>
+            <option value="9">ZUZU Scientist (+9%)</option>
+            <option value="12">ZUZU Titan (+12%)</option>
+          </select></div>
+        <div><label data-i="early">Early Badge</label>
+          <select id="earlyBoost" class="input">
+            <option value="0">None</option>
+            <option value="3">Badge +3%</option>
+            <option value="5">Badge+ +5%</option>
+          </select></div>
+      </div>
+      <div style="margin-top:8px"><button id="calcBtn" class="z-btn z-btn-primary" data-i="calc_btn">Calculate</button></div>
+      <div class="statwrap">
+        <div class="stat"><div class="label" data-i="ret">Total Return</div><div class="value" id="resultTotal">0 ZUZU</div></div>
+        <div class="stat"><div class="label" data-i="avg">Monthly Avg</div><div class="value" id="resultMonthly">0 ZUZU</div></div>
+        <div class="stat"><div class="label" data-i="boost">Total Boost</div><div class="value" id="resultBoost">+0%</div></div>
+      </div>
+      <div class="chart-wrap"><img src="assets/images/charts/staking-curve.png" alt="APY Curve"></div>
+    </div>
+  </div>
+</section>
+
+<!-- NFT REWARDS -->
+<section id="nft" class="z-section">
+  <div class="z-container">
+    <div class="section-head">
+      <h2>ZUZU Maskot NFT Rewards 🎁</h2>
+      <p>Stakers win rare NFTs from the collection. Contract: <code id="contractDisplay2"></code> •
+        <a id="thirdwebNFTRoute2" href="#" target="_blank" rel="noopener">Collection Page</a></p>
+    </div>
+    <div class="nft-grid" id="nftGrid"></div>
+  </div>
+</section>
+
+<!-- TOKENOMICS -->
+<section id="tokenomics" class="z-section">
+  <div class="z-container">
+    <div class="section-head"><h2 data-i="token_title">Tokenomics (Visualized)</h2></div>
+    <div class="card tk">
+      <div>
+        <!-- SVG Donut -->
+        <svg viewBox="0 0 42 42" width="100%" style="max-width:360px">
+          <circle cx="21" cy="21" r="15.915" fill="#0e172a"/>
+          <!-- segments -->
+          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#8E69FF" stroke-width="6" stroke-dasharray="35 65" stroke-dashoffset="25"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#23d4e1" stroke-width="6" stroke-dasharray="20 80" stroke-dashoffset="-10"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#47cc6f" stroke-width="6" stroke-dasharray="15 85" stroke-dashoffset="-30"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#ffaa3a" stroke-width="6" stroke-dasharray="10 90" stroke-dashoffset="-45"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#d07bff" stroke-width="6" stroke-dasharray="15 85" stroke-dashoffset="-60"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#ff6a6a" stroke-width="6" stroke-dasharray="5 95" stroke-dashoffset="-75"></circle>
+          <text x="21" y="21" text-anchor="middle" fill="#e9f2ff" font-size="3.3" font-weight="800">1,000,000,000</text>
+          <text x="21" y="26" text-anchor="middle" fill="#9fb4dd" font-size="2.4">Total Supply</text>
+        </svg>
+      </div>
+      <div class="legend">
+        <div><span class="dot" style="background:#8E69FF"></span><span>Community — 35%</span></div>
+        <div><span class="dot" style="background:#23d4e1"></span><span>Liquidity — 20%</span></div>
+        <div><span class="dot" style="background:#47cc6f"></span><span>Team (12m lock) — 15%</span></div>
+        <div><span class="dot" style="background:#ffaa3a"></span><span>Treasury — 10%</span></div>
+        <div><span class="dot" style="background:#d07bff"></span><span>Staking Rewards — 15%</span></div>
+        <div><span class="dot" style="background:#ff6a6a"></span><span>Partners — 5%</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap" class="z-section">
+  <div class="z-container">
+    <div class="section-head"><h2 data-i="road_title">Roadmap</h2><p data-i="road_lead">Clear plan focused on community, staking, NFT drops, listings.</p></div>
+    <div class="card">
+      <ul>
+        <li><b>Q1 — Core Setup</b>: Web, contract tests, community channels, security.</li>
+        <li><b>Q2 — Pre-Sale & Stake</b>: Sale rounds, staking launch, Maskot NFT rewards.</li>
+        <li><b>Q3 — Listings</b>: Liquidity, first CEX/DEX listings, market-maker.</li>
+        <li><b>Q4 — Ecosystem</b>: In-game integrations, partnerships, mobile mini-app.</li>
       </ul>
     </div>
   </div>
 </section>
 
-  <!-- Footer -->
-  <footer class="z-footer">
-    <div class="z-container between center-v">
-      <small>© ZUZUCOIN 2025</small>
-      <div class="z-chip-row">
-        <a class="z-chip" href="#topluluk">Community</a>
-        <a class="z-chip" href="#stake">Stake</a>
-        <a class="z-chip" href="#nft">NFT</a>
-        <a class="z-chip" href="#tokenomics">Tokenomics</a>
-      </div>
-    </div>
-  </footer>
+</main>
 
-  <script src="script.js"></script>
+<footer class="z-footer">
+  <div class="z-container between center-v">
+    <small>© ZUZUCOIN 2025</small>
+    <div class="z-chip-row">
+      <a class="z-chip" href="#presale">Pre-Sale</a>
+      <a class="z-chip" href="#stake">Stake</a>
+      <a class="z-chip" href="#nft">NFT</a>
+      <a class="z-chip" href="#tokenomics">Tokenomics</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ========= ZUZU CONFIG ========= */
+const CONFIG={
+  contractAddress:"0xF2bbbEcB417725813BF5E940d678793fACDa9729",
+  collectionUrl:"https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts",
+  launchAt: Date.now()+1000*60*60*24*17+1000*60*90, // 17 gün 1.5 saat
+  weekPrices:[0.0050,0.0065,0.0080,0.0100], // USDT
+  nfts:[
+    {id:0,name:"ZUZU Hero",      rarity:"Epic",   supply:200},
+    {id:1,name:"ZUZU Rogue",     rarity:"Rare",   supply:2500},
+    {id:2,name:"ZUZU Berserker", rarity:"Epic",   supply:800},
+    {id:3,name:"ZUZU Hacker",    rarity:"Rare",   supply:600},
+    {id:4,name:"ZUZU Sorceress", rarity:"Epic",   supply:750},
+    {id:5,name:"ZUZU Warrior",   rarity:"Rare",   supply:900},
+    {id:6,name:"ZUZU Maiden",    rarity:"Rare",   supply:1100},
+    {id:7,name:"ZUZU Ranger",    rarity:"Rare",   supply:1000},
+    {id:8,name:"ZUZU Scientist", rarity:"Epic",   supply:1100},
+    {id:9,name:"ZUZU Titan",     rarity:"Legendary", supply:250}
+  ]
+};
+
+/* ===== Language (EN default) ===== */
+const I={
+en:{nav_presale:"Pre-Sale",nav_stake:"Stake",nav_nft:"NFT Rewards",nav_roadmap:"Roadmap",nav_token:"Tokenomics",connect:"Connect Wallet",
+hero_badge:"Pre-Sale • Stake to Win NFT",hero_title:"ZUZU — Robotic Hedgehog 🦔⚡",hero_lead:"Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high <b>utility</b>.",
+cta_stake:"Start Staking",cta_nft:"NFT Rewards",collection_page:"Collection Page",contract:"Contract:",days:"DAYS",hours:"HOURS",mins:"MINUTES",secs:"SECONDS",
+presale_title:"Pre-Sale — Countdown",presale_lead:"Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.",amount:"Amount (ZUZU)",
+w1:"Week 1 (Cheapest)",w2:"Week 2",w3:"Week 3",w4:"Week 4 (Last Chance)",cost:"Cost:",buy:"Buy",exchanges:"Supported Exchanges",
+stake_title:"Stake Pro — Lock, Earn, Get NFT ✨",stake_lead:"Lock your ZUZU, earn <b>APY + NFT BOOST</b>. Early stakers get badge & airdrop priority.",
+calc_title:"Earnings Calculator",amount2:"Amount (ZUZU)",lock:"Lock Period",nft_have:"Have NFT?",early:"Early Badge",calc_btn:"Calculate",ret:"Total Return",avg:"Monthly Avg",boost:"Total Boost",
+token_title:"Tokenomics (Visualized)",road_title:"Roadmap",road_lead:"Clear plan focused on community, staking, NFT drops, listings."},
+tr:{nav_presale:"Ön Satış",nav_stake:"Stake",nav_nft:"NFT Ödülleri",nav_roadmap:"Yol Haritası",nav_token:"Tokonomi",connect:"Cüzdan Bağla",
+hero_badge:"Ön Satış • Stake ile NFT Kazan",hero_title:"ZUZU — Geleceğin Robotic Kirpisi 🦔⚡",hero_lead:"Stake et ve <b>ZUZU Maskot NFT</b> kazan. Sınırlı arz, yüksek <b>utility</b>.",
+cta_stake:"Stake Etmeye Başla",cta_nft:"NFT Ödülleri",collection_page:"Koleksiyon Sayfası",contract:"Kontrat:",days:"GÜN",hours:"SAAT",mins:"DAKİKA",secs:"SANİYE",
+presale_title:"Ön Satış — Geri Sayım",presale_lead:"ZUZU ön satışına hazır ol! <b>Sınırlı tahsis</b>, topluluğa özel fiyat.",amount:"Miktar (ZUZU)",
+w1:"1. Hafta (En Ucuz)",w2:"2. Hafta",w3:"3. Hafta",w4:"4. Hafta (Son Fırsat)",cost:"Maliyet:",buy:"Satın Al",exchanges:"Desteklenen Borsalar",
+stake_title:"Stake Pro — Kilitle, Kazan, NFT Kap ✨",stake_lead:"ZUZU’larını kilitle, <b>APY + NFT BOOST</b> ile pasif gelir elde et. Erken stake edenler rozet & airdrop önceliği alır.",
+calc_title:"Kazanç Hesaplayıcı",amount2:"Miktar (ZUZU)",lock:"Kilit Süresi",nft_have:"Elinde NFT var mı?",early:"Erken Rozet",calc_btn:"Hesapla",ret:"Toplam Getiri",avg:"Aylık Ortalama",boost:"Toplam Boost",
+token_title:"Tokonomi (Görselleştirilmiş)",road_title:"Yol Haritası",road_lead:"Topluluk, staking, NFT drop’ları ve listelemelere odaklı plan."},
+fr:{nav_presale:"Pré-vente",nav_stake:"Stake",nav_nft:"Récompenses NFT",nav_roadmap:"Feuille de route",nav_token:"Tokenomics",connect:"Connecter le Wallet",
+hero_badge:"Pré-vente • Stake pour gagner un NFT",hero_title:"ZUZU — Hérisson Robotique 🦔⚡",hero_lead:"Stake et gagne un <b>NFT Mascotte ZUZU</b>. Offre limitée, forte <b>utilité</b>.",
+cta_stake:"Commencer le Stake",cta_nft:"Récompenses NFT",collection_page:"Page de la Collection",contract:"Contrat :",days:"JOURS",hours:"HEURES",mins:"MINUTES",secs:"SECONDES",
+presale_title:"Pré-vente — Compte à rebours",presale_lead:"Prépare-toi à la pré-vente ZUZU ! <b>Allocation limitée</b>, prix communauté.",amount:"Montant (ZUZU)",
+w1:"Semaine 1 (Moins cher)",w2:"Semaine 2",w3:"Semaine 3",w4:"Semaine 4 (Dernière chance)",cost:"Coût :",buy:"Acheter",exchanges:"Bourses prises en charge",
+stake_title:"Stake Pro — Verrouille, Gagne, Reçois un NFT ✨",stake_lead:"Verrouille ton ZUZU, gagne <b>APY + BOOST NFT</b>. Badge & airdrop prioritaires pour les premiers.",
+calc_title:"Calculateur de gains",amount2:"Montant (ZUZU)",lock:"Période de verrouillage",nft_have:"Tu as un NFT ?",early:"Badge précoce",calc_btn:"Calculer",ret:"Gain total",avg:"Moyenne mensuelle",boost:"Boost total",
+token_title:"Tokenomics (Visualisé)",road_title:"Feuille de route",road_lead:"Plan axé sur la communauté, le staking, les drops NFT et les listings."},
+es:{nav_presale:"Pre-venta",nav_stake:"Stake",nav_nft:"Recompensas NFT",nav_roadmap:"Hoja de ruta",nav_token:"Tokenomics",connect:"Conectar Billetera",
+hero_badge:"Pre-venta • Stake para ganar NFT",hero_title:"ZUZU — Erizo Robótico 🦔⚡",hero_lead:"Haz stake y gana <b>NFT Mascota ZUZU</b>. Suministro limitado, gran <b>utilidad</b>.",
+cta_stake:"Empezar Stake",cta_nft:"Recompensas NFT",collection_page:"Página de Colección",contract:"Contrato:",days:"DÍAS",hours:"HORAS",mins:"MINUTOS",secs:"SEGUNDOS",
+presale_title:"Pre-venta — Cuenta regresiva",presale_lead:"¡Prepárate para la pre-venta ZUZU! <b>Asignación limitada</b>, precio para la comunidad.",amount:"Cantidad (ZUZU)",
+w1:"Semana 1 (Más barata)",w2:"Semana 2",w3:"Semana 3",w4:"Semana 4 (Última oportunidad)",cost:"Costo:",buy:"Comprar",exchanges:"Exchanges compatibles",
+stake_title:"Stake Pro — Bloquea, Gana, Obtén NFT ✨",stake_lead:"Bloquea tu ZUZU, gana <b>APY + BOOST NFT</b>. Primeros obtienen insignia y prioridad de airdrop.",
+calc_title:"Calculadora de ganancias",amount2:"Cantidad (ZUZU)",lock:"Periodo de bloqueo",nft_have:"¿Tienes NFT?",early:"Insignia temprana",calc_btn:"Calcular",ret:"Retorno total",avg:"Promedio mensual",boost:"Impulso total",
+token_title:"Tokenomics (Visualizado)",road_title:"Hoja de ruta",road_lead:"Plan centrado en comunidad, staking, drops NFT y listados."}
+};
+function t(lang){document.querySelectorAll("[data-i]").forEach(el=>{
+ const k=el.getAttribute("data-i"); if(I[lang]&&I[lang][k]) el.innerHTML=I[lang][k];
+});}
+const sel=document.getElementById("langSel"); sel.addEventListener("change",()=>t(sel.value)); t("en"); // default EN
+
+/* ==== Contract & links ==== */
+document.getElementById("contractDisplay").textContent=CONFIG.contractAddress.slice(0,6)+"..."+CONFIG.contractAddress.slice(-4);
+document.getElementById("contractDisplay2").textContent=CONFIG.contractAddress;
+document.getElementById("thirdwebNFTRoute").href=CONFIG.collectionUrl;
+document.getElementById("thirdwebNFTRoute2").href=CONFIG.collectionUrl;
+
+/* ==== Countdown ==== */
+function tick(){
+  const left=Math.max(0,CONFIG.launchAt-Date.now());
+  const d=Math.floor(left/864e5), h=Math.floor(left%864e5/36e5), m=Math.floor(left%36e5/6e4), s=Math.floor(left%6e4/1e3);
+  const pad=n=>n.toString().padStart(2,"0");
+  ["cdDays","cdHours","cdMins","cdSecs"].forEach((id,i)=>{
+    const v=[d,h,m,s][i]; const el=document.getElementById(id); if(!el)return;
+    if(el.textContent!==pad(v)){ el.textContent=pad(v); }
+  });
+}
+tick(); setInterval(tick,1000);
+
+/* ==== Pre-sale cost calc ==== */
+function updateCosts(){
+  const qty=parseFloat(document.getElementById("buyAmount").value||"0");
+  CONFIG.weekPrices.forEach((p,i)=>{
+    const cost=(qty*p)||0;
+    document.getElementById("p"+i).textContent=p.toFixed(4);
+    document.getElementById("c"+i).textContent=cost.toLocaleString();
+  });
+}
+document.getElementById("buyAmount").addEventListener("input",updateCosts); updateCosts();
+
+/* ==== NFT grid ==== */
+(function renderNFTs(){
+  const g=document.getElementById("nftGrid"); let html="";
+  CONFIG.nfts.forEach(n=>{
+    const img=`assets/images/mask/${n.id}.png`;
+    const link=`${CONFIG.collectionUrl}?tokenId=${n.id}`;
+    html+=`
+    <div class="nft">
+      <img src="${img}" alt="${n.name}" loading="lazy" onerror="this.style.display='none'">
+      <div class="meta"><div><b>${n.name}</b><div style="color:#9fb6e6">Supply: ${n.supply}</div></div>
+      <span class="tag">${n.rarity}</span></div>
+      <a class="z-btn z-btn-ghost" style="margin:0 10px 10px" href="${link}" target="_blank">View ↗</a>
+    </div>`;
+  });
+  g.innerHTML=html;
+})();
+
+/* ==== Calculator ==== */
+function setupCalc(){
+ const amount=document.getElementById("stakeAmount");
+ const duration=document.getElementById("stakeDuration");
+ const nft=document.getElementById("nftBoost");
+ const early=document.getElementById("earlyBoost");
+ const total=document.getElementById("resultTotal");
+ const monthly=document.getElementById("resultMonthly");
+ const boost=document.getElementById("resultBoost");
+ const apy={30:12,90:24,180:40,365:65,540:85};
+ const calc=()=>{
+   const a=parseFloat((amount.value||"0").toString().replace(/[^\d.]/g,""))||0;
+   const d=parseInt(duration.value,10)||0;
+   const base=apy[d]||0;
+   const nb=parseFloat(nft.value||"0"), eb=parseFloat(early.value||"0");
+   const tb=nb+eb;
+   const gross=a*((base+tb)/100)*(d/365);
+   const m=gross/(d/30);
+   total.textContent=(gross.toFixed(2))+" ZUZU";
+   monthly.textContent=(m.toFixed(2))+" ZUZU";
+   boost.textContent="+"+tb+"%";
+ };
+ document.getElementById("calcBtn").addEventListener("click",calc);
+ calc();
+}
+setupCalc();
+
+/* ==== Wallet Connect (MetaMask / Phantom / TON) ==== */
+const btn=document.getElementById("connectBtn");
+let tonUi;
+try{ tonUi=new TON_CONNECT_UI.TonConnectUI({manifestUrl:"https://ton-connect.github.io/demo-dapp-with-react-ui/tonconnect-manifest.json"});
+}catch(e){}
+btn.addEventListener("click",async()=>{
+  if(window.ethereum){ // MetaMask / EVM
+    try{
+      await window.ethereum.request({method:"eth_requestAccounts"});
+      btn.textContent="MetaMask ✓";
+      return;
+    }catch(e){}
+  }
+  if(window.solana && window.solana.isPhantom){ // Phantom
+    try{
+      await window.solana.connect(); btn.textContent="Phantom ✓"; return;
+    }catch(e){}
+  }
+  if(tonUi){ try{ await tonUi.openModal(); btn.textContent="TON ✓"; return;}catch(e){} }
+  alert("No wallet detected. Please install MetaMask, Phantom or TON Wallet.");
+});
+</script>
 </body>
 </html>
