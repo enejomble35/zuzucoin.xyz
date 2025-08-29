@@ -7,8 +7,9 @@
 <meta name="theme-color" content="#0e1522">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<!-- TonConnect UI (for TON) -->
+<!-- TON UI -->
 <script src="https://unpkg.com/@tonconnect/ui@2.0.9/dist/tonconnect-ui.min.js"></script>
+
 <style>
 :root{
   --bg:#0C1320;--panel:#0f1828;--muted:#8aa2c9;--txt:#e8f1ff;--brand:#7f9cff;
@@ -18,57 +19,67 @@
 html,body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
 a{color:#b8c7ff;text-decoration:none}
 img{max-width:100%;display:block}
-.z-container{width:min(1180px,92%);margin:0 auto}
+.z-container{width:min(1200px,92%);margin:0 auto}
+
+/* NAV */
 .z-nav{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(10,15,25,.9),rgba(10,15,25,.75));backdrop-filter:saturate(1.2) blur(8px);border-bottom:1px solid #16223a}
-.z-nav-inner{display:flex;align-items:center;justify-content:space-between;padding:.7rem 0}
+.z-nav-inner{display:flex;align-items:center;justify-content:space-between;padding:.7rem 0;gap:10px}
 .brand{display:flex;gap:.6rem;align-items:center;font-weight:800;letter-spacing:.3px}
-.brand img{width:34px;height:34px}
-.z-menu{display:flex;gap:14px;align-items:center}
-.z-menu a{padding:.45rem .75rem;border-radius:10px;background:transparent}
+.brand img{width:40px;height:40px}
+.z-menu{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.z-menu a{padding:.45rem .65rem;border-radius:10px;background:transparent;white-space:nowrap}
 .z-menu a:hover{background:#12203a}
 .lang{background:#0f1b31;border:1px solid #1c2a46;color:var(--txt);border-radius:10px;padding:.35rem .6rem}
-.z-btn{display:inline-flex;gap:.5rem;align-items:center;border:0;border-radius:12px;padding:.7rem 1.0rem;font-weight:700;cursor:pointer}
+.z-btn{display:inline-flex;gap:.5rem;align-items:center;border:0;border-radius:12px;padding:.7rem 1.0rem;font-weight:700;cursor:pointer;white-space:nowrap}
 .z-btn-primary{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#08101d}
 .z-btn-ghost{background:#12203a;color:#cfe2ff}
-.section-head h2{margin:.2rem 0 0;font-size:clamp(1.4rem,3.2vw,2rem)}
-.section-head p{color:var(--muted)}
+
+/* Section + headings */
 .z-section{padding:38px 0;border-top:1px solid #15243f}
+.section-head h2{margin:.2rem 0 .4rem;font-size:clamp(1.4rem,3.2vw,2rem)}
+.section-head p{color:var(--muted)}
 .z-chip{display:inline-flex;align-items:center;gap:.35rem;background:var(--chip);color:#cfe2ff;border:1px solid #1f2f50;border-radius:999px;padding:.4rem .7rem;font-size:.9rem}
 .z-chip-row{display:flex;gap:.5rem;flex-wrap:wrap}
 .badge{background:#172748;border:1px solid #263a63;color:#9eb9ff;padding:.3rem .55rem;border-radius:999px;font-size:.8rem}
-.grid-2{display:grid;grid-template-columns:1.2fr .8fr;gap:24px}
-@media(max-width:900px){.grid-2{grid-template-columns:1fr}}
-.hero{padding:34px 0 18px;background:radial-gradient(1200px 400px at 0% -10%,rgba(74,100,255,.18),transparent 45%),radial-gradient(800px 300px at 90% -20%,rgba(148,198,255,.16),transparent 40%)}
-.hero h1{font-size:clamp(2rem,4.6vw,3.2rem);margin:.2rem 0 .6rem;letter-spacing:.4px}
-.lead{color:#bfd2ff;font-size:1.05rem}
-.hero-cta{display:flex;gap:.6rem;margin:.8rem 0 1rem}
-.hero .full-img{border-radius:18px;overflow:hidden;background:#0f1727;border:1px solid #1c2b4d}
-.hero .full-img img{aspect-ratio:16/12;object-fit:cover}
+.grid-2{display:grid;grid-template-columns:1.1fr .9fr;gap:22px}
+@media(max-width:920px){.grid-2{grid-template-columns:1fr}}
 
-/* Flip countdown (simple) */
+/* HERO 2 — Büyük kirpi logo + yan sayaç */
+.hero-2{padding:34px 0 18px;background:
+  radial-gradient(1200px 400px at 0% -10%,rgba(74,100,255,.18),transparent 45%),
+  radial-gradient(800px 300px at 90% -20%,rgba(148,198,255,.16),transparent 40%)}
+.hero-2 h1{font-size:clamp(2rem,4.6vw,3.2rem);margin:.2rem 0 .6rem;letter-spacing:.4px}
+.lead{color:#bfd2ff;font-size:1.05rem}
+.hero-cta{display:flex;gap:.6rem;margin:.8rem 0 1rem;flex-wrap:wrap}
+.hero-visual{display:flex;justify-content:center;align-items:center}
+.hero-visual .logo-big{max-width:420px; width:100%; filter:drop-shadow(0 16px 36px rgba(0,0,0,.4))}
+.hero-banner{border-radius:18px;overflow:hidden;background:#0f1727;border:1px solid #1c2b4d}
+.hero-banner img{aspect-ratio:16/12;object-fit:cover}
+
+/* Flip countdown */
 .counter{display:flex;gap:14px;flex-wrap:wrap}
 .flip{width:92px;background:#13213a;border:1px solid #24385f;border-radius:14px;box-shadow:inset 0 -50px 60px rgba(0,0,0,.18);text-align:center}
 .flip .num{font-size:2rem;font-weight:800;padding:.6rem 0;color:#e9f2ff}
 .flip small{display:block;color:#9db3db;border-top:1px solid #203458;padding:.35rem 0 .5rem;font-weight:700;letter-spacing:1px}
 @media(max-width:520px){.flip{width:76px}.flip .num{font-size:1.7rem}}
 
-.presale{padding-top:8px}
+/* Presale */
 .presale-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 @media(max-width:900px){.presale-grid{grid-template-columns:1fr}}
 .card{background:var(--panel);border:1px solid #1b2a49;border-radius:16px;padding:16px}
 .buybox h4{margin:.2rem 0 .6rem}
 .buybox .price{color:#bcd1ff;font-weight:800}
-.buybox .cost{margin-top:.4rem;color:#8fb7ff}
+.buybox .cost{margin-top:.2rem;color:#8fb7ff}
 .buybox .row{display:flex; gap:.5rem}
 .buybox .row>*{flex:1}
 .input{width:100%;padding:.7rem;border-radius:12px;background:#0f1c33;border:1px solid #23395d;color:var(--txt)}
 .buy{display:flex;gap:.5rem;margin-top:.6rem}
 .buy .z-btn{flex:1;justify-content:center}
 
-/* Exchanges ticker (single row, big) */
+/* Exchanges ticker (single row, bigger) */
 .ticker{overflow:hidden;border:1px solid #1a2b4c;border-radius:16px;background:#0f1a30;padding:10px}
-.ticker__track{display:flex;gap:22px;align-items:center;animation:t 28s linear infinite}
-.ticker__item img{height:46px;opacity:.95;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
+.ticker__track{display:flex;gap:34px;align-items:center;animation:t 28s linear infinite}
+.ticker__item img{height:64px;opacity:.98;filter:drop-shadow(0 2px 8px rgba(0,0,0,.25))}
 @keyframes t{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .ex-note{color:#8ea7d3;font-style:italic;text-align:center;margin-top:8px}
 
@@ -93,29 +104,35 @@ img{max-width:100%;display:block}
 .stat .label{color:#90a9d6}
 .chart-wrap img{width:100%;border-radius:12px;border:1px solid #1d2d50;margin-top:10px}
 
-/* NFT grid */
-.nft-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-@media(max-width:980px){.nft-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:620px){.nft-grid{grid-template-columns:1fr}}
+/* NFT grid: Desktop 5 sütun (2 satır doğal), tablet 3-4, mobil 2 sütun */
+.nft-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+@media(max-width:1200px){.nft-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:992px){.nft-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){.nft-grid{grid-template-columns:repeat(2,1fr)}}
 .nft{background:#0f1a30;border:1px solid #1d2d50;border-radius:14px;overflow:hidden}
-.nft .meta{display:flex;justify-content:space-between;padding:10px}
+.nft img{width:100%;aspect-ratio:1/1;object-fit:cover}
+.nft .meta{display:flex;justify-content:space-between;align-items:center;padding:10px}
 .nft .tag{font-size:.75rem;background:#152748;color:#a8c2ff;border:1px solid #274075;border-radius:999px;padding:.25rem .5rem}
 
-/* Tokenomics donut */
+/* Tokenomics (SVG donut) */
 .tk{display:grid;grid-template-columns:1.1fr .9fr;gap:20px}
 @media(max-width:900px){.tk{grid-template-columns:1fr}}
 .legend{display:grid;gap:.45rem}
 .legend div{display:flex;align-items:center;gap:.55rem}
 .dot{width:12px;height:12px;border-radius:3px}
 
+/* Roadmap basit kart */
+.road{background:#0f1a30;border:1px solid #1d2d50;border-radius:14px;padding:12px}
+
 /* Footer */
 .z-footer{border-top:1px solid #15243f;padding:16px 0;color:#9cb6e6}
-.between{display:flex;justify-content:space-between}
+.between{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .center-v{align-items:center}
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <header class="z-nav">
   <div class="z-container z-nav-inner">
     <a class="brand" href="#"><img src="assets/images/logo.png" alt="ZUZU"><span>ZUZUCOIN</span></a>
@@ -138,23 +155,24 @@ img{max-width:100%;display:block}
 
 <main>
 
-<!-- HERO + COUNTDOWN -->
-<section class="z-section hero">
+<!-- HERO 2 (Büyük kirpi logo + sayaç) -->
+<section class="z-section hero-2">
   <div class="z-container grid-2">
     <div>
       <div class="badge" data-i="hero_badge">Pre-Sale • Stake to Win NFT</div>
       <h1 data-i="hero_title">ZUZU — Robotic Hedgehog 🦔⚡</h1>
-      <p class="lead" data-i="hero_lead">
-        Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high <b>utility</b>.
-      </p>
+      <p class="lead" data-i="hero_lead">Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high <b>utility</b>.</p>
       <div class="hero-cta">
         <a href="#stake" class="z-btn z-btn-primary" data-i="cta_stake">Start Staking</a>
         <a href="#nft" class="z-btn z-btn-ghost" data-i="cta_nft">NFT Rewards</a>
       </div>
       <div class="z-chip-row">
         <a id="thirdwebNFTRoute" class="z-chip" href="#" target="_blank" rel="noopener" data-i="collection_page">Collection Page</a>
-        <span class="z-chip" data-i="contract">Contract:</span> <span class="z-chip" id="contractDisplay">—</span>
+        <span class="z-chip" data-i="contract">Contract:</span>
+        <span class="z-chip" id="contractDisplay">—</span>
       </div>
+
+      <!-- RENKLİ FLIP COUNTDOWN -->
       <div class="counter" style="margin-top:14px">
         <div class="flip"><div id="cdDays" class="num">00</div><small data-i="days">DAYS</small></div>
         <div class="flip"><div id="cdHours" class="num">00</div><small data-i="hours">HOURS</small></div>
@@ -162,62 +180,80 @@ img{max-width:100%;display:block}
         <div class="flip"><div id="cdSecs" class="num">00</div><small data-i="secs">SECONDS</small></div>
       </div>
     </div>
-    <div class="full-img"><img src="assets/images/banner.jpg" alt="ZUZU hero"></div>
+
+    <div class="hero-visual">
+      <!-- BÜYÜK KİRPİ / LOGO -->
+      <img class="logo-big" src="assets/images/logo.png" alt="ZUZU big logo">
+    </div>
   </div>
 </section>
 
 <!-- PRE-SALE -->
-<section id="presale" class="z-section presale">
+<section id="presale" class="z-section">
   <div class="z-container">
     <div class="section-head">
       <h2 data-i="presale_title">Pre-Sale — Countdown</h2>
       <p  data-i="presale_lead">Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.</p>
     </div>
 
+    <!-- Miktar -->
     <div class="card" style="margin-bottom:12px">
       <label data-i="amount">Amount (ZUZU)</label>
       <input class="input" id="buyAmount" value="10000" inputmode="decimal">
     </div>
 
+    <!-- Haftalara göre satın alma kutuları -->
     <div class="presale-grid">
       <div class="card buybox">
         <h4 data-i="w1">Week 1 (Cheapest)</h4>
         <div class="price">1 ZUZU = <b id="p0">0.0050</b> USDT</div>
         <div class="cost" data-i="cost">Cost:</div> <div class="cost"><b id="c0">0</b> USDT</div>
-        <div class="buy"><button class="z-btn z-btn-primary" data-i="buy">Buy</button><button class="z-btn z-btn-ghost">Details</button></div>
+        <div class="buy">
+          <button class="z-btn z-btn-primary" data-i="buy">Buy</button>
+          <button class="z-btn z-btn-ghost">Details</button>
+        </div>
       </div>
       <div class="card buybox">
         <h4 data-i="w2">Week 2</h4>
         <div class="price">1 ZUZU = <b id="p1">0.0065</b> USDT</div>
         <div class="cost" data-i="cost">Cost:</div> <div class="cost"><b id="c1">0</b> USDT</div>
-        <div class="buy"><button class="z-btn z-btn-primary" data-i="buy">Buy</button><button class="z-btn z-btn-ghost">Details</button></div>
+        <div class="buy">
+          <button class="z-btn z-btn-primary" data-i="buy">Buy</button>
+          <button class="z-btn z-btn-ghost">Details</button>
+        </div>
       </div>
       <div class="card buybox">
         <h4 data-i="w3">Week 3</h4>
         <div class="price">1 ZUZU = <b id="p2">0.0080</b> USDT</div>
         <div class="cost" data-i="cost">Cost:</div> <div class="cost"><b id="c2">0</b> USDT</div>
-        <div class="buy"><button class="z-btn z-btn-primary" data-i="buy">Buy</button><button class="z-btn z-btn-ghost">Details</button></div>
+        <div class="buy">
+          <button class="z-btn z-btn-primary" data-i="buy">Buy</button>
+          <button class="z-btn z-btn-ghost">Details</button>
+        </div>
       </div>
       <div class="card buybox">
         <h4 data-i="w4">Week 4 (Last Chance)</h4>
         <div class="price">1 ZUZU = <b id="p3">0.0100</b> USDT</div>
         <div class="cost" data-i="cost">Cost:</div> <div class="cost"><b id="c3">0</b> USDT</div>
-        <div class="buy"><button class="z-btn z-btn-primary" data-i="buy">Buy</button><button class="z-btn z-btn-ghost">Details</button></div>
+        <div class="buy">
+          <button class="z-btn z-btn-primary" data-i="buy">Buy</button>
+          <button class="z-btn z-btn-ghost">Details</button>
+        </div>
       </div>
     </div>
 
-    <!-- Exchanges -->
+    <!-- EXCHANGES -->
     <div class="card" style="margin-top:16px">
       <h3 style="margin:0 0 10px" data-i="exchanges">Supported Exchanges</h3>
       <div class="ticker">
         <div class="ticker__track" id="exTrack">
-          <div class="ticker__item"><img src="assets/images/exchanges/gateio.png" alt="gate" loading="lazy"></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/kucoin.png" alt="kucoin" loading="lazy"></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/okx.png" alt="okx" loading="lazy"></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/mxc.png" alt="mexc" loading="lazy"></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/bitmart.png" alt="bitmart" loading="lazy"></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/bybit.png" alt="bybit" loading="lazy"></div>
-          <!-- duplicate for infinite loop -->
+          <div class="ticker__item"><img src="assets/images/exchanges/gateio.png" alt="Gate.io" loading="lazy"></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/kucoin.png" alt="KuCoin" loading="lazy"></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/okx.png" alt="OKX" loading="lazy"></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/mxc.png" alt="MEXC" loading="lazy"></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/bitmart.png" alt="Bitmart" loading="lazy"></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/bybit.png" alt="Bybit" loading="lazy"></div>
+          <!-- sonsuz loop için kopyalar -->
           <div class="ticker__item"><img src="assets/images/exchanges/gateio.png" alt=""></div>
           <div class="ticker__item"><img src="assets/images/exchanges/kucoin.png" alt=""></div>
           <div class="ticker__item"><img src="assets/images/exchanges/okx.png" alt=""></div>
@@ -252,6 +288,7 @@ img{max-width:100%;display:block}
         <li>540 days lock</li><li><b>85% APY</b></li><li>VIP rewards + airdrop priority</li></ul></div>
     </div>
 
+    <!-- HESAPLAYICI -->
     <div class="card calc">
       <h3 data-i="calc_title">Earnings Calculator</h3>
       <div class="calc-grid">
@@ -307,7 +344,7 @@ img{max-width:100%;display:block}
   </div>
 </section>
 
-<!-- TOKENOMICS -->
+<!-- TOKENOMICS (SVG donut + legend) -->
 <section id="tokenomics" class="z-section">
   <div class="z-container">
     <div class="section-head"><h2 data-i="token_title">Tokenomics (Visualized)</h2></div>
@@ -343,7 +380,7 @@ img{max-width:100%;display:block}
 <section id="roadmap" class="z-section">
   <div class="z-container">
     <div class="section-head"><h2 data-i="road_title">Roadmap</h2><p data-i="road_lead">Clear plan focused on community, staking, NFT drops, listings.</p></div>
-    <div class="card">
+    <div class="road">
       <ul>
         <li><b>Q1 — Core Setup</b>: Web, contract tests, community channels, security.</li>
         <li><b>Q2 — Pre-Sale & Stake</b>: Sale rounds, staking launch, Maskot NFT rewards.</li>
@@ -371,25 +408,29 @@ img{max-width:100%;display:block}
 <script>
 /* ========= ZUZU CONFIG ========= */
 const CONFIG={
+  // Thirdweb koleksiyon kontratı:
   contractAddress:"0xF2bbbEcB417725813BF5E940d678793fACDa9729",
   collectionUrl:"https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts",
-  launchAt: Date.now()+1000*60*60*24*17+1000*60*90, // 17 gün 1.5 saat
+  // Sayaç hedefi: (örnek) 17 gün + 1.5 saat
+  launchAt: Date.now()+1000*60*60*24*17 + 1000*60*90,
+  // Haftalık fiyatlar:
   weekPrices:[0.0050,0.0065,0.0080,0.0100], // USDT
+  // NFT Maskotlar:
   nfts:[
-    {id:0,name:"ZUZU Hero",      rarity:"Epic",   supply:200},
-    {id:1,name:"ZUZU Rogue",     rarity:"Rare",   supply:2500},
-    {id:2,name:"ZUZU Berserker", rarity:"Epic",   supply:800},
-    {id:3,name:"ZUZU Hacker",    rarity:"Rare",   supply:600},
-    {id:4,name:"ZUZU Sorceress", rarity:"Epic",   supply:750},
-    {id:5,name:"ZUZU Warrior",   rarity:"Rare",   supply:900},
-    {id:6,name:"ZUZU Maiden",    rarity:"Rare",   supply:1100},
-    {id:7,name:"ZUZU Ranger",    rarity:"Rare",   supply:1000},
-    {id:8,name:"ZUZU Scientist", rarity:"Epic",   supply:1100},
+    {id:0,name:"ZUZU Hero",      rarity:"Epic",      supply:200},
+    {id:1,name:"ZUZU Rogue",     rarity:"Rare",      supply:2500},
+    {id:2,name:"ZUZU Berserker", rarity:"Epic",      supply:800},
+    {id:3,name:"ZUZU Hacker",    rarity:"Rare",      supply:600},
+    {id:4,name:"ZUZU Sorceress", rarity:"Epic",      supply:750},
+    {id:5,name:"ZUZU Warrior",   rarity:"Rare",      supply:900},
+    {id:6,name:"ZUZU Maiden",    rarity:"Rare",      supply:1100},
+    {id:7,name:"ZUZU Ranger",    rarity:"Rare",      supply:1000},
+    {id:8,name:"ZUZU Scientist", rarity:"Epic",      supply:1100},
     {id:9,name:"ZUZU Titan",     rarity:"Legendary", supply:250}
   ]
 };
 
-/* ===== Language (EN default) ===== */
+/* ===== Language (EN default; TR/FR/ES) ===== */
 const I={
 en:{nav_presale:"Pre-Sale",nav_stake:"Stake",nav_nft:"NFT Rewards",nav_roadmap:"Roadmap",nav_token:"Tokenomics",connect:"Connect Wallet",
 hero_badge:"Pre-Sale • Stake to Win NFT",hero_title:"ZUZU — Robotic Hedgehog 🦔⚡",hero_lead:"Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high <b>utility</b>.",
@@ -440,10 +481,8 @@ function tick(){
   const left=Math.max(0,CONFIG.launchAt-Date.now());
   const d=Math.floor(left/864e5), h=Math.floor(left%864e5/36e5), m=Math.floor(left%36e5/6e4), s=Math.floor(left%6e4/1e3);
   const pad=n=>n.toString().padStart(2,"0");
-  ["cdDays","cdHours","cdMins","cdSecs"].forEach((id,i)=>{
-    const v=[d,h,m,s][i]; const el=document.getElementById(id); if(!el)return;
-    if(el.textContent!==pad(v)){ el.textContent=pad(v); }
-  });
+  const ids=["cdDays","cdHours","cdMins","cdSecs"];
+  [d,h,m,s].forEach((v,i)=>{ const el=document.getElementById(ids[i]); if(el && el.textContent!==pad(v)) el.textContent=pad(v); });
 }
 tick(); setInterval(tick,1000);
 
@@ -452,13 +491,15 @@ function updateCosts(){
   const qty=parseFloat(document.getElementById("buyAmount").value||"0");
   CONFIG.weekPrices.forEach((p,i)=>{
     const cost=(qty*p)||0;
-    document.getElementById("p"+i).textContent=p.toFixed(4);
-    document.getElementById("c"+i).textContent=cost.toLocaleString();
+    const priceEl=document.getElementById("p"+i);
+    const costEl=document.getElementById("c"+i);
+    if(priceEl) priceEl.textContent=p.toFixed(4);
+    if(costEl)  costEl.textContent=cost.toLocaleString();
   });
 }
 document.getElementById("buyAmount").addEventListener("input",updateCosts); updateCosts();
 
-/* ==== NFT grid ==== */
+/* ==== NFT grid (5 sütun desktop, 2 sütun mobil) ==== */
 (function renderNFTs(){
   const g=document.getElementById("nftGrid"); let html="";
   CONFIG.nfts.forEach(n=>{
@@ -467,8 +508,13 @@ document.getElementById("buyAmount").addEventListener("input",updateCosts); upda
     html+=`
     <div class="nft">
       <img src="${img}" alt="${n.name}" loading="lazy" onerror="this.style.display='none'">
-      <div class="meta"><div><b>${n.name}</b><div style="color:#9fb6e6">Supply: ${n.supply}</div></div>
-      <span class="tag">${n.rarity}</span></div>
+      <div class="meta">
+        <div>
+          <b>${n.name}</b>
+          <div style="color:#9fb6e6;font-size:.9rem">Supply: ${n.supply.toLocaleString()}</div>
+        </div>
+        <span class="tag">${n.rarity}</span>
+      </div>
       <a class="z-btn z-btn-ghost" style="margin:0 10px 10px" href="${link}" target="_blank">View ↗</a>
     </div>`;
   });
@@ -505,8 +551,7 @@ setupCalc();
 /* ==== Wallet Connect (MetaMask / Phantom / TON) ==== */
 const btn=document.getElementById("connectBtn");
 let tonUi;
-try{ tonUi=new TON_CONNECT_UI.TonConnectUI({manifestUrl:"https://ton-connect.github.io/demo-dapp-with-react-ui/tonconnect-manifest.json"});
-}catch(e){}
+try{ tonUi=new TON_CONNECT_UI.TonConnectUI({manifestUrl:"https://ton-connect.github.io/demo-dapp-with-react-ui/tonconnect-manifest.json"}); }catch(e){}
 btn.addEventListener("click",async()=>{
   if(window.ethereum){ // MetaMask / EVM
     try{
