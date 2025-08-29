@@ -25,7 +25,19 @@
         <a href="#roadmap">Roadmap</a>
         <a href="#tokenomics">Tokenomics</a>
       </nav>
-
+<!-- Dil seçici + Cüzdan -->
+<div class="z-nav-actions">
+  <select id="langSelect" class="z-lang">
+    <option value="en">EN</option>
+    <option value="tr">TR</option>
+    <option value="ru">RU</option>
+    <option value="hi">HI</option>
+    <option value="zh">中文</option>
+    <option value="es">ES</option>
+    <option value="pt">PT</option>
+  </select>
+  <button id="connectWallet" class="z-btn z-btn-outline">Connect Wallet</button>
+</div>
       <div class="z-actions">
         <select id="langSel" class="lang">
           <option value="en" selected>EN</option>
@@ -53,27 +65,48 @@
   <main id="zzu">
     <!-- HERO -->
     <section class="z-hero">
-      <div class="z-container z-grid-2">
-        <div>
-          <div class="kicker">Pre-Sale • Stake to Win NFT</div>
-          <h1>ZUZU — Robotic Hedgehog 🦔⚡</h1>
-          <p class="lead">
-            Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high <b>utility</b>.
-          </p>
-          <div class="z-cta">
-            <a href="#stake" class="z-btn z-btn-primary">Start Staking</a>
-            <a href="#nft" class="z-btn z-btn-ghost">NFT Rewards</a>
-          </div>
-          <div class="z-chip-row">
-            <a class="z-chip" id="thirdwebNFTRoute" target="_blank" rel="noopener">Collection Page</a>
-            <span class="z-chip">Contract: <span id="contractDisplay">—</span></span>
-          </div>
+    <section class="z-hero-2" id="home">
+  <div class="z-container">
+    <div class="hero-head">
+      <h1 data-i18n="heroTitle">ZUZU — Robotic Hedgehog</h1>
+      <p class="lead" data-i18n="heroSub">
+        Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high utility.
+      </p>
+      <div class="hero-actions">
+        <a href="#nft" class="z-btn z-btn-primary" data-i18n="btnNft">NFT Rewards</a>
+        <a href="#" id="thirdwebNFTRoute" class="z-btn z-btn-ghost" target="_blank" rel="noopener" data-i18n="btnCollection">Collection Page</a>
+        <span class="z-chip"><span data-i18n="contract">Contract</span>: <b id="contractDisplay">—</b></span>
+      </div>
+    </div>
+
+    <div class="hero-body">
+      <!-- Büyük ZUZU logosu -->
+      <div class="hero-logo">
+        <img src="assets/images/branding/zuzu-coin-3d.png" alt="ZUZU" />
+      </div>
+
+      <!-- Flip sayaç -->
+      <div class="flip-counter" aria-label="Pre-sale countdown">
+        <div class="flip">
+          <div class="flip__num" id="cdDays">00</div>
+          <div class="flip__label" data-i18n="days">DAYS</div>
         </div>
-        <div class="full-img hero-img">
-          <img src="assets/images/banner.jpg" alt="ZUZU hero">
+        <div class="flip">
+          <div class="flip__num" id="cdHours">00</div>
+          <div class="flip__label" data-i18n="hours">HOURS</div>
+        </div>
+        <div class="flip">
+          <div class="flip__num" id="cdMins">00</div>
+          <div class="flip__label" data-i18n="minutes">MINUTES</div>
+        </div>
+        <div class="flip">
+          <div class="flip__num" id="cdSecs">00</div>
+          <div class="flip__label" data-i18n="seconds">SECONDS</div>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
     <!-- PRE-SALE COUNTDOWN (Borsaların üstünde) -->
     <section class="z-section presale" id="presale">
@@ -141,20 +174,23 @@
 
     <!-- EXCHANGES – Desteklenen Borsalar (4x büyük ve kayar) -->
     <section id="exchanges" class="exchanges">
-      <div class="z-container">
-        <h3 class="section-title">Supported Exchanges</h3>
-      </div>
-      <div class="ticker" aria-label="Supported Exchanges">
-        <ul class="ticker__track" id="exTrack">
-          <li class="ticker__item"><img src="assets/images/exchanges/bybit.png"   alt="Bybit"   loading="lazy"></li>
-          <li class="ticker__item"><img src="assets/images/exchanges/gateio.png"  alt="Gate.io" loading="lazy"></li>
-          <li class="ticker__item"><img src="assets/images/exchanges/kucoin.png"  alt="KuCoin"  loading="lazy"></li>
-          <li class="ticker__item"><img src="assets/images/exchanges/okx.png"     alt="OKX"     loading="lazy"></li>
-          <li class="ticker__item"><img src="assets/images/exchanges/mxc.png"     alt="MEXC"    loading="lazy"></li>
-          <li class="ticker__item"><img src="assets/images/exchanges/bitmart.png" alt="Bitmart" loading="lazy"></li>
-        </ul>
-      </div>
-    </section>
+  <div class="z-container">
+    <h3 class="section-title" data-i18n="supportedEx">Supported Exchanges</h3>
+
+    <div class="ticker">
+      <ul class="ticker__track" id="exTrack">
+        <li class="ticker__item"><img src="assets/images/exchanges/gateio.png"  alt="gate.io"></li>
+        <li class="ticker__item"><img src="assets/images/exchanges/kucoin.png"  alt="KuCoin"></li>
+        <li class="ticker__item"><img src="assets/images/exchanges/okx.png"     alt="OKX"></li>
+        <li class="ticker__item"><img src="assets/images/exchanges/mxc.png"     alt="MEXC"></li>
+        <li class="ticker__item"><img src="assets/images/exchanges/bitmart.png" alt="Bitmart"></li>
+        <li class="ticker__item"><img src="assets/images/exchanges/bybit.png"   alt="Bybit"></li>
+      </ul>
+    </div>
+
+    <p class="soon" data-i18n="willBeListed">Will be listed soon</p>
+  </div>
+</section>
 
     <!-- COMMUNITY -->
     <section class="z-section" id="topluluk">
@@ -265,32 +301,27 @@
     </section>
 
     <!-- TOKENOMICS -->
-    <section class="z-section" id="tokenomics">
-      <div class="z-container">
-        <div class="section-head">
-          <h2>Tokenomics</h2>
-          <p>Fair distribution, sustainable reward economy & reserve plan.</p>
-        </div>
-        <div class="tokogrid">
-          <div class="tokotext">
-            <h4>Supply</h4>
-            <p>1,000,000,000</p>
-            <ul>
-              <li>Community — 35%</li>
-              <li>Liquidity — 20%</li>
-              <li>Team (12m lock) — 15%</li>
-              <li>Treasury — 10%</li>
-              <li>Staking Rewards — 15%</li>
-              <li>Partners — 5%</li>
-            </ul>
-          </div>
-          <div class="tokoimg">
-            <img src="assets/images/tokonomics.png" alt="Tokenomics chart">
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
+<section class="z-section" id="tokenomics">
+  <div class="z-container">
+    <div class="section-head">
+      <h2 data-i18n="tokenomics">Tokenomics (Visualized)</h2>
+      <p data-i18n="tokenomicsDesc">Fair distribution, sustainable reward economy & reserve plan.</p>
+    </div>
+
+    <div class="tokenomics-wrap">
+      <canvas id="tokenomicsChart" width="520" height="320"></canvas>
+
+      <ul class="legend">
+        <li><span class="dot c1"></span><b data-i18n="legCommunity">Community</b> — 35%</li>
+        <li><span class="dot c2"></span><b data-i18n="legLiquidity">Liquidity</b> — 20%</li>
+        <li><span class="dot c3"></span><b data-i18n="legTeam">Team</b> — 15% <small>(12 mo lock)</small></li>
+        <li><span class="dot c4"></span><b data-i18n="legTreasury">Treasury</b> — 10%</li>
+        <li><span class="dot c5"></span><b data-i18n="legStaking">Staking Rewards</b> — 15%</li>
+        <li><span class="dot c6"></span><b data-i18n="legPartners">Advisors/Partners</b> — 5%</li>
+      </ul>
+    </div>
+  </div>
+</section>
 
   <!-- Footer -->
   <footer class="z-footer">
