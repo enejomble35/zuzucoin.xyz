@@ -1,177 +1,152 @@
-/* =============== Global Base =============== */
 :root{
-  --bg:#0e1522; --card:#131b2a; --text:#e6f1ff; --muted:#9fb3c8;
-  --accent:#28d1ff; --accent-2:#7a5cff;
+  --bg:#0b1220;
+  --card:#101a2c;
+  --muted:#7f8ca6;
+  --txt:#e6efff;
+  --primary:#6c8cff; /* mavi-mor */
+  --accent:#7dfcff;  /* aqua */
+  --chip:#152239;
+  --green:#56d364;
+  --yellow:#ffcc66;
+  --danger:#ff6b6b;
 }
 *{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto}
+img{max-width:100%;display:block}
+a{color:var(--accent);text-decoration:none}
+.mono{font-family:ui-monospace,Consolas,monaco,monospace}
+
+/* NAV */
+.z-nav{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(11,18,32,.9),rgba(11,18,32,.7));backdrop-filter: blur(10px);border-bottom:1px solid #15213a}
+.z-nav-inner{max-width:1200px;margin:0 auto;display:flex;gap:16px;align-items:center;justify-content:space-between;padding:10px 16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;color:#fff;font-size:18px}
+.brand-logo{height:28px;width:auto}
+.z-menu{display:flex;gap:12px;align-items:center}
+.z-menu a{padding:8px 10px;border-radius:8px;color:#cfe1ff}
+.z-menu a:hover{background:#0f1b31}
+.z-controls{display:flex;align-items:center;gap:10px}
+.z-select{background:#0f1b31;border:1px solid #223357;color:#cfe1ff;border-radius:8px;padding:8px}
+
+/* Buttons */
+.z-btn{padding:10px 14px;border-radius:10px;border:1px solid #20345b;background:#14203a;color:#cfe1ff;font-weight:600}
+.z-btn:hover{background:#0f1a31}
+.z-btn-primary{background:linear-gradient(135deg,#6c8cff,#7dfcff);color:#08101f;border:none}
+.z-btn-primary:hover{opacity:.92}
+.z-btn-outline{background: transparent;border:1px solid #304a7d}
+.z-btn-ghost{background:#0f1b31;color:#b9cfff;border:1px solid #1f2f53}
+
+/* Sections */
+.z-section{padding:56px 0;border-top:1px solid #101a2c}
+.z-container{max-width:1200px;margin:0 auto;padding:0 16px}
+.z-grid-2{display:grid;grid-template-columns:1.1fr .9fr;gap:28px}
+.section-head h2{margin:0 0 8px}
+.section-head p{color:var(--muted);margin:6px 0 0}
+.full-img{border-radius:16px;overflow:hidden;border:1px solid #1a2947;background:#0f1830}
+.z-badge{display:inline-block;padding:6px 10px;background:#11203a;border:1px solid #223357;color:#a9c3ff;border-radius:999px;margin-bottom:10px}
+
+/* HERO */
+.z-hero h1{font-size:36px;margin:8px 0 10px}
+.z-hero .lead{color:#c4d6ff}
+
+/* Chip row */
+.z-chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.z-chip{background:var(--chip);border:1px solid #1f2e4d;color:#cfe1ff;padding:8px 10px;border-radius:999px}
+
+/* Presale counter */
+.counter{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0 10px}
+.ctr{background:#0f1b31;border:1px solid #24385f;border-radius:12px;padding:10px 8px;text-align:center}
+.ctr span{display:block;font-size:38px;font-weight:800;letter-spacing:1px;background:linear-gradient(180deg,#12223e,#0a152a);border:1px solid #1f304f;border-radius:12px;padding:12px 0}
+.ctr small{display:block;margin-top:6px;color:#a6b9da;font-weight:700;letter-spacing:.5px}
+
+.presale-input{margin:14px 0 10px;display:grid;grid-template-columns:1fr;gap:6px}
+.presale-input input{background:#0f1b31;border:1px solid #223357;color:#cfe1ff;border-radius:10px;padding:10px}
+.presale-input small{color:#8297bf}
+
+.week-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:12px}
+.week-card{background:#0f1b31;border:1px solid #24385f;border-radius:14px;padding:14px}
+.week-card .w-title{font-weight:800;margin-bottom:6px}
+.week-card .w-price{color:#bfe4ff;margin:6px 0}
+.week-card .w-cost{color:#9ab3d8;margin:6px 0}
+.w-actions{display:flex;gap:8px;margin-top:8px}
+
+/* Exchanges marquee */
+.exchanges{padding-top:34px}
+.section-title{margin:0 0 10px}
+.ticker{position:relative;overflow:hidden;border:1px solid #1c2c4d;border-radius:12px;background:#0f1b31}
+.ticker__track{display:flex;gap:50px;align-items:center;animation:scroll 35s linear infinite;padding:12px 24px}
+.ticker__item img{height:100px; /* 4× büyütüldü */ filter:drop-shadow(0 6px 16px rgba(0,0,0,.45))}
+@keyframes scroll{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
 }
 
-/* =============== Header =============== */
-.z-nav{
-  position:sticky; top:0; z-index:50;
-  background:rgba(8,12,20,.7);
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid rgba(255,255,255,.06);
-}
-.z-nav-inner{
-  width:min(1180px,92%); margin-inline:auto; display:flex; align-items:center; justify-content:space-between; height:64px;
-}
-.brand{display:flex; align-items:center; gap:10px; color:#fff; text-decoration:none; font-weight:800; letter-spacing:.3px}
-.brand img{width:28px;height:28px;object-fit:contain}
-.z-menu{display:flex; gap:16px; align-items:center}
-.z-menu a{color:#d9e7ff; text-decoration:none; font-weight:600; padding:.45rem .7rem; border-radius:10px; border:1px solid transparent}
-.z-menu a:hover{background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.08)}
-.z-btn{display:inline-flex; align-items:center; justify-content:center; border-radius:10px; padding:.6rem 1rem; border:1px solid rgba(255,255,255,.08); text-decoration:none; color:#fff}
-.z-btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2)); border-color:transparent}
-.z-btn-ghost{background:transparent}
-@media (max-width:860px){ .z-menu{display:none} }
-
-/* =============== Scoped ZUZU Block =============== */
-#zzu { --bg:#0e1522; --card:#131b2a; --muted:#9fb3c8; --text:#e6f1ff;
-       --accent:#28d1ff; --accent-2:#7a5cff; --accent-3:#00ffa8; }
-#zzu img{max-width:100%;display:block}
-#zzu .z-container{ width:min(1180px, 92%); margin-inline:auto; }
-#zzu .flex{display:flex;gap:.75rem}
-#zzu .center-v{align-items:center}
-#zzu .between{justify-content:space-between}
-#zzu .z-grid-2{display:grid;grid-template-columns:1.1fr .9fr;gap:2rem}
-#zzu .z-section{ padding:72px 0;color:var(--text) }
-#zzu .section-head{margin-bottom:28px}
-#zzu .section-head h2{font-size:2rem;margin:0 0 .5rem}
-#zzu .section-head p{color:var(--muted)}
-#zzu .z-hero{padding:80px 0 40px;background:
-     radial-gradient(1200px 600px at 10% -20%, rgba(39,179,255,.2) 0, transparent 60%),
-     radial-gradient(600px 400px at 90% 10%, rgba(122,92,255,.2) 0, transparent 60%)}
-#zzu .z-hero h1{font-size:2.4rem;margin:0 0 .4rem}
-#zzu .z-hero .lead{color:var(--muted);font-size:1.08rem}
-#zzu .z-cta{display:flex;gap:12px;margin-top:16px}
-#zzu .full-img{border-radius:14px;border:1px solid rgba(255,255,255,.06);background:#0b1220;overflow:hidden}
-#zzu .z-chip-row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
-#zzu .z-chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);padding:.4rem .7rem;border-radius:999px;text-decoration:none;color:#e9f3ff}
-
-/* Stake Pro */
-#zzu .stake-pro .stake-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:14px 0 24px}
-#zzu .stake-card{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px 14px}
-#zzu .stake-card .tier{margin:.2rem 0 .4rem;font-size:1.05rem}
-#zzu .tier.silver{color:#cbd9ff}
-#zzu .tier.gold{color:#ffd86b}
-#zzu .tier.diamond{color:#9ad7ff}
-#zzu .tier.obsidian{color:#a7ffd1}
-#zzu .stake-card ul{padding:0 0 0 1rem;margin:.5rem 0 0}
-#zzu .stake-card li{margin:.25rem 0}
+/* Stake */
+.stake-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:12px}
+.stake-card{background:#0f1b31;border:1px solid #24385f;border-radius:14px;padding:14px}
+.tier{font-weight:800;margin-bottom:8px}
+.tier.silver{color:#cfe5ff}
+.tier.gold{color:#ffd98c}
+.tier.diamond{color:#a9e4ff}
+.tier.obsidian{color:#c1b0ff}
 
 /* Calculator */
-#zzu .calculator{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.005));
-  border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px 16px}
-#zzu .calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}
-#zzu .calculator label{font-size:.86rem;color:#a5b7ce}
-#zzu .calculator input,#zzu .calculator select{width:100%;background:#0c1321;border:1px solid rgba(255,255,255,.08);border-radius:10px;color:#e9f3ff;padding:.6rem .7rem}
-#zzu .calc-result{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
-#zzu .stat{background:#0f1728;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px}
-#zzu .stat .label{font-size:.85rem;color:#a6b6cc}
-#zzu .stat .value{font-weight:700;font-size:1.15rem}
-#zzu .chart-wrap{margin-top:16px;border:1px dashed rgba(255,255,255,.1);border-radius:12px;padding:10px}
+.calculator{margin-top:18px;background:#0f1b31;border:1px solid #24385f;border-radius:14px;padding:16px}
+.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.calc-grid input,.calc-grid select{width:100%;background:#0c1830;border:1px solid #20345b;color:#d9e7ff;border-radius:10px;padding:10px}
+.flex{margin-top:8px}
+.calc-result{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+.stat{background:#0c1830;border:1px solid #20345b;border-radius:12px;padding:12px}
+.stat .label{color:#a6b9da}
+.stat .value{font-size:18px;font-weight:800;margin-top:6px}
+.chart-wrap{margin-top:10px;border:1px dashed #20345b;border-radius:10px;overflow:hidden}
 
-/* NFT Grid */
-#zzu .nft-rewards .nft-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
-#zzu .nft-card{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;color:#e6f1ff;text-decoration:none}
-#zzu .nft-card .media{aspect-ratio:1/1;background:#0b1220;display:flex;align-items:center;justify-content:center}
-#zzu .nft-card img{max-height:260px;object-fit:cover}
-#zzu .nft-card .meta{padding:10px 12px}
-#zzu .nft-card .meta h4{margin:.1rem 0 .25rem;font-size:1rem}
-#zzu .nft-card .meta p{margin:.15rem 0;color:#a8bbd2;font-size:.92rem}
-#zzu .nft-card .foot{margin-top:auto;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,.06)}
-#zzu .badge{font-size:.8rem;padding:.15rem .5rem;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06)}
-#zzu .badge.rare{color:#ffd86b;border-color:#ffd86b33;background:#ffd86b14}
-#zzu .badge.epic{color:#9ad7ff;border-color:#9ad7ff33;background:#9ad7ff14}
-#zzu .badge.legend{color:#a7ffd1;border-color:#a7ffd133;background:#a7ffd114}
+/* NFT grid */
+.nft-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.nft-card{background:#0f1b31;border:1px solid #24385f;border-radius:14px;overflow:hidden}
+.nft-card .cap{padding:12px;border-top:1px solid #223357;display:flex;align-items:center;justify-content:space-between}
+.badge{font-size:12px;padding:4px 8px;border-radius:999px;border:1px solid #2a3f6a;background:#122240;color:#bfe4ff}
 
-/* Presale */
-#zzu .presale .counter{display:flex;gap:14px;justify-content:center;margin:18px 0}
-#zzu .presale .ctr{background:var(--card);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 14px;text-align:center;min-width:90px}
-#zzu .presale .ctr span{font-size:1.6rem;font-weight:800;display:block}
-#zzu .presale .ctr small{color:#a9b9cf;font-size:.78rem}
-#zzu .presale .presale-cta{display:flex;gap:10px;justify-content:center;margin-top:12px}
+/* Roadmap */
+.roadmap-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:6px}
+.rm-card{background:#0f1b31;border:1px solid #24385f;border-radius:14px;padding:14px;position:relative}
+.rm-dot{position:absolute;left:10px;top:10px;width:10px;height:10px;background:#7dfcff;border-radius:50%}
+.margin-top{margin-top:12px}
+
+/* Tokenomics */
+.tok-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+.tok-card{background:#0f1b31;border:1px solid #24385f;border-radius:14px;padding:14px}
+.tok-card .big{font-size:28px;font-weight:800;margin:6px 0 10px}
+.tok-img{max-width:420px;margin:0 auto}
 
 /* Footer */
-.z-footer{border-top:1px solid rgba(255,255,255,.06);padding:22px 0;background:#0b1120}
+.z-footer{padding:20px 0;border-top:1px solid #15213a;background:#0b1220;color:#9ab3d8}
+
+/* Modal */
+.modal[hidden]{display:none}
+.modal{position:fixed;inset:0;z-index:80}
+.modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.55)}
+.modal-box{position:relative;z-index:1;max-width:560px;margin:10vh auto;background:#0f1b31;border:1px solid #24385f;border-radius:14px;padding:16px}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.modal-x{background:#14223c;border:1px solid #2e497e;color:#cfe1ff;border-radius:8px;padding:6px 8px}
+.wallet-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.wallet-item{display:flex;flex-direction:column;align-items:center;gap:8px;background:#0c1830;border:1px solid #20345b;border-radius:12px;padding:14px;color:#d9e7ff}
+.wallet-item img{width:34px;height:34px}
+.modal-foot{margin-top:8px;color:#9ab3d8}
 
 /* Responsive */
 @media (max-width:1024px){
-  #zzu .z-grid-2{grid-template-columns:1fr}
-  #zzu .stake-pro .stake-grid{grid-template-columns:repeat(3,1fr)}
-  #zzu .nft-rewards .nft-grid{grid-template-columns:repeat(3,1fr)}
-  #zzu .calc-grid{grid-template-columns:repeat(2,1fr)}
+  .z-grid-2{grid-template-columns:1fr}
+  .stake-grid{grid-template-columns:repeat(3,1fr)}
+  .calc-grid{grid-template-columns:repeat(2,1fr)}
+  .calc-result{grid-template-columns:1fr}
+  .week-grid{grid-template-columns:repeat(2,1fr)}
+  .nft-grid{grid-template-columns:repeat(2,1fr)}
+  .roadmap-cards{grid-template-columns:repeat(2,1fr)}
+  .tok-grid{grid-template-columns:1fr}
 }
-@media (max-width:640px){
-  #zzu .stake-pro .stake-grid{grid-template-columns:repeat(2,1fr)}
-  #zzu .nft-rewards .nft-grid{grid-template-columns:repeat(2,1fr)}
-  #zzu .calc-result{grid-template-columns:1fr}
-}
-/* === EXCHANGES / Ticker === */
-.exchanges {
-  padding: 48px 0 32px;
-  position: relative;
-}
-
-.section-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin: 0 0 16px;
-  color: #e9eef9;
-}
-
-.ticker {
-  --gap: 56px;
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  border-radius: 14px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  padding: 18px 0;
-  /* kenarlara fade */
-  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
-          mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
-  border: 1px solid rgba(255,255,255,0.06);
-}
-
-.ticker__track {
-  display: flex;
-  align-items: center;
-  gap: var(--gap);
-  width: max-content;
-  animation: ticker-scroll 18s linear infinite;
-  will-change: transform;
-}
-
-.ticker:hover .ticker__track {
-  animation-play-state: paused; /* hover'da durur */
-}
-
-.ticker__item img {
-  height: 32px;
-  width: auto;
-  display: block;
-  opacity: .85;
-  filter: grayscale(100%) contrast(1.1) brightness(1.05);
-  transition: transform .25s ease, opacity .25s ease, filter .25s ease;
-}
-
-@media (min-width: 768px) {
-  .ticker__item img { height: 40px; }
-}
-
-.ticker__item img:hover {
-  opacity: 1;
-  filter: none;
-  transform: translateY(-2px) scale(1.05);
-}
-
-@keyframes ticker-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); } /* JS eliyle içerik iki katına çıkacağı için 50% */
+@media (max-width:600px){
+  .counter{grid-template-columns:repeat(2,1fr)}
+  .stake-grid{grid-template-columns:repeat(2,1fr)}
+  .week-grid{grid-template-columns:1fr}
+  .nft-grid{grid-template-columns:1fr}
 }
