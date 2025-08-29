@@ -112,3 +112,66 @@ body{
   #zzu .nft-rewards .nft-grid{grid-template-columns:repeat(2,1fr)}
   #zzu .calc-result{grid-template-columns:1fr}
 }
+/* === EXCHANGES / Ticker === */
+.exchanges {
+  padding: 48px 0 32px;
+  position: relative;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 16px;
+  color: #e9eef9;
+}
+
+.ticker {
+  --gap: 56px;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  padding: 18px 0;
+  /* kenarlara fade */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.ticker__track {
+  display: flex;
+  align-items: center;
+  gap: var(--gap);
+  width: max-content;
+  animation: ticker-scroll 18s linear infinite;
+  will-change: transform;
+}
+
+.ticker:hover .ticker__track {
+  animation-play-state: paused; /* hover'da durur */
+}
+
+.ticker__item img {
+  height: 32px;
+  width: auto;
+  display: block;
+  opacity: .85;
+  filter: grayscale(100%) contrast(1.1) brightness(1.05);
+  transition: transform .25s ease, opacity .25s ease, filter .25s ease;
+}
+
+@media (min-width: 768px) {
+  .ticker__item img { height: 40px; }
+}
+
+.ticker__item img:hover {
+  opacity: 1;
+  filter: none;
+  transform: translateY(-2px) scale(1.05);
+}
+
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); } /* JS eliyle içerik iki katına çıkacağı için 50% */
+}
