@@ -2,85 +2,85 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>ZUZUCOIN — Robotic Hedgehog</title>
-<meta name="theme-color" content="#0b1324" />
-<link rel="preconnect" href="https://unpkg.com" />
-<link rel="dns-prefetch" href="https://unpkg.com" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ZUZUCOIN – Robotic Hedgehog</title>
+<meta name="theme-color" content="#0b1220" />
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link rel="preconnect" href="https://unpkg.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
   :root{
-    --bg:#0b1324; --card:#111a2e; --soft:#0f1830; --line:#1d2a4a;
-    --txt:#e6edf6; --muted:#a8b2c7; --primary:#6ea8fe; --accent:#7f5af0;
-    --success:#3bd671; --warning:#ffae42; --danger:#ff5861;
+    --bg:#0b1220;--card:#0f172a;--muted:#94a3b8;--text:#e2e8f0;--pri:#6ee7ff;--pri2:#8b5cf6;--acc:#22d3ee;
+    --ok:#16a34a;--warn:#f59e0b;--danger:#ef4444;--border:#1f2a44
   }
   *{box-sizing:border-box}
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);font:400 16px/1.55 Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
-  a{color:var(--primary);text-decoration:none}
-  .container{max-width:1200px;margin:auto;padding:16px}
-  header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,rgba(11,19,36,.95),rgba(11,19,36,.7));backdrop-filter:saturate(1.2) blur(8px);border-bottom:1px solid var(--line)}
-  .nav{display:flex;align-items:center;gap:14px;justify-content:space-between;padding:10px 0}
-  .brand{display:flex;align-items:center;gap:10px;font-weight:700}
-  .brand img{height:28px;width:auto}
-  .nav-links{display:flex;gap:14px;flex-wrap:wrap}
-  .btn{background:var(--soft);border:1px solid var(--line);color:var(--txt);padding:10px 14px;border-radius:10px;cursor:pointer;transition:.2s}
-  .btn:hover{border-color:#2d3e6e}
-  .btn-primary{background:linear-gradient(135deg,#6ea8fe,#7f5af0);border:none}
-  .grid{display:grid;gap:18px}
-  .hero{display:grid;gap:18px;grid-template-columns:1.15fr .85fr}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
-  h1{font-size:clamp(22px,3.3vw,40px);margin:0 0 10px}
-  h2{font-size:clamp(18px,2.2vw,26px);margin:4px 0 12px}
-  h3{font-size:18px;margin:6px 0 10px}
-  p{margin:6px 0;color:var(--muted)}
-  .tag{font-size:12px;color:#aab6d1;background:#0f1b33;border:1px solid var(--line);padding:6px 8px;border-radius:30px;margin-right:8px;display:inline-flex;align-items:center;gap:6px}
-  /* hero image */
-  .hero-img{width:100%;border-radius:14px;border:1px solid var(--line);display:block}
-  /* flip countdown */
-  .flip{display:flex;gap:10px;justify-content:space-between;margin-top:12px}
-  .unit{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1}
-  .digits{display:flex;gap:8px}
-  .digit{position:relative;width:70px;height:80px;border-radius:12px;overflow:hidden;background:linear-gradient(180deg,#0e1830,#0a1224);border:1px solid var(--line);display:grid;place-items:center;font-weight:800;font-size:38px}
-  .digit:before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:#2a3a63}
-  .label{font-size:12px;color:#9fb0d0;letter-spacing:.15em}
-  /* marquee exchanges */
-  .marquee{overflow:hidden;white-space:nowrap;border:1px solid var(--line);border-radius:14px;background:var(--card);padding:12px}
-  .marquee-track{display:inline-flex;gap:26px;align-items:center;animation:slide 28s linear infinite}
-  .marquee img{height:28px;opacity:.9;filter:drop-shadow(0 3px 8px #0006)}
-  @keyframes slide{to{transform:translateX(-50%)}}
-  /* stake plans */
-  .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-  .plan{border-radius:14px;border:1px solid var(--line);background:var(--card);padding:14px}
-  .plan h3{margin:0 0 6px}
-  .badge{padding:4px 8px;border-radius:40px;font-size:12px;border:1px solid var(--line);background:#0f1b33;color:#a9b5d2}
-  .calc{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .stat{background:var(--soft);border:1px solid var(--line);padding:12px;border-radius:12px;display:flex;flex-direction:column;gap:6px}
-  .stat strong{font-size:20px}
-  /* nft grid */
-  .nft-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-  .nft{border:1px solid var(--line);border-radius:14px;background:var(--card);overflow:hidden;display:flex;flex-direction:column}
-  .nft img{width:100%;aspect-ratio:1/1;object-fit:cover;background:#0a1224}
-  .nft .meta{padding:12px}
-  .nft .meta small{color:#9fb0d0}
-  /* presale table */
-  .presale{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-  .tier{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--card)}
-  .tier .row{display:flex;align-items:center;gap:8px;margin-top:8px}
-  .lang{position:relative}
-  .select{background:var(--soft);border:1px solid var(--line);color:var(--txt);padding:8px 10px;border-radius:10px}
-  footer{border-top:1px solid var(--line);margin-top:30px;padding:16px 0;color:#93a3c8;font-size:13px}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  a{color:#93c5fd;text-decoration:none}
+  img{max-width:100%;display:block}
+  .container{max-width:1180px;margin:0 auto;padding:20px}
+  header{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,#0b1220cc,#0b122000)}
+  .nav{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 0}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand img{height:28px}
+  .navlinks{display:flex;gap:10px;flex-wrap:wrap}
+  .navlinks a, .chip{padding:8px 12px;border-radius:10px;background:#0f1a33;color:#cbd5e1;border:1px solid var(--border);font-weight:600}
+  .chip.sel{background:linear-gradient(90deg,#1f2937, #111827);color:#fff}
+  .lang{appearance:none;background:#0f1a33;color:#cbd5e1;border:1px solid var(--border);border-radius:10px;padding:8px 12px}
+  .btn{padding:10px 14px;border-radius:12px;border:1px solid #1e293b;background:linear-gradient(180deg,#1b2540,#121a2f);color:#e2e8f0;font-weight:700}
+  .btn.primary{background:linear-gradient(90deg,#06b6d4,#6366f1);border-color:#334155;color:#fff}
+  .grid{display:grid;gap:16px}
+  .hero{display:grid;grid-template-columns:1.1fr 0.9fr;gap:24px;align-items:center}
+  .card{background:linear-gradient(180deg,#0f172a,#0b1220);border:1px solid var(--border);border-radius:16px;padding:16px}
+  .title{font-size:clamp(24px,3.2vw,40px);line-height:1.15;margin:10px 0 12px;font-weight:800}
+  .subtitle{color:var(--muted);font-size:15px}
+  .cta{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 6px}
+  .pill{border:1px dashed #334155;padding:6px 10px;border-radius:999px;color:#a5b4fc}
+  .heroimg{border-radius:16px;border:1px solid var(--border);overflow:hidden}
+  /* countdown */
+  .flip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+  .slot{background:linear-gradient(180deg,#0e162c,#0b1220);border:1px solid #1f2a44;border-radius:14px;padding:10px 8px;text-align:center}
+  .num{display:flex;justify-content:center;gap:6px}
+  .digit{width:36px;height:48px;border-radius:10px;background:linear-gradient(180deg,#0b1b34,#0a1426);display:grid;place-items:center;
+         color:#e2e8f0;font-size:26px;font-weight:800;border:1px solid #1f2a44;box-shadow:inset 0 -1px 0 #0b1220}
+  .lab{margin-top:6px;font-size:12px;letter-spacing:.08em;color:#93a2c9}
+  /* marquee */
+  .marq{margin:14px 0 4px;background:#0e162b;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+  .marq .row{display:flex;gap:40px;align-items:center;animation:slide 25s linear infinite;padding:10px 20px}
+  .marq img{height:26px;filter:grayscale(.1) saturate(1.1)}
+  @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  .section-title{font-weight:800;font-size:22px;margin:6px 0 12px}
+  /* stake cards */
+  .tiers{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .tier .hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .tier h4{margin:0;font-size:18px}
+  .bad{font-size:12px;border:1px solid #334155;padding:2px 8px;border-radius:999px;color:#cbd5e1}
+  .apy{font-size:28px;font-weight:800;margin:8px 0}
+  .list{color:#9fb2d0;font-size:14px;display:grid;gap:6px}
+  /* calculator */
+  .calc{grid-template-columns:1fr 1fr}
+  .field{display:grid;gap:6px}
+  input,select{background:#0c152a;border:1px solid #26324f;border-radius:12px;color:#e2e8f0;padding:10px 12px}
+  .resbox{background:#0e1528;border:1px solid #223053;border-radius:12px;padding:10px}
+  .nftgrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .nftcard{background:#0e162c;border:1px solid #223053;border-radius:14px;overflow:hidden}
+  .nftmedia{aspect-ratio:1/1;background:#0a1222;display:grid;place-items:center;color:#6b7aa6}
+  .nftbody{padding:10px;border-top:1px solid #1b2742;display:flex;justify-content:space-between;align-items:center}
+  .tag{font-size:12px;border:1px solid #314163;border-radius:999px;padding:2px 8px;color:#a0b4d8}
+  /* tokenomics + roadmap */
+  .twocol{grid-template-columns:1fr 1fr}
+  footer{color:#7a8eb8;border-top:1px solid #1b2742;margin-top:24px;padding:16px 0}
   /* responsive */
-  @media(max-width:1100px){ .hero{grid-template-columns:1fr} }
-  @media(max-width:900px){
-    .nft-grid{grid-template-columns:repeat(2,1fr)}
-    .plans{grid-template-columns:repeat(2,1fr)}
-    .presale{grid-template-columns:1fr}
+  @media (max-width:1024px){
+    .hero{grid-template-columns:1fr}
+    .nftgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .tiers{grid-template-columns:repeat(2,minmax(0,1fr))}
     .calc{grid-template-columns:1fr}
-    .digit{width:58px;height:66px;font-size:30px}
+    .twocol{grid-template-columns:1fr}
   }
-  @media(max-width:520px){
-    .nft-grid{grid-template-columns:1fr}
-    .marquee img{height:24px}
-    .digit{width:52px;height:60px;font-size:28px}
+  @media (max-width:640px){
+    .digit{width:32px;height:42px;font-size:22px}
+    .nftgrid{grid-template-columns:1fr}
+    .tiers{grid-template-columns:1fr}
   }
 </style>
 </head>
@@ -88,421 +88,361 @@
 <header>
   <div class="container nav">
     <div class="brand">
-      <img src="assets/branding/zuzu-logo.svg" alt="ZUZU" />
-      <span>ZUZUCOIN</span>
+      <img src="assets/images/logo.png" alt="ZUZUCOIN" />
+      <strong>ZUZUCOIN</strong>
     </div>
-    <nav class="nav-links">
-      <a class="btn" href="#community" data-i="nav.community">Community</a>
-      <a class="btn" href="#stake" data-i="nav.stake">Stake</a>
-      <a class="btn" href="#rewards" data-i="nav.nft">NFT Rewards</a>
-      <a class="btn" href="#roadmap" data-i="nav.roadmap">Roadmap</a>
-      <a class="btn" href="#tokenomics" data-i="nav.tokenomics">Tokenomics</a>
-      <div class="lang">
-        <select id="lang" class="select">
-          <option value="en">EN</option>
-          <option value="tr">TR</option>
-          <option value="ru">RU</option>
-          <option value="zh">中文</option>
-          <option value="hi">HI</option>
-          <option value="es">ES</option>
-          <option value="pt">PT</option>
-        </select>
-      </div>
-      <button id="btnConnect" class="btn btn-primary" data-i="btn.connect">Connect Wallet</button>
-    </nav>
+    <div class="navlinks">
+      <a href="#community" class="chip" data-t="nav.community"></a>
+      <a href="#stake" class="chip" data-t="nav.stake"></a>
+      <a href="#rewards" class="chip" data-t="nav.nft"></a>
+      <a href="#roadmap" class="chip" data-t="nav.roadmap"></a>
+      <a href="#tokenomics" class="chip" data-t="nav.tokenomics"></a>
+      <select id="lang" class="lang">
+        <option value="en">EN</option><option value="tr">TR</option>
+        <option value="es">ES</option><option value="ru">RU</option>
+        <option value="hi">HI</option><option value="zh">中文</option>
+        <option value="pt">PT</option>
+      </select>
+      <button id="btnConnect" class="btn">Connect Wallet</button>
+    </div>
   </div>
 </header>
 
 <main class="container">
-
-  <!-- HERO + TIMER + PRESALE + MARQUEE -->
-  <section class="grid hero" id="top">
+  <!-- HERO -->
+  <section class="hero" id="top">
     <div class="card">
-      <span class="tag" data-i="hero.tag">Pre-Sale • Stake to Win NFT</span>
-      <h1 data-i="hero.title">ZUZU — Robotic Hedgehog</h1>
-      <p data-i="hero.desc">Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high utility.</p>
-      <div style="display:flex;gap:10px;margin:10px 0 14px">
-        <a href="#rewards" class="btn btn-primary" data-i="hero.btn.rewards">NFT Rewards</a>
-        <a target="_blank" href="https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts" class="btn" data-i="hero.btn.collection">Collection Page</a>
+      <div class="pill" data-t="hero.pill"></div>
+      <h1 class="title" data-t="hero.title"></h1>
+      <p class="subtitle" data-t="hero.sub"></p>
+      <div class="cta">
+        <a class="btn primary" href="#rewards" data-t="hero.cta1"></a>
+        <a class="btn" target="_blank" href="https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts" data-t="hero.cta2"></a>
+        <span class="pill">Contract: 0xF2bb…9729</span>
       </div>
-      <span class="tag">Contract: <span id="ctrShort"></span></span>
-
-      <img class="hero-img" src="assets/hero/hero-robot-hedgehog.png" alt="ZUZU hero" />
-
       <!-- Countdown -->
       <div class="flip" id="countdown">
-        <div class="unit">
-          <div class="digits"><div class="digit" id="d1">0</div><div class="digit" id="d2">0</div></div>
-          <div class="label" data-i="timer.days">DAYS</div>
-        </div>
-        <div class="unit">
-          <div class="digits"><div class="digit" id="h1">0</div><div class="digit" id="h2">0</div></div>
-          <div class="label" data-i="timer.hours">HOURS</div>
-        </div>
-        <div class="unit">
-          <div class="digits"><div class="digit" id="m1">0</div><div class="digit" id="m2">0</div></div>
-          <div class="label" data-i="timer.minutes">MINUTES</div>
-        </div>
-        <div class="unit">
-          <div class="digits"><div class="digit" id="s1">0</div><div class="digit" id="s2">0</div></div>
-          <div class="label" data-i="timer.seconds">SECONDS</div>
-        </div>
+        <div class="slot"><div class="num" id="dNum"></div><div class="lab" data-t="cd.days"></div></div>
+        <div class="slot"><div class="num" id="hNum"></div><div class="lab" data-t="cd.hours"></div></div>
+        <div class="slot"><div class="num" id="mNum"></div><div class="lab" data-t="cd.mins"></div></div>
+        <div class="slot"><div class="num" id="sNum"></div><div class="lab" data-t="cd.secs"></div></div>
       </div>
-
-      <!-- Presale Tiers -->
-      <div class="card" style="margin-top:14px">
-        <h3 data-i="presale.title">Pre-Sale — Limited allocation • type amount to see cost</h3>
-        <div class="row" style="display:flex;gap:10px;align-items:center">
-          <label data-i="presale.amount">Amount (ZUZU)</label>
-          <input id="psAmount" type="number" value="10000" class="select" style="min-width:160px"/>
-          <small id="psNote" style="color:#93a3c8">Buttons switch to real tx when sale contract is live.</small>
-        </div>
-        <div class="presale" style="margin-top:12px">
-          <div class="tier">
-            <b data-i="presale.w1.t">Week 1 (Cheapest)</b>
-            <div class="row"><small>1 ZUZU =</small> <b id="w1p">0.0050</b> <small>USDT</small></div>
-            <div class="row" data-i="presale.cost">Cost:</div>
-            <div class="row"><b id="w1c">0 USDT</b></div>
-            <div class="row"><button class="btn btn-primary" disabled data-i="btn.buy">Buy</button> <a class="btn" href="#" data-i="btn.details">Details</a></div>
+      <!-- Pre-sale input + cards -->
+      <div class="card" style="margin-top:12px">
+        <div class="subtitle" data-t="presale.note"></div>
+        <div class="grid calc" style="margin-top:8px">
+          <div class="field">
+            <label for="psAmount" data-t="presale.amount"></label>
+            <input id="psAmount" type="number" value="10000" min="0" step="1" />
           </div>
-          <div class="tier">
-            <b data-i="presale.w2.t">Week 2</b>
-            <div class="row"><small>1 ZUZU =</small> <b id="w2p">0.0065</b> <small>USDT</small></div>
-            <div class="row" data-i="presale.cost">Cost:</div><div class="row"><b id="w2c">0 USDT</b></div>
-            <div class="row"><button class="btn btn-primary" disabled data-i="btn.buy">Buy</button> <a class="btn" href="#" data-i="btn.details">Details</a></div>
-          </div>
-          <div class="tier">
-            <b data-i="presale.w3.t">Week 3</b>
-            <div class="row"><small>1 ZUZU =</small> <b id="w3p">0.0080</b> <small>USDT</small></div>
-            <div class="row" data-i="presale.cost">Cost:</div><div class="row"><b id="w3c">0 USDT</b></div>
-            <div class="row"><button class="btn btn-primary" disabled data-i="btn.buy">Buy</button> <a class="btn" href="#" data-i="btn.details">Details</a></div>
-          </div>
-          <div class="tier">
-            <b data-i="presale.w4.t">Week 4 (Last Chance)</b>
-            <div class="row"><small>1 ZUZU =</small> <b id="w4p">0.0100</b> <small>USDT</small></div>
-            <div class="row" data-i="presale.cost">Cost:</div><div class="row"><b id="w4c">0 USDT</b></div>
-            <div class="row"><button class="btn btn-primary" disabled data-i="btn.buy">Buy</button> <a class="btn" href="#" data-i="btn.details">Details</a></div>
+          <div class="grid" style="grid-template-columns:repeat(2,1fr);gap:10px">
+            <div class="resbox"><strong>1 ZUZU = 0.0050 USDT</strong><div data-t="presale.cost"></div><button class="btn primary" style="margin-top:6px" disabled data-t="presale.buy"></button></div>
+            <div class="resbox"><strong>1 ZUZU = 0.0065 USDT</strong><div data-t="presale.cost"></div><button class="btn" style="margin-top:6px" disabled data-t="presale.buy"></button></div>
+            <div class="resbox"><strong>1 ZUZU = 0.0080 USDT</strong><div data-t="presale.cost"></div><button class="btn" style="margin-top:6px" disabled data-t="presale.buy"></button></div>
+            <div class="resbox"><strong>1 ZUZU = 0.0100 USDT</strong><div data-t="presale.cost"></div><button class="btn" style="margin-top:6px" disabled data-t="presale.buy"></button></div>
           </div>
         </div>
       </div>
-
       <!-- Exchanges marquee -->
-      <div class="marquee" style="margin-top:14px">
-        <div class="marquee-track" id="mx">
-          <img src="assets/exchanges/binance.png" alt="binance">
-          <img src="assets/exchanges/okx.png" alt="okx">
-          <img src="assets/exchanges/mexc.png" alt="mexc">
-          <img src="assets/exchanges/bybit.png" alt="bybit">
-          <img src="assets/exchanges/kucoin.png" alt="kucoin">
-          <img src="assets/exchanges/gateio.png" alt="gate">
-          <img src="assets/exchanges/binance.png" alt="binance">
-          <img src="assets/exchanges/okx.png" alt="okx">
-          <img src="assets/exchanges/mexc.png" alt="mexc">
-          <img src="assets/exchanges/bybit.png" alt="bybit">
-          <img src="assets/exchanges/kucoin.png" alt="kucoin">
-          <img src="assets/exchanges/gateio.png" alt="gate">
+      <div class="marq" aria-label="Supported Exchanges">
+        <div class="row">
+          <img src="assets/images/exchanges/bybit.png" alt="Bybit"/>
+          <img src="assets/images/exchanges/gateio.png" alt="Gate.io"/>
+          <img src="assets/images/exchanges/kucoin.png" alt="KuCoin"/>
+          <img src="assets/images/exchanges/mxc.png" alt="MEXC"/>
+          <img src="assets/images/exchanges/okx.png" alt="OKX"/>
+          <img src="assets/images/exchanges/bitmart.png" alt="Bitmart"/>
+          <!-- duplicate for infinite loop -->
+          <img src="assets/images/exchanges/bybit.png" alt="Bybit"/>
+          <img src="assets/images/exchanges/gateio.png" alt="Gate.io"/>
+          <img src="assets/images/exchanges/kucoin.png" alt="KuCoin"/>
+          <img src="assets/images/exchanges/mxc.png" alt="MEXC"/>
+          <img src="assets/images/exchanges/okx.png" alt="OKX"/>
+          <img src="assets/images/exchanges/bitmart.png" alt="Bitmart"/>
         </div>
       </div>
     </div>
+    <div class="heroimg">
+      <img src="assets/hero/hero-robot-hedgehog.png" alt="ZUZU Robotic Hedgehog" />
+    </div>
+  </section>
 
-    <!-- RIGHT SIDE: Stake Pro + Calculator -->
-    <div class="card" id="stake">
-      <h2 data-i="stake.title">Stake Pro — Lock, Earn, Get NFT</h2>
-      <p data-i="stake.desc">Lock ZUZU, earn APY + NFT boost. Early stakers get special badge & airdrop priority.</p>
+  <!-- STAKE -->
+  <section id="stake" class="card" style="margin-top:16px">
+    <h3 class="section-title" data-t="stake.title"></h3>
+    <p class="subtitle" data-t="stake.sub"></p>
+    <div class="grid tiers">
+      <div class="card tier"><div class="hdr"><h4 data-t="tiers.bronze"></h4><span class="bad">30d</span></div><div class="apy">12% APY</div><div class="list"><span data-t="tiers.b1"></span></div></div>
+      <div class="card tier"><div class="hdr"><h4 data-t="tiers.silver"></h4><span class="bad">90d</span></div><div class="apy">24% APY</div><div class="list"><span data-t="tiers.s1"></span></div></div>
+      <div class="card tier"><div class="hdr"><h4 data-t="tiers.gold"></h4><span class="bad">180d</span></div><div class="apy">40% APY</div><div class="list"><span data-t="tiers.g1"></span></div></div>
 
-      <div class="plans">
-        <div class="plan">
-          <h3 data-i="stake.bronze.t">Bronze</h3>
-          <div class="badge" data-i="stake.bronze.b">30 days lock</div>
-          <p><b>12% APY</b></p>
-          <small data-i="stake.bronze.s">Early access raffles</small>
-        </div>
-        <div class="plan">
-          <h3 data-i="stake.silver.t">Silver</h3>
-          <div class="badge" data-i="stake.silver.b">90 days lock</div>
-          <p><b>24% APY</b></p>
-          <small data-i="stake.silver.s">+5% NFT boost</small>
-        </div>
-        <div class="plan">
-          <h3 data-i="stake.gold.t">Gold</h3>
-          <div class="badge" data-i="stake.gold.b">180 days lock</div>
-          <p><b>40% APY</b></p>
-          <small data-i="stake.gold.s">Whitelist + ZUZU badge</small>
-        </div>
-        <div class="plan">
-          <h3 data-i="stake.diamond.t">Diamond</h3>
-          <div class="badge" data-i="stake.diamond.b">365 days lock</div>
-          <p><b>65% APY</b></p>
-          <small data-i="stake.diamond.s">+10% NFT boost</small>
-        </div>
-        <div class="plan">
-          <h3 data-i="stake.obsidian.t">Obsidian</h3>
-          <div class="badge" data-i="stake.obsidian.b">540 days lock</div>
-          <p><b>85% APY</b></p>
-          <small data-i="stake.obsidian.s">VIP rewards + airdrop priority</small>
+      <div class="card tier"><div class="hdr"><h4 data-t="tiers.diamond"></h4><span class="bad">365d</span></div><div class="apy">65% APY</div><div class="list"><span data-t="tiers.d1"></span></div></div>
+      <div class="card tier"><div class="hdr"><h4 data-t="tiers.obsidian"></h4><span class="bad">540d</span></div><div class="apy">85% APY</div><div class="list"><span data-t="tiers.o1"></span></div></div>
+    </div>
+
+    <!-- Calculator -->
+    <div class="grid calc" style="margin-top:12px">
+      <div class="card">
+        <h4 data-t="calc.title"></h4>
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-top:6px">
+          <div class="field"><label data-t="calc.amount"></label><input type="number" id="cAmount" value="10000"/></div>
+          <div class="field">
+            <label data-t="calc.period"></label>
+            <select id="cPeriod">
+              <option value="12">30 gün (12% APY)</option>
+              <option value="24">90 gün (24% APY)</option>
+              <option value="40">180 gün (40% APY)</option>
+              <option value="65">365 gün (65% APY)</option>
+              <option value="85">540 gün (85% APY)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label data-t="calc.hasnft"></label>
+            <select id="cNFT">
+              <option value="0" data-t="calc.none"></option>
+              <option value="5">+5% Boost</option>
+              <option value="10">+10% Boost</option>
+            </select>
+          </div>
+          <div class="field"><label>&nbsp;</label><button id="btnCalc" class="btn primary" data-t="calc.btn"></button></div>
         </div>
       </div>
-
-      <div class="card" style="margin-top:12px">
-        <h3 data-i="calc.title">Earnings Calculator</h3>
-        <div class="calc">
-          <div>
-            <div class="row" style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
-              <label data-i="calc.amount">Amount (ZUZU)</label>
-              <input id="cAmount" type="number" class="select" value="10000"/>
-            </div>
-            <div class="row" style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
-              <label data-i="calc.lock">Lock Period</label>
-              <select id="cLock" class="select">
-                <option value="0.12" data-i="calc.l30">30 days (12% APY)</option>
-                <option value="0.24" data-i="calc.l90">90 days (24% APY)</option>
-                <option value="0.40" data-i="calc.l180">180 days (40% APY)</option>
-                <option value="0.65" data-i="calc.l365">365 days (65% APY)</option>
-                <option value="0.85" data-i="calc.l540">540 days (85% APY)</option>
-              </select>
-            </div>
-            <div class="row" style="display:flex;gap:8px;align-items:center">
-              <label data-i="calc.nft">Have NFT?</label>
-              <select id="cNFT" class="select">
-                <option value="0" data-i="calc.no">No</option>
-                <option value="0.05" data-i="calc.r1">Rare +5%</option>
-                <option value="0.10" data-i="calc.r2">Epic +10%</option>
-                <option value="0.15" data-i="calc.r3">Legendary +15%</option>
-              </select>
-              <button class="btn btn-primary" id="btnCalc" data-i="btn.calculate">Calculate</button>
-            </div>
-          </div>
-          <div class="grid">
-            <div class="stat"><small data-i="calc.total">Total Return</small><strong id="oTotal">0 ZUZU</strong></div>
-            <div class="stat"><small data-i="calc.monthly">Monthly Avg</small><strong id="oMonthly">0 ZUZU</strong></div>
-            <div class="stat"><small data-i="calc.boost">Total Boost</small><strong id="oBoost">+0%</strong></div>
-          </div>
-        </div>
+      <div class="grid" style="gap:10px">
+        <div class="resbox"><div data-t="calc.total"></div><div id="cTotal" style="font-weight:800;font-size:22px">0 ZUZU</div></div>
+        <div class="resbox"><div data-t="calc.month"></div><div id="cMonth" style="font-weight:800;font-size:22px">0 ZUZU</div></div>
+        <div class="resbox"><div data-t="calc.boost"></div><div id="cBoost" style="font-weight:800;font-size:22px">+0%</div></div>
       </div>
     </div>
   </section>
 
   <!-- NFT REWARDS -->
-  <section class="card" id="rewards" style="margin-top:16px">
-    <h2 data-i="nft.title">ZUZU Maskot NFT Rewards</h2>
-    <p><span data-i="nft.desc">Stakers win rare NFTs from the collection.</span> <a id="colLink" target="_blank">• Collection Page</a></p>
-    <div class="nft-grid" id="nfts"></div>
+  <section id="rewards" class="card" style="margin-top:16px">
+    <h3 class="section-title" data-t="nft.title"></h3>
+    <p class="subtitle">
+      <span data-t="nft.sub"></span>
+      • <a target="_blank" href="https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts">Collection Page</a>
+    </p>
+    <div id="nftGrid" class="grid nftgrid"></div>
   </section>
 
-  <!-- ROADMAP / TOKENOMICS -->
-  <section class="grid" style="grid-template-columns:1fr 1fr;margin-top:16px">
-    <div class="card" id="tokenomics">
-      <h2 data-i="tok.title">Tokenomics (Visualized)</h2>
-      <img src="assets/charts/tokenomics-pie.png" alt="tokenomics" class="hero-img">
-    </div>
-    <div class="card" id="roadmap">
-      <h2 data-i="road.title">Roadmap (Timeline)</h2>
-      <img src="assets/charts/roadmap.png" alt="roadmap" class="hero-img">
-    </div>
-  </section>
-
-  <!-- COMMUNITY -->
-  <section class="card" id="community" style="margin-top:16px">
-    <h2 data-i="com.title">Community</h2>
-    <p data-i="com.desc">Join our global family on Telegram, X, and Discord. Events, airdrops, mini-games and more.</p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap">
-      <a class="btn" href="https://t.me/zuzu" target="_blank">Telegram</a>
-      <a class="btn" href="https://x.com" target="_blank">Twitter / X</a>
-      <a class="btn" href="https://discord.gg" target="_blank">Discord</a>
+  <!-- Tokenomics + Roadmap -->
+  <section id="tokenomics" class="card" style="margin-top:16px">
+    <h3 class="section-title" data-t="tok.title"></h3>
+    <div class="grid twocol">
+      <div class="card"><img src="assets/images/charts/tokenomics.png" alt="tokenomics" loading="lazy" /></div>
+      <div class="card" id="roadmap">
+        <h4 data-t="road.title"></h4>
+        <img src="assets/images/charts/roadmap.png" alt="roadmap" loading="lazy" />
+      </div>
     </div>
   </section>
 
-  <footer>
-    <div class="container" style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
-      <div>© ZUZUCOIN 2025</div>
-      <div style="display:flex;gap:10px"><a href="#stake">Stake</a> · <a href="#rewards">NFT</a> · <a href="#tokenomics">Tokenomics</a></div>
+  <!-- Community -->
+  <section id="community" class="card" style="margin-top:16px">
+    <h3 class="section-title" data-t="com.title"></h3>
+    <p class="subtitle" data-t="com.sub"></p>
+    <div class="cta">
+      <a class="btn" href="#" target="_blank">Telegram</a>
+      <a class="btn" href="#" target="_blank">Twitter / X</a>
+      <a class="btn" href="#" target="_blank">Discord</a>
     </div>
-  </footer>
+  </section>
 </main>
 
-<!-- Thirdweb v5 (browser) -->
-<script type="module">
-  import { createThirdwebClient, getContract } from "https://unpkg.com/thirdweb@5/dist/thirdweb.esm.min.js";
-  import { polygon } from "https://unpkg.com/thirdweb@5/dist/chains/dist/thirdweb-chains.esm.min.js";
-  import { getNFTs } from "https://unpkg.com/thirdweb@5/dist/extensions/erc1155/read/getNFTs.esm.min.js";
-  import { createWallet, injected, walletConnect, coinbase, connect } from "https://unpkg.com/thirdweb@5/dist/wallets/dist/thirdweb-wallets.esm.min.js";
+<footer>
+  <div class="container" style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+    <div>© ZUZUCOIN 2025</div>
+    <div class="cta"><a href="#stake" class="btn">Stake</a><a href="#rewards" class="btn">NFT</a><a href="#tokenomics" class="btn">Tokenomics</a></div>
+  </div>
+</footer>
 
-  /* ==== CONFIG ==== */
-  const CLIENT_ID = "28b60a165b087da2fe5e238a325b6fc5";
-  const CONTRACT = "0xF2bbbEcB417725813BF5E940d678793fACDa9729";
-  const CHAIN = polygon;
-  const COLLECTION_URL = "https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts";
-  const PRESALE_START = Date.now()+1000*60*60*24*33; // örnek: 33 gün sonra (ayarla)
-  const PRICES = [0.0050,0.0065,0.0080,0.0100]; // week1..4
+<!-- libs -->
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<script src="https://unpkg.com/@walletconnect/web3modal@2.6.2/dist/index.umd.js"></script>
 
-  /* ==== SHORT ADDRESS ==== */
-  const ctrShort = CONTRACT.slice(0,6)+"..."+CONTRACT.slice(-4);
-  document.getElementById("ctrShort").textContent = ctrShort;
-  const colLink = document.getElementById("colLink"); colLink.href = COLLECTION_URL; colLink.textContent="• Collection Page";
+<script>
+/* ---------------- CONFIG ---------------- */
+const POLYGON_RPC = "https://polygon.llamarpc.com";            // hızlı public
+const NFT_CONTRACT = "0xF2bbbEcB417725813BF5E940d678793fACDa9729";
+const ERC1155_ABI = [
+  "function uri(uint256) view returns (string)",
+  "function totalSupply(uint256) view returns (uint256)"
+];
+const TOKEN_IDS = [0,1,2,3,4,5,6,7,8,9]; // koleksiyonundaki ID aralığı
+const CLIENT_ID = "28b60a165b08d7da2fe5e23a8325b6fc5";        // thirdweb client id (okuma)
+const PRESALE_START = "2025-09-30T18:00:00+03:00";              // TRT'ye göre ayarla
 
-  /* ==== COUNTDOWN ==== */
-  const ids = { d1:"d1", d2:"d2", h1:"h1", h2:"h2", m1:"m1", m2:"m2", s1:"s1", s2:"s2" };
-  function setDigits(val, el1, el2){
-    val = Math.max(0, val);
-    const s = val.toString().padStart(2,"0");
-    document.getElementById(el1).textContent = s[0];
-    document.getElementById(el2).textContent = s[1];
+/* -------------- i18n STRINGS -------------- */
+const T = {
+  en:{
+    "nav.community":"Community","nav.stake":"Stake","nav.nft":"NFT Rewards","nav.roadmap":"Roadmap","nav.tokenomics":"Tokenomics",
+    "hero.pill":"Pre-Sale • Stake to Win NFT","hero.title":"ZUZU — Robotic Hedgehog ⚡","hero.sub":"Stake and win ZUZU Maskot NFT. Limited supply, high utility.",
+    "hero.cta1":"NFT Rewards","hero.cta2":"Collection Page",
+    "cd.days":"DAYS","cd.hours":"HOURS","cd.mins":"MINUTES","cd.secs":"SECONDS",
+    "presale.note":"Pre-Sale — Limited allocation • type amount to see cost (buttons switch to real TX when sale contract is live).",
+    "presale.amount":"Amount (ZUZU) e.g., 10,000","presale.cost":"Cost: 0 USDT","presale.buy":"Buy",
+    "stake.title":"Stake Pro — Lock, Earn, Get NFT","stake.sub":"Lock ZUZU, earn APY + NFT boost. Early stakers get special badge & airdrop priority.",
+    "tiers.bronze":"Bronze","tiers.b1":"Early access raffles",
+    "tiers.silver":"Silver","tiers.s1":"+5% NFT boost",
+    "tiers.gold":"Gold","tiers.g1":"Whitelist + ZUZU badge",
+    "tiers.diamond":"Diamond","tiers.d1":"+10% NFT boost",
+    "tiers.obsidian":"Obsidian","tiers.o1":"VIP rewards + airdrop priority",
+    "calc.title":"Earnings Calculator","calc.amount":"Amount (ZUZU)","calc.period":"Lock Period","calc.hasnft":"Have NFT?","calc.none":"No",
+    "calc.btn":"Calculate","calc.total":"Total Return","calc.month":"Monthly Avg","calc.boost":"Total Boost",
+    "nft.title":"ZUZU Maskot NFT Rewards","nft.sub":"Stakers win rare NFTs from the collection.",
+    "tok.title":"Tokenomics (Visualized)","road.title":"Roadmap (Timeline)",
+    "com.title":"Community","com.sub":"Join our global family on Telegram, X, and Discord. Events, airdrops, mini-games and more."
+  },
+  tr:{
+    "nav.community":"Topluluk","nav.stake":"Stake","nav.nft":"NFT Ödülleri","nav.roadmap":"Yol Haritası","nav.tokenomics":"Tokonomi",
+    "hero.pill":"Ön Satış • Stake ile NFT Kazan","hero.title":"ZUZU — Geleceğin Robotic Kirpisi ⚡","hero.sub":"Stake et ve ZUZU Maskot NFT'lerini kap. Sınırlı arz, yüksek utility.",
+    "hero.cta1":"NFT Ödülleri","hero.cta2":"Koleksiyon Sayfası",
+    "cd.days":"GÜN","cd.hours":"SAAT","cd.mins":"DAKİKA","cd.secs":"SANİYE",
+    "presale.note":"Ön Satış — Sınırlı tahsis • Miktarı yaz, maliyet otomatik hesaplanır (kontrat açılınca butonlar gerçek alıma döner).",
+    "presale.amount":"Miktar (ZUZU) ör: 10,000","presale.cost":"Maliyet: 0 USDT","presale.buy":"Satın Al",
+    "stake.title":"Stake Pro — Kilitle, Kazan, NFT Kap","stake.sub":"ZUZU kilitle, APY + NFT boost ile pasif gelir elde et. Erken stake edenlere rozeti ve airdrop önceliği.",
+    "tiers.bronze":"Bronz","tiers.b1":"Erken erişim çekilişleri",
+    "tiers.silver":"Gümüş","tiers.s1":"+%5 NFT boost",
+    "tiers.gold":"Altın","tiers.g1":"Özel whitelist + ZUZU rozeti",
+    "tiers.diamond":"Elmas","tiers.d1":"+%10 NFT boost",
+    "tiers.obsidian":"Obsidyen","tiers.o1":"VIP ödüller + airdrop önceliği",
+    "calc.title":"Kazanç Hesaplayıcı","calc.amount":"Miktar (ZUZU)","calc.period":"Kilit Süresi","calc.hasnft":"Elinde NFT var mı?","calc.none":"Yok",
+    "calc.btn":"Hesapla","calc.total":"Toplam Getiri","calc.month":"Aylık Ortalama","calc.boost":"Toplam Boost",
+    "nft.title":"ZUZU Maskot NFT Ödülleri","nft.sub":"Stake edenler koleksiyondan nadir NFT’ler kazanır.",
+    "tok.title":"Tokonomi (Görselleştirilmiş)","road.title":"Yol Haritası (Timeline)",
+    "com.title":"Topluluk","com.sub":"Telegram, X ve Discord’da global ailemize katıl."
+  },
+  es:{...T_en()},
+  ru:{...T_en()},
+  hi:{...T_en()},
+  zh:{...T_en()},
+  pt:{...T_en()}
+};
+function T_en(){return {
+  "nav.community":"Community","nav.stake":"Stake","nav.nft":"NFT Rewards","nav.roadmap":"Roadmap","nav.tokenomics":"Tokenomics",
+  "hero.pill":"Pre-Sale • Stake to Win NFT","hero.title":"ZUZU — Robotic Hedgehog ⚡","hero.sub":"Stake and win ZUZU Maskot NFT. Limited supply, high utility.",
+  "hero.cta1":"NFT Rewards","hero.cta2":"Collection Page",
+  "cd.days":"DAYS","cd.hours":"HOURS","cd.mins":"MINUTES","cd.secs":"SECONDS",
+  "presale.note":"Pre-Sale — Limited allocation • type amount to see cost.",
+  "presale.amount":"Amount (ZUZU) e.g., 10,000","presale.cost":"Cost: 0 USDT","presale.buy":"Buy",
+  "stake.title":"Stake Pro — Lock, Earn, Get NFT","stake.sub":"Lock ZUZU, earn APY + NFT boost.",
+  "tiers.bronze":"Bronze","tiers.b1":"Early access raffles","tiers.silver":"Silver","tiers.s1":"+5% NFT boost",
+  "tiers.gold":"Gold","tiers.g1":"Whitelist + ZUZU badge","tiers.diamond":"Diamond","tiers.d1":"+10% NFT boost",
+  "tiers.obsidian":"Obsidian","tiers.o1":"VIP rewards + airdrop priority",
+  "calc.title":"Earnings Calculator","calc.amount":"Amount (ZUZU)","calc.period":"Lock Period","calc.hasnft":"Have NFT?","calc.none":"No",
+  "calc.btn":"Calculate","calc.total":"Total Return","calc.month":"Monthly Avg","calc.boost":"Total Boost",
+  "nft.title":"ZUZU Maskot NFT Rewards","nft.sub":"Stakers win rare NFTs from the collection.",
+  "tok.title":"Tokenomics (Visualized)","road.title":"Roadmap (Timeline)",
+  "com.title":"Community","com.sub":"Join our global family on Telegram, X, and Discord."
+};}
+
+/* -------------- LANGUAGE -------------- */
+const sel = id=>document.getElementById(id);
+function setLang(lang){
+  const dict=T[lang]??T.en;
+  document.querySelectorAll("[data-t]").forEach(el=>{
+    const key=el.getAttribute("data-t");
+    if(dict[key]) el.textContent=dict[key];
+  });
+  sel('lang').value=lang;
+  localStorage.setItem("zuzu_lang",lang);
+}
+sel('lang').addEventListener('change',e=>setLang(e.target.value));
+setLang(localStorage.getItem("zuzu_lang")||"en");
+
+/* -------------- COUNTDOWN -------------- */
+const target=new Date(PRESALE_START).getTime();
+function two(n){return n.toString().padStart(2,'0').split('')}
+function renderDigits(id,val){const el=sel(id);el.innerHTML='';two(val).forEach(d=>{const s=document.createElement('div');s.className='digit';s.textContent=d;el.appendChild(s);});}
+function tick(){
+  const now=Date.now(); let diff=Math.max(0, target-now);
+  const d=Math.floor(diff/86400000); diff%=86400000;
+  const h=Math.floor(diff/3600000); diff%=3600000;
+  const m=Math.floor(diff/60000); const s=Math.floor((diff%60000)/1000);
+  renderDigits('dNum',d%100); renderDigits('hNum',h); renderDigits('mNum',m); renderDigits('sNum',s);
+}
+tick(); setInterval(tick,1000);
+
+/* -------------- PRESALE COST PREVIEW -------------- */
+document.querySelectorAll('.resbox').forEach((box,idx)=>{
+  const amt=()=>parseFloat(sel('psAmount').value||0);
+  const price=[0.0050,0.0065,0.0080,0.0100][idx];
+  const costEl=box.querySelector('div:nth-child(2)');
+  function upd(){costEl.textContent=`Cost: ${(amt()*price).toFixed(2)} USDT`;}
+  sel('psAmount').addEventListener('input',upd); upd();
+});
+
+/* -------------- CALCULATOR -------------- */
+sel('btnCalc').addEventListener('click',()=>{
+  const amount=parseFloat(sel('cAmount').value||0);
+  const apy=parseFloat(sel('cPeriod').value||0);
+  const boost=parseFloat(sel('cNFT').value||0);
+  const total=amount*((apy+boost)/100);
+  sel('cTotal').textContent=`${total.toFixed(2)} ZUZU`;
+  sel('cMonth').textContent=`${(total/12).toFixed(2)} ZUZU`;
+  sel('cBoost').textContent=`+${boost}%`;
+});
+
+/* -------------- WALLET CONNECT -------------- */
+let provider, signer, accounts=[];
+const web3Modal = new window.Web3Modal.Web3Modal({
+  walletConnectVersion: 2,
+  projectId: "8a1a3e9b0f6b4a7bbd3c9b7b72e6c1df", // public demo id
+  chains: [{id:137, name:"Polygon", rpcUrls:{default:{http:[POLYGON_RPC]}}}]
+});
+async function connect(){
+  try{
+    const instance = await web3Modal.openModal();
+    // fallback to metamask if installed
+  }catch(e){}
+  if(window.ethereum){
+    provider=new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts",[]);
+    signer=provider.getSigner(); accounts=await provider.listAccounts();
+    sel('btnConnect').textContent=accounts[0].slice(0,6)+"…"+accounts[0].slice(-4);
+  }else{
+    alert("Install MetaMask or use a WalletConnect compatible wallet.");
   }
-  function tick(){
-    const t = Math.max(0, Math.floor((PRESALE_START - Date.now())/1000));
-    const d = Math.floor(t/86400), h = Math.floor((t%86400)/3600), m=Math.floor((t%3600)/60), s=Math.floor(t%60);
-    setDigits(d,"d1","d2"); setDigits(h,"h1","h2"); setDigits(m,"m1","m2"); setDigits(s,"s1","s2");
-  }
-  setInterval(tick, 1000); tick();
+}
+sel('btnConnect').addEventListener('click',connect);
 
-  /* ==== PRE-SALE COST ==== */
-  const amtInput = document.getElementById("psAmount");
-  const wkCostEl = [ "w1c","w2c","w3c","w4c" ].map(id => document.getElementById(id));
-  function updateCosts(){
-    const q = Math.max(0, Number(amtInput.value||0));
-    wkCostEl.forEach((el,idx)=> el.textContent = (q*PRICES[idx]).toFixed(2)+" USDT");
-  }
-  amtInput.addEventListener("input", updateCosts); updateCosts();
-
-  /* ==== STAKE CALCULATOR ==== */
-  function calc(){
-    const q = Math.max(0, Number(document.getElementById("cAmount").value||0));
-    const apy = Number(document.getElementById("cLock").value);
-    const nftb = Number(document.getElementById("cNFT").value);
-    const boost = apy + nftb;
-    const total = q * boost;               // 1y varsayımı: basit kurgusal
-    const monthly = total/12;
-    document.getElementById("oTotal").textContent = total.toFixed(2)+" ZUZU";
-    document.getElementById("oMonthly").textContent = monthly.toFixed(2)+" ZUZU";
-    document.getElementById("oBoost").textContent = "+"+Math.round(boost*100)+"%";
-  }
-  document.getElementById("btnCalc").addEventListener("click", calc); calc();
-
-  /* ==== THIRDWEB NFT LIST ==== */
-  const client = createThirdwebClient({ clientId: CLIENT_ID });
-  const contract = getContract({ client, chain: CHAIN, address: CONTRACT });
-
-  async function loadNFTs(){
+/* -------------- NFT GRID (on-chain ERC1155) -------------- */
+async function loadNFTs(){
+  const provider = new ethers.providers.JsonRpcProvider(POLYGON_RPC);
+  const c = new ethers.Contract(NFT_CONTRACT, ERC1155_ABI, provider);
+  const grid = document.getElementById('nftGrid');
+  grid.innerHTML='';
+  for(const id of TOKEN_IDS){
     try{
-      const list = await getNFTs({ contract });
-      const wrap = document.getElementById("nfts");
-      if(!list?.length){ wrap.innerHTML = `<div class="card">No NFTs found.</div>`; return; }
-      wrap.innerHTML = "";
-      list.forEach(n=>{
-        const img = n.metadata?.image || n.metadata?.image_url || "";
-        const sup = n.supply ?? n.totalSupply ?? "-";
-        const name = n.metadata?.name ?? ("Token #"+n.id);
-        const rarity = (()=>{ // simple rarity hint
-          const s = Number(sup||0);
-          if(s <= 300) return "Legendary";
-          if(s <= 800) return "Epic";
-          return "Rare";
-        })();
-        const card = document.createElement("div");
-        card.className="nft";
-        card.innerHTML = `
-          <img src="${img}" alt="${name}" onerror="this.src='assets/hero/hero-robot-hedgehog.png'"/>
-          <div class="meta">
-            <b>${name}</b><br/>
-            <small>Supply: ${sup} • ${rarity}</small>
-            <div style="margin-top:8px;display:flex;gap:8px;justify-content:flex-end">
-              <a class="btn" target="_blank" href="${COLLECTION_URL}?tokenId=${n.id}">View ↗</a>
-            </div>
-          </div>`;
-        wrap.appendChild(card);
-      });
+      let uri = await c.uri(id);
+      // handle erc1155 {id} replacement
+      const hexId = id.toString(16).padStart(64,"0");
+      uri = uri.replace("{id}",hexId);
+      // normalize ipfs
+      if(uri.startsWith("ipfs://")) uri = "https://ipfs.io/ipfs/"+uri.slice(7);
+      const meta = await fetch(uri,{cache:"no-cache"}).then(r=>r.json()).catch(()=>null);
+      const card = document.createElement('div'); card.className='nftcard';
+      const media = document.createElement('div'); media.className='nftmedia';
+      if(meta && (meta.image || meta.image_url)){
+        let img = (meta.image || meta.image_url);
+        if(img.startsWith("ipfs://")) img = "https://ipfs.io/ipfs/"+img.slice(7);
+        media.innerHTML = `<img src="${img}" alt="${meta.name||'ZUZU'}" loading="lazy">`;
+      }else{
+        media.textContent="Görsel bulunamadı";
+      }
+      const foot = document.createElement('div'); foot.className='nftbody';
+      foot.innerHTML = `<div><strong>${meta?.name||('ZUZU #'+id)}</strong><div style="color:#8ea4c7;font-size:12px">ID: ${id}</div></div><span class="tag">${(meta?.rarity||'Rare')}</span>`;
+      card.appendChild(media); card.appendChild(foot);
+      card.addEventListener('click',()=>window.open(`https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/${NFT_CONTRACT}/nfts?tokenId=${id}`, '_blank'));
+      grid.appendChild(card);
     }catch(e){
-      console.warn("NFT load error",e);
-      document.getElementById("nfts").innerHTML = `<div class="card">Connection error. Check Client ID or contract.</div>`;
+      const err = document.createElement('div'); err.className='nftcard';
+      err.innerHTML=`<div class="nftmedia">NFT ${id} yüklenemedi</div>`;
+      grid.appendChild(err);
     }
   }
-  loadNFTs();
-
-  /* ==== WALLETS ==== */
-  let activeWallet = null;
-  const wallets = [
-    createWallet(injected()),
-    createWallet(walletConnect({ projectId: "9f6d0f1c7c1d4b9bb-zuzu" })), // örnek id (WC)
-    createWallet(coinbase())
-  ];
-  async function connectWallet(){
-    try{
-      const w = await connect({ client, wallets, chain: CHAIN });
-      activeWallet = w;
-      document.getElementById("btnConnect").textContent = (await w.getAccount()).address.slice(0,6)+"..."+(await w.getAccount()).address.slice(-4);
-      document.getElementById("btnConnect").classList.remove("btn-primary");
-    }catch(e){ console.log(e); }
-  }
-  document.getElementById("btnConnect").addEventListener("click", connectWallet);
-
-  /* ==== i18n (EN default) ==== */
-  const i18n = {
-    en:{
-      "nav.community":"Community","nav.stake":"Stake","nav.nft":"NFT Rewards","nav.roadmap":"Roadmap","nav.tokenomics":"Tokenomics",
-      "btn.connect":"Connect Wallet","hero.tag":"Pre-Sale • Stake to Win NFT","hero.title":"ZUZU — Robotic Hedgehog",
-      "hero.desc":"Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high utility.","hero.btn.rewards":"NFT Rewards","hero.btn.collection":"Collection Page",
-      "timer.days":"DAYS","timer.hours":"HOURS","timer.minutes":"MINUTES","timer.seconds":"SECONDS",
-      "presale.title":"Pre-Sale — Limited allocation • type amount to see cost",
-      "presale.amount":"Amount (ZUZU)","presale.cost":"Cost:","presale.w1.t":"Week 1 (Cheapest)","presale.w2.t":"Week 2","presale.w3.t":"Week 3","presale.w4.t":"Week 4 (Last Chance)",
-      "btn.buy":"Buy","btn.details":"Details",
-      "stake.title":"Stake Pro — Lock, Earn, Get NFT","stake.desc":"Lock ZUZU, earn APY + NFT boost. Early stakers get special badge & airdrop priority.",
-      "stake.bronze.t":"Bronze","stake.bronze.b":"30 days lock","stake.bronze.s":"Early access raffles",
-      "stake.silver.t":"Silver","stake.silver.b":"90 days lock","stake.silver.s":"+5% NFT boost",
-      "stake.gold.t":"Gold","stake.gold.b":"180 days lock","stake.gold.s":"Whitelist + ZUZU badge",
-      "stake.diamond.t":"Diamond","stake.diamond.b":"365 days lock","stake.diamond.s":"+10% NFT boost",
-      "stake.obsidian.t":"Obsidian","stake.obsidian.b":"540 days lock","stake.obsidian.s":"VIP rewards + airdrop priority",
-      "calc.title":"Earnings Calculator","calc.amount":"Amount (ZUZU)","calc.lock":"Lock Period","calc.nft":"Have NFT?","calc.no":"No","calc.r1":"Rare +5%","calc.r2":"Epic +10%","calc.r3":"Legendary +15%",
-      "calc.l30":"30 days (12% APY)","calc.l90":"90 days (24% APY)","calc.l180":"180 days (40% APY)","calc.l365":"365 days (65% APY)","calc.l540":"540 days (85% APY)",
-      "btn.calculate":"Calculate","calc.total":"Total Return","calc.monthly":"Monthly Avg","calc.boost":"Total Boost",
-      "nft.title":"ZUZU Maskot NFT Rewards","nft.desc":"Stakers win rare NFTs from the collection.",
-      "tok.title":"Tokenomics (Visualized)","road.title":"Roadmap (Timeline)",
-      "com.title":"Community","com.desc":"Join our global family on Telegram, X, and Discord. Events, airdrops, mini-games and more."
-    },
-    tr:{
-      "nav.community":"Topluluk","nav.stake":"Stake","nav.nft":"NFT Ödülleri","nav.roadmap":"Yol Haritası","nav.tokenomics":"Tokonomi",
-      "btn.connect":"Cüzdan Bağla","hero.tag":"Ön Satış • Stake ile NFT Kazan","hero.title":"ZUZU — Geleceğin Robotic Kirpisi",
-      "hero.desc":"Stake et, <b>ZUZU Maskot NFT</b> kazan. Sınırlı arz, yüksek utility.","hero.btn.rewards":"NFT Ödülleri","hero.btn.collection":"Koleksiyon Sayfası",
-      "timer.days":"GÜN","timer.hours":"SAAT","timer.minutes":"DAKİKA","timer.seconds":"SANİYE",
-      "presale.title":"Ön Satış — Sınırlı tahsis • Maliyeti görmek için miktarı yaz",
-      "presale.amount":"Miktar (ZUZU)","presale.cost":"Maliyet:","presale.w1.t":"1. Hafta (En Ucuz)","presale.w2.t":"2. Hafta","presale.w3.t":"3. Hafta","presale.w4.t":"4. Hafta (Son Fırsat)",
-      "btn.buy":"Satın Al","btn.details":"Detay","stake.title":"Stake Pro — Kilitle, Kazan, NFT Kap",
-      "stake.desc":"ZUZU’nu kilitle, APY + NFT boost ile pasif gelir elde et. Erken stake eden rozeti ve airdrop önceliği alır.",
-      "stake.bronze.t":"Bronz","stake.bronze.b":"30 gün kilit","stake.bronze.s":"Erken erişim çekilişleri",
-      "stake.silver.t":"Gümüş","stake.silver.b":"90 gün kilit","stake.silver.s":"+%5 NFT Boost",
-      "stake.gold.t":"Altın","stake.gold.b":"180 gün kilit","stake.gold.s":"Özel whitelist + ZUZU rozeti",
-      "stake.diamond.t":"Elmas","stake.diamond.b":"365 gün kilit","stake.diamond.s":"+%10 NFT Boost",
-      "stake.obsidian.t":"Obsidyen","stake.obsidian.b":"540 gün kilit","stake.obsidian.s":"VIP ödüller + airdrop önceliği",
-      "calc.title":"Kazanç Hesaplayıcı","calc.amount":"Miktar (ZUZU)","calc.lock":"Kilit Süresi","calc.nft":"NFT var mı?","calc.no":"Yok","calc.r1":"Rare +%5","calc.r2":"Epic +%10","calc.r3":"Legendary +%15",
-      "calc.l30":"30 gün (%12 APY)","calc.l90":"90 gün (%24 APY)","calc.l180":"180 gün (%40 APY)","calc.l365":"365 gün (%65 APY)","calc.l540":"540 gün (%85 APY)",
-      "btn.calculate":"Hesapla","calc.total":"Toplam Getiri","calc.monthly":"Aylık Ortalama","calc.boost":"Toplam Boost",
-      "nft.title":"ZUZU Maskot NFT Ödülleri","nft.desc":"Stake edenler koleksiyondan nadir NFT’ler kazanır.",
-      "tok.title":"Tokonomi (Görselleştirilmiş)","road.title":"Yol Haritası (Timeline)",
-      "com.title":"Topluluk","com.desc":"Telegram, X ve Discord’da global ailemize katıl."
-    },
-    ru:{ /* kısaltılmış çeviriler */ "btn.connect":"Подключить кошелёк","nav.community":"Сообщество","nav.stake":"Стейк","nav.nft":"NFT Награды","nav.roadmap":"Дорожная карта","nav.tokenomics":"Токеномика",
-      "hero.title":"ZUZU — Роботический Ёж","hero.tag":"Предпродажа • Стейк и получай NFT","hero.desc":"Делай стейк и получай <b>ZUZU Maskot NFT</b>. Ограниченное предложение, высокая полезность.",
-      "timer.days":"ДНИ","timer.hours":"ЧАСЫ","timer.minutes":"МИН","timer.seconds":"СЕК", "btn.calculate":"Рассчитать","presale.amount":"Количество (ZUZU)","presale.cost":"Стоимость:" },
-    zh:{ "btn.connect":"连接钱包","nav.community":"社区","nav.stake":"质押","nav.nft":"NFT奖励","nav.roadmap":"路线图","nav.tokenomics":"代币经济",
-      "hero.title":"ZUZU — 未来机甲刺猬","hero.tag":"预售 • 质押赢取NFT","hero.desc":"质押并获得<b>ZUZU面具NFT</b>。限量、高效用。","timer.days":"天","timer.hours":"时","timer.minutes":"分","timer.seconds":"秒"},
-    hi:{ "btn.connect":"वॉलेट कनेक्ट","nav.community":"समुदाय","nav.stake":"स्टेक","nav.nft":"NFT रिवॉर्ड्स","nav.roadmap":"रोडमैप","nav.tokenomics":"टोकनोमिक्स",
-      "hero.title":"ZUZU — रोबोटिक साही","hero.tag":"प्री-सेल • स्टेक कर NFT पाओ","timer.days":"दिन","timer.hours":"घंटे","timer.minutes":"मिनट","timer.seconds":"सेकंड"},
-    es:{ "btn.connect":"Conectar Billetera","nav.community":"Comunidad","nav.stake":"Stake","nav.nft":"Recompensas NFT","nav.roadmap":"Hoja de Ruta","nav.tokenomics":"Tokenomics",
-      "hero.title":"ZUZU — Erizo Robótico","hero.tag":"Pre-venta • Haz stake y gana NFT","timer.days":"DÍAS","timer.hours":"HORAS","timer.minutes":"MIN","timer.seconds":"SEG"},
-    pt:{ "btn.connect":"Conectar Carteira","nav.community":"Comunidade","nav.stake":"Stake","nav.nft":"Recompensas NFT","nav.roadmap":"Roteiro","nav.tokenomics":"Tokenomics",
-      "hero.title":"ZUZU — O Ouriço Robótico","hero.tag":"Pré-venda • Faça stake e ganhe NFT","timer.days":"DIAS","timer.hours":"HORAS","timer.minutes":"MIN","timer.seconds":"SEG"}
-  };
-  const fields = document.querySelectorAll("[data-i]");
-  function applyLang(l){
-    const d = i18n[l]||i18n.en;
-    fields.forEach(el=>{
-      const k = el.getAttribute("data-i");
-      if(d[k]) el.innerHTML = d[k];
-    });
-  }
-  // Default EN for everyone; user can change:
-  const sel = document.getElementById("lang");
-  sel.value = "en"; applyLang("en");
-  sel.addEventListener("change", e=> applyLang(e.target.value));
+}
+loadNFTs();
 </script>
 </body>
 </html>
