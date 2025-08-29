@@ -6,75 +6,64 @@
 <title>ZUZUCOIN — Ön Satış • Stake • NFT Ödülleri</title>
 <style>
   :root{
-    --bg:#0b1220;
-    --panel:#121a2b;
-    --panel-2:#0f1729;
-    --text:#e6ebff;
-    --muted:#9fb0d3;
-    --primary:#7dc3ff;
-    --primary-2:#8b5cf6;
-    --accent:#22d3ee;
-    --good:#22c55e;
-    --warn:#f59e0b;
-    --danger:#ef4444;
-    --card:#0e1526;
-    --stroke:#1e2a44;
-    --shadow:0 10px 30px rgba(0,0,0,.35);
-    --radius:18px;
+    --bg:#0b1220; --panel:#121a2b; --panel-2:#0f1729; --text:#e6ebff; --muted:#9fb0d3;
+    --primary:#7dc3ff; --primary-2:#8b5cf6; --accent:#22d3ee; --card:#0e1526; --stroke:#1e2a44;
+    --shadow:0 10px 30px rgba(0,0,0,.35); --radius:18px;
   }
   *{box-sizing:border-box}
   html,body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.45}
-  a{color:var(--primary)}
+  a{color:var(--primary);text-decoration:none}
   .wrap{max-width:1100px;margin:auto;padding:18px}
   .topnav{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:18px}
   .brand{font-weight:800;letter-spacing:.5px}
   .tabs{display:flex;gap:14px;flex-wrap:wrap}
-  .tabs a{padding:8px 12px;border:1px solid var(--stroke);border-radius:999px;color:var(--muted);text-decoration:none}
+  .tabs a{padding:8px 12px;border:1px solid var(--stroke);border-radius:999px;color:var(--muted)}
   .tabs a.active,.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-2));color:white;border-color:transparent}
-  .btn{padding:10px 14px;border-radius:12px;border:1px solid var(--stroke);background:var(--panel);color:var(--text);text-decoration:none;display:inline-flex;gap:8px;align-items:center}
+  .btn{padding:10px 14px;border-radius:12px;border:1px solid var(--stroke);background:var(--panel);color:var(--text);display:inline-flex;gap:8px;align-items:center}
   .btn-primary{border:none}
   .grid{display:grid;gap:16px}
-  .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
   .card{background:var(--card);border:1px solid var(--stroke);border-radius:var(--radius);box-shadow:var(--shadow)}
   .card-pad{padding:16px}
   .title-xl{font-size:clamp(20px,4vw,36px);font-weight:900;margin:4px 0 10px}
   .kicker{display:inline-block;font-size:12px;color:var(--muted);border:1px solid var(--stroke);padding:4px 8px;border-radius:999px;margin-bottom:8px}
-  .countdown{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
+  /* countdown */
+  .countdown{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap;margin-top:8px}
   .countdown .unit{flex:1 1 120px;min-width:120px;background:var(--panel-2);border:1px solid var(--stroke);border-radius:16px;padding:12px;text-align:center}
   .countdown .num{font-variant-numeric:tabular-nums;letter-spacing:1px;font-weight:800;font-size:32px}
   .countdown .lab{margin-top:4px;font-size:12px;color:var(--muted)}
+  /* presale */
   .presale{display:grid;gap:14px}
   .tier{display:flex;align-items:center;gap:14px;justify-content:space-between;background:var(--panel);border:1px solid var(--stroke);border-radius:16px;padding:14px}
   .tier .price{font-weight:800}
+  /* logos */
   .logos{display:grid;grid-auto-flow:column;gap:18px;overflow:auto;padding-bottom:6px}
   .logo{min-width:120px;height:56px;border-radius:14px;border:1px dashed var(--stroke);display:grid;place-items:center;background:var(--panel)}
+  /* sections */
   .section{margin-top:18px}
   .section h2{margin:0 0 10px;font-size:20px}
+  /* nfts */
   .nfts{display:grid;gap:16px}
   .nft-card{display:flex;flex-direction:column;gap:12px}
   .nft-img{aspect-ratio:16/12;border-radius:16px;border:1px solid var(--stroke);overflow:hidden;background:linear-gradient(180deg,#1b2440,#0c1330);display:grid;place-items:center}
   .nft-meta{display:flex;align-items:center;justify-content:space-between;color:var(--muted)}
-  /* Tokenomics donut */
+  /* tokenomics */
   .tokonomics{display:grid;gap:16px}
   .legend{display:grid;gap:8px}
   .legend .row{display:flex;align-items:center;gap:10px}
   .dot{width:12px;height:12px;border-radius:3px}
-  /* Timeline */
+  /* roadmap */
   .timeline{position:relative;padding-left:18px;display:grid;gap:14px}
   .timeline::before{content:"";position:absolute;left:7px;top:0;bottom:0;width:2px;background:linear-gradient(#2a3a62,transparent)}
   .milestone{position:relative;padding:12px 12px 12px 18px;background:var(--panel);border:1px solid var(--stroke);border-radius:14px}
   .milestone::before{content:"";position:absolute;left:-3px;top:18px;width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(34,211,238,.15)}
-  /* Footer */
   .foot{margin:24px 0 12px;display:flex;gap:12px;flex-wrap:wrap;color:var(--muted)}
-  /* Responsive */
+  /* responsive grids */
   @media (min-width:900px){
     .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
     .nfts{grid-template-columns:repeat(3,minmax(0,1fr))}
     .presale{grid-template-columns:repeat(2,minmax(0,1fr))}
   }
   @media (max-width:899.98px){
-    .grid-2,.grid-3{grid-template-columns:1fr}
     .countdown .unit{flex:1 1 calc(25% - 10px);min-width:calc(25% - 10px)}
   }
 </style>
@@ -162,7 +151,6 @@
       <!-- HERO IMAGE -->
       <div class="card">
         <div class="nft-img" style="height:100%">
-          <!-- Inline SVG görsel -->
           <svg viewBox="0 0 1200 900" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
             <defs>
               <linearGradient id="g1" x1="0" x2="1" y1="0" y2="1">
@@ -171,10 +159,7 @@
               <filter id="glow"><feGaussianBlur stdDeviation="12" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
             </defs>
             <rect width="1200" height="900" fill="#111a33"/>
-            <g filter="url(#glow)">
-              <circle cx="280" cy="250" r="120" fill="url(#g1)" opacity=".25"/>
-              <circle cx="900" cy="650" r="160" fill="#22d3ee" opacity=".18"/>
-            </g>
+            <g filter="url(#glow)"><circle cx="280" cy="250" r="120" fill="url(#g1)" opacity=".25"/><circle cx="900" cy="650" r="160" fill="#22d3ee" opacity=".18"/></g>
             <g transform="translate(320,220)">
               <path d="M180 420c-90 0-160-70-160-160s70-160 160-160 160 70 160 160-70 160-160 160z" fill="url(#g1)" stroke="#5ea8f9" stroke-width="10"/>
               <path d="M50 250l-60 40 30-90" fill="none" stroke="#22d3ee" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
@@ -189,97 +174,26 @@
       </div>
     </section>
 
-    <!-- NFTS -->
+    <!-- NFTS (Dinamik Thirdweb Yükleyici) -->
     <section id="nfts" class="section card card-pad">
       <h2>Maskot NFT Koleksiyonu</h2>
-      <div class="nfts">
-        <!-- NFT 1 -->
-        <div class="nft-card">
-          <div class="nft-img">
-            <!-- PNG kullanmak istersen buraya URL koy -->
-            <!-- <img src="https://.../zuzu-warrior.png" alt="ZUZU Warrior" style="width:100%;height:100%;object-fit:cover"> -->
-            <!-- Inline SVG (her zaman görünür) -->
-            <svg viewBox="0 0 600 450" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-              <defs><linearGradient id="w" x1="0" x2="1"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
-              <rect width="600" height="450" fill="#111a33"/>
-              <circle cx="140" cy="120" r="70" fill="url(#w)" opacity=".25"/>
-              <g transform="translate(120,120) scale(1.1)">
-                <rect x="40" y="80" width="220" height="140" rx="30" fill="url(#w)" stroke="#5ea8f9" stroke-width="8"/>
-                <circle cx="110" cy="150" r="12" fill="#0b1220"/><circle cx="190" cy="150" r="12" fill="#0b1220"/>
-                <path d="M110 190c28 18 52 18 80 0" stroke="#0b1220" stroke-width="10" fill="none" stroke-linecap="round"/>
-              </g>
-              <text x="50%" y="420" fill="#c7d2fe" text-anchor="middle" font-family="Inter,Arial" font-size="22">ZUZU Warrior — Arz: 900 (Rare)</text>
-            </svg>
-          </div>
-          <div class="nft-meta">
-            <div><strong>ZUZU Warrior</strong> · Arz: 900</div>
-            <a class="btn" href="#" aria-label="ZUZU Warrior görüntüle">Görüntüle ↗</a>
-          </div>
-        </div>
-
-        <!-- NFT 2 -->
-        <div class="nft-card">
-          <div class="nft-img">
-            <!-- <img src="https://.../zuzu-maiden.png" alt="ZUZU Maiden" style="width:100%;height:100%;object-fit:cover"> -->
-            <svg viewBox="0 0 600 450" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-              <defs><linearGradient id="m" x1="0" x2="1"><stop offset="0" stop-color="#7dc3ff"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
-              <rect width="600" height="450" fill="#101935"/>
-              <circle cx="480" cy="120" r="80" fill="url(#m)" opacity=".22"/>
-              <g transform="translate(120,120)">
-                <rect x="40" y="70" width="220" height="150" rx="40" fill="url(#m)" stroke="#7dc3ff" stroke-width="8"/>
-                <path d="M70 70l25-40 30 22 25-36 30 24 25-36 26 40" fill="none" stroke="#7dc3ff" stroke-width="10" stroke-linecap="round"/>
-              </g>
-              <text x="50%" y="420" fill="#c7d2fe" text-anchor="middle" font-family="Inter,Arial" font-size="22">ZUZU Maiden — Arz: 800 (Rare)</text>
-            </svg>
-          </div>
-          <div class="nft-meta">
-            <div><strong>ZUZU Maiden</strong> · Arz: 800</div>
-            <a class="btn" href="#" aria-label="ZUZU Maiden görüntüle">Görüntüle ↗</a>
-          </div>
-        </div>
-
-        <!-- NFT 3 -->
-        <div class="nft-card">
-          <div class="nft-img">
-            <!-- <img src="https://.../zuzu-ranger.png" alt="ZUZU Ranger" style="width:100%;height:100%;object-fit:cover"> -->
-            <svg viewBox="0 0 600 450" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-              <defs><linearGradient id="r" x1="0" x2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
-              <rect width="600" height="450" fill="#0f1833"/>
-              <circle cx="300" cy="340" r="120" fill="url(#r)" opacity=".18"/>
-              <g transform="translate(110,120)">
-                <rect x="40" y="70" width="240" height="150" rx="24" fill="url(#r)" stroke="#5ea8f9" stroke-width="8"/>
-                <circle cx="120" cy="140" r="12" fill="#0b1220"/><circle cx="200" cy="140" r="12" fill="#0b1220"/>
-              </g>
-              <text x="50%" y="420" fill="#c7d2fe" text-anchor="middle" font-family="Inter,Arial" font-size="22">ZUZU Ranger — Arz: 1000 (Rare)</text>
-            </svg>
-          </div>
-          <div class="nft-meta">
-            <div><strong>ZUZU Ranger</strong> · Arz: 1000</div>
-            <a class="btn" href="#" aria-label="ZUZU Ranger görüntüle">Görüntüle ↗</a>
-          </div>
-        </div>
-      </div>
+      <div id="nft-grid" class="nfts"></div>
     </section>
 
     <!-- TOKENOMICS -->
     <section id="tokenomics" class="section card card-pad tokonomics">
       <h2>Tokonomi (Görselleştirilmiş)</h2>
-      <div class="grid grid-2">
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
         <div style="display:grid;place-items:center">
-          <!-- Donut Chart -->
           <svg viewBox="0 0 240 240" width="100%" max-width="280" xmlns="http://www.w3.org/2000/svg" aria-label="Tokonomi Dağılımı">
-            <!-- donut arka -->
             <circle cx="120" cy="120" r="76" stroke="#1e2a44" stroke-width="28" fill="none"/>
-            <!-- dilimler -->
-            <!-- Toplam 100: Topluluk 35, Likidite 20, Ekip 15, Hazine 10, Staking 15, Danışman 5 -->
             <g transform="rotate(-90 120 120)">
-              <circle cx="120" cy="120" r="76" stroke="#7dc3ff" stroke-width="28" stroke-dasharray="238.76 238.76" stroke-dashoffset="0" fill="none" opacity=".0"/>
-              <circle cx="120" cy="120" r="76" stroke="#8b5cf6" stroke-width="28" stroke-dasharray="83.57 396.93" stroke-dashoffset="0" fill="none"/> <!-- Topluluk 35 -->
-              <circle cx="120" cy="120" r="76" stroke="#22d3ee" stroke-width="28" stroke-dasharray="47.73 432.77" stroke-dashoffset="-83.57" fill="none"/> <!-- Likidite 20 -->
-              <circle cx="120" cy="120" r="76" stroke="#22c55e" stroke-width="28" stroke-dasharray="35.80 444.70" stroke-dashoffset="-131.3" fill="none"/> <!-- Ekip 15 -->
-              <circle cx="120" cy="120" r="76" stroke="#f59e0b" stroke-width="28" stroke-dasharray="23.87 456.63" stroke-dashoffset="-167.1" fill="none"/> <!-- Hazine 10 -->
-              <circle cx="120" cy="120" r="76" stroke="#e879f9" stroke-width="28" stroke-dasharray="35.80 444.70" stroke-dashoffset="-190.97" fill="none"/> <!-- Staking 15 -->
-              <circle cx="120" cy="120" r="76" stroke="#ef4444" stroke-width="28" stroke-dasharray="11.93 468.57" stroke-dashoffset="-226.77" fill="none"/> <!-- Danışman 5 -->
+              <circle cx="120" cy="120" r="76" stroke="#8b5cf6" stroke-width="28" stroke-dasharray="83.57 396.93" stroke-dashoffset="0" fill="none"/>
+              <circle cx="120" cy="120" r="76" stroke="#22d3ee" stroke-width="28" stroke-dasharray="47.73 432.77" stroke-dashoffset="-83.57" fill="none"/>
+              <circle cx="120" cy="120" r="76" stroke="#22c55e" stroke-width="28" stroke-dasharray="35.80 444.70" stroke-dashoffset="-131.3" fill="none"/>
+              <circle cx="120" cy="120" r="76" stroke="#f59e0b" stroke-width="28" stroke-dasharray="23.87 456.63" stroke-dashoffset="-167.1" fill="none"/>
+              <circle cx="120" cy="120" r="76" stroke="#e879f9" stroke-width="28" stroke-dasharray="35.80 444.70" stroke-dashoffset="-190.97" fill="none"/>
+              <circle cx="120" cy="120" r="76" stroke="#ef4444" stroke-width="28" stroke-dasharray="11.93 468.57" stroke-dashoffset="-226.77" fill="none"/>
             </g>
             <circle cx="120" cy="120" r="52" fill="#0b1220"/>
             <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#c7d2fe" font-size="14" font-family="Inter,Arial">Toplam Arz</text>
@@ -289,10 +203,10 @@
         <div class="legend">
           <div class="row"><span class="dot" style="background:#8b5cf6"></span><strong>Topluluk</strong> — %35</div>
           <div class="row"><span class="dot" style="background:#22d3ee"></span><strong>Likidite</strong> — %20</div>
-          <div class="row"><span class="dot" style="background:#22c55e"></span><strong>Ekip</strong> — %15 (12 ay kilit, çizelgeli açılım)</div>
+          <div class="row"><span class="dot" style="background:#22c55e"></span><strong>Ekip</strong> — %15 (12 ay kilit)</div>
           <div class="row"><span class="dot" style="background:#f59e0b"></span><strong>Hazine</strong> — %10</div>
           <div class="row"><span class="dot" style="background:#e879f9"></span><strong>Staking Ödülleri</strong> — %15</div>
-          <div class="row"><span class="dot" style="background:#ef4444"></span><strong>Danışman / Partner</strong> — %5</div>
+          <div class="row"><span class="dot" style="background:#ef4444"></span><strong>Danışman/Partner</strong> — %5</div>
         </div>
       </div>
     </section>
@@ -301,22 +215,10 @@
     <section id="roadmap" class="section card card-pad">
       <h2>Yol Haritası (Timeline)</h2>
       <div class="timeline">
-        <div class="milestone">
-          <strong>Q1 — Temel Altyapı</strong><br/>
-          Web, akıllı kontrat testi, topluluk kanalları, güvenlik denetimi hazırlığı
-        </div>
-        <div class="milestone">
-          <strong>Q2 — Ön Satış & Stake</strong><br/>
-          Ön satış turları, staking lansmanı, **Maskot NFT** ödülleri
-        </div>
-        <div class="milestone">
-          <strong>Q3 — Borsa Listeleri</strong><br/>
-          Likidite sağlama, ilk CEX/DEX listeleri, market-maker entegrasyonu
-        </div>
-        <div class="milestone">
-          <strong>Q4 — Ekosistem</strong><br/>
-          Oyun içi entegrasyonlar, partnerlikler, mobil cüzdan & mini-app
-        </div>
+        <div class="milestone"><strong>Q1 — Temel Altyapı</strong><br/>Web, kontrat testleri, topluluk kanalları, güvenlik hazırlığı</div>
+        <div class="milestone"><strong>Q2 — Ön Satış & Stake</strong><br/>Ön satış turları, staking lansmanı, Maskot NFT ödülleri</div>
+        <div class="milestone"><strong>Q3 — Borsa Listeleri</strong><br/>Likidite, ilk CEX/DEX listeleri, market-maker entegrasyonu</div>
+        <div class="milestone"><strong>Q4 — Ekosistem</strong><br/>Oyun içi entegrasyonlar, partnerlikler, mobil mini-app</div>
       </div>
     </section>
 
@@ -326,33 +228,98 @@
     </div>
   </div>
 
+<!-- Ethers (CDN) -->
+<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+
 <script>
-  // --- COUNTDOWN (YAN YANA, 2 HANE) ---
-  // Hedef zamanı (örn. 18 gün sonra) ayarla:
-  const target = new Date(Date.now() + 18*24*60*60*1000).getTime();
-  const dEl = document.getElementById('d');
-  const hEl = document.getElementById('h');
-  const mEl = document.getElementById('m');
-  const sEl = document.getElementById('s');
-
-  function pad2(n){ return String(n).padStart(2,'0'); }
+  /* ===== Countdown (yan yana, 2 hane) ===== */
+  // Lansman hedef tarihini buraya gir (YYYY-MM-DDTHH:MM:SS yerel):
+  const TARGET_DATE = '2025-10-01T18:00:00';
+  const target = new Date(TARGET_DATE).getTime();
+  const dEl=document.getElementById('d'), hEl=document.getElementById('h'),
+        mEl=document.getElementById('m'), sEl=document.getElementById('s');
+  const pad2 = n => String(n).padStart(2,'0');
   function tick(){
-    const now = Date.now();
-    let diff = Math.max(0, target - now);
-    const d = Math.floor(diff / (1000*60*60*24)); diff -= d*24*60*60*1000;
-    const h = Math.floor(diff / (1000*60*60));    diff -= h*60*60*1000;
-    const m = Math.floor(diff / (1000*60));       diff -= m*60*1000;
-    const s = Math.floor(diff / 1000);
-
-    dEl.textContent = pad2(d);
-    hEl.textContent = pad2(h);
-    mEl.textContent = pad2(m);
-    sEl.textContent = pad2(s);
+    let diff = Math.max(0, target - Date.now());
+    const d = Math.floor(diff/86400000); diff-=d*86400000;
+    const h = Math.floor(diff/3600000);  diff-=h*3600000;
+    const m = Math.floor(diff/60000);    diff-=m*60000;
+    const s = Math.floor(diff/1000);
+    dEl.textContent=pad2(d); hEl.textContent=pad2(h); mEl.textContent=pad2(m); sEl.textContent=pad2(s);
   }
-  tick(); setInterval(tick, 1000);
+  tick(); setInterval(tick,1000);
 
-  // --- OPTIONAL: PNG'ye geçmek için örnek ---
-  // document.querySelector('#nfts img')?.setAttribute('src','/assets/nft/zuzu-warrior.png');
+  /* ===== ZUZU NFT Loader (Thirdweb / ERC721 tokenURI) ===== */
+  const CONTRACT = "0xF2bbbEcB417725813BF5E940d678793fACDa9729"; // Polygon
+  const RPC      = "https://polygon-rpc.com"; // alternatif: https://polygon.llamarpc.com
+  // Görüntülenecek token ID aralığı (ör. 1..12):
+  const TOKEN_IDS = Array.from({length: 12}, (_, i) => i + 1);
+
+  // IPFS -> HTTP
+  function ipfsToHttp(u){
+    if(!u) return "";
+    if(u.startsWith("ipfs://")) return "https://ipfs.io/ipfs/" + u.replace("ipfs://","");
+    return u;
+  }
+  // Gateway fallback
+  function withFallback(url){
+    const cidPath = url.replace(/^https?:\/\/[^/]+\/ipfs\//, "");
+    return [
+      "https://ipfs.io/ipfs/" + cidPath,
+      "https://cloudflare-ipfs.com/ipfs/" + cidPath,
+      "https://gateway.pinata.cloud/ipfs/" + cidPath
+    ];
+  }
+  async function fetchJSON(url){
+    try{ const r = await fetch(url,{mode:"cors"}); if(r.ok) return await r.json(); }catch(e){}
+    return null;
+  }
+  async function getMetadataFromURI(uri){
+    if(!uri) return null;
+    if(uri.startsWith("data:application/json;base64,")){
+      try{ return JSON.parse(atob(uri.split(",")[1])); }catch(e){ return null; }
+    }
+    const first = ipfsToHttp(uri);
+    for(const u of withFallback(first)){ const j = await fetchJSON(u); if(j) return j; }
+    return null;
+  }
+  function nftCard(meta, tokenId){
+    const name   = meta?.name || `ZUZU Maskot #${tokenId}`;
+    const supply = meta?.attributes?.find(a => (a.trait_type||"").toLowerCase()==="supply")?.value ?? "";
+    const rarity = meta?.attributes?.find(a => (a.trait_type||"").toLowerCase()==="rarity")?.value ?? "Rare";
+    const imgUrl = ipfsToHttp(meta?.image || "");
+    const imgs   = imgUrl ? withFallback(imgUrl) : [];
+
+    const wrap = document.createElement("div"); wrap.className="nft-card";
+    const imgBox = document.createElement("div"); imgBox.className="nft-img";
+    const img = document.createElement("img"); img.alt=name; img.style="width:100%;height:100%;object-fit:cover";
+    let idx=0; function tryLoad(){ if(idx>=imgs.length){ imgBox.innerHTML='<div style="color:#9fb0d3">Görsel yüklenemedi</div>'; return; } img.src=imgs[idx++]; }
+    img.onerror=tryLoad; tryLoad(); imgBox.appendChild(img);
+
+    const metaRow=document.createElement("div"); metaRow.className="nft-meta";
+    metaRow.innerHTML = `<div><strong>${name}</strong>${supply?` · Arz: ${supply}`:""} · <span style="color:#9fb0d3">${rarity}</span></div>
+      <a class="btn" href="https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/${CONTRACT}/nfts?tokenId=${tokenId}" target="_blank" rel="noopener">Görüntüle ↗</a>`;
+    wrap.appendChild(imgBox); wrap.appendChild(metaRow);
+    return wrap;
+  }
+  async function loadNFTs(){
+    const grid = document.getElementById("nft-grid");
+    const provider = new ethers.providers.JsonRpcProvider(RPC);
+    const abi = ["function tokenURI(uint256 tokenId) view returns (string)"];
+    const c = new ethers.Contract(CONTRACT, abi, provider);
+
+    for(const id of TOKEN_IDS){
+      const sk = document.createElement("div"); sk.className="nft-card";
+      sk.innerHTML = `<div class="nft-img" style="display:grid;place-items:center"><div style="color:#9fb0d3">Yükleniyor... #${id}</div></div>`;
+      grid.appendChild(sk);
+      try{
+        const uri  = await c.tokenURI(id);
+        const meta = await getMetadataFromURI(uri);
+        if(meta){ grid.replaceChild(nftCard(meta,id), sk); } else { grid.removeChild(sk); }
+      }catch(e){ grid.removeChild(sk); /* token mint edilmemiş olabilir */ }
+    }
+  }
+  loadNFTs();
 </script>
 </body>
 </html>
