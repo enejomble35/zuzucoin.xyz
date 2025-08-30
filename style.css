@@ -154,3 +154,34 @@
 .z-modal__panel{position:relative;margin:8vh auto;background:#0e1522;border:1px solid #24314b;border-radius:14px;max-width:480px;padding:18px}
 .z-modal__head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .z-wallets{display:grid;gap:10px}
+/* ==== FIX: NFT maskot full-frame, kesme yok ==== */
+.nft img{
+  width:100%;
+  aspect-ratio: 1 / 1;      /* kare yüksekliği kendisi ayarlar */
+  height:auto;              /* tarayıcı aspect-ratio’dan hesaplar */
+  object-fit:contain;       /* kesme yok */
+  background:#0f1a30;       /* çerçeve fonu */
+  padding:10px;
+  border-bottom:1px solid #1d2d50;
+  border-radius:14px 14px 0 0;
+}
+
+/* ==== FIX: Exchanges ticker mobilde görünmeme ==== */
+@media (max-width: 768px){
+  .ticker{padding:10px; height:auto; overflow:visible;}
+  .ticker__track{
+    position:static;        /* absolute → static */
+    animation:none;         /* kayan animasyonu kapat */
+    display:flex;
+    flex-wrap:wrap;         /* taşarsa alta */
+    gap:16px;
+    justify-content:center; /* ortala */
+  }
+  .ticker__item{flex:0 0 auto;}
+  .ticker__item img{height:38px; opacity:1;}
+}
+
+/* Küçük cihazlarda küçük padding */
+@media (max-width: 420px){
+  .nft img{padding:6px;}
+}
