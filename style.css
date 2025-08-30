@@ -168,3 +168,19 @@ img{max-width:100%;display:block}
 .supported-exchanges-wrapper {
   overflow: visible !important;
 }
+
+.nft-grid .nft-card img,
+.nft-card__img {
+  width: 100%;
+  height: 280px;           /* grid yüksekliğini eşitlemek için */
+  object-fit: contain;     /* kırpma yok */
+  aspect-ratio: 1 / 1;     /* kare görünüm, istersen 4/5 yap */
+  background: #0b1220;     /* boş kenarlar koyu dursun */
+  border-radius: 12px;
+}
+@media (max-width: 640px){
+  .nft-grid .nft-card img,
+  .nft-card__img {
+    height: 220px;         /* mobilde daha kısa */
+  }
+}
