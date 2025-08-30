@@ -616,7 +616,21 @@ btn.addEventListener("click",async()=>{
   document.getElementById('connect-evm')?.addEventListener('click', connectEvm);
 </script>
 <!-- ✅ MetaMask Connect Script Bitti -->
-
+<!-- Wallet Select Modal -->
+<div class="z-modal" id="walletModal" style="display:none">
+  <div class="z-modal__backdrop"></div>
+  <div class="z-modal__panel">
+    <div class="z-modal__head">
+      <b>Select Wallet</b>
+      <button id="wmClose" class="z-btn z-btn-ghost">×</button>
+    </div>
+    <div class="z-wallets">
+      <button class="z-btn z-btn-primary" id="btnMeta">MetaMask (EVM)</button>
+      <button class="z-btn z-btn-primary" id="btnTon">TON Wallet</button>
+      <button class="z-btn z-btn-ghost"    id="btnPh">Phantom (Solana)</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
 </body>
