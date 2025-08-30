@@ -126,3 +126,45 @@ img{max-width:100%;display:block}
 .z-footer{border-top:1px solid #15243f;padding:16px 0;color:#9cb6e6}
 .between{display:flex;justify-content:space-between}
 .center-v{align-items:center}
+
+/* Borsa logoları kutusu */
+.supported-exchanges,
+.exchanges-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+/* Logolar */
+.supported-exchanges img,
+.exchanges-row img,
+.supported-exchanges svg,
+.exchanges-row svg {
+  height: 28px;
+  max-width: 72px;
+  width: auto;
+  object-fit: contain;
+  opacity: 0.95;
+  filter: none;
+}
+
+/* Mobil uyarlama */
+@media (max-width: 480px){
+  .supported-exchanges img,
+  .exchanges-row img,
+  .supported-exchanges svg,
+  .exchanges-row svg {
+    height: 22px;
+    max-width: 60px;
+    opacity: 1;
+  }
+}
+
+/* Taşmayı gizleyip görünmez yapan kapsayıcıları nötrleyelim */
+.exchanges-wrapper,
+.supported-exchanges-wrapper {
+  overflow: visible !important;
+}
