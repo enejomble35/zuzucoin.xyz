@@ -21,7 +21,7 @@ img{max-width:100%;display:block}
 .z-btn-primary{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#08101d}
 .z-btn-ghost{background:#12203a;color:#cfe2ff}
 
-/* Sections */
+/* Section + headings */
 .z-section{padding:38px 0;border-top:1px solid #15243f}
 .section-head h2{margin:.2rem 0 .4rem;font-size:clamp(1.4rem,3.2vw,2rem)}
 .section-head p{color:var(--muted)}
@@ -31,15 +31,15 @@ img{max-width:100%;display:block}
 .grid-2{display:grid;grid-template-columns:1.1fr .9fr;gap:22px}
 @media(max-width:920px){.grid-2{grid-template-columns:1fr}}
 
-/* HERO */
+/* HERO 2 — Büyük kirpi logo + sayaç */
 .hero-2{padding:34px 0 18px;background:
   radial-gradient(1200px 400px at 0% -10%,rgba(74,100,255,.18),transparent 45%),
   radial-gradient(800px 300px at 90% -20%,rgba(148,198,255,.16),transparent 40%)}
 .hero-2 h1{font-size:clamp(2rem,4.6vw,3.2rem);margin:.2rem 0 .6rem;letter-spacing:.4px}
 .lead{color:#bfd2ff;font-size:1.05rem}
 .hero-cta{display:flex;gap:.6rem;margin:.8rem 0 1rem;flex-wrap:wrap}
-.hero-banner{border-radius:18px;overflow:hidden;background:#0f1727;border:1px solid #1c2b4d}
-.hero-banner img{aspect-ratio:16/12;object-fit:cover}
+.hero-visual{display:flex;justify-content:center;align-items:center}
+.hero-visual .logo-big{max-width:420px;width:100%;filter:drop-shadow(0 16px 36px rgba(0,0,0,.4))}
 
 /* Flip countdown */
 .counter{display:flex;gap:14px;flex-wrap:wrap}
@@ -54,24 +54,19 @@ img{max-width:100%;display:block}
 .card{background:var(--panel);border:1px solid #1b2a49;border-radius:16px;padding:16px}
 .buybox h4{margin:.2rem 0 .6rem}
 .buybox .price{color:#bcd1ff;font-weight:800}
-.buybox .cost{margin-top:.2rem;color:#8fb7ff}
+.cost-row{display:flex;justify-content:space-between;align-items:center;margin:.3rem 0 .4rem}
 .input{width:100%;padding:.7rem;border-radius:12px;background:#0f1c33;border:1px solid #23395d;color:var(--txt)}
+.buy{display:flex;gap:.5rem;margin-top:.6rem}
+.buy .z-btn{flex:1;justify-content:center}
 
-/* Exchanges ticker */
+/* Exchanges ticker – mobilde görünür */
 .ticker{overflow:hidden;border:1px solid #1a2b4c;border-radius:16px;background:#0f1a30;padding:10px}
-.ticker__track{display:flex;gap:22px;align-items:center;animation:t 28s linear infinite}
-.ticker__item img{height:46px;opacity:.95;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
+.ticker__track{display:flex;gap:32px;align-items:center;animation:t 28s linear infinite;min-width:200%}
+.ticker__item img{height:58px;opacity:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
 @keyframes t{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .ex-note{color:#8ea7d3;font-style:italic;text-align:center;margin-top:8px}
 
-/* MOBILE ticker fix (görünmeme sorununu çözer) */
-@media (max-width:768px){
-  .ticker{height:auto;overflow:visible}
-  .ticker__track{animation:none;flex-wrap:wrap;justify-content:center;gap:16px}
-  .ticker__item img{height:38px;opacity:1}
-}
-
-/* Stake grid */
+/* Stake Pro */
 .stake-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 @media(max-width:980px){.stake-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:640px){.stake-grid{grid-template-columns:1fr}}
@@ -90,27 +85,23 @@ img{max-width:100%;display:block}
 .statwrap{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
 .stat{background:#0f1a30;border:1px solid #22365a;border-radius:14px;padding:12px}
 .stat .label{color:#90a9d6}
+.chart-wrap img{width:100%;border-radius:12px;border:1px solid #1d2d50;margin-top:10px}
 
-/* NFT grid — 5 kolon desktop / 2 kolon mobil ve KESME YOK */
-.nft-grid{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:14px;
-}
+/* NFT grid – 5 kolon desktop / 2 kolon mobil, tam sığdırma */
+.nft-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
 @media(max-width:1100px){.nft-grid{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:900px){.nft-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:680px){.nft-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.nft-grid{grid-template-columns:repeat(2,1fr)}}
 
-.nft{background:#0f1a30;border:1px solid #1d2d50;border-radius:14px;overflow:hidden}
-.nft-img{
+.nft{background:#0f1a30;border:1px solid #1d2d50;border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.nft img{
   width:100%;
-  aspect-ratio:1 / 1;         /* kare */
-  object-fit:contain;          /* KESME YOK */
-  background:#0f1a30;
+  aspect-ratio:1/1;
+  object-fit:contain;         /* BAŞ/AYAK KESİLMESİN */
+  background:radial-gradient(120% 120% at 50% 30%, rgba(140,118,255,.12), rgba(0,0,0,.12));
   padding:10px;
-  border-bottom:1px solid #1d2d50;
 }
-.nft .meta{display:flex;justify-content:space-between;padding:10px}
+.nft .meta{display:flex;justify-content:space-between;align-items:center;padding:10px}
 .nft .tag{font-size:.75rem;background:#152748;color:#a8c2ff;border:1px solid #274075;border-radius:999px;padding:.25rem .5rem}
 
 /* Tokenomics */
@@ -120,13 +111,7 @@ img{max-width:100%;display:block}
 .legend div{display:flex;align-items:center;gap:.55rem}
 .dot{width:12px;height:12px;border-radius:3px}
 
-/* Footer, modal */
+/* Footer */
 .z-footer{border-top:1px solid #15243f;padding:16px 0;color:#9cb6e6}
 .between{display:flex;justify-content:space-between}
 .center-v{align-items:center}
-
-.z-modal{position:fixed;inset:0;z-index:90}
-.z-modal__backdrop{position:absolute;inset:0;background:rgba(0,0,0,.5)}
-.z-modal__panel{position:relative;margin:8vh auto;background:#0e1522;border:1px solid #24314b;border-radius:14px;max-width:480px;padding:18px}
-.z-modal__head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.z-wallets{display:grid;gap:10px}
