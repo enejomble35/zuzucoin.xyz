@@ -1,110 +1,179 @@
-/* ================================
-   I18N – Çoklu dil (varsayılan EN)
-   HTML'de data-i18n="key" olanları çevirir.
-================================== */
-function initI18n(){
-  const dict = {
-    en: {
-      heroTitle: "ZUZU — Robotic Hedgehog",
-      heroSub: "Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high utility.",
-      btnNft: "NFT Rewards",
-      btnCollection: "Collection Page",
-      contract: "Contract",
-      days: "DAYS", hours: "HOURS", minutes: "MINUTES", seconds: "SECONDS",
-      supportedEx: "Supported Exchanges",
-      willBeListed: "Will be listed soon",
-      tokenomics: "Tokenomics (Visualized)",
-      tokenomicsDesc: "Fair distribution, sustainable reward economy & reserve plan.",
-      legCommunity:"Community", legLiquidity:"Liquidity", legTeam:"Team", legTreasury:"Treasury", legStaking:"Staking Rewards", legPartners:"Advisors/Partners"
-    },
-    tr: {
-      heroTitle: "ZUZU — Geleceğin Robotic Kirpisi",
-      heroSub: "Stake et ve <b>ZUZU Maskot NFT</b>'lerini kazan. Sınırlı arz, yüksek utility.",
-      btnNft: "NFT Ödülleri",
-      btnCollection: "Koleksiyon Sayfası",
-      contract: "Kontrat",
-      days: "GÜN", hours: "SAAT", minutes:"DAKİKA", seconds:"SANİYE",
-      supportedEx: "Desteklenen Borsalar",
-      willBeListed: "Yakında listelenecek",
-      tokenomics: "Tokonomi (Görselleştirilmiş)",
-      tokenomicsDesc: "Adil dağıtım, sürdürülebilir ödül ekonomisi ve rezerv planı.",
-      legCommunity:"Topluluk", legLiquidity:"Likidite", legTeam:"Ekip", legTreasury:"Hazine", legStaking:"Staking Ödülleri", legPartners:"Danışman/Partner"
-    },
-    ru: { heroTitle:"ZUZU — Роботический ёж", heroSub:"Стейк и выигрывай <b>маскот NFT ZUZU</b>. Ограниченная эмиссия, высокая полезность.", btnNft:"NFT Награды", btnCollection:"Страница коллекции", contract:"Контракт", days:"ДНИ", hours:"ЧАСЫ", minutes:"МИНУТЫ", seconds:"СЕКУНДЫ", supportedEx:"Поддерживаемые биржи", willBeListed:"Скоро будет листинг", tokenomics:"Токеномика (визуально)", tokenomicsDesc:"Справедливое распределение, устойчивая экономика вознаграждений и резерв.", legCommunity:"Сообщество", legLiquidity:"Ликвидность", legTeam:"Команда", legTreasury:"Казна", legStaking:"Награды стейкинга", legPartners:"Советники/Партнеры" },
-    hi: { heroTitle:"ZUZU — रोबोटिक हेजहॉग", heroSub:"स्टेक करें और <b>ZUZU मास्कॉट NFT</b> जीतें। सीमित सप्लाई, उच्च यूटिलिटी।", btnNft:"NFT रिवार्ड्स", btnCollection:"कलेक्शन पेज", contract:"कॉन्ट्रैक्ट", days:"दिन", hours:"घंटे", minutes:"मिनट", seconds:"सेकंड", supportedEx:"समर्थित एक्सचेंज", willBeListed:"जल्द सूचीबद्ध होगा", tokenomics:"टोकनॉमिक्स (दृश्य)", tokenomicsDesc:"न्यायसंगत वितरण, टिकाऊ रिवार्ड अर्थव्यवस्था और रिज़र्व योजना।", legCommunity:"कम्युनिटी", legLiquidity:"लिक्विडिटी", legTeam:"टीम", legTreasury:"ट्रेज़री", legStaking:"स्टेकिंग रिवार्ड्स", legPartners:"एडवाइज़र्स/पार्टनर्स" },
-    zh: { heroTitle:"ZUZU — 机械刺猬", heroSub:"质押并赢取 <b>ZUZU 吉祥物 NFT</b>。供给有限，实用性高。", btnNft:"NFT 奖励", btnCollection:"收藏页面", contract:"合约", days:"天", hours:"小时", minutes:"分钟", seconds:"秒", supportedEx:"支持的交易所", willBeListed:"即将上线", tokenomics:"代币经济（可视化）", tokenomicsDesc:"公平分配、可持续奖励经济与储备计划。", legCommunity:"社区", legLiquidity:"流动性", legTeam:"团队", legTreasury:"金库", legStaking:"质押奖励", legPartners:"顾问/合作伙伴" },
-    es: { heroTitle:"ZUZU — Erizo Robótico", heroSub:"Haz stake y gana <b>NFT Mascota ZUZU</b>. Suministro limitado, gran utilidad.", btnNft:"Recompensas NFT", btnCollection:"Página de Colección", contract:"Contrato", days:"DÍAS", hours:"HORAS", minutes:"MINUTOS", seconds:"SEGUNDOS", supportedEx:"Exchanges Soportados", willBeListed:"Se listará pronto", tokenomics:"Tokenomics (Visualizado)", tokenomicsDesc:"Distribución justa, economía de recompensas sostenible y plan de reserva.", legCommunity:"Comunidad", legLiquidity:"Liquidez", legTeam:"Equipo", legTreasury:"Tesorería", legStaking:"Recompensas de Staking", legPartners:"Asesores/Socios" },
-    pt: { heroTitle:"ZUZU — Ouriço Robótico", heroSub:"Faça stake e ganhe <b>NFT Mascote ZUZU</b>. Oferta limitada, alta utilidade.", btnNft:"Recompensas NFT", btnCollection:"Página da Coleção", contract:"Contrato", days:"DIAS", hours:"HORAS", minutes:"MINUTOS", seconds:"SEGUNDOS", supportedEx:"Exchanges Suportadas", willBeListed:"Será listado em breve", tokenomics:"Tokenomics (Visualizado)", tokenomicsDesc:"Distribuição justa, economia de recompensas sustentável e plano de reserva.", legCommunity:"Comunidade", legLiquidity:"Liquidez", legTeam:"Equipe", legTreasury:"Tesouraria", legStaking:"Recompensas de Staking", legPartners:"Conselheiros/Parceiros" }
-  };
+/* ========= ZUZU CONFIG ========= */
+const CONFIG = {
+  contractAddress: "0xF2bbbEcB417725813BF5E940d678793fACDa9729",
+  collectionUrl: "https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts",
+  launchAt: Date.now() + 1000*60*60*24*17 + 1000*60*90, // 17 gün 1.5 saat
+  weekPrices: [0.0050,0.0065,0.0080,0.0100],
+  nfts: [
+    {id:0,name:"ZUZU Hero",      rarity:"Epic",      supply:200},
+    {id:1,name:"ZUZU Rogue",     rarity:"Rare",      supply:2500},
+    {id:2,name:"ZUZU Berserker", rarity:"Epic",      supply:800},
+    {id:3,name:"ZUZU Hacker",    rarity:"Rare",      supply:600},
+    {id:4,name:"ZUZU Sorceress", rarity:"Epic",      supply:750},
+    {id:5,name:"ZUZU Warrior",   rarity:"Rare",      supply:900},
+    {id:6,name:"ZUZU Maiden",    rarity:"Rare",      supply:1100},
+    {id:7,name:"ZUZU Ranger",    rarity:"Rare",      supply:1000},
+    {id:8,name:"ZUZU Scientist", rarity:"Epic",      supply:1100},
+    {id:9,name:"ZUZU Titan",     rarity:"Legendary", supply:250}
+  ]
+};
 
-  const select = document.getElementById("langSelect");
-  if (!select) return;
-
-  // Varsayılan EN
-  const apply = (lng="en")=>{
-    const table = dict[lng] || dict.en;
-    document.querySelectorAll("[data-i18n]").forEach(el=>{
-      const key = el.getAttribute("data-i18n");
-      if (table[key]) el.innerHTML = table[key];
-    });
-    // sayac label’ları güncellendiğinde görünüm bozulmasın
-  };
-
-  select.addEventListener("change", ()=>apply(select.value));
-  apply("en"); // ilk açılış İngilizce
-}
-
-/* ================================
-   TOKENOMICS – donut çizimi (canvas)
-================================== */
-function drawTokenomics(){
-  const c = document.getElementById("tokenomicsChart");
-  if (!c) return;
-  const ctx = c.getContext("2d");
-  const W = c.width, H = c.height;
-  const cx = W/2 - 10, cy = H/2 + 6, r = 110, inner = 70;
-
-  // Dilimler: %’ler ve renkler örnek görselle uyumlu
-  const parts = [
-    { p:35, color:"#8c76ff" }, // community
-    { p:20, color:"#1fd4e7" }, // liquidity
-    { p:15, color:"#7bff9b" }, // team
-    { p:10, color:"#ffb648" }, // treasury
-    { p:15, color:"#d77cff" }, // staking
-    { p:5,  color:"#ff6a6a" }, // partners
-  ];
-  ctx.clearRect(0,0,W,H);
-
-  // dış gölge
-  ctx.beginPath();
-  ctx.arc(cx,cy,r+16,0,Math.PI*2);
-  ctx.fillStyle="rgba(0,0,0,.18)";
-  ctx.fill();
-
-  // donut
-  let start = -Math.PI/2;
-  parts.forEach(seg=>{
-    const ang = (seg.p/100)*Math.PI*2;
-    ctx.beginPath();
-    ctx.moveTo(cx,cy);
-    ctx.arc(cx,cy,r,start,start+ang);
-    ctx.closePath();
-    ctx.fillStyle=seg.color;
-    ctx.fill();
-    start+=ang;
+/* ==== Lang (kısa) ==== */
+const I = {
+  en:{nav_presale:"Pre-Sale",nav_stake:"Stake",nav_nft:"NFT Rewards",nav_roadmap:"Roadmap",nav_token:"Tokenomics",connect:"Connect Wallet",
+      hero_badge:"Pre-Sale • Stake to Win NFT",hero_title:"ZUZU — Robotic Hedgehog 🦔⚡",hero_lead:"Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high <b>utility</b>.",
+      cta_stake:"Start Staking",cta_nft:"NFT Rewards",collection_page:"Collection Page",contract:"Contract:",days:"DAYS",hours:"HOURS",mins:"MINUTES",secs:"SECONDS",
+      presale_title:"Pre-Sale — Countdown",presale_lead:"Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.",amount:"Amount (ZUZU)",
+      w1:"Week 1 (Cheapest)",w2:"Week 2",w3:"Week 3",w4:"Week 4 (Last Chance)",cost:"Cost:",buy:"Buy",exchanges:"Supported Exchanges",
+      stake_title:"Stake Pro — Lock, Earn, Get NFT ✨",stake_lead:"Lock your ZUZU, earn <b>APY + NFT BOOST</b>. Early stakers get badge & airdrop priority.",
+      calc_title:"Earnings Calculator",amount2:"Amount (ZUZU)",lock:"Lock Period",nft_have:"Have NFT?",early:"Early Badge",calc_btn:"Calculate",ret:"Total Return",avg:"Monthly Avg",boost:"Total Boost",
+      token_title:"Tokenomics (Visualized)",road_title:"Roadmap",road_lead:"Clear plan focused on community, staking, NFT drops, listings."},
+  tr:{nav_presale:"Ön Satış",nav_stake:"Stake",nav_nft:"NFT Ödülleri",nav_roadmap:"Yol Haritası",nav_token:"Tokonomi",connect:"Cüzdan Bağla",
+      hero_badge:"Ön Satış • Stake ile NFT Kazan",hero_title:"ZUZU — Geleceğin Robotic Kirpisi 🦔⚡",hero_lead:"Stake et ve <b>ZUZU Maskot NFT</b> kazan. Sınırlı arz, yüksek <b>utility</b>.",
+      cta_stake:"Stake Etmeye Başla",cta_nft:"NFT Ödülleri",collection_page:"Koleksiyon Sayfası",contract:"Kontrat:",days:"GÜN",hours:"SAAT",mins:"DAKİKA",secs:"SANİYE",
+      presale_title:"Ön Satış — Geri Sayım",presale_lead:"ZUZU ön satışına hazır ol! <b>Sınırlı tahsis</b>, topluluğa özel fiyat.",amount:"Miktar (ZUZU)",
+      w1:"1. Hafta (En Ucuz)",w2:"2. Hafta",w3:"3. Hafta",w4:"4. Hafta (Son Fırsat)",cost:"Maliyet:",buy:"Satın Al",exchanges:"Desteklenen Borsalar",
+      stake_title:"Stake Pro — Kilitle, Kazan, NFT Kap ✨",stake_lead:"ZUZU’larını kilitle, <b>APY + NFT BOOST</b> ile pasif gelir elde et. Erken stake edenler rozet & airdrop önceliği alır.",
+      calc_title:"Kazanç Hesaplayıcı",amount2:"Miktar (ZUZU)",lock:"Kilit Süresi",nft_have:"Elinde NFT var mı?",early:"Erken Rozet",calc_btn:"Hesapla",ret:"Toplam Getiri",avg:"Aylık Ortalama",boost:"Toplam Boost",
+      token_title:"Tokonomi (Görselleştirilmiş)",road_title:"Yol Haritası",road_lead:"Topluluk, staking, NFT drop’ları ve listelemelere odaklı plan."},
+  fr:{nav_presale:"Pré-vente",nav_stake:"Stake",nav_nft:"Récompenses NFT",nav_roadmap:"Feuille de route",nav_token:"Tokenomics",connect:"Connecter le Wallet"},
+  es:{nav_presale:"Pre-venta",nav_stake:"Stake",nav_nft:"Recompensas NFT",nav_roadmap:"Hoja de ruta",nav_token:"Tokenomics",connect:"Conectar Billetera"}
+};
+function trn(lang){
+  document.querySelectorAll("[data-i]").forEach(el=>{
+    const k=el.getAttribute("data-i"); if(I[lang]&&I[lang][k]) el.innerHTML=I[lang][k];
   });
-
-  // iç delik
-  ctx.beginPath();
-  ctx.arc(cx,cy,inner,0,Math.PI*2);
-  ctx.fillStyle="#0e1522";
-  ctx.fill();
-
-  // orta metin
-  ctx.fillStyle="#cfe0ff";
-  ctx.font="700 18px Inter, system-ui";
-  ctx.textAlign="center";
-  ctx.fillText("Total Supply", cx, cy-6);
-  ctx.font="800 22px Inter, system-ui";
-  ctx.fillText("1,000,000,000", cx, cy+22);
 }
+const sel=document.getElementById("langSel"); sel.addEventListener("change",()=>trn(sel.value)); trn("en");
+
+/* ==== Contract & links ==== */
+document.getElementById("contractDisplay").textContent =
+  CONFIG.contractAddress.slice(0,6)+"..."+CONFIG.contractAddress.slice(-4);
+document.getElementById("contractDisplay2").textContent = CONFIG.contractAddress;
+document.getElementById("thirdwebNFTRoute").href = CONFIG.collectionUrl;
+document.getElementById("thirdwebNFTRoute2").href = CONFIG.collectionUrl;
+
+/* ==== Countdown ==== */
+function tick(){
+  const left=Math.max(0,CONFIG.launchAt-Date.now());
+  const d=Math.floor(left/864e5), h=Math.floor(left%864e5/36e5),
+        m=Math.floor(left%36e5/6e4), s=Math.floor(left%6e4/1e3);
+  const pad=n=>n.toString().padStart(2,"0");
+  const ids=["cdDays","cdHours","cdMins","cdSecs"];
+  [d,h,m,s].forEach((v,i)=>{ const el=document.getElementById(ids[i]); if(el) el.textContent=pad(v); });
+}
+tick(); setInterval(tick,1000);
+
+/* ==== Pre-sale prices/cost ==== */
+function updateCosts(){
+  const qty=parseFloat(document.getElementById("buyAmount").value||"0");
+  CONFIG.weekPrices.forEach((p,i)=>{
+    const priceEl=document.getElementById("p"+i);
+    const costEl=document.getElementById("c"+i);
+    if(priceEl) priceEl.textContent=p.toFixed(4);
+    if(costEl)  costEl.textContent=((qty*p)||0).toLocaleString();
+  });
+}
+document.getElementById("buyAmount").addEventListener("input",updateCosts); updateCosts();
+
+/* ==== NFT Grid render — KESMESİZ ==== */
+(function renderNFTs(){
+  const g=document.getElementById("nftGrid"); let html="";
+  CONFIG.nfts.forEach(n=>{
+    const img=`assets/images/mask/${n.id}.png`;
+    const link=`${CONFIG.collectionUrl}?tokenId=${n.id}`;
+    html+=`
+      <div class="nft">
+        <img class="nft-img" src="${img}" alt="${n.name}" loading="lazy">
+        <div class="meta">
+          <div><b>${n.name}</b>
+            <div style="color:#9fb6e6;font-size:.9rem">Supply: ${n.supply.toLocaleString()}</div>
+          </div>
+          <span class="tag">${n.rarity}</span>
+        </div>
+        <a class="z-btn z-btn-ghost" style="margin:0 10px 10px" target="_blank" href="${link}">View ↗</a>
+      </div>`;
+  });
+  g.innerHTML=html;
+})();
+
+/* ==== Calculator ==== */
+(function setupCalc(){
+  const amount=$("#stakeAmount"), duration=$("#stakeDuration"),
+        nft=$("#nftBoost"), early=$("#earlyBoost"),
+        total=$("#resultTotal"), monthly=$("#resultMonthly"), boost=$("#resultBoost");
+  const apy={30:12,90:24,180:40,365:65,540:85};
+  function calc(){
+    const a=parseFloat((amount.value||"0").toString().replace(/[^\d.]/g,""))||0;
+    const d=parseInt(duration.value,10)||0;
+    const base=apy[d]||0;
+    const tb=(parseFloat(nft.value||"0")||0) + (parseFloat(early.value||"0")||0);
+    const gross=a*((base+tb)/100)*(d/365);
+    const m=gross/(d/30);
+    total.textContent=gross.toFixed(2)+" ZUZU";
+    monthly.textContent=m.toFixed(2)+" ZUZU";
+    boost.textContent="+"+tb+"%";
+  }
+  $("#calcBtn").addEventListener("click",calc);
+  calc();
+  function $(q){return document.querySelector(q);}
+})();
+
+/* ==== Wallet Connect (Modal + MetaMask/TON/Phantom) ==== */
+const connectBtn = document.getElementById("connectBtn");
+const modal = document.getElementById("walletModal");
+const wmClose = document.getElementById("wmClose");
+const btnMeta = document.getElementById("btnMeta");
+const btnTon  = document.getElementById("btnTon");
+const btnPh   = document.getElementById("btnPh");
+
+function openModal(){ modal.style.display="block"; }
+function closeModal(){ modal.style.display="none"; }
+connectBtn.addEventListener("click", openModal);
+wmClose.addEventListener("click", closeModal);
+modal.querySelector(".z-modal__backdrop").addEventListener("click", closeModal);
+
+// TON UI (manifest domaininizde)
+let tonUi;
+try{
+  tonUi = new TON_CONNECT_UI.TonConnectUI({
+    manifestUrl: "https://zuzucoin.xyz/tonconnect-manifest.json"
+  });
+}catch(e){ console.warn("TON UI init fail:", e); }
+
+// MetaMask
+btnMeta.addEventListener("click", async ()=>{
+  try{
+    if (window.ethereum && window.ethereum.request){
+      await window.ethereum.request({ method:"eth_requestAccounts" });
+      connectBtn.textContent = "MetaMask ✓";
+      closeModal();
+      return;
+    }
+    // Mobil deeplink (MetaMask içi tarayıcıda açar)
+    window.location.href = "https://metamask.app.link/dapp/zuzucoin.xyz";
+  }catch(e){
+    alert("MetaMask connection failed");
+  }
+});
+
+// TON
+btnTon.addEventListener("click", async ()=>{
+  try{
+    if (tonUi){ await tonUi.openModal(); connectBtn.textContent="TON ✓"; closeModal(); }
+    else alert("TON UI not ready");
+  }catch(e){ alert("TON connection failed"); }
+});
+
+// Phantom (Solana)
+btnPh.addEventListener("click", async ()=>{
+  try{
+    if (window.solana && window.solana.isPhantom){
+      await window.solana.connect();
+      connectBtn.textContent = "Phantom ✓";
+      closeModal();
+    }else{
+      window.open("https://phantom.app/", "_blank");
+    }
+  }catch(e){ alert("Phantom connection failed"); }
+});
