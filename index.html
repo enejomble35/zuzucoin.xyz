@@ -569,5 +569,55 @@ btn.addEventListener("click",async()=>{
   alert("No wallet detected. Please install MetaMask, Phantom or TON Wallet.");
 });
 </script>
+  </script>
+
+<!-- ✅ MetaMask Connect Script -->
+<script>
+  function short(addr){ return addr ? addr.slice(0,6)+'…'+addr.slice(-4) : 'Connect MetaMask'; }
+
+  async function connectEvm(){
+    if(!window.ethereum){
+      alert('MetaMask yüklü değil. metamask.io adresinden kurabilirsin.');
+      return;
+    }
+    try{
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const acc = accounts[0];
+      document.getElementById('connect-evm').textContent = short(acc);
+
+      const preferred = '0x89'; // Polygon Mainnet
+      if (window.ethereum.chainId !== preferred){
+        try{
+          await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: preferred }]
+          });
+        }catch(e){
+          if(e.code === 4902){
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [{
+                chainId: preferred,
+                chainName: 'Polygon',
+                nativeCurrency: { name:'MATIC', symbol:'MATIC', decimals:18 },
+                rpcUrls: ['https://polygon-rpc.com/'],
+                blockExplorerUrls: ['https://polygonscan.com']
+              }]
+            });
+          }
+        }
+      }
+    }catch(err){
+      console.error(err);
+      document.getElementById('connect-evm').textContent = 'Connect MetaMask';
+    }
+  }
+
+  document.getElementById('connect-evm')?.addEventListener('click', connectEvm);
+</script>
+<!-- ✅ MetaMask Connect Script Bitti -->
+
+</body>
+</html>
 </body>
 </html>
