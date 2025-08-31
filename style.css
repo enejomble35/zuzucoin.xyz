@@ -179,24 +179,3 @@ select#langSel{
   background:#0f1b31;color:#d9e7ff;border:1px solid #243457;border-radius:10px;
   padding:.35rem .6rem
 }
-/* Hero sağ kolonda logo hizası */
-.hero-2 .grid-2{ align-items:flex-start; }
-.hero-visual{
-  display:flex;
-  justify-content:flex-end;   /* sağa yasla */
-  align-items:flex-start;
-  padding-top:6px;
-}
-.hero-visual .logo-big{
-  max-width:380px;
-  width:100%;
-  height:auto;
-  object-fit:contain;
-  filter: drop-shadow(0 16px 36px rgba(0,0,0,.40));
-}
-
-/* Mobilde ortaya al */
-@media (max-width:920px){
-  .hero-visual{ justify-content:center; margin-top:8px; }
-  .hero-visual .logo-big{ max-width:320px; }
-}
