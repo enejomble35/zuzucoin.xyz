@@ -479,64 +479,13 @@ async function zuzuSwitchChain(chain){
   setTimeout(()=>{ track.style.transform = ''; }, 50);
 })();
 
-/* ========= MetaMask Connect (desktop + mobile deeplink) ========= */
-
-const connectBtn = document.getElementById("connectBtn");
-
-function isMobile() {
-  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-}
-
-/** MetaMask mobil uygulamasında bu siteyi açar */
-function openInMetaMaskDapp() {
-  // örnek: https://metamask.app.link/dapp/zuzucoin.xyz
-  const host = location.host;
-  const path = location.pathname.replace(/^\//,'');
-  const dapp = `https://metamask.app.link/dapp/${host}/${path}`;
-  location.href = dapp;
-}
-
-/** Buton üstündeki cüzdan yazısını güncelle */
-function setConnectedLabel(addr){
-  if(!connectBtn) return;
-  if(addr) connectBtn.textContent = addr.slice(0,6)+'…'+addr.slice(-4);
-  else connectBtn.textContent = "Connect Wallet";
-}
-
-async function connectMetaMaskUI(){
-  if (typeof window.ethereum === "undefined") {
-    if (isMobile()) {
-      const go = confirm("MetaMask Mobile ile açalım mı?");
-      if (go) openInMetaMaskDapp();
-    } else {
-      alert("MetaMask not detected. Install: https://metamask.io/download/");
+/** MetaMask yoksa Connect butonuna güvenli uyarı */
+(function guardConnectBtn(){
+  const b = document.getElementById('connectBtn');
+  if(!b) return;
+  b.addEventListener('click', ()=>{
+    if(!window.ethereum){
+      alert('MetaMask not detected. Please install MetaMask and refresh the page.');
     }
-    throw new Error("no_metamask");
-  }
-  if (!window.ethereum.isMetaMask) {
-    alert("Please use MetaMask-compatible wallet.");
-    throw new Error("not_metamask");
-  }
-  const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-  const account = accounts?.[0];
-  if (!account) throw new Error("no_accounts");
-  setConnectedLabel(account);
-
-  // olayları dinle
-  try {
-    window.ethereum.on("accountsChanged", (accs) => setConnectedLabel(accs?.[0] || null));
-    window.ethereum.on("chainChanged", () => location.reload());
-  } catch(e){}
-  return account;
-}
-
-// Connect butonu
-if (connectBtn) {
-  connectBtn.addEventListener("click", async () => {
-    try { await connectMetaMaskUI(); } 
-    catch(e){ console.warn("connect failed", e); }
-  });
-}
-
-/* NOT: Buy akışında (sendUSDT) connectMetaMask() zaten çağrılıyor.
-   Eğer connect butonuna basmadan Buy'a basarsa da orada bağlanır. */
+  }, {capture:true});
+})();
