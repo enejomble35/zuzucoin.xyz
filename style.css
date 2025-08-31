@@ -214,3 +214,17 @@ select#langSel{
 @media (max-width: 880px){
   .z-menu{ gap: 8px; }
 }
+/* === PATCH-B: Hero logo hizalama (başlığın sağında) === */
+.hero-2 .grid-2{ align-items:flex-start; }
+.hero-visual{
+  display:flex; justify-content:flex-end; align-items:flex-start;
+  padding-top:6px;
+}
+.hero-visual .logo-big{
+  max-width:380px; width:100%; height:auto; object-fit:contain;
+  filter:drop-shadow(0 16px 36px rgba(0,0,0,.40));
+}
+@media (max-width:920px){
+  .hero-visual{ justify-content:center; margin-top:8px; }
+  .hero-visual .logo-big{ max-width:320px; }
+}
