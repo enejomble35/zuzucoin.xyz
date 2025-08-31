@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ZUZUCOIN — Pre-Sale • Stake • NFT Rewards</title>
 <meta name="theme-color" content="#0e1522">
-
-<!-- Security-oriented meta (GH Pages üzerinde sınırlı ama faydalı) -->
+<!-- Basit güvenlik head'leri -->
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
@@ -42,8 +41,6 @@
       <select id="langSel" class="lang">
         <option value="en" selected>EN</option>
         <option value="tr">TR</option>
-        <option value="fr">FR</option>
-        <option value="es">ES</option>
       </select>
       <button id="connectBtn" class="z-btn z-btn-primary" data-i="connect">Connect Wallet</button>
     </nav>
@@ -53,7 +50,7 @@
 <main>
 
 <!-- HERO + COUNTDOWN + HERO LOGO -->
-<section class="z-section hero-2">
+<section class="z-section hero">
   <div class="z-container grid-2">
     <div>
       <div class="badge" data-i="hero_badge">Pre-Sale • Stake to Win NFT</div>
@@ -61,10 +58,12 @@
       <p class="lead" data-i="hero_lead">
         Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high <b>utility</b>.
       </p>
+
       <div class="hero-cta">
         <a href="#stake" class="z-btn z-btn-primary" data-i="cta_stake">Start Staking</a>
         <a href="#nft" class="z-btn z-btn-ghost" data-i="cta_nft">NFT Rewards</a>
       </div>
+
       <div class="z-chip-row">
         <a id="thirdwebNFTRoute" class="z-chip" href="#" target="_blank" rel="noopener" data-i="collection_page">Collection Page</a>
         <span class="z-chip" data-i="contract">Contract:</span>
@@ -80,13 +79,15 @@
       </div>
     </div>
 
-    <!-- Büyük ZUZU Logo görseli -->
-<div class="hero-visual">
-  <img class="logo-big"
-       src="assets/images/branding/zuzu-logo.svg"
-       onerror="this.onerror=null;this.src='assets/images/banner.jpg';"
-       alt="ZUZU Logo">
-</div>
+    <!-- Büyük ZUZU Logo (sağda) -->
+    <div class="hero-visual">
+      <img class="logo-big"
+           src="assets/images/branding/zuzu-logo.svg"
+           onerror="this.onerror=null;this.src='assets/images/banner.jpg';"
+           alt="ZUZU Logo">
+    </div>
+  </div>
+</section>
 
 <!-- PRE-SALE -->
 <section id="presale" class="z-section presale">
@@ -177,7 +178,7 @@
           <div class="ticker__item"><img src="assets/images/exchanges/bybit.png" alt=""></div>
         </div>
       </div>
-      <div class="ex-note">Will Be Listed Soon</div>
+      <div class="ex-note" data-i="will_listed">Will Be Listed Soon</div>
     </div>
   </div>
 </section>
@@ -271,7 +272,6 @@
         <!-- 500M yazılı donut -->
         <svg viewBox="0 0 42 42" width="100%" style="max-width:360px">
           <circle cx="21" cy="21" r="15.915" fill="#0e172a"/>
-          <!-- örnek segmentler -->
           <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#8E69FF" stroke-width="6" stroke-dasharray="35 65" stroke-dashoffset="25"></circle>
           <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#23d4e1" stroke-width="6" stroke-dasharray="20 80" stroke-dashoffset="-10"></circle>
           <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#47cc6f" stroke-width="6" stroke-dasharray="15 85" stroke-dashoffset="-30"></circle>
