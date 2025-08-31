@@ -266,46 +266,69 @@ updateCosts();
 })();
 
 /* =========================
-   MetaMask – Connect & Buy
+   MetaMask – Connect & Buy (MOBILE DEEPLINK + SAĞLAYICI SEÇİMİ)
 ========================= */
 let provider, signer, currentAccount = null, currentChainId = null;
 
+function isMobile(){
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+function getMetaMaskProvider(){
+  // Eğer çoklu provider varsa (Coinbase + MM gibi) MetaMask'i seç
+  if (window.ethereum && window.ethereum.isMetaMask) return window.ethereum;
+  if (window.ethereum && Array.isArray(window.ethereum.providers)){
+    const mm = window.ethereum.providers.find(p => p && p.isMetaMask);
+    if (mm) return mm;
+  }
+  return null;
+}
+function openInMetaMaskDapp(){
+  // Mobilde MetaMask yoksa DApp browser’da sayfayı aç
+  const dappUrl = ${location.protocol}//${location.host}${location.pathname};
+  // resmi deep link
+  location.href = https://metamask.app.link/dapp/${dappUrl};
+}
+
 async function ensureProvider(){
-  if (!window.ethereum) {
-    alert("MetaMask not found. Please install MetaMask.");
+  const mm = getMetaMaskProvider();
+  if (!mm){
+    if (isMobile()){ openInMetaMaskDapp(); }
+    else { alert("MetaMask not found. Please install MetaMask."); }
     throw new Error("No MetaMask");
   }
-  provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+  provider = new ethers.providers.Web3Provider(mm, "any");
   return provider;
 }
 
 async function connectWallet(){
-  await ensureProvider();
-  const accounts = await provider.send("eth_requestAccounts", []);
+  const mm = getMetaMaskProvider();
+  if (!mm){
+    if (isMobile()){ openInMetaMaskDapp(); }
+    else { alert("MetaMask not detected. Please install MetaMask and refresh the page."); }
+    return;
+  }
+  provider = new ethers.providers.Web3Provider(mm, "any");
+  const accounts = await mm.request({ method:"eth_requestAccounts" });
   signer = provider.getSigner();
   currentAccount = accounts[0];
   currentChainId = (await provider.getNetwork()).chainId;
 
   const btn = document.getElementById("connectBtn");
-  if (btn && currentAccount) {
-    btn.textContent = `${currentAccount.slice(0,6)}...${currentAccount.slice(-4)}`;
-  }
+  if (btn) btn.textContent = ${currentAccount.slice(0,6)}...${currentAccount.slice(-4)};
 
-  // Dinleyiciler
-  if (window.ethereum && !window.ethereum._zuzuBound) {
-    window.ethereum.on("accountsChanged", (accs)=>{
-      const b = document.getElementById("connectBtn");
-      if (accs && accs.length>0) {
+  // Olay dinleyicileri tek sefer bağla
+  if (!mm._zuzuBound){
+    mm.on("accountsChanged", (accs)=>{
+      if (accs && accs.length>0){
         currentAccount = accs[0];
-        if (b) b.textContent = `${currentAccount.slice(0,6)}...${currentAccount.slice(-4)}`;
-      } else {
-        currentAccount=null; if (b) b.textContent="Connect Wallet";
+        if (btn) btn.textContent = ${currentAccount.slice(0,6)}...${currentAccount.slice(-4)};
+      }else{
+        currentAccount = null;
+        if (btn) btn.textContent = "Connect Wallet";
       }
     });
-    window.ethereum.on("chainChanged", (_chainId)=>{
-      window.location.reload(); // basitçe yenile
-    });
-    window.ethereum._zuzuBound = true;
+    mm.on("chainChanged", ()=> location.reload());
+    mm._zuzuBound = true;
   }
 }
 
@@ -313,24 +336,17 @@ async function switchNetwork(targetId){
   await ensureProvider();
   const meta = CHAINS[targetId];
   if (!meta) throw new Error("Unsupported network");
-  try {
-    await window.ethereum.request({
-      method: "wallet_switchEthereumChain",
-      params: [{ chainId: meta.hex }]
-    });
-  } catch(err){
-    // 4902: chain eklemek lazım
-    if (err && err.code === 4902 && meta.params) {
-      await window.ethereum.request({
-        method: "wallet_addEthereumChain",
-        params: [meta.params]
-      });
-    } else {
+  const mm = getMetaMaskProvider();
+  try{
+    await mm.request({ method:"wallet_switchEthereumChain", params:[{ chainId: meta.hex }] });
+  }catch(err){
+    if (err && err.code === 4902 && meta.params){
+      await mm.request({ method:"wallet_addEthereumChain", params:[meta.params] });
+    }else{
       throw err;
     }
   }
 }
-
 function getSelectedChainId(){
   const sel = document.getElementById("networkSel");
   const v = parseInt(sel?.value||"56",10);
@@ -338,58 +354,48 @@ function getSelectedChainId(){
 }
 
 async function connectIfNeeded(){
-  if (!currentAccount) {
-    await connectWallet();
-  }
+  if (!currentAccount){ await connectWallet(); }
 }
 
 async function usdtTransfer(chainId, to, amountFloat){
   await ensureProvider();
   await connectIfNeeded();
 
-  // Ağ uygun mu? değilse switch yap
   const net = await provider.getNetwork();
-  if (net.chainId !== chainId) {
+  if (net.chainId !== chainId){
     await switchNetwork(chainId);
   }
   const meta = CHAINS[chainId];
-
   const token = new ethers.Contract(meta.usdt, ERC20_ABI, provider).connect(signer);
 
-  // Decimals’a göre parse et
   const dec = meta.usdtDecimals;
-  const amtStr = Number.isFinite(amountFloat) ? amountFloat.toFixed(dec > 6 ? 6 : dec) : "0";
+  const amtStr = amountFloat.toFixed(dec > 6 ? 6 : dec);
   const amount = ethers.utils.parseUnits(amtStr, dec);
 
-  // Bakiye kontrol
   const bal = await token.balanceOf(currentAccount);
-  if (bal.lt(amount)) {
-    alert("Insufficient USDT balance.");
-    throw new Error("Low balance");
-  }
+  if (bal.lt(amount)){ alert("Insufficient USDT balance."); throw new Error("Low balance"); }
 
-  // Transfer yap
   const tx = await token.transfer(CONFIG.ownerAddress, amount);
   await tx.wait();
   return tx.hash;
 }
 
 async function handleBuy(weekIndex){
-  try {
+  try{
     const qty = parseFloat((document.getElementById("buyAmount")?.value||"0").toString().replace(/[^\d.]/g,"")) || 0;
-    if (qty <= 0) { alert("Enter a valid amount."); return; }
+    if (qty <= 0){ alert("Enter a valid amount."); return; }
 
     const active = getActiveWeek();
-    if (weekIndex !== active) { alert("This week is not active."); return; }
+    if (weekIndex !== active){ alert("This week is not active."); return; }
 
-    const price = CONFIG.weekPrices[weekIndex]; // USDT
+    const price = CONFIG.weekPrices[weekIndex];
     const cost  = qty * price;
 
     const chainId = getSelectedChainId();
     const txHash = await usdtTransfer(chainId, CONFIG.ownerAddress, cost);
 
-    alert(`Purchase successful!\nTX: ${txHash}\nYou can claim later from Claim Portal.`);
-  } catch(e){
+    alert(Purchase successful!\nTX: ${txHash}\nYou can claim later from Claim Portal.);
+  }catch(e){
     console.error(e);
     alert("Transaction failed or rejected.");
   }
@@ -398,7 +404,7 @@ async function handleBuy(weekIndex){
 document.getElementById("connectBtn")?.addEventListener("click", connectWallet);
 document.getElementById("networkSel")?.addEventListener("change", async ()=>{
   const cid = getSelectedChainId();
-  try { await switchNetwork(cid); } catch(e){ console.warn(e); }
+  try{ await switchNetwork(cid); }catch(e){ console.warn(e); }
 });
 
 // Buy buttons
@@ -407,7 +413,6 @@ document.getElementById("networkSel")?.addEventListener("change", async ()=>{
   if (!b) return;
   b.addEventListener("click", ()=>handleBuy(i));
 });
-
 // İlk UI ayarları
 updateActiveWeekUI();
 updateCosts();
