@@ -81,11 +81,14 @@
     </div>
 
     <!-- Büyük ZUZU Logo görseli -->
-    <div class="hero-visual">
-      <img class="logo-big" src="assets/images/branding/zuzu-logo.svg" alt="ZUZU Logo">
-    </div>
-  </div>
-</section>
+    <!-- HERO görseli (fallback ve cache-bust ekli) -->
+<div class="full-img hero-visual">
+  <img id="heroLogo"
+       class="logo-big"
+       src="assets/images/banner.jpg?v=3"
+       alt="ZUZU hero"
+       onerror="this.onerror=null; this.src='assets/images/logo.png?v=3';">
+</div>
 
 <!-- PRE-SALE -->
 <section id="presale" class="z-section presale">
