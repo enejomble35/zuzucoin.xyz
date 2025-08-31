@@ -1,14 +1,12 @@
 /* =========================
    ZUZU – Global Styles
-   (Bu dosyayı style.css olarak kaydet)
 ========================= */
-
 :root{
   --bg:#0C1320; --panel:#0f1828; --muted:#8aa2c9; --txt:#e8f1ff; --brand:#7f9cff;
   --chip:#1c2840; --pri:#6a8cff; --pri2:#9aaeff; --ok:#16d2a6; --warn:#ffb347;
 }
 
-*{box-sizing:border-box;}
+*{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
 img{max-width:100%;display:block}
 a{color:#b8c7ff;text-decoration:none}
@@ -18,15 +16,15 @@ a{color:#b8c7ff;text-decoration:none}
    NAV
 ========================= */
 .z-nav{
-  position:sticky;top:0;z-index:50;
+  position:sticky; top:0; z-index:50;
   background:linear-gradient(180deg,rgba(10,15,25,.9),rgba(10,15,25,.75));
   backdrop-filter:saturate(1.2) blur(8px);
-  border-bottom:1px solid #16223a
+  border-bottom:1px solid #16223a;
 }
 .z-nav-inner{display:flex;align-items:center;justify-content:space-between;padding:.7rem 0;gap:10px}
 .brand{display:flex;gap:.6rem;align-items:center;font-weight:800;letter-spacing:.3px}
 .brand img{width:40px;height:40px}
-.z-menu{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.z-menu{display:flex;gap:10px;align-items:center;flex-wrap:wrap;row-gap:6px}
 .z-menu a{padding:.45rem .65rem;border-radius:10px;background:transparent;white-space:nowrap}
 .z-menu a:hover{background:#12203a}
 .lang{background:#0f1b31;border:1px solid #1c2a46;color:var(--txt);border-radius:10px;padding:.35rem .6rem}
@@ -51,21 +49,26 @@ a{color:#b8c7ff;text-decoration:none}
 @media(max-width:920px){.grid-2{grid-template-columns:1fr}}
 
 /* =========================
-   HERO (büyük logo + sayaç)
+   HERO (başlık + sayaç + sağda logo)
 ========================= */
-.hero{
+.hero-2{
   padding:34px 0 18px;
   background:
     radial-gradient(1200px 400px at 0% -10%,rgba(74,100,255,.18),transparent 45%),
     radial-gradient(800px 300px at 90% -20%,rgba(148,198,255,.16),transparent 40%);
 }
-.hero h1{font-size:clamp(2rem,4.6vw,3.2rem);margin:.2rem 0 .6rem;letter-spacing:.4px}
+.hero-2 h1{font-size:clamp(2rem,4.6vw,3.2rem);margin:.2rem 0 .6rem;letter-spacing:.4px}
 .lead{color:#bfd2ff;font-size:1.05rem}
 .hero-cta{display:flex;gap:.6rem;margin:.8rem 0 1rem;flex-wrap:wrap}
-.full-img{border-radius:18px;overflow:hidden;background:#0f1727;border:1px solid #1c2b4d}
-.full-img img{aspect-ratio:16/12;object-fit:cover}
 
-/* Sayaç (flip style) */
+/* Sağdaki büyük logo */
+.hero-visual{display:flex;justify-content:center;align-items:center}
+.hero-visual .logo-big{
+  max-width:420px; width:100%;
+  filter:drop-shadow(0 16px 36px rgba(0,0,0,.4));
+}
+
+/* Sayaç (flip tarzı) */
 .counter{display:flex;gap:14px;flex-wrap:wrap}
 .flip{width:92px;background:#13213a;border:1px solid #24385f;border-radius:14px;box-shadow:inset 0 -50px 60px rgba(0,0,0,.18);text-align:center}
 .flip .num{font-size:2rem;font-weight:800;padding:.6rem 0;color:#e9f2ff}
@@ -87,7 +90,7 @@ a{color:#b8c7ff;text-decoration:none}
 .buy{display:flex;gap:.5rem;margin-top:.6rem}
 .buy .z-btn{flex:1;justify-content:center}
 
-/* Aktif hafta “Buy” vurgusu */
+/* Aktif hafta Buy vurgusu */
 .active-week{
   box-shadow:0 0 0 2px rgba(122,161,255,.35), 0 6px 20px rgba(0,0,0,.25);
   transform:translateY(-1px);
@@ -95,18 +98,24 @@ a{color:#b8c7ff;text-decoration:none}
 
 /* =========================
    EXCHANGES – tek sıra ticker
-   (Mobilde görünmeme sorununu çözer)
+   (Mobilde görünmeme sorununu da çözer)
 ========================= */
-.ticker{overflow:hidden;border:1px solid #1a2b4c;border-radius:16px;background:#0f1a30;padding:10px}
-.ticker__track{display:flex;gap:28px;align-items:center;animation:z-scroll 30s linear infinite;will-change:transform}
+.ticker{
+  overflow:hidden;border:1px solid #1a2b4c;border-radius:16px;background:#0f1a30;padding:10px;min-height:72px;
+}
+.ticker__track{
+  display:flex;gap:28px;align-items:center;
+  animation:z-scroll 30s linear infinite;
+  will-change:transform;
+  min-width:max-content;
+}
 .ticker__item img{
   height:64px; width:auto; opacity:.95;
-  filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,.25));
 }
 @keyframes z-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .ex-note{color:#8ea7d3;font-style:italic;text-align:center;margin-top:8px}
 
-/* Mobilde de göster (yükseklik düşür, logo küçült) */
 @media (max-width: 720px){
   .ticker{padding:8px}
   .ticker__item img{height:46px}
@@ -138,7 +147,7 @@ a{color:#b8c7ff;text-decoration:none}
 
 /* =========================
    NFT GRID (contain + 5/2)
-   (Kesik çıkma sorununu çözer)
+   (Kesik çıkmayı engeller)
 ========================= */
 .nft-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
 @media(max-width:1024px){.nft-grid{grid-template-columns:repeat(3,1fr)}}
@@ -146,8 +155,13 @@ a{color:#b8c7ff;text-decoration:none}
 
 .nft{background:#0f1a30;border:1px solid #1d2d50;border-radius:14px;overflow:hidden}
 .nft img{
-  aspect-ratio:1/1;object-fit:contain;background:#0f1a30;
-  padding:8px;border-bottom:1px solid #1d2d50
+  width:100%;
+  aspect-ratio:1/1;
+  object-fit:contain;
+  object-position:center;
+  background:#0b1426;
+  padding:6px;
+  border-bottom:1px solid #1d2d50;
 }
 .nft .meta{display:flex;justify-content:space-between;padding:10px}
 .nft .tag{font-size:.75rem;background:#152748;color:#a8c2ff;border:1px solid #274075;border-radius:999px;padding:.25rem .5rem}
@@ -169,7 +183,7 @@ a{color:#b8c7ff;text-decoration:none}
 .center-v{align-items:center}
 
 /* =========================
-   FORM / Select tweaks
+   FORMS / SELECT
 ========================= */
 select#networkSel{
   background:#0f1b31;color:#d9e7ff;border:1px solid #243457;border-radius:10px;
@@ -178,53 +192,4 @@ select#networkSel{
 select#langSel{
   background:#0f1b31;color:#d9e7ff;border:1px solid #243457;border-radius:10px;
   padding:.35rem .6rem
-}
-/* === PATCH-A: Mobile ticker visibility, NFT images fit, minor responsive === */
-
-/* 1) NFT maskot görselleri: kare içinde TAM görünüm (baş/ayak kesilmesin) */
-.nft img{
-  width: 100%;
-  aspect-ratio: 1 / 1;      /* kare çerçeve */
-  object-fit: contain;       /* taşı da kırpma */
-  object-position: center;   /* ortala */
-  background: #0b1426;       /* siyah-mavi zemin */
-  padding: 6px;              /* içerikten min boşluk */
-  border-bottom: 1px solid #1d2d50;
-}
-
-/* 2) Mobilde exchange ticker görünmeme düzeltmesi */
-.ticker{
-  min-height: 72px;           /* yüksekliği sabitle */
-  overflow: hidden;
-}
-.ticker__track{
-  display: inline-flex;
-  align-items: center;
-  gap: 22px;
-  min-width: max-content;     /* içeriği kesme */
-  will-change: transform;
-}
-@media (max-width: 560px){
-  .ticker__item img{ height: 44px; }
-}
-
-/* 3) Küçük boşluk/dağılma için ufak responsive ekleri */
-.z-menu{ row-gap: 6px; }
-.z-menu a{ white-space: nowrap; }
-@media (max-width: 880px){
-  .z-menu{ gap: 8px; }
-}
-/* === PATCH-B: Hero logo hizalama (başlığın sağında) === */
-.hero-2 .grid-2{ align-items:flex-start; }
-.hero-visual{
-  display:flex; justify-content:flex-end; align-items:flex-start;
-  padding-top:6px;
-}
-.hero-visual .logo-big{
-  max-width:380px; width:100%; height:auto; object-fit:contain;
-  filter:drop-shadow(0 16px 36px rgba(0,0,0,.40));
-}
-@media (max-width:920px){
-  .hero-visual{ justify-content:center; margin-top:8px; }
-  .hero-visual .logo-big{ max-width:320px; }
 }
