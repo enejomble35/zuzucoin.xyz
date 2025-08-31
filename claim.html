@@ -1,32 +1,287 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ZUZU Claim Portal</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ZUZUCOIN — Claim Portal</title>
+<meta name="theme-color" content="#0e1522">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
-<body style="background:#0e1522;color:#fff;font-family:Inter,system-ui;">
-  <div class="z-container" style="padding:40px 0;">
-    <h1>Claim Your ZUZU</h1>
-    <p>If you participated in the pre-sale, connect your wallet and claim your tokens here.</p>
+<body>
 
-    <button id="connectBtn" class="z-btn z-btn-primary">Connect Wallet</button>
-    <br><br>
+<header class="z-nav">
+  <div class="z-container z-nav-inner">
+    <a class="brand" href="index.html">
+      <img src="assets/images/logo.png" alt="ZUZU"><span>ZUZUCOIN</span>
+    </a>
+    <nav class="z-menu">
+      <a href="index.html#presale">Pre-Sale</a>
+      <a href="index.html#stake">Stake</a>
+      <a href="index.html#nft">NFT</a>
+      <a href="index.html#tokenomics">Tokenomics</a>
+      <a href="stake-simulator.html">Stake Simulator</a>
+      <button id="connectBtn" class="z-btn z-btn-primary">Connect MetaMask</button>
+    </nav>
+  </div>
+</header>
 
-    <div class="card">
-      <label>Amount to Claim</label>
-      <input class="input" id="claimAmount" placeholder="e.g., 5000">
-      <button id="claimBtn" class="z-btn z-btn-ghost">Claim Now</button>
+<main>
+  <section class="z-section hero">
+    <div class="z-container">
+      <div class="badge">Claim Portal</div>
+      <h1>Claim Your ZUZU After TGE</h1>
+      <p class="lead">
+        Pre-sale sırasında yaptığınız alımlar, <b>bu cüzdan adresi</b> ile eşleştirilir.
+        TGE açıldığında, birikmiş hak edişinizi buradan tek tıkla talep edebileceksiniz.
+      </p>
+      <div class="z-chip-row">
+        <span class="z-chip">Supported: <b>BSC</b>, <b>Ethereum</b>, <b>Polygon</b> (USDT)</span>
+        <span class="z-chip">Your Wallet: <b id="addrShort">—</b></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="z-section">
+    <div class="z-container">
+      <div class="section-head">
+        <h2>Purchases Linked To Your Wallet</h2>
+        <p>Bu tabloda, <b>bu tarayıcıda</b> kayıtlı alımlar görünür. Farklı cihazdan aldıysan, aşağıdaki form ile TX bilgisini ekleyebilirsin.</p>
+      </div>
+
+      <div class="card">
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse">
+            <thead>
+              <tr style="color:#9fb7ff">
+                <th style="text-align:left;padding:8px;border-bottom:1px solid #22365a">Network</th>
+                <th style="text-align:left;padding:8px;border-bottom:1px solid #22365a">USDT Amount</th>
+                <th style="text-align:left;padding:8px;border-bottom:1px solid #22365a">Week/Price</th>
+                <th style="text-align:left;padding:8px;border-bottom:1px solid #22365a">TX Hash</th>
+                <th style="text-align:left;padding:8px;border-bottom:1px solid #22365a">Date</th>
+              </tr>
+            </thead>
+            <tbody id="ordersBody">
+              <tr><td colspan="5" style="padding:10px;color:#9fb4dd">No purchases recorded in this browser.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <h3>Manually Add a Receipt (Optional)</h3>
+        <p style="color:#9ab0da">Farklı cihaz/tarayıcıdan aldığınız satın alımı buraya ekleyin. TGE’de adresinizden doğrulanınca otomatik hak edişe dahil edilecek.</p>
+        <div class="presale-grid">
+          <div>
+            <label>Network</label>
+            <select id="netSel" class="input">
+              <option value="BSC">BSC</option>
+              <option value="ETH">Ethereum</option>
+              <option value="POLYGON">Polygon</option>
+            </select>
+          </div>
+          <div>
+            <label>USDT Amount</label>
+            <input id="usdtAmt" class="input" placeholder="e.g., 250.50" inputmode="decimal">
+          </div>
+          <div>
+            <label>Week / Unit Price (optional)</label>
+            <input id="weekInfo" class="input" placeholder="Week 1 @0.0050">
+          </div>
+          <div>
+            <label>TX Hash</label>
+            <input id="txHash" class="input" placeholder="0x..." spellcheck="false">
+          </div>
+        </div>
+        <div class="buy">
+          <button id="addReceipt" class="z-btn z-btn-primary">Add Receipt</button>
+          <button id="clearMine" class="z-btn z-btn-ghost">Clear My Local Records</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <h3>Claim Status</h3>
+        <p id="claimNote" style="color:#9ab0da;margin:0 0 8px">
+          Claim is locked until TGE. When open, your claimable ZUZU will appear below.
+        </p>
+        <div class="z-chip-row">
+          <span class="z-chip">Claimable (est.): <b id="claimable">0 ZUZU</b></span>
+        </div>
+        <div class="buy">
+          <button id="claimBtn" class="z-btn z-btn-primary" disabled>Claim (Soon)</button>
+          <a href="index.html#presale" class="z-btn z-btn-ghost">Back to Pre-Sale</a>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <h3>Security</h3>
+        <ul style="margin:6px 0 0 18px;color:#9ab0da">
+          <li>Bağlandığınız cüzdan adresini asla paylaşmayın.</li>
+          <li>Tx imzalama dışında hiçbir özel anahtar istenmez.</li>
+          <li>Claim açılınca sadece “Claim” butonunu kullanın, sahte sayfalara itibar etmeyin.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="z-footer">
+  <div class="z-container between center-v">
+    <small>© ZUZUCOIN 2025</small>
+    <div class="z-chip-row">
+      <a class="z-chip" href="index.html#presale">Pre-Sale</a>
+      <a class="z-chip" href="index.html#stake">Stake</a>
+      <a class="z-chip" href="index.html#nft">NFT</a>
+      <a class="z-chip" href="index.html#tokenomics">Tokenomics</a>
     </div>
   </div>
+</footer>
 
 <script>
-const CLAIM_CONTRACT = "0xYourClaimContractHere"; // ileride deploy ettiğimiz claim SC adresi
-document.getElementById("claimBtn").addEventListener("click", ()=>{
-  alert("Claim will be enabled once contract is live.");
+/* ==============
+   Minimal Claim Portal Logic
+   ============== */
+const KEY = "zuzu:orders"; // localStorage key
+let currentAddr = null;
+
+function short(addr){
+  if(!addr) return "—";
+  return addr.slice(0,6)+"..."+addr.slice(-4);
+}
+
+function loadAll(){
+  try{ return JSON.parse(localStorage.getItem(KEY) || "{}"); }
+  catch(e){ return {}; }
+}
+function saveAll(db){
+  try{ localStorage.setItem(KEY, JSON.stringify(db)); }
+  catch(e){}
+}
+
+function getMine(){
+  const db = loadAll();
+  if(!currentAddr) return [];
+  return db[currentAddr.toLowerCase()] || [];
+}
+
+function setMine(list){
+  const db = loadAll();
+  if(!currentAddr) return;
+  db[currentAddr.toLowerCase()] = list;
+  saveAll(db);
+}
+
+function renderTable(){
+  const body = document.getElementById("ordersBody");
+  const mine = getMine();
+  if(!mine.length){
+    body.innerHTML = '<tr><td colspan="5" style="padding:10px;color:#9fb4dd">No purchases recorded in this browser.</td></tr>';
+    document.getElementById("claimable").textContent = "0 ZUZU";
+    return;
+  }
+  let html = "";
+  let estZuzu = 0;
+
+  mine.forEach(r=>{
+    // very rough est. using weekInfo like "Week 1 @0.0050"
+    let unit = 0.0065; // default
+    const m = /@([0-9.]+)/.exec(r.week || "");
+    if(m) unit = parseFloat(m[1] || "0") || unit;
+    const zuzu = unit>0 ? (parseFloat(r.amount||"0")/unit) : 0;
+    estZuzu += zuzu;
+
+    html += `
+      <tr>
+        <td style="padding:8px;border-bottom:1px solid #22365a">${r.net}</td>
+        <td style="padding:8px;border-bottom:1px solid #22365a">${parseFloat(r.amount||0).toLocaleString()}</td>
+        <td style="padding:8px;border-bottom:1px solid #22365a">${r.week||"-"}</td>
+        <td style="padding:8px;border-bottom:1px solid #22365a">
+          ${r.tx ? `<a href="${txExplorer(r.net,r.tx)}" target="_blank" rel="noopener">${r.tx.slice(0,10)}...</a>`:"-"}
+        </td>
+        <td style="padding:8px;border-bottom:1px solid #22365a">${new Date(r.ts).toLocaleString()}</td>
+      </tr>`;
+  });
+
+  body.innerHTML = html || '<tr><td colspan="5" style="padding:10px;color:#9fb4dd">No data.</td></tr>';
+  document.getElementById("claimable").textContent = estZuzu.toFixed(2)+" ZUZU";
+}
+
+function txExplorer(net, tx){
+  const t = (tx||"").trim();
+  if(!t) return "#";
+  switch(net){
+    case "BSC": return `https://bscscan.com/tx/${t}`;
+    case "ETH": return `https://etherscan.io/tx/${t}`;
+    case "POLYGON": return `https://polygonscan.com/tx/${t}`;
+    default: return "#";
+  }
+}
+
+async function connectMetaMask(){
+  if(!window.ethereum){
+    alert("MetaMask not detected. Please install MetaMask.");
+    return;
+  }
+  try{
+    const accs = await window.ethereum.request({method:"eth_requestAccounts"});
+    currentAddr = accs && accs[0] || null;
+    document.getElementById("addrShort").textContent = short(currentAddr);
+    document.getElementById("connectBtn").textContent = "MetaMask ✓";
+    renderTable();
+  }catch(e){
+    alert("Wallet connect rejected.");
+  }
+}
+
+document.getElementById("connectBtn").addEventListener("click", connectMetaMask);
+
+document.getElementById("addReceipt").addEventListener("click", ()=>{
+  if(!currentAddr){ alert("Connect MetaMask first."); return; }
+  const net = document.getElementById("netSel").value;
+  const amt = (document.getElementById("usdtAmt").value || "").trim();
+  const week = (document.getElementById("weekInfo").value || "").trim();
+  const tx = (document.getElementById("txHash").value || "").trim();
+
+  const val = parseFloat(amt||"0");
+  if(!(val>0)){ alert("Invalid amount"); return; }
+  if(tx && !(tx.startsWith("0x") && tx.length===66)){ alert("Invalid TX hash"); return; }
+
+  const mine = getMine();
+  mine.push({ net, amount: val, week, tx, ts: Date.now() });
+  setMine(mine);
+  renderTable();
+
+  document.getElementById("usdtAmt").value="";
+  document.getElementById("weekInfo").value="";
+  document.getElementById("txHash").value="";
+  alert("Receipt saved locally for this wallet.");
 });
+
+document.getElementById("clearMine").addEventListener("click", ()=>{
+  if(!currentAddr) { alert("Connect MetaMask first."); return; }
+  if(confirm("Clear local purchase records for this wallet?")){
+    setMine([]);
+    renderTable();
+  }
+});
+
+/* Claim button: locked until TGE. Enable with ?claim=on for testing */
+(function(){
+  const url = new URL(location.href);
+  const test = url.searchParams.get("claim")==="on";
+  const btn = document.getElementById("claimBtn");
+  const note = document.getElementById("claimNote");
+  if(test){
+    btn.disabled = false;
+    note.textContent = "TEST MODE: Claim button enabled (no on-chain transfer yet).";
+  }
+  btn.addEventListener("click", ()=>{
+    if(btn.disabled) return;
+    alert("Claim requested (TEST). On-chain claim will be enabled after TGE.");
+  });
+})();
 </script>
 </body>
 </html>
