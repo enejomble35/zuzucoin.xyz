@@ -80,11 +80,16 @@
       </div>
     </div>
 
-    <!-- Büyük ZUZU Logo görseli (başlığın sağında) -->
     <div class="hero-visual">
-      <img class="logo-big"
-           src="assets/images/branding/zuzu-logo.svg"
-           alt="ZUZU Logo"
+  <picture>
+    <!-- 1) Asıl istediğimiz büyük görsel -->
+    <source srcset="assets/images/hero/zuzu-hero.png" type="image/png">
+    <!-- 2) Yedek: SVG varsa -->
+    <source srcset="assets/images/branding/zuzu-logo.svg" type="image/svg+xml">
+    <!-- 3) Son çare: logo.png -->
+    <img class="logo-big" src="assets/images/logo.png" alt="ZUZU Logo">
+  </picture>
+</div>
            onerror="this.onerror=null; this.src='assets/images/banner.jpg';">
     </div>
   </div>
