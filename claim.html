@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ZUZU Claim Portal</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+</head>
+<body style="background:#0e1522;color:#fff;font-family:Inter,system-ui;">
+  <div class="z-container" style="padding:40px 0;">
+    <h1>Claim Your ZUZU</h1>
+    <p>If you participated in the pre-sale, connect your wallet and claim your tokens here.</p>
+
+    <button id="connectBtn" class="z-btn z-btn-primary">Connect Wallet</button>
+    <br><br>
+
+    <div class="card">
+      <label>Amount to Claim</label>
+      <input class="input" id="claimAmount" placeholder="e.g., 5000">
+      <button id="claimBtn" class="z-btn z-btn-ghost">Claim Now</button>
+    </div>
+  </div>
+
+<script>
+const CLAIM_CONTRACT = "0xYourClaimContractHere"; // ileride deploy ettiğimiz claim SC adresi
+document.getElementById("claimBtn").addEventListener("click", ()=>{
+  alert("Claim will be enabled once contract is live.");
+});
+</script>
+</body>
+</html>
