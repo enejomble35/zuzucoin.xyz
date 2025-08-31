@@ -179,3 +179,38 @@ select#langSel{
   background:#0f1b31;color:#d9e7ff;border:1px solid #243457;border-radius:10px;
   padding:.35rem .6rem
 }
+/* === PATCH-A: Mobile ticker visibility, NFT images fit, minor responsive === */
+
+/* 1) NFT maskot görselleri: kare içinde TAM görünüm (baş/ayak kesilmesin) */
+.nft img{
+  width: 100%;
+  aspect-ratio: 1 / 1;      /* kare çerçeve */
+  object-fit: contain;       /* taşı da kırpma */
+  object-position: center;   /* ortala */
+  background: #0b1426;       /* siyah-mavi zemin */
+  padding: 6px;              /* içerikten min boşluk */
+  border-bottom: 1px solid #1d2d50;
+}
+
+/* 2) Mobilde exchange ticker görünmeme düzeltmesi */
+.ticker{
+  min-height: 72px;           /* yüksekliği sabitle */
+  overflow: hidden;
+}
+.ticker__track{
+  display: inline-flex;
+  align-items: center;
+  gap: 22px;
+  min-width: max-content;     /* içeriği kesme */
+  will-change: transform;
+}
+@media (max-width: 560px){
+  .ticker__item img{ height: 44px; }
+}
+
+/* 3) Küçük boşluk/dağılma için ufak responsive ekleri */
+.z-menu{ row-gap: 6px; }
+.z-menu a{ white-space: nowrap; }
+@media (max-width: 880px){
+  .z-menu{ gap: 8px; }
+}
