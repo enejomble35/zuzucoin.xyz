@@ -214,3 +214,25 @@ select#langSel{
 @media (max-width: 880px){
   .z-menu{ gap: 8px; }
 }
+/* === HERO big image — sağ sütunda konumlandırma ve boyut === */
+.hero-visual{
+  display:flex;
+  justify-content:flex-end;   /* sağa hizala (desktop) */
+  align-items:flex-start;
+}
+.hero-visual .logo-big{
+  width:min(480px, 42vw);     /* masaüstünde 420–480px aralığı */
+  max-width:520px;
+  height:auto;
+  aspect-ratio: 1 / 1;        /* kare görünüm bozulmasın */
+  object-fit: contain;
+  filter: drop-shadow(0 16px 36px rgba(0,0,0,.4));
+}
+@media (max-width: 920px){
+  .hero-visual{
+    justify-content:center;   /* mobilde alta geçince ortala */
+  }
+  .hero-visual .logo-big{
+    width: min(360px, 74vw);
+  }
+}
