@@ -236,3 +236,10 @@ select#langSel{
     width: min(360px, 74vw);
   }
 }
+/* --- Hero logo yeri/ölçüsü garanti --- */
+.hero-visual{display:flex;justify-content:flex-end;align-items:center}
+.hero-visual .logo-big{max-width:420px;width:100%;filter:drop-shadow(0 16px 36px rgba(0,0,0,.4))}
+@media(max-width:920px){
+  .hero-visual{justify-content:center}
+  .hero-visual .logo-big{max-width:320px}
+}
