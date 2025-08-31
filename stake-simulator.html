@@ -5,54 +5,34 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ZUZUCOIN — Stake Simulator</title>
 <meta name="theme-color" content="#0e1522">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<!-- TON UI -->
-<script src="https://unpkg.com/@tonconnect/ui@2.0.9/dist/tonconnect-ui.min.js"></script>
+<link rel="stylesheet" href="style.css">
+
 <style>
-:root{
-  --bg:#0C1320;--panel:#0f1828;--muted:#8aa2c9;--txt:#e8f1ff;--chip:#1c2840;
-  --pri:#6a8cff;--pri2:#9aaeff;--ok:#16d2a6;--warn:#ffb347;
-  --bd:#1b2a49;--bd2:#21345a;
-}
-*{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
-a{color:#b8c7ff;text-decoration:none}
-img{max-width:100%;display:block}
-.z-container{width:min(1100px,92%);margin:0 auto}
-.z-nav{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,rgba(10,15,25,.9),rgba(10,15,25,.75));backdrop-filter:saturate(1.2) blur(8px);border-bottom:1px solid #16223a}
-.z-nav-inner{display:flex;align-items:center;justify-content:space-between;padding:.7rem 0;gap:12px}
-.brand{display:flex;gap:.6rem;align-items:center;font-weight:800}
-.brand img{width:36px;height:36px}
-.z-btn{display:inline-flex;align-items:center;gap:.5rem;border:0;border-radius:12px;padding:.65rem 1rem;font-weight:700;cursor:pointer;white-space:nowrap}
-.z-btn-primary{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#08101d}
-.z-btn-ghost{background:#12203a;color:#cfe2ff;border:1px solid #1c2d4a}
-.badge{background:#172748;border:1px solid #263a63;color:#9eb9ff;padding:.3rem .55rem;border-radius:999px;font-size:.8rem}
-.z-section{padding:28px 0}
-h1{margin:.2rem 0 .4rem;font-size:clamp(1.6rem,3.8vw,2.3rem)}
-.lead{color:#bfd2ff}
-.grid-2{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
-@media(max-width:950px){.grid-2{grid-template-columns:1fr}}
-.card{background:var(--panel);border:1px solid var(--bd);border-radius:16px;padding:16px}
-.input,select{width:100%;padding:.7rem;border-radius:12px;background:#0f1c33;border:1px solid #23395d;color:var(--txt)}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:760px){.row{grid-template-columns:1fr}}
-.stat3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
-.stat{background:#0f1a30;border:1px solid var(--bd2);border-radius:14px;padding:12px}
-.stat .label{color:#90a9d6}
-.progress{height:10px;border-radius:8px;background:#10213a;overflow:hidden;border:1px solid #213a65}
-.progress > span{display:block;height:100%;background:linear-gradient(90deg,#24d1a5,#6a8cff)}
-.tbl{width:100%;border-collapse:collapse;margin-top:10px}
-.tbl th,.tbl td{padding:8px;border-bottom:1px solid #1b2c4d;text-align:left}
-.tbl th{color:#9cb6e6;font-weight:700}
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-@media(max-width:900px){.grid-3{grid-template-columns:1fr}}
-.small{color:#96acd6;font-size:.92rem}
-.center{text-align:center}
-.footer{border-top:1px solid #15243f;color:#9cb6e6;padding:18px 0;margin-top:24px}
-.nft-chip{display:inline-flex;align-items:center;gap:8px;background:#0f1c33;border:1px solid #20365b;border-radius:999px;padding:8px 10px}
-.nft-chip img{width:28px;height:28px;object-fit:contain}
-.hint{color:#9db3db;font-size:.9rem}
+/* Sayfaya küçük ek düzenlemeler (mevcut style.css ile uyumlu) */
+.sim-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+@media(max-width:980px){.sim-grid{grid-template-columns:1fr}}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:760px){.form-grid{grid-template-columns:1fr}}
+.hint{color:#9ab0da;font-size:.95rem}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
+@media(max-width:980px){.kpis{grid-template-columns:1fr 1fr}}
+@media(max-width:540px){.kpis{grid-template-columns:1fr}}
+.kpi{background:#0f1a30;border:1px solid #22365a;border-radius:14px;padding:12px}
+.kpi .t{color:#90a9d6;font-size:.9rem}
+.kpi .v{font-weight:800;font-size:1.15rem;margin-top:4px}
+.chart-box{background:#0f1a30;border:1px solid #22365a;border-radius:14px;padding:10px}
+label small{color:#89a2cd}
+.switch{display:flex;gap:8px;align-items:center}
+.switch input{accent-color:#7f9cff}
+.table-wrap{overflow-x:auto}
+table.proj{width:100%;border-collapse:collapse}
+table.proj th,table.proj td{padding:8px;border-bottom:1px solid #22365a;text-align:left}
+table.proj th{color:#9fb7ff}
+.note{color:#9ab0da;margin-top:8px}
+.badge2{display:inline-block;background:#182745;border:1px solid #2a3f66;border-radius:999px;padding:.25rem .6rem;color:#a8c2ff;font-size:.85rem}
 </style>
 </head>
 <body>
@@ -60,34 +40,48 @@ h1{margin:.2rem 0 .4rem;font-size:clamp(1.6rem,3.8vw,2.3rem)}
 <header class="z-nav">
   <div class="z-container z-nav-inner">
     <a class="brand" href="index.html">
-      <img src="assets/images/logo.png" alt="ZUZU">
-      <span>ZUZUCOIN — Stake Simulator</span>
+      <img src="assets/images/logo.png" alt="ZUZU"><span>ZUZUCOIN</span>
     </a>
-    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-      <a class="z-btn z-btn-ghost" href="index.html">← Back to Home</a>
-      <button id="connectBtn" class="z-btn z-btn-primary">Connect Wallet</button>
-    </div>
+    <nav class="z-menu">
+      <a href="index.html#presale">Pre-Sale</a>
+      <a href="index.html#stake">Stake</a>
+      <a href="index.html#nft">NFT</a>
+      <a href="index.html#tokenomics">Tokenomics</a>
+      <a href="claim.html">Claim</a>
+      <button id="connectBtn" class="z-btn z-btn-primary">Connect MetaMask</button>
+    </nav>
   </div>
 </header>
 
-<main class="z-section">
-  <div class="z-container">
-    <div class="badge">Visual • No blockchain write</div>
-    <h1>Stake & Claim NFT Rewards — Simulator</h1>
-    <p class="lead">Enter your amount and choose a lock period + NFT boost. We’ll simulate total rewards, monthly claim schedule and boosted APY.</p>
+<main>
+  <section class="z-section hero">
+    <div class="z-container">
+      <div class="badge">Analyzer</div>
+      <h1>Stake Simulator</h1>
+      <p class="lead">
+        ZUZU stake getirini <b>kilit süresi</b>, <b>baz APY</b>, <b>NFT BOOST</b> ve <b>Early Badge</b> senaryoları ile simüle et.
+        İster basit getiri, ister aylık bileşik hesabı kullan.
+      </p>
+      <div class="z-chip-row">
+        <span class="z-chip">Supported lock tiers: 30 / 90 / 180 / 365 / 540 days</span>
+        <span class="z-chip">Base APY: 12% ~ 85% (tier’a göre)</span>
+      </div>
+    </div>
+  </section>
 
-    <div class="grid-2" style="margin-top:14px">
-      <!-- Left: Inputs -->
+  <section class="z-section">
+    <div class="z-container sim-grid">
+      <!-- LEFT: Form -->
       <div class="card">
         <h3>Parameters</h3>
-        <div class="row">
+        <div class="form-grid">
           <div>
-            <label>Amount (ZUZU)</label>
-            <input type="text" id="simAmount" class="input" placeholder="e.g., 10,000" value="10000">
+            <label>Amount (ZUZU) <small>e.g., 10,000</small></label>
+            <input id="inAmount" class="input" placeholder="e.g., 10,000" inputmode="decimal">
           </div>
           <div>
             <label>Lock Period</label>
-            <select id="simDuration" class="input">
+            <select id="inLock" class="input">
               <option value="30">30 days (12% APY)</option>
               <option value="90">90 days (24% APY)</option>
               <option value="180">180 days (40% APY)</option>
@@ -95,13 +89,10 @@ h1{margin:.2rem 0 .4rem;font-size:clamp(1.6rem,3.8vw,2.3rem)}
               <option value="540">540 days (85% APY)</option>
             </select>
           </div>
-        </div>
-
-        <div class="row" style="margin-top:10px">
           <div>
-            <label>Have ZUZU NFT?</label>
-            <select id="simNft" class="input">
-              <option value="0">None</option>
+            <label>Have NFT? <small>adds bonus</small></label>
+            <select id="inNft" class="input">
+              <option value="0">No</option>
               <option value="5">ZUZU Hero (+5%)</option>
               <option value="8">ZUZU Rogue (+8%)</option>
               <option value="10">ZUZU Berserker (+10%)</option>
@@ -115,241 +106,254 @@ h1{margin:.2rem 0 .4rem;font-size:clamp(1.6rem,3.8vw,2.3rem)}
           </div>
           <div>
             <label>Early Badge</label>
-            <select id="simEarly" class="input">
+            <select id="inEarly" class="input">
               <option value="0">None</option>
               <option value="3">Badge +3%</option>
               <option value="5">Badge+ +5%</option>
             </select>
           </div>
+          <div class="switch">
+            <input id="inCompound" type="checkbox">
+            <label for="inCompound">Monthly compounding</label>
+          </div>
+          <div>
+            <button id="calcBtn" class="z-btn z-btn-primary" style="width:100%">Calculate</button>
+          </div>
         </div>
 
-        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
-          <button id="btnCalc" class="z-btn z-btn-primary">Calculate</button>
-          <button id="btnReset" class="z-btn z-btn-ghost">Reset Claim</button>
-        </div>
+        <p class="hint">
+          Not: Hesaplar simülasyondur. Gerçek dağıtımlar stake sözleşmesinin kurallarına, havuz durumuna ve kampanya dönemlerine göre farklılık gösterebilir.
+        </p>
 
-        <div class="small hint" style="margin-top:8px">
-          *This page is a visual simulator for education. Real staking, claiming and NFT rewards will be executed on the live dApp.
+        <div class="kpis">
+          <div class="kpi">
+            <div class="t">Total Return</div>
+            <div id="outTotal" class="v">0 ZUZU</div>
+          </div>
+          <div class="kpi">
+            <div class="t">Monthly Avg</div>
+            <div id="outMonthly" class="v">0 ZUZU</div>
+          </div>
+          <div class="kpi">
+            <div class="t">Total Boost</div>
+            <div id="outBoost" class="v">+0%</div>
+          </div>
+          <div class="kpi">
+            <div class="t">Effective APR</div>
+            <div id="outAPR" class="v">0%</div>
+          </div>
         </div>
       </div>
 
-      <!-- Right: Stats -->
+      <!-- RIGHT: Chart -->
       <div class="card">
-        <h3>Results</h3>
-        <div class="stat3">
-          <div class="stat">
-            <div class="label">Total Return</div>
-            <div id="resTotal" style="font-weight:800;margin-top:4px">0 ZUZU</div>
-          </div>
-          <div class="stat">
-            <div class="label">Monthly Avg</div>
-            <div id="resMonthly" style="font-weight:800;margin-top:4px">0 ZUZU</div>
-          </div>
-          <div class="stat">
-            <div class="label">Boosted APY</div>
-            <div id="resBoost" style="font-weight:800;margin-top:4px">0%</div>
-          </div>
+        <h3>Projection</h3>
+        <div class="chart-box">
+          <canvas id="chart" width="780" height="340"></canvas>
         </div>
-
-        <div style="margin-top:12px">
-          <div class="label">Progress (simulated)</div>
-          <div class="progress"><span id="prog" style="width:0%"></span></div>
-          <div class="small" id="progText" style="margin-top:6px">0% of lock elapsed</div>
-        </div>
-
-        <div style="margin-top:12px">
-          <div class="nft-chip">
-            <img src="assets/images/mask/0.png" alt="ZUZU NFT">
-            <div>
-              <div style="font-weight:700">ZUZU Maskot NFT Boost</div>
-              <div class="small">Holding NFT increases APY as shown above.</div>
-            </div>
-          </div>
-        </div>
+        <p class="note">Grafik: Aylık bakiye (bileşik seçiliyse bileşiklenmiş) ve toplam proje edilmiş kazanç eğrisi.</p>
       </div>
     </div>
 
-    <!-- CLAIM SCHEDULE -->
-    <div class="card" style="margin-top:16px">
-      <h3>Claim Schedule</h3>
-      <p class="small">Rewards are linearly unlocked each month of the lock period in this simulator. Use the buttons to simulate claiming.</p>
-      <div class="grid-3">
-        <div class="stat">
-          <div class="label">Claimable (simulated)</div>
-          <div id="resClaimable" style="font-weight:800;margin-top:4px">0 ZUZU</div>
+    <div class="z-container" style="margin-top:14px">
+      <div class="card">
+        <div class="section-head">
+          <h3>Monthly Breakdown</h3>
+          <p>İlk 18 aya kadar özet tablo.</p>
         </div>
-        <div class="stat">
-          <div class="label">Claimed</div>
-          <div id="resClaimed" style="font-weight:800;margin-top:4px">0 ZUZU</div>
+        <div class="table-wrap">
+          <table class="proj">
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Start Balance</th>
+                <th>Yield</th>
+                <th>End Balance</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
         </div>
-        <div class="stat">
-          <div class="label">Remaining</div>
-          <div id="resRemaining" style="font-weight:800;margin-top:4px">0 ZUZU</div>
+        <div class="note">
+          <span class="badge2">Tip</span> — “Monthly compounding” aktifken, her ayın getirisi anaparaya eklenir ve bir sonraki aya daha yüksek bakiye ile girersiniz.
         </div>
       </div>
-
-      <div style="display:flex;gap:10px;margin:12px 0;flex-wrap:wrap">
-        <button id="btnAdvanceMonth" class="z-btn z-btn-ghost">Advance 1 Month →</button>
-        <button id="btnClaimNow" class="z-btn z-btn-primary">Claim Now</button>
-      </div>
-
-      <table class="tbl" id="tbl">
-        <thead><tr><th>#</th><th>Unlock</th><th>Amount (ZUZU)</th><th>Status</th></tr></thead>
-        <tbody></tbody>
-      </table>
     </div>
-
-    <div class="footer z-container center">
-      <div>© ZUZUCOIN 2025 — <a href="index.html">Back to Main</a> • <a target="_blank" href="https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a">Collection</a></div>
-    </div>
-
-  </div>
+  </section>
 </main>
 
-<script>
-/** ====== CONFIG (aynı verilerle eşleşsin) ====== */
-const CONFIG = {
-  contractAddress:"0xF2bbbEcB417725813BF5E940d678793fACDa9729",
-  collectionUrl:"https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts",
-  apyMap:{30:12,90:24,180:40,365:65,540:85}
-};
+<footer class="z-footer">
+  <div class="z-container between center-v">
+    <small>© ZUZUCOIN 2025</small>
+    <div class="z-chip-row">
+      <a class="z-chip" href="index.html#presale">Pre-Sale</a>
+      <a class="z-chip" href="index.html#stake">Stake</a>
+      <a class="z-chip" href="index.html#nft">NFT</a>
+      <a class="z-chip" href="index.html#tokenomics">Tokenomics</a>
+    </div>
+  </div>
+</footer>
 
-/** ====== Wallet Connect (MetaMask / Phantom / TON) ====== */
+<script>
+/* ===== MetaMask connect (opsiyonel) ===== */
 const btn = document.getElementById("connectBtn");
-let tonUi;
-try{
-  tonUi = new TON_CONNECT_UI.TonConnectUI({ manifestUrl: "/tonconnect-manifest.json" });
-}catch(e){}
 btn.addEventListener("click", async ()=>{
-  if (window.ethereum){
-    try{ await window.ethereum.request({method:"eth_requestAccounts"});
-      btn.textContent="MetaMask ✓"; return;
-    }catch(e){}
-  }
-  if (window.solana && window.solana.isPhantom){
-    try{ await window.solana.connect(); btn.textContent="Phantom ✓"; return;}catch(e){}
-  }
-  if (tonUi){
-    try{ await tonUi.openModal(); btn.textContent="TON ✓"; return;}catch(e){}
-  }
-  alert("Please install MetaMask, Phantom or TON Wallet.");
+  if(!window.ethereum){ alert("MetaMask not detected."); return; }
+  try{
+    await window.ethereum.request({method:"eth_requestAccounts"});
+    btn.textContent = "MetaMask ✓";
+  }catch(e){ alert("Wallet connect rejected."); }
 });
 
-/** ====== Simulator Logic ====== */
-const $ = (s)=>document.querySelector(s);
-const amountEl = $("#simAmount");
-const durationEl = $("#simDuration");
-const nftEl = $("#simNft");
-const earlyEl = $("#simEarly");
+/* ===== Stake Simulator Logic ===== */
+const APY = {30:12, 90:24, 180:40, 365:65, 540:85};
 
-// results
-const resTotal = $("#resTotal");
-const resMonthly = $("#resMonthly");
-const resBoost = $("#resBoost");
-const progBar = $("#prog");
-const progText = $("#progText");
-
-const claimableEl = $("#resClaimable");
-const claimedEl   = $("#resClaimed");
-const remainingEl = $("#resRemaining");
-const tbody       = $("#tbl tbody");
-
-let state = {
-  total:0, months:0, monthly:0,
-  monthNow:0, // kaç ay geçti (simülasyon)
-  claimed:0
+const el = {
+  amount: document.getElementById("inAmount"),
+  lock: document.getElementById("inLock"),
+  nft: document.getElementById("inNft"),
+  early: document.getElementById("inEarly"),
+  comp: document.getElementById("inCompound"),
+  calc: document.getElementById("calcBtn"),
+  total: document.getElementById("outTotal"),
+  monthly: document.getElementById("outMonthly"),
+  boost: document.getElementById("outBoost"),
+  apr: document.getElementById("outAPR"),
+  chart: document.getElementById("chart"),
+  rows: document.getElementById("rows")
 };
 
-function number(x){ return parseFloat((x||"0").toString().replace(/[^\d.]/g,""))||0; }
-function fmt(x){ return (x||0).toLocaleString(undefined,{maximumFractionDigits:2}); }
+function parseNum(v){ return parseFloat((v||"").toString().replace(/[^\d.]/g,"")) || 0; }
 
-function recalc(){
-  const a  = number(amountEl.value);
-  const d  = parseInt(durationEl.value,10)||0;
-  const nft= number(nftEl.value);
-  const eb = number(earlyEl.value);
-  const base = CONFIG.apyMap[d]||0;
-  const tb = nft + eb;
-  const gross = a * ((base + tb)/100) * (d/365);
+function calc(){
+  const a = parseNum(el.amount.value);
+  const d = parseInt(el.lock.value,10);
+  const base = APY[d] || 0;
+  const bN = parseFloat(el.nft.value||"0");
+  const bE = parseFloat(el.early.value||"0");
+  const totalBoost = bN + bE;
+  const comp = !!el.comp.checked;
+
+  // Yıllık oran:
+  const apr = base + totalBoost; // basit varsayım
+  // Periyot (gün) => ay adedi:
   const months = Math.max(1, Math.round(d/30));
-  const m = gross / months;
+  const monthlyRate = apr/12/100;
 
-  state.total = gross;
-  state.months = months;
-  state.monthly = m;
-  state.monthNow = 0;
-  state.claimed = 0;
+  let balance = a;
+  let sumYield = 0;
+  const points = []; // chart için
+  const rows = [];
 
-  resTotal.textContent   = fmt(gross) + " ZUZU";
-  resMonthly.textContent = fmt(m) + " ZUZU";
-  resBoost.textContent   = (base + tb).toFixed(0) + "%";
-
-  progBar.style.width = "0%";
-  progText.textContent = "0% of lock elapsed";
-
-  renderSchedule();
-  refreshClaimSummary();
-}
-
-function renderSchedule(){
-  let html = "";
-  for(let i=1;i<=state.months;i++){
-    html += `<tr data-i="${i}">
-      <td>${i}</td>
-      <td>Month ${i}</td>
-      <td>${fmt(state.monthly)}</td>
-      <td class="status">Locked</td>
-    </tr>`;
+  for(let m=1; m<=Math.min(18, months); m++){
+    const start = balance;
+    const y = start * monthlyRate;
+    sumYield += y;
+    const end = comp ? (start + y) : (start);
+    if(comp) balance = end; // bileşik ise ekle
+    points.push({m, val: end});
+    rows.push({m, start, y, end});
   }
-  tbody.innerHTML = html;
+
+  // Dönem toplam getiri (lineer: d/365)
+  const linearGross = a * (apr/100) * (d/365);
+  const totalReturn = comp ? (balance - a) : linearGross;
+  const monthlyAvg = totalReturn / months;
+
+  el.total.textContent = totalReturn.toFixed(2) + " ZUZU";
+  el.monthly.textContent = monthlyAvg.toFixed(2) + " ZUZU";
+  el.boost.textContent = "+" + totalBoost + "%";
+  el.apr.textContent = apr.toFixed(2) + "%";
+
+  renderChart(points, a, comp);
+  renderRows(rows);
 }
 
-function refreshClaimSummary(){
-  const unlocked = Math.min(state.monthNow, state.months) * state.monthly;
-  const claimable = Math.max(0, unlocked - state.claimed);
-  const remaining = Math.max(0, state.total - state.claimed);
+function renderRows(rows){
+  const fmt = n => (n||0).toLocaleString(undefined,{maximumFractionDigits:2});
+  el.rows.innerHTML = rows.map(r=>`
+    <tr>
+      <td>${r.m}</td>
+      <td>${fmt(r.start)}</td>
+      <td>${fmt(r.y)}</td>
+      <td>${fmt(r.end)}</td>
+    </tr>
+  `).join("") || `<tr><td colspan="4" style="color:#9fb4dd">No data.</td></tr>`;
+}
 
-  claimableEl.textContent = fmt(claimable) + " ZUZU";
-  claimedEl.textContent   = fmt(state.claimed) + " ZUZU";
-  remainingEl.textContent = fmt(remaining) + " ZUZU";
+function renderChart(points, base, comp){
+  const c = el.chart, ctx = c.getContext("2d");
+  const W = c.width, H = c.height;
+  ctx.clearRect(0,0,W,H);
 
-  // table statuses
-  [...tbody.querySelectorAll("tr")].forEach((tr,idx)=>{
-    const i = idx+1;
-    const st = tr.querySelector(".status");
-    if (i <= state.claimed / state.monthly) st.textContent = "Claimed";
-    else if (i <= state.monthNow) st.textContent = "Unlocked";
-    else st.textContent = "Locked";
+  // Axis
+  ctx.fillStyle = "#0e1522";
+  ctx.fillRect(0,0,W,H);
+  // frame
+  ctx.strokeStyle="#23365d"; ctx.lineWidth=1;
+  ctx.strokeRect(38,16,W-54,H-40);
+
+  if(!points.length){ return; }
+
+  const maxVal = Math.max(...points.map(p=>p.val), base);
+  const minVal = Math.min(base, ...points.map(p=>p.val));
+  const padL=48, padR=16, padT=20, padB=28;
+  const chartW = W - padL - padR, chartH = H - padT - padB;
+
+  function x(i){ return padL + (i/(points.length-1||1))*chartW; }
+  function y(v){
+    const ratio = (v - minVal) / (maxVal - minVal || 1);
+    return padT + (1-ratio)*chartH;
+  }
+
+  // grid lines
+  ctx.strokeStyle="rgba(255,255,255,.06)";
+  ctx.lineWidth=1;
+  ctx.beginPath();
+  for(let i=0;i<5;i++){
+    const yy = padT + (i/4)*chartH;
+    ctx.moveTo(padL, yy); ctx.lineTo(padL+chartW, yy);
+  }
+  ctx.stroke();
+
+  // baseline (start)
+  ctx.strokeStyle="#2f436e";
+  ctx.setLineDash([4,4]);
+  ctx.beginPath();
+  const yBase = y(base);
+  ctx.moveTo(padL, yBase); ctx.lineTo(padL+chartW, yBase);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // line
+  ctx.strokeStyle = comp ? "#8bd1ff" : "#9ad77c";
+  ctx.lineWidth = 2.4;
+  ctx.beginPath();
+  points.forEach((p,i)=>{
+    const xx = x(i), yy = y(p.val);
+    if(i===0) ctx.moveTo(xx,yy); else ctx.lineTo(xx,yy);
+  });
+  ctx.stroke();
+
+  // points
+  ctx.fillStyle = "rgba(255,255,255,.8)";
+  points.forEach((p,i)=>{
+    const xx = x(i), yy = y(p.val);
+    ctx.beginPath(); ctx.arc(xx,yy,2.6,0,Math.PI*2); ctx.fill();
   });
 
-  const p = Math.min(100, (state.monthNow/state.months)*100);
-  progBar.style.width = p + "%";
-  progText.textContent = p.toFixed(0) + "% of lock elapsed";
+  // labels
+  ctx.fillStyle="#9fb4dd";
+  ctx.font="700 12px Inter, system-ui";
+  ctx.textAlign="left";
+  ctx.fillText("Start", padL+6, yBase-6);
+  ctx.textAlign="right";
+  ctx.fillText("Months", padL+chartW, H-8);
 }
 
-// advance 1 month (simülasyon)
-$("#btnAdvanceMonth").addEventListener("click", ()=>{
-  state.monthNow = Math.min(state.months, state.monthNow + 1);
-  refreshClaimSummary();
-});
-
-// claim now (simülasyon)
-$("#btnClaimNow").addEventListener("click", ()=>{
-  const unlocked = Math.min(state.monthNow, state.months) * state.monthly;
-  const claimable = Math.max(0, unlocked - state.claimed);
-  if (claimable <= 0) { alert("Nothing to claim yet."); return; }
-  state.claimed += claimable;
-  refreshClaimSummary();
-});
-
-// calc + reset
-$("#btnCalc").addEventListener("click", recalc);
-$("#btnReset").addEventListener("click", ()=>{
-  state.monthNow = 0; state.claimed = 0; refreshClaimSummary();
-});
-
-// initial
-recalc();
+document.getElementById("calcBtn").addEventListener("click", calc);
+// ilk hesap
+calc();
 </script>
 </body>
 </html>
