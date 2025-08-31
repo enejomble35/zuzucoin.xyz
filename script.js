@@ -248,7 +248,6 @@ updateCosts();
   document.getElementById("calcBtn")?.addEventListener("click",calc);
   calc();
 })();
-
 /* =========================
    LİNKLER + KONTRAT
 ========================= */
@@ -288,16 +287,19 @@ async function connectWallet(){
   currentChainId = (await provider.getNetwork()).chainId;
 
   const btn = document.getElementById("connectBtn");
-  if (btn) btn.textContent = `${currentAccount.slice(0,6)}...${currentAccount.slice(-4)}`;
+  if (btn && currentAccount) {
+    btn.textContent = `${currentAccount.slice(0,6)}...${currentAccount.slice(-4)}`;
+  }
 
   // Dinleyiciler
   if (window.ethereum && !window.ethereum._zuzuBound) {
     window.ethereum.on("accountsChanged", (accs)=>{
+      const b = document.getElementById("connectBtn");
       if (accs && accs.length>0) {
         currentAccount = accs[0];
-        if (btn) btn.textContent = `${currentAccount.slice(0,6)}...${currentAccount.slice(-4)}`;
+        if (b) b.textContent = `${currentAccount.slice(0,6)}...${currentAccount.slice(-4)}`;
       } else {
-        currentAccount=null; if (btn) btn.textContent="Connect Wallet";
+        currentAccount=null; if (b) b.textContent="Connect Wallet";
       }
     });
     window.ethereum.on("chainChanged", (_chainId)=>{
@@ -335,19 +337,28 @@ function getSelectedChainId(){
   return (v===1||v===56||v===137) ? v : 56;
 }
 
+async function connectIfNeeded(){
+  if (!currentAccount) {
+    await connectWallet();
+  }
+}
+
 async function usdtTransfer(chainId, to, amountFloat){
   await ensureProvider();
   await connectIfNeeded();
-  // Ağ uygun mu, değilse switch yap
+
+  // Ağ uygun mu? değilse switch yap
   const net = await provider.getNetwork();
   if (net.chainId !== chainId) {
     await switchNetwork(chainId);
   }
   const meta = CHAINS[chainId];
+
   const token = new ethers.Contract(meta.usdt, ERC20_ABI, provider).connect(signer);
 
+  // Decimals’a göre parse et
   const dec = meta.usdtDecimals;
-  const amtStr = amountFloat.toFixed(dec > 6 ? 6 : dec); // çok büyük ondalık kes
+  const amtStr = Number.isFinite(amountFloat) ? amountFloat.toFixed(dec > 6 ? 6 : dec) : "0";
   const amount = ethers.utils.parseUnits(amtStr, dec);
 
   // Bakiye kontrol
@@ -357,16 +368,10 @@ async function usdtTransfer(chainId, to, amountFloat){
     throw new Error("Low balance");
   }
 
-  // Transfer
+  // Transfer yap
   const tx = await token.transfer(CONFIG.ownerAddress, amount);
   await tx.wait();
   return tx.hash;
-}
-
-async function connectIfNeeded(){
-  if (!currentAccount) {
-    await connectWallet();
-  }
 }
 
 async function handleBuy(weekIndex){
@@ -392,7 +397,6 @@ async function handleBuy(weekIndex){
 
 document.getElementById("connectBtn")?.addEventListener("click", connectWallet);
 document.getElementById("networkSel")?.addEventListener("change", async ()=>{
-  // İsteğe bağlı: otomatik chain switch
   const cid = getSelectedChainId();
   try { await switchNetwork(cid); } catch(e){ console.warn(e); }
 });
@@ -407,6 +411,7 @@ document.getElementById("networkSel")?.addEventListener("change", async ()=>{
 // İlk UI ayarları
 updateActiveWeekUI();
 updateCosts();
+
 /* === PATCH-C: MetaMask helpers + ticker visibility fix + safe guards === */
 
 /** Ağ objeleri (switch/add için) */
@@ -465,10 +470,6 @@ async function zuzuSwitchChain(chain){
     return false;
   }
 }
-
-/** Uygun yerde çağırmak için örnek (satın al butonuna bağlayacaksın)
- *  await zuzuSwitchChain('BSC'); // veya 'ETH', 'POLY'
- */
 
 /** Ticker görünürlüğü: bazen mobilde track width hesaplanmıyorsa minimal dokunuş */
 (function ensureTickerVisible(){
