@@ -52,14 +52,24 @@
 
 <main>
 
-<!-- HERO görseli -->
-<div class="hero-visual">
-  <img id="heroLogo"
-       class="logo-big"
-       src="assets/images/banner.jpg?v=3"
-       alt="ZUZU hero"
-       onerror="this.onerror=null; this.src='assets/images/logo.png?v=3';">
-</div>
+<!-- HERO + COUNTDOWN + HERO LOGO -->
+<section class="z-section hero-2">
+  <div class="z-container grid-2">
+    <div>
+      <div class="badge" data-i="hero_badge">Pre-Sale • Stake to Win NFT</div>
+      <h1 data-i="hero_title">ZUZU — Robotic Hedgehog 🦔⚡</h1>
+      <p class="lead" data-i="hero_lead">
+        Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high <b>utility</b>.
+      </p>
+      <div class="hero-cta">
+        <a href="#stake" class="z-btn z-btn-primary" data-i="cta_stake">Start Staking</a>
+        <a href="#nft" class="z-btn z-btn-ghost" data-i="cta_nft">NFT Rewards</a>
+      </div>
+      <div class="z-chip-row">
+        <a id="thirdwebNFTRoute" class="z-chip" href="#" target="_blank" rel="noopener" data-i="collection_page">Collection Page</a>
+        <span class="z-chip" data-i="contract">Contract:</span>
+        <span class="z-chip" id="contractDisplay">—</span>
+      </div>
 
       <!-- Countdown -->
       <div class="counter" style="margin-top:14px">
