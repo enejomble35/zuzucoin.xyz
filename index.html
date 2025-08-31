@@ -6,7 +6,7 @@
 <title>ZUZUCOIN — Pre-Sale • Stake • NFT Rewards</title>
 <meta name="theme-color" content="#0e1522">
 
-<!-- Security-oriented meta -->
+<!-- Security-oriented meta (GH Pages üzerinde sınırlı ama faydalı) -->
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
@@ -20,14 +20,6 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <link rel="stylesheet" href="style.css">
-
-<!-- SADECE yerleşim için küçük override (logo sağda dursun) -->
-<style>
-  .hero-2 .grid-2{ align-items:flex-start; }
-  .hero-visual{ display:flex; justify-content:flex-end; align-items:flex-start; padding-top:6px; }
-  .hero-visual .logo-big{ max-width:380px; width:100%; height:auto; object-fit:contain; filter:drop-shadow(0 16px 36px rgba(0,0,0,.40)); }
-  @media (max-width:920px){ .hero-visual{ justify-content:center; margin-top:8px; } .hero-visual .logo-big{ max-width:320px; } }
-</style>
 </head>
 <body>
 
@@ -63,7 +55,6 @@
 <!-- HERO + COUNTDOWN + HERO LOGO -->
 <section class="z-section hero-2">
   <div class="z-container grid-2">
-    <!-- SOL KOLON -->
     <div>
       <div class="badge" data-i="hero_badge">Pre-Sale • Stake to Win NFT</div>
       <h1 data-i="hero_title">ZUZU — Robotic Hedgehog 🦔⚡</h1>
@@ -89,12 +80,9 @@
       </div>
     </div>
 
-    <!-- SAĞ KOLON — Büyük ZUZU Logo -->
+    <!-- Büyük ZUZU Logo görseli -->
     <div class="hero-visual">
-      <img class="logo-big"
-           src="assets/images/branding/zuzu-logo.svg"
-           alt="ZUZU Logo"
-           onerror="this.onerror=null; this.src='assets/images/banner.jpg';">
+      <img class="logo-big" src="assets/images/branding/zuzu-logo.svg" alt="ZUZU Logo">
     </div>
   </div>
 </section>
@@ -168,7 +156,7 @@
       </div>
     </div>
 
-    <!-- Exchanges -->
+    <!-- Exchanges (tek sıra, mobilde de görünecek) -->
     <div class="card" style="margin-top:16px">
       <h3 style="margin:0 0 10px" data-i="exchanges">Supported Exchanges</h3>
       <div class="ticker">
@@ -279,8 +267,10 @@
     </div>
     <div class="card tk">
       <div>
+        <!-- 500M yazılı donut -->
         <svg viewBox="0 0 42 42" width="100%" style="max-width:360px">
           <circle cx="21" cy="21" r="15.915" fill="#0e172a"/>
+          <!-- örnek segmentler -->
           <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#8E69FF" stroke-width="6" stroke-dasharray="35 65" stroke-dashoffset="25"></circle>
           <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#23d4e1" stroke-width="6" stroke-dasharray="20 80" stroke-dashoffset="-10"></circle>
           <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#47cc6f" stroke-width="6" stroke-dasharray="15 85" stroke-dashoffset="-30"></circle>
