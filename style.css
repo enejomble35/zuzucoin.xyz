@@ -61,11 +61,21 @@ a{color:#b8c7ff;text-decoration:none}
 .lead{color:#bfd2ff;font-size:1.05rem}
 .hero-cta{display:flex;gap:.6rem;margin:.8rem 0 1rem;flex-wrap:wrap}
 
-/* Sağdaki büyük logo */
-.hero-visual{display:flex;justify-content:center;align-items:center}
+/* Sağdaki büyük logo — görünürlük ve stabil yükseklik */
+.hero-visual{
+  display:flex;justify-content:center;align-items:center;
+  min-height:260px;            /* yazıların kaymasını engeller */
+}
 .hero-visual .logo-big{
-  max-width:420px; width:100%;
+  max-width:420px; width:100%; height:auto;   /* kesin görünür */
   filter:drop-shadow(0 16px 36px rgba(0,0,0,.4));
+}
+@media(max-width:920px){
+  .hero-visual{ min-height:180px; margin-top:8px; }
+  .hero-visual .logo-big{ max-width:360px; }
+}
+@media(max-width:520px){
+  .hero-visual .logo-big{ max-width:300px; }
 }
 
 /* Sayaç (flip tarzı) */
@@ -192,4 +202,9 @@ select#networkSel{
 select#langSel{
   background:#0f1b31;color:#d9e7ff;border:1px solid #243457;border-radius:10px;
   padding:.35rem .6rem
+}
+
+/* Erişilebilirlik: animasyon kapat (istemeyen kullanıcılar için) */
+@media (prefers-reduced-motion: reduce) {
+  .ticker__track { animation: none; }
 }
