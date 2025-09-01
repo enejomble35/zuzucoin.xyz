@@ -1,7 +1,26 @@
 /* =========================
    ZUZU – Global Config
 ========================= */
-const CONFIG = {
+const CONFIG
+   // === Persisted Countdown (Do not reset every reload)
+(function persistLaunchAt(){
+  try{
+    const LS_KEY = 'zuzu_launchAt';
+    let saved = localStorage.getItem(LS_KEY);
+    if (!saved) {
+      // İlk kez girenler için 50 gün sonrası
+      const target = Date.now() + 50*24*60*60*1000;
+      localStorage.setItem(LS_KEY, String(target));
+      CONFIG.launchAt = target;
+    } else {
+      CONFIG.launchAt = Number(saved);
+    }
+  }catch(e){
+    // localStorage yoksa fallback: sabit tarih ver istersen
+    // CONFIG.launchAt = Date.parse('2025-10-25T00:00:00Z');
+  }
+})();
+   = {
   ownerAddress: "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", // USDT ödemeleri buraya
   contractAddress: "0xF2bbbEcB417725813BF5E940d678793fACDa9729",
   collectionUrl: "https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts",
