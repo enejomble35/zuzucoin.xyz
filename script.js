@@ -269,6 +269,7 @@ updateCosts();
   document.getElementById("calcBtn")?.addEventListener("click",calc);
   calc();
 })();
+
 /* =========================
    MetaMask – Connect & Buy (MOBILE DEEPLINK + MULTI PROVIDER)
 ========================= */
