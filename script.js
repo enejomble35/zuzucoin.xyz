@@ -336,39 +336,6 @@ async function handleBuy(weekIndex){
 }
 
 document.getElementById("connectBtn")?.addEventListener("click", connectWallet);
-// === Robust provider bootstrap (desktop + mobile)
-window.addEventListener('load', ()=>{
-  if (window.ethereum) {
-    // Desktop MetaMask
-    provider = new ethers.providers.Web3Provider(window.ethereum,"any");
-  } else {
-    // Mobile users: deep link
-    const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
-    if (isMobile) {
-      // Kullanıcı mobildeyse MetaMask in-app browser yönlendirmesi
-      console.log("No window.ethereum on mobile, suggest MetaMask in-app browser");
-      // örn: window.location.href = "https://metamask.app.link/dapp/zuzucoin.xyz";
-    }
-  }
-});
-// Connect button patch
-document.getElementById("connectBtn")?.addEventListener("click", async ()=>{
-  try {
-    if (!window.ethereum) {
-      const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
-      if (isMobile) {
-        window.location.href = "https://metamask.app.link/dapp/zuzucoin.xyz";
-        return;
-      }
-      alert("MetaMask not detected. Please install MetaMask.");
-      return;
-    }
-    await connectWallet();
-  } catch(err){
-    console.error(err);
-    alert("Failed to connect MetaMask.");
-  }
-});
 ["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{
   document.getElementById(id)?.addEventListener("click", ()=>handleBuy(i));
 });
