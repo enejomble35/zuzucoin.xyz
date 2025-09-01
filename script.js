@@ -351,7 +351,6 @@ window.addEventListener('load', ()=>{
     }
   }
 });
-
 // Connect button patch
 document.getElementById("connectBtn")?.addEventListener("click", async ()=>{
   try {
