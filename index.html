@@ -53,7 +53,7 @@
 <main>
 
 <!-- HERO + COUNTDOWN + HERO LOGO -->
-<section class="z-section hero-2">
+<section class="z-section hero">
   <div class="z-container grid-2">
     <div>
       <div class="badge" data-i="hero_badge">Pre-Sale • Stake to Win NFT</div>
@@ -72,7 +72,7 @@
       </div>
 
       <!-- Countdown -->
-      <div class="counter" style="margin-top:14px">
+      <div class="counter">
         <div class="flip"><div id="cdDays" class="num">00</div><small data-i="days">DAYS</small></div>
         <div class="flip"><div id="cdHours" class="num">00</div><small data-i="hours">HOURS</small></div>
         <div class="flip"><div id="cdMins" class="num">00</div><small data-i="mins">MINUTES</small></div>
@@ -80,15 +80,9 @@
       </div>
     </div>
 
-    <!-- Sağdaki büyük ZUZU logo (fallback'lı) -->
+    <!-- Büyük ZUZU Logo görseli (fallback aktif) -->
     <div class="hero-visual">
-      <picture>
-        <source srcset="assets/images/branding/zuzu-logo.svg" type="image/svg+xml">
-        <img class="logo-big"
-             src="assets/images/banner.jpg"
-             alt="ZUZU Logo"
-             onerror="this.onerror=null;this.src='assets/images/banner.jpg'">
-      </picture>
+      <img id="heroLogo" class="logo-big" src="assets/images/branding/zuzu-logo.svg" alt="ZUZU Logo">
     </div>
   </div>
 </section>
@@ -273,7 +267,7 @@
     </div>
     <div class="card tk">
       <div>
-        <!-- 500M donut -->
+        <!-- Donut -->
         <svg viewBox="0 0 42 42" width="100%" style="max-width:360px">
           <circle cx="21" cy="21" r="15.915" fill="#0e172a"/>
           <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#8E69FF" stroke-width="6" stroke-dasharray="35 65" stroke-dashoffset="25"></circle>
@@ -328,5 +322,17 @@
 </footer>
 
 <script src="script.js"></script>
+
+<!-- LOGO FALLBACK: svg yüklenemezse logo.png'ya düş -->
+<script>
+  (function(){
+    const img = document.getElementById('heroLogo');
+    if(!img) return;
+    img.onerror = ()=> {
+      img.onerror = null;
+      img.src = 'assets/images/logo.png';
+    };
+  })();
+</script>
 </body>
 </html>
