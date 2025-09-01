@@ -269,36 +269,55 @@ updateCosts();
   document.getElementById("calcBtn")?.addEventListener("click",calc);
   calc();
 })();
-
 /* =========================
-   Linkler + Kontrat
+   MetaMask – Connect & Buy (MOBILE DEEPLINK + MULTI PROVIDER)
 ========================= */
-(function setupLinks(){
-  const c = CONFIG.contractAddress;
-  const short = `${c.slice(0,6)}...${c.slice(-4)}`;
-  const cd = document.getElementById("contractDisplay");
-  const cd2 = document.getElementById("contractDisplay2");
-  if (cd)  cd.textContent = short;
-  if (cd2) cd2.textContent = c;
 
-  const t1 = document.getElementById("thirdwebNFTRoute");
-  const t2 = document.getElementById("thirdwebNFTRoute2");
-  if (t1) t1.href = CONFIG.collectionUrl;
-  if (t2) t2.href = CONFIG.collectionUrl;
-})();
+let provider, signer, currentAccount = null, currentChainId = null;
 
-/* =========================
-   MetaMask — Connect & Buy
-========================= */
-let provider, signer, currentAccount = null;
+function isMobile(){
+  return /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+}
+function buildMetaMaskDeepLink(){
+  // Sayfayı MetaMask uygulamasında açar (mobil)
+  const loc = `${location.protocol}//${location.host}${location.pathname}`;
+  return `https://metamask.app.link/dapp/${location.host}${location.pathname}`;
+}
+
+/** Çoklu provider (Brave/OKX/Phantom) varsa gerçek MetaMask'ı seç */
+function getInjectedMetaMask(){
+  const eth = window.ethereum;
+  if (!eth) return null;
+  if (eth.isMetaMask) return eth;
+  if (eth.providers && Array.isArray(eth.providers)){
+    const mm = eth.providers.find(p => p.isMetaMask);
+    if (mm) return mm;
+  }
+  return null;
+}
 
 async function ensureProvider(){
-  if (!window.ethereum) {
-    alert("MetaMask not detected. Please install MetaMask.");
-    throw new Error("No MetaMask");
+  // 1) Desktop: MetaMask extension
+  if (typeof window !== 'undefined' && window.ethereum){
+    const injected = getInjectedMetaMask();
+    if (injected){
+      provider = new ethers.providers.Web3Provider(injected, "any");
+      return provider;
+    }
   }
-  provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-  return provider;
+
+  // 2) Mobile: MetaMask app deeplink
+  if (isMobile()){
+    // Kullanıcıyı MetaMask uygulamasında bu sayfayı açmaya yönlendir
+    const link = buildMetaMaskDeepLink();
+    // Kullanıcıyı yönlendiriyoruz; ardından hata atıp akışı kesiyoruz
+    window.location.href = link;
+    throw new Error("Redirecting to MetaMask app via deep link");
+  }
+
+  // 3) Son seçenek: kurulum uyarısı
+  alert("MetaMask not detected. Please install MetaMask.");
+  throw new Error("No MetaMask");
 }
 
 async function connectWallet(){
@@ -306,23 +325,31 @@ async function connectWallet(){
   const accounts = await provider.send("eth_requestAccounts", []);
   signer = provider.getSigner();
   currentAccount = accounts[0];
+  currentChainId = (await provider.getNetwork()).chainId;
 
   const btn = document.getElementById("connectBtn");
-  if (btn) btn.textContent = `${currentAccount.slice(0,6)}...${currentAccount.slice(-4)}`;
+  if (btn && currentAccount) {
+    btn.textContent = `${currentAccount.slice(0,6)}...${currentAccount.slice(-4)}`;
+  }
 
-  // Listeners (tek kez bağla)
-  if (window.ethereum && !window.ethereum._zuzuBound) {
-    window.ethereum.on("accountsChanged", (accs)=>{
+  // Dinleyiciler
+  const eth = getInjectedMetaMask();
+  if (eth && !eth._zuzuBound){
+    eth.on("accountsChanged", (accs)=>{
       const b = document.getElementById("connectBtn");
       if (accs && accs.length>0) {
         currentAccount = accs[0];
         if (b) b.textContent = `${currentAccount.slice(0,6)}...${currentAccount.slice(-4)}`;
       } else {
-        currentAccount=null; if (b) b.textContent="Connect Wallet";
+        currentAccount = null;
+        if (b) b.textContent = "Connect Wallet";
       }
     });
-    window.ethereum.on("chainChanged", ()=>window.location.reload());
-    window.ethereum._zuzuBound = true;
+    eth.on("chainChanged", ()=>{
+      // Basit: sayfayı yenile
+      window.location.reload();
+    });
+    eth._zuzuBound = true;
   }
 }
 
@@ -330,14 +357,15 @@ async function switchNetwork(targetId){
   await ensureProvider();
   const meta = CHAINS[targetId];
   if (!meta) throw new Error("Unsupported network");
+  const eth = getInjectedMetaMask();
   try {
-    await window.ethereum.request({
+    await eth.request({
       method: "wallet_switchEthereumChain",
       params: [{ chainId: meta.hex }]
     });
   } catch(err){
     if (err && err.code === 4902 && meta.params) {
-      await window.ethereum.request({
+      await eth.request({
         method: "wallet_addEthereumChain",
         params: [meta.params]
       });
@@ -353,42 +381,37 @@ function getSelectedChainId(){
   return (v===1||v===56||v===137) ? v : 56;
 }
 
-async function connectIfNeeded(){
-  if (!currentAccount) {
-    await connectWallet();
-  }
-}
-
 async function usdtTransfer(chainId, to, amountFloat){
   await ensureProvider();
   await connectIfNeeded();
 
-  // Doğru ağa geç
   const net = await provider.getNetwork();
   if (net.chainId !== chainId) {
     await switchNetwork(chainId);
   }
-
   const meta = CHAINS[chainId];
   const token = new ethers.Contract(meta.usdt, ERC20_ABI, provider).connect(signer);
 
-  // USDT 6 veya 18 decimals olabilir
   const dec = meta.usdtDecimals;
-  // Çok uzun ondalıklarda yuvarlayalım
-  const fixed = amountFloat.toFixed(dec>6 ? 6 : dec);
-  const amount = ethers.utils.parseUnits(fixed, dec);
+  // Büyük ondalık hatalarını engelle
+  const amtStr = amountFloat.toFixed(dec > 6 ? 6 : dec);
+  const amount = ethers.utils.parseUnits(amtStr, dec);
 
-  // Bakiye kontrol
   const bal = await token.balanceOf(currentAccount);
   if (bal.lt(amount)) {
     alert("Insufficient USDT balance.");
     throw new Error("Low balance");
   }
 
-  // Transfer (ownerAddress’e)
   const tx = await token.transfer(CONFIG.ownerAddress, amount);
   await tx.wait();
   return tx.hash;
+}
+
+async function connectIfNeeded(){
+  if (!currentAccount) {
+    await connectWallet();
+  }
 }
 
 async function handleBuy(weekIndex){
@@ -408,24 +431,46 @@ async function handleBuy(weekIndex){
     alert(`Purchase successful!\nTX: ${txHash}\nYou can claim later from Claim Portal.`);
   } catch(e){
     console.error(e);
+    if (String(e?.message||'').includes('deeplink')){
+      // mobilde metamask uygulamasına yönlendirdik
+      return;
+    }
     alert("Transaction failed or rejected.");
   }
 }
 
-// Events
+// Button bağlama
 document.getElementById("connectBtn")?.addEventListener("click", connectWallet);
+
 document.getElementById("networkSel")?.addEventListener("change", async ()=>{
-  try { await switchNetwork(getSelectedChainId()); } catch(e){ console.warn(e); }
+  const cid = getSelectedChainId();
+  try { await switchNetwork(cid); } catch(e){ console.warn(e); }
 });
+
+/** MetaMask yoksa Connect butonu tıklanınca güvenli uyarı
+ *  (Desktop dış tarayıcıda ve mobile tarayıcıda çalışır) */
+(function guardConnectBtn(){
+  const b = document.getElementById('connectBtn');
+  if(!b) return;
+  b.addEventListener('click', (ev)=>{
+    if(!getInjectedMetaMask()){
+      if(isMobile()){
+        // Direkt deeplink
+        const link = buildMetaMaskDeepLink();
+        window.location.href = link;
+      }else{
+        alert('MetaMask not detected. Please install MetaMask and refresh the page.');
+      }
+    }
+  }, {capture:true});
+})();
+
+// Buy buttons
 ["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{
   const b = document.getElementById(id);
   if (!b) return;
   b.addEventListener("click", ()=>handleBuy(i));
 });
-
-// İlk UI
-updateActiveWeekUI();
-updateCosts();
 
 /* =========================
    Küçük koruma & ticker fix
