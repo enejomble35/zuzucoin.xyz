@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ZUZUCOIN — Pre-Sale • Stake • NFT Rewards</title>
 <meta name="theme-color" content="#0e1522">
-<!-- Basit güvenlik head'leri -->
+
+<!-- Security meta -->
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
@@ -41,6 +42,8 @@
       <select id="langSel" class="lang">
         <option value="en" selected>EN</option>
         <option value="tr">TR</option>
+        <option value="fr">FR</option>
+        <option value="es">ES</option>
       </select>
       <button id="connectBtn" class="z-btn z-btn-primary" data-i="connect">Connect Wallet</button>
     </nav>
@@ -50,8 +53,9 @@
 <main>
 
 <!-- HERO + COUNTDOWN + HERO LOGO -->
-<section class="z-section hero">
+<section class="z-section hero-2">
   <div class="z-container grid-2">
+    <!-- Sol kolon -->
     <div>
       <div class="badge" data-i="hero_badge">Pre-Sale • Stake to Win NFT</div>
       <h1 data-i="hero_title">ZUZU — Robotic Hedgehog 🦔⚡</h1>
@@ -79,12 +83,12 @@
       </div>
     </div>
 
-    <!-- Büyük ZUZU Logo (sağda) -->
+    <!-- Sağ kolon — Büyük ZUZU Logo -->
     <div class="hero-visual">
       <img class="logo-big"
            src="assets/images/branding/zuzu-logo.svg"
-           onerror="this.onerror=null;this.src='assets/images/banner.jpg';"
-           alt="ZUZU Logo">
+           alt="ZUZU Logo"
+           onerror="this.onerror=null;this.src='assets/images/banner.jpg';">
     </div>
   </div>
 </section>
@@ -158,7 +162,7 @@
       </div>
     </div>
 
-    <!-- Exchanges (tek sıra, mobilde de görünecek) -->
+    <!-- Exchanges ticker -->
     <div class="card" style="margin-top:16px">
       <h3 style="margin:0 0 10px" data-i="exchanges">Supported Exchanges</h3>
       <div class="ticker">
@@ -169,7 +173,7 @@
           <div class="ticker__item"><img src="assets/images/exchanges/mxc.png" alt="mexc" loading="lazy"></div>
           <div class="ticker__item"><img src="assets/images/exchanges/bitmart.png" alt="bitmart" loading="lazy"></div>
           <div class="ticker__item"><img src="assets/images/exchanges/bybit.png" alt="bybit" loading="lazy"></div>
-          <!-- loop için tekrar -->
+          <!-- loop tekrarları -->
           <div class="ticker__item"><img src="assets/images/exchanges/gateio.png" alt=""></div>
           <div class="ticker__item"><img src="assets/images/exchanges/kucoin.png" alt=""></div>
           <div class="ticker__item"><img src="assets/images/exchanges/okx.png" alt=""></div>
@@ -178,7 +182,7 @@
           <div class="ticker__item"><img src="assets/images/exchanges/bybit.png" alt=""></div>
         </div>
       </div>
-      <div class="ex-note" data-i="will_listed">Will Be Listed Soon</div>
+      <div class="ex-note">Will Be Listed Soon</div>
     </div>
   </div>
 </section>
