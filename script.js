@@ -4,51 +4,39 @@
 const CONFIG = {
   ownerAddress: "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", // USDT ödemeleri buraya
   contractAddress: "0xF2bbbEcB417725813BF5E940d678793fACDa9729",
-  collectionUrl:
-    "https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts",
-
-  // ✅ 50 gün — kullanıcının cihazında sabit kalacak (yenileyince sıfırlanmaz)
-  launchAt: (() => {
-    const KEY = "zuzu_launch_at_v2";
-    let saved = parseInt(localStorage.getItem(KEY) || "0", 10);
-    if (!saved || isNaN(saved) || saved < Date.now()) {
-      saved = Date.now() + 50 * 24 * 60 * 60 * 1000;
-      localStorage.setItem(KEY, String(saved));
-    }
-    return saved;
-  })(),
-
-  // Satış haftaları: 7g+7g+7g+geri kalan
+  collectionUrl: "https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts",
+  // Countdown: 50 gün
+  launchAt: Date.now() + 50 * 24 * 60 * 60 * 1000,
+  // Satış haftaları
   saleStart: Date.now(),
   weekPrices: [0.0050, 0.0065, 0.0080, 0.0100], // USDT
-
   nfts: [
-    { id: 0, name: "ZUZU Hero", rarity: "Epic", supply: 200 },
-    { id: 1, name: "ZUZU Rogue", rarity: "Rare", supply: 2500 },
-    { id: 2, name: "ZUZU Berserker", rarity: "Epic", supply: 800 },
-    { id: 3, name: "ZUZU Hacker", rarity: "Rare", supply: 600 },
-    { id: 4, name: "ZUZU Sorceress", rarity: "Epic", supply: 750 },
-    { id: 5, name: "ZUZU Warrior", rarity: "Rare", supply: 900 },
-    { id: 6, name: "ZUZU Maiden", rarity: "Rare", supply: 1100 },
-    { id: 7, name: "ZUZU Ranger", rarity: "Rare", supply: 1000 },
-    { id: 8, name: "ZUZU Scientist", rarity: "Epic", supply: 1100 },
-    { id: 9, name: "ZUZU Titan", rarity: "Legendary", supply: 250 }
+    { id:0, name:"ZUZU Hero",      rarity:"Epic",      supply:200 },
+    { id:1, name:"ZUZU Rogue",     rarity:"Rare",      supply:2500 },
+    { id:2, name:"ZUZU Berserker", rarity:"Epic",      supply:800 },
+    { id:3, name:"ZUZU Hacker",    rarity:"Rare",      supply:600 },
+    { id:4, name:"ZUZU Sorceress", rarity:"Epic",      supply:750 },
+    { id:5, name:"ZUZU Warrior",   rarity:"Rare",      supply:900 },
+    { id:6, name:"ZUZU Maiden",    rarity:"Rare",      supply:1100 },
+    { id:7, name:"ZUZU Ranger",    rarity:"Rare",      supply:1000 },
+    { id:8, name:"ZUZU Scientist", rarity:"Epic",      supply:1100 },
+    { id:9, name:"ZUZU Titan",     rarity:"Legendary", supply:250 }
   ]
 };
 
-// Zincir/USDT adresleri ve ondalıklar (mainnet)
+// Zincir/USDT adresleri
 const CHAINS = {
   1: { // Ethereum
     hex: "0x1",
     name: "Ethereum",
-    usdt: "0xdAC17F958D2ee523a2206206994597C13D831ec7", // 6
+    usdt: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
     usdtDecimals: 6,
     params: null
   },
   56: { // BNB Smart Chain
     hex: "0x38",
     name: "BNB Chain",
-    usdt: "0x55d398326f99059fF775485246999027B3197955", // 18
+    usdt: "0x55d398326f99059fF775485246999027B3197955",
     usdtDecimals: 18,
     params: {
       chainId: "0x38",
@@ -61,7 +49,7 @@ const CHAINS = {
   137: { // Polygon
     hex: "0x89",
     name: "Polygon",
-    usdt: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174", // 6
+    usdt: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
     usdtDecimals: 6,
     params: {
       chainId: "0x89",
@@ -142,9 +130,8 @@ function applyLang(lang="en"){
   sel.addEventListener("change", ()=>applyLang(sel.value));
   applyLang("en");
 })();
-
 /* =========================
-   Countdown (persist 50 gün)
+   Countdown (50 gün)
 ========================= */
 function tick(){
   const left = Math.max(0, CONFIG.launchAt - Date.now());
@@ -162,7 +149,7 @@ function tick(){
 tick(); setInterval(tick, 1000);
 
 /* =========================
-   Presale – aktif hafta
+   Aktif hafta seçimi
 ========================= */
 function getActiveWeek(){
   const days = Math.floor((Date.now() - CONFIG.saleStart) / 86400000);
@@ -188,10 +175,10 @@ function updateActiveWeekUI(){
 updateActiveWeekUI();
 
 /* =========================
-   Maliyet hesap (tüm haftalar)
+   Maliyet hesaplama
 ========================= */
 function updateCosts(){
-  const qty = parseFloat((document.getElementById("buyAmount")?.value||"0").toString().replace(/[^\d.]/g,"")) || 0;
+  const qty = parseFloat((document.getElementById("buyAmount")?.value||"0").replace(/[^\d.]/g,"")) || 0;
   CONFIG.weekPrices.forEach((p,i)=>{
     const cost = qty * p;
     const priceEl = document.getElementById("p"+i);
@@ -204,7 +191,7 @@ document.getElementById("buyAmount")?.addEventListener("input", updateCosts);
 updateCosts();
 
 /* =========================
-   NFT Grid render (contain)
+   NFT Grid
 ========================= */
 (function renderNFTs(){
   const g = document.getElementById("nftGrid");
@@ -232,78 +219,14 @@ updateCosts();
 })();
 
 /* =========================
-   Hesaplayıcı
-========================= */
-(function setupCalc(){
-  const amount=document.getElementById("stakeAmount");
-  const duration=document.getElementById("stakeDuration");
-  const nft=document.getElementById("nftBoost");
-  const early=document.getElementById("earlyBoost");
-  const total=document.getElementById("resultTotal");
-  const monthly=document.getElementById("resultMonthly");
-  const boost=document.getElementById("resultBoost");
-  if(!amount||!duration||!nft||!early||!total||!monthly||!boost) return;
-
-  const apy={30:12,90:24,180:40,365:65,540:85};
-  const calc=()=>{
-    const a=parseFloat((amount.value||"0").toString().replace(/[^\d.]/g,""))||0;
-    const d=parseInt(duration.value,10)||0;
-    const base=apy[d]||0;
-    const nb=parseFloat(nft.value||"0"), eb=parseFloat(early.value||"0");
-    const tb=nb+eb;
-    const gross=a*((base+tb)/100)*(d/365);
-    const m=gross/(d/30);
-    total.textContent=(gross.toFixed(2))+" ZUZU";
-    monthly.textContent=(m.toFixed(2))+" ZUZU";
-    boost.textContent="+"+tb+"%";
-  };
-  document.getElementById("calcBtn")?.addEventListener("click",calc);
-  calc();
-})();
-
-/* =========================
-   LİNKLER + KONTRAT
-========================= */
-(function setupLinks(){
-  const c = CONFIG.contractAddress;
-  const short = `${c.slice(0,6)}...${c.slice(-4)}`;
-  const cd = document.getElementById("contractDisplay");
-  const cd2 = document.getElementById("contractDisplay2");
-  if (cd)  cd.textContent = short;
-  if (cd2) cd2.textContent = c;
-
-  const t1 = document.getElementById("thirdwebNFTRoute");
-  const t2 = document.getElementById("thirdwebNFTRoute2");
-  if (t1) t1.href = CONFIG.collectionUrl;
-  if (t2) t2.href = CONFIG.collectionUrl;
-})();
-
-/* =========================
-   MetaMask – Connect & Buy
+   MetaMask — Connect & Buy
 ========================= */
 let provider, signer, currentAccount = null;
 
-const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-// Mobilde MetaMask yoksa deep-link ile açmaya zorla
-function tryOpenMetaMaskDeepLink() {
-  if (!isMobile) return false;
-  const dapp = `${location.host}${location.pathname}`.replace(/\/+$/,'');
-  const link = `metamask://dapp/${dapp}`;
-  // bazı tarayıcılarda yeni sekmede açmak gerekebilir
-  window.location.href = link;
-  return true;
-}
-
 async function ensureProvider(){
-  // Chrome/Safari mobil tarayıcılarda ethereum yok → deep-link dene
   if (!window.ethereum) {
-    if (tryOpenMetaMaskDeepLink()) {
-      alert("Opening in MetaMask… If nothing happens, open this site from MetaMask browser.");
-    } else {
-      alert("MetaMask not detected. Please install/enabled MetaMask.");
-    }
-    throw new Error("No MetaMask provider");
+    alert("MetaMask not found. Please install MetaMask.");
+    throw new Error("No MetaMask");
   }
   provider = new ethers.providers.Web3Provider(window.ethereum, "any");
   return provider;
@@ -319,21 +242,6 @@ async function connectWallet(){
   if (btn && currentAccount) {
     btn.textContent = `${currentAccount.slice(0,6)}...${currentAccount.slice(-4)}`;
   }
-
-  if (window.ethereum && !window.ethereum._zuzuBound) {
-    window.ethereum.on("accountsChanged", (accs)=>{
-      const b = document.getElementById("connectBtn");
-      if (accs && accs.length>0) {
-        currentAccount = accs[0];
-        if (b) b.textContent = `${currentAccount.slice(0,6)}...${currentAccount.slice(-4)}`;
-      } else {
-        currentAccount = null;
-        if (b) b.textContent = "Connect Wallet";
-      }
-    });
-    window.ethereum.on("chainChanged", ()=>window.location.reload());
-    window.ethereum._zuzuBound = true;
-  }
 }
 
 async function switchNetwork(targetId){
@@ -346,14 +254,12 @@ async function switchNetwork(targetId){
       params: [{ chainId: meta.hex }]
     });
   } catch(err){
-    if (err && err.code === 4902 && meta.params) {
+    if (err.code === 4902 && meta.params) {
       await window.ethereum.request({
         method: "wallet_addEthereumChain",
         params: [meta.params]
       });
-    } else {
-      throw err;
-    }
+    } else { throw err; }
   }
 }
 
@@ -363,15 +269,10 @@ function getSelectedChainId(){
   return (v===1||v===56||v===137) ? v : 56;
 }
 
-async function connectIfNeeded(){
-  if (!currentAccount) await connectWallet();
-}
-
 async function usdtTransfer(chainId, to, amountFloat){
   await ensureProvider();
-  await connectIfNeeded();
+  if (!currentAccount) await connectWallet();
 
-  // Ağ uygun mu? değilse switch yap
   const net = await provider.getNetwork();
   if (net.chainId !== chainId) {
     await switchNetwork(chainId);
@@ -379,19 +280,16 @@ async function usdtTransfer(chainId, to, amountFloat){
   const meta = CHAINS[chainId];
   const token = new ethers.Contract(meta.usdt, ERC20_ABI, provider).connect(signer);
 
-  // Decimals’a göre parse et
   const dec = meta.usdtDecimals;
-  const amtStr = Number.isFinite(amountFloat) ? amountFloat.toFixed(dec > 6 ? 6 : dec) : "0";
+  const amtStr = amountFloat.toFixed(dec > 6 ? 6 : dec);
   const amount = ethers.utils.parseUnits(amtStr, dec);
 
-  // Bakiye kontrol
   const bal = await token.balanceOf(currentAccount);
   if (bal.lt(amount)) {
     alert("Insufficient USDT balance.");
     throw new Error("Low balance");
   }
 
-  // Transfer yap
   const tx = await token.transfer(CONFIG.ownerAddress, amount);
   await tx.wait();
   return tx.hash;
@@ -399,13 +297,13 @@ async function usdtTransfer(chainId, to, amountFloat){
 
 async function handleBuy(weekIndex){
   try {
-    const qty = parseFloat((document.getElementById("buyAmount")?.value||"0").toString().replace(/[^\d.]/g,"")) || 0;
+    const qty = parseFloat((document.getElementById("buyAmount")?.value||"0").replace(/[^\d.]/g,"")) || 0;
     if (qty <= 0) { alert("Enter a valid amount."); return; }
 
     const active = getActiveWeek();
     if (weekIndex !== active) { alert("This week is not active."); return; }
 
-    const price = CONFIG.weekPrices[weekIndex]; // USDT
+    const price = CONFIG.weekPrices[weekIndex];
     const cost  = qty * price;
 
     const chainId = getSelectedChainId();
@@ -419,49 +317,6 @@ async function handleBuy(weekIndex){
 }
 
 document.getElementById("connectBtn")?.addEventListener("click", connectWallet);
-document.getElementById("networkSel")?.addEventListener("change", async ()=>{
-  const cid = getSelectedChainId();
-  try { await switchNetwork(cid); } catch(e){ console.warn(e); }
-});
-
-// Buy buttons
 ["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{
-  const b = document.getElementById(id);
-  if (!b) return;
-  b.addEventListener("click", ()=>handleBuy(i));
+  document.getElementById(id)?.addEventListener("click", ()=>handleBuy(i));
 });
-
-// İlk UI ayarları
-updateActiveWeekUI();
-updateCosts();
-
-/* =========================
-   UI yardımcıları
-========================= */
-// Mobilde MetaMask yoksa sayfaya küçük bir “Open in MetaMask” butonu ekle
-(function injectOpenInMetaMaskButton(){
-  if (window.ethereum || !isMobile) return;
-  const bar = document.createElement('div');
-  bar.style.cssText = `
-    position:fixed;z-index:9999;left:12px;right:12px;bottom:12px;
-    background:#152748;border:1px solid #274075;color:#cfe2ff;
-    padding:10px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;gap:10px
-  `;
-  bar.innerHTML = `
-    <div style="font-weight:700">Open in MetaMask for wallet connection</div>
-    <button id="openMM" style="background:#6a8cff;border:0;color:#08101d;border-radius:10px;padding:8px 12px;font-weight:800">Open</button>
-  `;
-  document.body.appendChild(bar);
-  document.getElementById('openMM')?.addEventListener('click', ()=>{
-    tryOpenMetaMaskDeepLink();
-  });
-})();
-
-// Ticker görünürlüğü için ufak tetikleyici
-(function ensureTickerVisible(){
-  const track = document.getElementById('exTrack');
-  if(!track) return;
-  track.style.willChange = 'transform';
-  track.style.transform = 'translateX(0)';
-  setTimeout(()=>{ track.style.transform = ''; }, 50);
-})();
