@@ -466,6 +466,38 @@ async function handleBuy(weekIndex){
     else alert("Transaction failed or rejected.");
   }
 }
+// Mobil algıla
+function isMobile(){
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+function openInMetaMask(){
+  // Domainini aynen yaz:
+  const dappUrl = "zuzucoin.xyz"; // ör: "zuzucoin.xyz" veya "enejomble35.github.io/zuzucoin.xyz"
+  window.location.href = `https://metamask.app.link/dapp/${dappUrl}`;
+}
+
+// Connect butonu – mobil fallback
+const connectBtnEl = document.getElementById("connectBtn");
+if (connectBtnEl){
+  connectBtnEl.addEventListener("click", async (e)=>{
+    try{
+      if (!window.ethereum){
+        // Mobilse MetaMask app linkine at
+        if (isMobile()){
+          openInMetaMask();
+          return;
+        }
+        alert("MetaMask not detected. Please install MetaMask extension/app and retry.");
+        return;
+      }
+      // Masaüstü + eklenti varsa normal bağlan
+      await connectWallet();
+    }catch(err){
+      console.error(err);
+      alert("Connection failed or rejected.");
+    }
+  });
+}
 
 // UI listeners
 document.getElementById("connectBtn")?.addEventListener("click", connectWallet);
