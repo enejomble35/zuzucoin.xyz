@@ -61,21 +61,11 @@ a{color:#b8c7ff;text-decoration:none}
 .lead{color:#bfd2ff;font-size:1.05rem}
 .hero-cta{display:flex;gap:.6rem;margin:.8rem 0 1rem;flex-wrap:wrap}
 
-/* Sağdaki büyük logo — görünürlük ve stabil yükseklik */
-.hero-visual{
-  display:flex;justify-content:center;align-items:center;
-  min-height:260px;            /* yazıların kaymasını engeller */
-}
+/* Sağdaki büyük logo */
+.hero-visual{display:flex;justify-content:center;align-items:center}
 .hero-visual .logo-big{
-  max-width:420px; width:100%; height:auto;   /* kesin görünür */
+  max-width:420px; width:100%;
   filter:drop-shadow(0 16px 36px rgba(0,0,0,.4));
-}
-@media(max-width:920px){
-  .hero-visual{ min-height:180px; margin-top:8px; }
-  .hero-visual .logo-big{ max-width:360px; }
-}
-@media(max-width:520px){
-  .hero-visual .logo-big{ max-width:300px; }
 }
 
 /* Sayaç (flip tarzı) */
@@ -107,8 +97,7 @@ a{color:#b8c7ff;text-decoration:none}
 }
 
 /* =========================
-   EXCHANGES – tek sıra ticker
-   (Mobilde görünmeme sorununu da çözer)
+   EXCHANGES – Ticker
 ========================= */
 .ticker{
   overflow:hidden;border:1px solid #1a2b4c;border-radius:16px;background:#0f1a30;padding:10px;min-height:72px;
@@ -156,8 +145,7 @@ a{color:#b8c7ff;text-decoration:none}
 .chart-wrap img{width:100%;border-radius:12px;border:1px solid #1d2d50;margin-top:10px}
 
 /* =========================
-   NFT GRID (contain + 5/2)
-   (Kesik çıkmayı engeller)
+   NFT GRID
 ========================= */
 .nft-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
 @media(max-width:1024px){.nft-grid{grid-template-columns:repeat(3,1fr)}}
@@ -177,7 +165,7 @@ a{color:#b8c7ff;text-decoration:none}
 .nft .tag{font-size:.75rem;background:#152748;color:#a8c2ff;border:1px solid #274075;border-radius:999px;padding:.25rem .5rem}
 
 /* =========================
-   TOKENOMICS (legend)
+   TOKENOMICS
 ========================= */
 .tk{display:grid;grid-template-columns:1.1fr .9fr;gap:20px}
 @media(max-width:900px){.tk{grid-template-columns:1fr}}
@@ -195,16 +183,7 @@ a{color:#b8c7ff;text-decoration:none}
 /* =========================
    FORMS / SELECT
 ========================= */
-select#networkSel{
+select#networkSel, select#langSel{
   background:#0f1b31;color:#d9e7ff;border:1px solid #243457;border-radius:10px;
   padding:.45rem .6rem
-}
-select#langSel{
-  background:#0f1b31;color:#d9e7ff;border:1px solid #243457;border-radius:10px;
-  padding:.35rem .6rem
-}
-
-/* Erişilebilirlik: animasyon kapat (istemeyen kullanıcılar için) */
-@media (prefers-reduced-motion: reduce) {
-  .ticker__track { animation: none; }
 }
