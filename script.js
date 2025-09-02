@@ -266,66 +266,96 @@ updateCosts();
 })();
 
 /* =========================
-   MetaMask – Connect & Buy
+   MetaMask – Connect & Buy (Robust)
 ========================= */
-let provider, signer, currentAccount = null, currentChainId = null;
+let provider, signer, currentAccount = null;
+
+/** Çoklu provider varsa MetaMask olanı seç */
+function getMetaMaskProvider(){
+  const eth = window.ethereum;
+  if (!eth) return null;
+  if (eth.providers && Array.isArray(eth.providers)) {
+    const mm = eth.providers.find(p => p.isMetaMask);
+    return mm || eth;
+  }
+  return eth;
+}
 
 async function ensureProvider(){
-  if (!window.ethereum) {
-    alert("MetaMask not found. Please install MetaMask.");
+  const eth = getMetaMaskProvider();
+  if (!eth) {
+    alert("MetaMask not detected. Install MetaMask or open in MetaMask browser.");
     throw new Error("No MetaMask");
   }
-  provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+  provider = new ethers.providers.Web3Provider(eth, "any");
   return provider;
 }
 
 async function connectWallet(){
   await ensureProvider();
-  const accounts = await provider.send("eth_requestAccounts", []);
-  signer = provider.getSigner();
-  currentAccount = accounts[0];
-  currentChainId = (await provider.getNetwork()).chainId;
+  const eth = getMetaMaskProvider();
 
-  const btn = document.getElementById("connectBtn");
-  if (btn && currentAccount) {
-    btn.textContent = `${currentAccount.slice(0,6)}...${currentAccount.slice(-4)}`;
-  }
+  try {
+    const accounts = await eth.request({ method: "eth_requestAccounts" });
+    signer = provider.getSigner();
+    currentAccount = accounts && accounts[0] ? accounts[0] : null;
 
-  // Dinleyiciler
-  if (window.ethereum && !window.ethereum._zuzuBound) {
-    window.ethereum.on("accountsChanged", (accs)=>{
-      const b = document.getElementById("connectBtn");
-      if (accs && accs.length>0) {
-        currentAccount = accs[0];
-        if (b) b.textContent = `${currentAccount.slice(0,6)}...${currentAccount.slice(-4)}`;
-      } else {
-        currentAccount=null; if (b) b.textContent="Connect Wallet";
-      }
-    });
-    window.ethereum.on("chainChanged", (_chainId)=>{
-      window.location.reload(); // basitçe yenile
-    });
-    window.ethereum._zuzuBound = true;
+    const btn = document.getElementById("connectBtn");
+    if (btn && currentAccount) {
+      btn.textContent = `${currentAccount.slice(0,6)}...${currentAccount.slice(-4)}`;
+    }
+
+    // event listeners – bir kez bağla
+    if (!eth._zuzuBound) {
+      eth.on("accountsChanged", (accs)=>{
+        const b = document.getElementById("connectBtn");
+        if (accs && accs.length>0) {
+          currentAccount = accs[0];
+          if (b) b.textContent = `${currentAccount.slice(0,6)}...${currentAccount.slice(-4)}`;
+        } else {
+          currentAccount=null; if (b) b.textContent="Connect Wallet";
+        }
+      });
+      eth.on("chainChanged", (_chainId)=>{
+        // Bazı cihazlarda sonsuz reload oluşmasın
+        // Basitçe UI’yı düzeltmek için küçük gecikmeli yenile:
+        setTimeout(()=>location.reload(), 200);
+      });
+      eth._zuzuBound = true;
+    }
+  } catch (e) {
+    console.warn("eth_requestAccounts rejected:", e);
+    alert("Wallet connection was rejected.");
+    throw e;
   }
 }
 
 async function switchNetwork(targetId){
   await ensureProvider();
+  const eth = getMetaMaskProvider();
   const meta = CHAINS[targetId];
   if (!meta) throw new Error("Unsupported network");
+
   try {
-    await window.ethereum.request({
+    await eth.request({
       method: "wallet_switchEthereumChain",
       params: [{ chainId: meta.hex }]
     });
   } catch(err){
-    // 4902: chain eklemek lazım
     if (err && err.code === 4902 && meta.params) {
-      await window.ethereum.request({
-        method: "wallet_addEthereumChain",
-        params: [meta.params]
-      });
+      try {
+        await eth.request({
+          method: "wallet_addEthereumChain",
+          params: [meta.params]
+        });
+      } catch(e2){
+        console.warn("add chain rejected", e2);
+        alert("User rejected adding the chain.");
+        throw e2;
+      }
     } else {
+      console.warn("switch failed", err);
+      alert("Network switch failed.");
       throw err;
     }
   }
@@ -347,18 +377,19 @@ async function usdtTransfer(chainId, to, amountFloat){
   await ensureProvider();
   await connectIfNeeded();
 
-  // Ağ uygun mu? değilse switch yap
   const net = await provider.getNetwork();
   if (net.chainId !== chainId) {
     await switchNetwork(chainId);
   }
   const meta = CHAINS[chainId];
 
+  // ERC20 kontratı & transfer
   const token = new ethers.Contract(meta.usdt, ERC20_ABI, provider).connect(signer);
 
-  // Decimals’a göre parse et
+  // Decimals parse
   const dec = meta.usdtDecimals;
-  const amtStr = Number.isFinite(amountFloat) ? amountFloat.toFixed(dec > 6 ? 6 : dec) : "0";
+  const safe = Number.isFinite(amountFloat) ? amountFloat : 0;
+  const amtStr = safe.toFixed(dec > 6 ? 6 : dec);
   const amount = ethers.utils.parseUnits(amtStr, dec);
 
   // Bakiye kontrol
@@ -368,7 +399,6 @@ async function usdtTransfer(chainId, to, amountFloat){
     throw new Error("Low balance");
   }
 
-  // Transfer yap
   const tx = await token.transfer(CONFIG.ownerAddress, amount);
   await tx.wait();
   return tx.hash;
@@ -376,13 +406,20 @@ async function usdtTransfer(chainId, to, amountFloat){
 
 async function handleBuy(weekIndex){
   try {
-    const qty = parseFloat((document.getElementById("buyAmount")?.value||"0").toString().replace(/[^\d.]/g,"")) || 0;
+    const qtyEl = document.getElementById("buyAmount");
+    const qty = parseFloat((qtyEl?.value||"0").toString().replace(/[^\d.]/g,"")) || 0;
     if (qty <= 0) { alert("Enter a valid amount."); return; }
 
-    const active = getActiveWeek();
+    const active = (()=>{
+      const days = Math.floor((Date.now() - CONFIG.saleStart) / 86400000);
+      if (days < 7)  return 0;
+      if (days < 14) return 1;
+      if (days < 21) return 2;
+      return 3;
+    })();
     if (weekIndex !== active) { alert("This week is not active."); return; }
 
-    const price = CONFIG.weekPrices[weekIndex]; // USDT
+    const price = CONFIG.weekPrices[weekIndex];
     const cost  = qty * price;
 
     const chainId = getSelectedChainId();
@@ -395,6 +432,7 @@ async function handleBuy(weekIndex){
   }
 }
 
+// Bağlantı & ağ switch butonları
 document.getElementById("connectBtn")?.addEventListener("click", connectWallet);
 document.getElementById("networkSel")?.addEventListener("change", async ()=>{
   const cid = getSelectedChainId();
@@ -409,84 +447,25 @@ document.getElementById("networkSel")?.addEventListener("change", async ()=>{
 });
 
 // İlk UI ayarları
-updateActiveWeekUI();
-updateCosts();
+updateActiveWeekUI?.();
+updateCosts?.();
 
-/* === PATCH-C: MetaMask helpers + ticker visibility fix + safe guards === */
-
-/** Ağ objeleri (switch/add için) */
-const ZUZU_CHAINS = {
-  ETH: {
-    chainId: '0x1',
-    chainName: 'Ethereum Mainnet',
-    nativeCurrency: { name:'ETH', symbol:'ETH', decimals:18 },
-    rpcUrls: ['https://rpc.ankr.com/eth'],
-    blockExplorerUrls: ['https://etherscan.io']
-  },
-  BSC: {
-    chainId: '0x38',
-    chainName: 'BNB Smart Chain',
-    nativeCurrency: { name:'BNB', symbol:'BNB', decimals:18 },
-    rpcUrls: ['https://bsc-dataseed.binance.org'],
-    blockExplorerUrls: ['https://bscscan.com']
-  },
-  POLY: {
-    chainId: '0x89',
-    chainName: 'Polygon',
-    nativeCurrency: { name:'MATIC', symbol:'MATIC', decimals:18 },
-    rpcUrls: ['https://polygon-rpc.com'],
-    blockExplorerUrls: ['https://polygonscan.com']
-  }
-};
-
-/** MetaMask ağını değiştir/ekle (kullanacağın yerde await ile çağır) */
-async function zuzuSwitchChain(chain){
-  if(!window.ethereum) { alert('MetaMask not detected'); return false; }
-  const cfg = ZUZU_CHAINS[chain];
-  if(!cfg){ alert('Unknown chain'); return false; }
-  try{
-    await window.ethereum.request({
-      method: 'wallet_switchEthereumChain',
-      params: [{ chainId: cfg.chainId }]
-    });
-    return true;
-  }catch(e){
-    // Chain yüklü değilse ekle
-    if(e && e.code === 4902){
-      try{
-        await window.ethereum.request({
-          method: 'wallet_addEthereumChain',
-          params: [cfg]
-        });
-        return true;
-      }catch(e2){
-        console.warn('add chain rejected', e2);
-        alert('User rejected chain add.');
-        return false;
-      }
-    }
-    console.warn('switch chain failed', e);
-    alert('Network switch failed.');
-    return false;
-  }
-}
-
-/** Ticker görünürlüğü: bazen mobilde track width hesaplanmıyorsa minimal dokunuş */
+/** Ticker görünürlüğü dokunuşu */
 (function ensureTickerVisible(){
   const track = document.getElementById('exTrack');
   if(!track) return;
   track.style.willChange = 'transform';
-  track.style.transform = 'translateX(0)'; // başlangıçta bir kez tetikle
+  track.style.transform = 'translateX(0)';
   setTimeout(()=>{ track.style.transform = ''; }, 50);
 })();
 
-/** MetaMask yoksa Connect butonuna güvenli uyarı */
+/** MetaMask yoksa Connect’te güvenli uyarı (özellikle mobil Safari) */
 (function guardConnectBtn(){
   const b = document.getElementById('connectBtn');
   if(!b) return;
   b.addEventListener('click', ()=>{
-    if(!window.ethereum){
-      alert('MetaMask not detected. Please install MetaMask and refresh the page.');
+    if(!getMetaMaskProvider()){
+      alert('MetaMask not detected. Install MetaMask or open in MetaMask browser:\nmetamask://dapp/zuzucoin.xyz');
     }
   }, {capture:true});
 })();
