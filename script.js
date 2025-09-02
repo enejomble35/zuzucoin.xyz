@@ -5,10 +5,24 @@ const CONFIG = {
   ownerAddress: "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", // USDT ödemeleri buraya
   contractAddress: "0xF2bbbEcB417725813BF5E940d678793fACDa9729",
   collectionUrl: "https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts",
-  // Countdown: 50 gün
-  launchAt: Date.now() + 50 * 24 * 60 * 60 * 1000,
+  // Countdown: 50 günü sabitle - localStorage ile
+  launchAt: (() => {
+    const key = "zuzu_launchAt";
+    const saved = localStorage.getItem(key);
+    if (saved) return parseInt(saved, 10);
+    const t = Date.now() + 50 * 24 * 60 * 60 * 1000;
+    localStorage.setItem(key, String(t));
+    return t;
+  })(),
   // Satış haftaları
-  saleStart: Date.now(),
+  saleStart: (() => {
+    const key = "zuzu_saleStart";
+    const saved = localStorage.getItem(key);
+    if (saved) return parseInt(saved, 10);
+    const t = Date.now();
+    localStorage.setItem(key, String(t));
+    return t;
+  })(),
   weekPrices: [0.0050, 0.0065, 0.0080, 0.0100], // USDT
   nfts: [
     { id:0, name:"ZUZU Hero",      rarity:"Epic",      supply:200 },
@@ -93,7 +107,29 @@ const I = {
       stake_title:"Stake Pro — Kilitle, Kazan, NFT Kap ✨",stake_lead:"ZUZU’larını kilitle, <b>APY + NFT BOOST</b> ile pasif gelir elde et. Erken stake edenler rozet & airdrop önceliği alır.",
       calc_title:"Kazanç Hesaplayıcı",amount2:"Miktar (ZUZU)",lock:"Kilit Süresi",nft_have:"Elinde NFT var mı?",early:"Erken Rozet",calc_btn:"Hesapla",
       ret:"Toplam Getiri",avg:"Aylık Ortalama",boost:"Toplam Boost",token_title:"Tokonomi (Görselleştirilmiş)",road_title:"Yol Haritası",
-      road_lead:"Topluluk, staking, NFT drop’ları ve listelemelere odaklı plan."}
+      road_lead:"Topluluk, staking, NFT drop’ları ve listelemelere odaklı plan."},
+  fr:{nav_presale:"Pré-vente",nav_stake:"Stake",nav_nft:"Récompenses NFT",nav_roadmap:"Feuille de route",nav_token:"Tokenomics",connect:"Connecter le Wallet",
+      hero_badge:"Pré-vente • Stake pour gagner un NFT",hero_title:"ZUZU — Hérisson Robotique 🦔⚡",
+      hero_lead:"Stake et gagne un <b>NFT Mascotte ZUZU</b>. Offre limitée, forte <b>utilité</b>.",
+      cta_stake:"Commencer le Stake",cta_nft:"Récompenses NFT",collection_page:"Page de la Collection",contract:"Contrat :",
+      days:"JOURS",hours:"HEURES",mins:"MINUTES",secs:"SECONDES",
+      presale_title:"Pré-vente — Compte à rebours",presale_lead:"Prépare-toi pour la pré-vente ZUZU ! <b>Allocation limitée</b>, prix communauté.",amount:"Montant (ZUZU)",
+      w1:"Semaine 1 (Moins cher)",w2:"Semaine 2",w3:"Semaine 3",w4:"Semaine 4 (Dernière chance)",cost:"Coût :",buy:"Acheter",exchanges:"Bourses prises en charge",
+      stake_title:"Stake Pro — Verrouille, Gagne, Reçois un NFT ✨",stake_lead:"Verrouille ton ZUZU, gagne <b>APY + BOOST NFT</b>. Badge & airdrop prioritaires pour les premiers.",
+      calc_title:"Calculateur de gains",amount2:"Montant (ZUZU)",lock:"Période de verrouillage",nft_have:"Tu as un NFT ?",early:"Badge précoce",calc_btn:"Calculer",
+      ret:"Gain total",avg:"Moyenne mensuelle",boost:"Boost total",token_title:"Tokenomics (Visualisé)",road_title:"Feuille de route",
+      road_lead:"Plan axé sur communauté, staking, drops NFT et listings."},
+  es:{nav_presale:"Pre-venta",nav_stake:"Stake",nav_nft:"Recompensas NFT",nav_roadmap:"Hoja de ruta",nav_token:"Tokenomics",connect:"Conectar Billetera",
+      hero_badge:"Pre-venta • Stake para ganar NFT",hero_title:"ZUZU — Erizo Robótico 🦔⚡",
+      hero_lead:"Haz stake y gana <b>NFT Mascota ZUZU</b>. Suministro limitado, gran <b>utilidad</b>.",
+      cta_stake:"Empezar Stake",cta_nft:"Recompensas NFT",collection_page:"Página de Colección",contract:"Contrato:",
+      days:"DÍAS",hours:"HORAS",mins:"MINUTOS",secs:"SEGUNDOS",
+      presale_title:"Pre-venta — Cuenta regresiva",presale_lead:"¡Prepárate para la pre-venta ZUZU! <b>Asignación limitada</b>, precio para la comunidad.",amount:"Cantidad (ZUZU)",
+      w1:"Semana 1 (Más barata)",w2:"Semana 2",w3:"Semana 3",w4:"Semana 4 (Última oportunidad)",cost:"Costo:",buy:"Comprar",exchanges:"Exchanges compatibles",
+      stake_title:"Stake Pro — Bloquea, Gana, Obtén NFT ✨",stake_lead:"Bloquea tu ZUZU, gana <b>APY + BOOST NFT</b>. Primeros obtienen insignia y prioridad de airdrop.",
+      calc_title:"Calculadora de ganancias",amount2:"Cantidad (ZUZU)",lock:"Periodo de bloqueo",nft_have:"¿Tienes NFT?",early:"Insignia temprana",calc_btn:"Calcular",
+      ret:"Retorno total",avg:"Promedio mensual",boost:"Impulso total",token_title:"Tokenomics (Visualizado)",road_title:"Hoja de ruta",
+      road_lead:"Plan centrado en comunidad, staking, drops NFT y listados."}
 };
 
 function applyLang(lang="en"){
@@ -108,8 +144,9 @@ function applyLang(lang="en"){
   sel.addEventListener("change", ()=>applyLang(sel.value));
   applyLang("en");
 })();
+
 /* =========================
-   Countdown (50 gün)
+   Countdown (persist 50 gün)
 ========================= */
 function tick(){
   const left = Math.max(0, CONFIG.launchAt - Date.now());
@@ -127,7 +164,7 @@ function tick(){
 tick(); setInterval(tick, 1000);
 
 /* =========================
-   Aktif Hafta Hesaplama
+   Presale – aktif hafta
 ========================= */
 function getActiveWeek(){
   const days = Math.floor((Date.now() - CONFIG.saleStart) / 86400000);
@@ -153,7 +190,7 @@ function updateActiveWeekUI(){
 updateActiveWeekUI();
 
 /* =========================
-   Maliyet Hesaplama
+   Maliyet hesap (tüm haftalar)
 ========================= */
 function updateCosts(){
   const qty = parseFloat((document.getElementById("buyAmount")?.value||"0").toString().replace(/[^\d.]/g,"")) || 0;
@@ -169,7 +206,7 @@ document.getElementById("buyAmount")?.addEventListener("input", updateCosts);
 updateCosts();
 
 /* =========================
-   NFT Grid render
+   NFT Grid render (contain)
 ========================= */
 (function renderNFTs(){
   const g = document.getElementById("nftGrid");
@@ -197,16 +234,87 @@ updateCosts();
 })();
 
 /* =========================
+   Hesaplayıcı
+========================= */
+(function setupCalc(){
+  const amount=document.getElementById("stakeAmount");
+  const duration=document.getElementById("stakeDuration");
+  const nft=document.getElementById("nftBoost");
+  const early=document.getElementById("earlyBoost");
+  const total=document.getElementById("resultTotal");
+  const monthly=document.getElementById("resultMonthly");
+  const boost=document.getElementById("resultBoost");
+  if(!amount||!duration||!nft||!early||!total||!monthly||!boost) return;
+
+  const apy={30:12,90:24,180:40,365:65,540:85};
+  const calc=()=>{
+    const a=parseFloat((amount.value||"0").toString().replace(/[^\d.]/g,""))||0;
+    const d=parseInt(duration.value,10)||0;
+    const base=apy[d]||0;
+    const nb=parseFloat(nft.value||"0"), eb=parseFloat(early.value||"0");
+    const tb=nb+eb;
+    const gross=a*((base+tb)/100)*(d/365);
+    const m=gross/(d/30);
+    total.textContent=(gross.toFixed(2))+" ZUZU";
+    monthly.textContent=(m.toFixed(2))+" ZUZU";
+    boost.textContent="+"+tb+"%";
+  };
+  document.getElementById("calcBtn")?.addEventListener("click",calc);
+  calc();
+})();
+/* =========================
+   LİNKLER + KONTRAT
+========================= */
+(function setupLinks(){
+  const c = CONFIG.contractAddress;
+  const short = `${c.slice(0,6)}...${c.slice(-4)}`;
+  const cd  = document.getElementById("contractDisplay");
+  const cd2 = document.getElementById("contractDisplay2");
+  if (cd)  cd.textContent = short;
+  if (cd2) cd2.textContent = c;
+
+  const t1 = document.getElementById("thirdwebNFTRoute");
+  const t2 = document.getElementById("thirdwebNFTRoute2");
+  if (t1) t1.href = CONFIG.collectionUrl;
+  if (t2) t2.href = CONFIG.collectionUrl;
+})();
+
+/* =========================
    MetaMask – Connect & Buy
+   (mobile + in-app tarayıcı uyumlu)
 ========================= */
 let provider, signer, currentAccount = null;
 
+function isInAppBrowser(){
+  const ua = navigator.userAgent.toLowerCase();
+  return /(instagram|fbav|fb_iab|twitter|telegram|tiktok|pinterest)/.test(ua);
+}
+function isMobile(){
+  return /(android|iphone|ipad|ipod)/i.test(navigator.userAgent);
+}
+function getInjectedMetaMask(){
+  // Birden fazla provider varsa MetaMask'i seç
+  if (window.ethereum?.providers?.length) {
+    const mm = window.ethereum.providers.find(p=>p.isMetaMask);
+    if (mm) return mm;
+    return window.ethereum.providers[0];
+  }
+  if (window.ethereum) return window.ethereum;
+  return null;
+}
+
 async function ensureProvider(){
-  if (!window.ethereum) {
-    alert("MetaMask not found. Please install MetaMask.");
+  const injected = getInjectedMetaMask();
+  if (!injected) {
+    // Mobilde in-app ise yönlendir
+    if (isMobile()) {
+      alert("MetaMask not detected. Please open this site inside the MetaMask browser.\n\nMetaMask > Browser > zuzucoin.xyz");
+    } else {
+      alert("MetaMask not detected. Please install MetaMask and refresh the page.");
+    }
     throw new Error("No MetaMask");
   }
-  provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+  provider = new ethers.providers.Web3Provider(injected, "any");
   return provider;
 }
 
@@ -220,6 +328,22 @@ async function connectWallet(){
   if (btn && currentAccount) {
     btn.textContent = `${currentAccount.slice(0,6)}...${currentAccount.slice(-4)}`;
   }
+
+  // Dinleyiciler
+  const injected = getInjectedMetaMask();
+  if (injected && !injected._zuzuBound) {
+    injected.on("accountsChanged", (accs)=>{
+      const b = document.getElementById("connectBtn");
+      if (accs && accs.length>0) {
+        currentAccount = accs[0];
+        if (b) b.textContent = `${currentAccount.slice(0,6)}...${currentAccount.slice(-4)}`;
+      } else {
+        currentAccount=null; if (b) b.textContent="Connect Wallet";
+      }
+    });
+    injected.on("chainChanged", ()=>window.location.reload());
+    injected._zuzuBound = true;
+  }
 }
 
 async function switchNetwork(targetId){
@@ -232,7 +356,7 @@ async function switchNetwork(targetId){
       params: [{ chainId: meta.hex }]
     });
   } catch(err){
-    if (err.code === 4902 && meta.params) {
+    if (err && err.code === 4902 && meta.params) {
       await window.ethereum.request({
         method: "wallet_addEthereumChain",
         params: [meta.params]
@@ -245,11 +369,18 @@ async function switchNetwork(targetId){
 
 function getSelectedChainId(){
   const sel = document.getElementById("networkSel");
-  return parseInt(sel?.value||"56",10);
+  const v = parseInt(sel?.value||"56",10);
+  return (v===1||v===56||v===137) ? v : 56;
+}
+
+async function connectIfNeeded(){
+  if (!currentAccount) await connectWallet();
 }
 
 async function usdtTransfer(chainId, to, amountFloat){
   await ensureProvider();
+  await connectIfNeeded();
+
   const net = await provider.getNetwork();
   if (net.chainId !== chainId) {
     await switchNetwork(chainId);
@@ -257,7 +388,16 @@ async function usdtTransfer(chainId, to, amountFloat){
   const meta = CHAINS[chainId];
   const token = new ethers.Contract(meta.usdt, ERC20_ABI, provider).connect(signer);
 
-  const amount = ethers.utils.parseUnits(amountFloat.toString(), meta.usdtDecimals);
+  const dec = meta.usdtDecimals;
+  const amtStr = Number.isFinite(amountFloat) ? amountFloat.toFixed(dec > 6 ? 6 : dec) : "0";
+  const amount = ethers.utils.parseUnits(amtStr, dec);
+
+  const bal = await token.balanceOf(currentAccount);
+  if (bal.lt(amount)) {
+    alert("Insufficient USDT balance.");
+    throw new Error("Low balance");
+  }
+
   const tx = await token.transfer(CONFIG.ownerAddress, amount);
   await tx.wait();
   return tx.hash;
@@ -265,7 +405,7 @@ async function usdtTransfer(chainId, to, amountFloat){
 
 async function handleBuy(weekIndex){
   try {
-    const qty = parseFloat(document.getElementById("buyAmount")?.value||"0") || 0;
+    const qty = parseFloat((document.getElementById("buyAmount")?.value||"0").toString().replace(/[^\d.]/g,"")) || 0;
     if (qty <= 0) { alert("Enter a valid amount."); return; }
 
     const active = getActiveWeek();
@@ -284,7 +424,47 @@ async function handleBuy(weekIndex){
   }
 }
 
+/* =========================
+   Event bindings
+========================= */
 document.getElementById("connectBtn")?.addEventListener("click", connectWallet);
-["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{
-  document.getElementById(id)?.addEventListener("click", ()=>handleBuy(i));
+document.getElementById("networkSel")?.addEventListener("change", async ()=>{
+  const cid = getSelectedChainId();
+  try { await switchNetwork(cid); } catch(e){ console.warn(e); }
 });
+
+["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{
+  const b = document.getElementById(id);
+  if (!b) return;
+  b.addEventListener("click", ()=>handleBuy(i));
+});
+
+updateActiveWeekUI();
+updateCosts();
+
+/* =========================
+   UX iyileştirmeleri
+========================= */
+// Ticker kick
+(function ensureTickerVisible(){
+  const track = document.getElementById('exTrack');
+  if(!track) return;
+  track.style.willChange = 'transform';
+  track.style.transform = 'translateX(0)';
+  setTimeout(()=>{ track.style.transform = ''; }, 50);
+})();
+
+// MetaMask yoksa kullanıcıyı yönlendir
+(function guardConnectBtn(){
+  const b = document.getElementById('connectBtn');
+  if(!b) return;
+  b.addEventListener('click', ()=>{
+    if(!getInjectedMetaMask()){
+      if (isMobile()) {
+        alert('MetaMask not detected. Please open this site inside the MetaMask mobile browser.\n\nMetaMask App > Browser > zuzucoin.xyz');
+      } else {
+        alert('MetaMask not detected. Please install MetaMask and refresh the page.');
+      }
+    }
+  }, {capture:true});
+})();
