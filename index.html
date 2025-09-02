@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-<!-- Ethers.js (MetaMask) -->
+<!-- Ethers.js (EVM) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"
         integrity="sha512-57m0O+W20T+woYvD9w0t3NE0g1rY37v9m1m3xA7C6E1Hg7N6xJ9cptZ6NGe7R3IYyN7t+W3h1JpP+s3jo8d1yg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -45,10 +45,29 @@
         <option value="fr">FR</option>
         <option value="es">ES</option>
       </select>
+
+      <!-- Tek buton: Seçim modalını açar -->
       <button id="connectBtn" class="z-btn z-btn-primary" data-i="connect">Connect Wallet</button>
     </nav>
   </div>
 </header>
+
+<!-- WALLET MODAL (Trust / Binance / OKX) -->
+<div id="walletModal" class="z-modal hidden" aria-hidden="true">
+  <div class="z-modal__backdrop" data-close="walletModal"></div>
+  <div class="z-modal__panel">
+    <div class="z-modal__head">
+      <b>Choose Wallet</b>
+      <button class="z-btn z-btn-ghost" data-close="walletModal">×</button>
+    </div>
+    <div class="z-wallets">
+      <button id="btnTrust"   class="z-btn z-btn-primary">Trust Wallet</button>
+      <button id="btnBinance" class="z-btn z-btn-primary">Binance Wallet</button>
+      <button id="btnOkx"     class="z-btn z-btn-primary">OKX Wallet</button>
+      <small style="color:#9fb6e6">Eğer bu cüzdanlar tarayıcınızda kurulu değilse, lütfen resmi eklentiyi yükleyin ve sayfayı yenileyin.</small>
+    </div>
+  </div>
+</div>
 
 <main>
 
@@ -84,12 +103,11 @@
     </div>
 
     <!-- Sağ kolon — Büyük ZUZU Logo -->
-<div class="hero-visual">
-  <img id="zuzuLogo" class="logo-big"
-       src="assets/images/branding/zuzu-logo.svg"
-       alt="ZUZU Logo"
-       onerror="this.onerror=null; this.src='assets/images/branding/zuzu-logo.png';">
-</div>
+    <div class="hero-visual">
+      <img class="logo-big"
+           src="assets/images/branding/zuzu-logo.svg"
+           alt="ZUZU Logo"
+           onerror="this.onerror=null;this.src='assets/images/banner.jpg';">
     </div>
   </div>
 </section>
@@ -119,7 +137,7 @@
             </select>
           </div>
         </div>
-        <small class="muted">Payments in USDT via MetaMask</small>
+        <small class="muted">Payments in USDT via EVM wallet (Trust/Binance/OKX)</small>
       </div>
     </div>
 
