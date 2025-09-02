@@ -1,6 +1,18 @@
 /* =========================
    ZUZU – Global Config
 ========================= */
+/* ===== Mobile detect + MetaMask Deep Link helpers ===== */
+function isMobile(){
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+function openInMetaMask(){
+  // Dapp’i MetaMask’in in-app browser’ında aç
+  const deep = `https://metamask.app.link/dapp/${location.host}${location.pathname}`;
+  window.location.href = deep;
+}
+function openInstallMetaMask(){
+  window.open('https://metamask.io/download/', '_blank', 'noopener');
+}
 const CONFIG = {
   ownerAddress: "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", // USDT ödemeleri buraya
   contractAddress: "0xF2bbbEcB417725813BF5E940d678793fACDa9729",
@@ -344,8 +356,52 @@ async function ensureChain(targetId){
   }
 }
 
-async function connectIfNeeded(){
-  if (!currentAccount) await connectWallet();
+async function connectWallet(){
+  // MetaMask extension yoksa (özellikle mobil Chrome/Safari)
+  if (!window.ethereum) {
+    if (isMobile()) {
+      // Mobilde doğrudan MetaMask içinde aç
+      openInMetaMask();
+    } else {
+      // Masaüstü: kullanıcıya yükleme sayfasını aç
+      openInstallMetaMask();
+    }
+    return;
+  }
+
+  // Extension/in-app mevcutsa normal akış:
+  provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+  try{
+    const accounts = await provider.send("eth_requestAccounts", []);
+    signer = provider.getSigner();
+    currentAccount = accounts && accounts[0] ? accounts[0] : null;
+    currentChainId = (await provider.getNetwork()).chainId;
+
+    const btn = document.getElementById("connectBtn");
+    if (btn && currentAccount) {
+      btn.textContent = `${currentAccount.slice(0,6)}...${currentAccount.slice(-4)}`;
+    }
+
+    if (window.ethereum && !window.ethereum._zuzuBound) {
+      window.ethereum.on("accountsChanged", (accs)=>{
+        const b = document.getElementById("connectBtn");
+        if (accs && accs.length>0) {
+          currentAccount = accs[0];
+          if (b) b.textContent = `${currentAccount.slice(0,6)}...${currentAccount.slice(-4)}`;
+        } else {
+          currentAccount=null; if (b) b.textContent="Connect Wallet";
+        }
+      });
+      window.ethereum.on("chainChanged", (_chainId)=>{
+        // tazelemek yerine butonu güncelleyelim
+        currentChainId = parseInt(_chainId, 16);
+      });
+      window.ethereum._zuzuBound = true;
+    }
+  }catch(err){
+    console.warn("connect failed:", err);
+    alert("Connection rejected or failed.");
+  }
 }
 
 async function payUSDT(costFloat){
