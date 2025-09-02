@@ -19,6 +19,12 @@
         integrity="sha512-57m0O+W20T+woYvD9w0t3NE0g1rY37v9m1m3xA7C6E1Hg7N6xJ9cptZ6NGe7R3IYyN7t+W3h1JpP+s3jo8d1yg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+<!-- WalletConnect v2 – Ethereum Provider (UMD) -->
+<script src="https://unpkg.com/@walletconnect/ethereum-provider/dist/umd/index.min.js"></script>
+
+<!-- Coinbase Wallet SDK (UMD) -->
+<script src="https://unpkg.com/@coinbase/wallet-sdk/dist/CoinbaseWalletSDK.umd.min.js"></script>
+
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -46,7 +52,6 @@
         <option value="es">ES</option>
       </select>
       <button id="connectBtn" class="z-btn z-btn-primary" data-i="connect">Connect Wallet</button>
-          <a class="z-chip" id="openInMM" href="https://metamask.app.link/dapp/zuzucoin.xyz">Open in MetaMask ↗</a>  
     </nav>
   </div>
 </header>
@@ -85,12 +90,11 @@
     </div>
 
     <!-- Sağ kolon — Büyük ZUZU Logo -->
-<div class="hero-visual">
-  <img id="zuzuLogo" class="logo-big"
-       src="assets/images/branding/zuzu-logo.svg"
-       alt="ZUZU Logo"
-       onerror="this.onerror=null; this.src='assets/images/branding/zuzu-logo.png';">
-</div>
+    <div class="hero-visual">
+      <img class="logo-big"
+           src="assets/images/branding/zuzu-logo.svg"
+           alt="ZUZU Logo"
+           onerror="this.onerror=null;this.src='assets/images/banner.jpg';">
     </div>
   </div>
 </section>
@@ -120,7 +124,7 @@
             </select>
           </div>
         </div>
-        <small class="muted">Payments in USDT via MetaMask</small>
+        <small class="muted">Payments in USDT via MetaMask / WalletConnect / Coinbase</small>
       </div>
     </div>
 
@@ -300,21 +304,6 @@
   </div>
 </section>
 
-<!-- ROADMAP -->
-<section id="roadmap" class="z-section">
-  <div class="z-container">
-    <div class="section-head"><h2 data-i="road_title">Roadmap</h2><p data-i="road_lead">Clear plan focused on community, staking, NFT drops, listings.</p></div>
-    <div class="card">
-      <ul>
-        <li><b>Q1 — Core Setup</b>: Web, contract tests, community channels, security.</li>
-        <li><b>Q2 — Pre-Sale & Stake</b>: Sale rounds, staking launch, Maskot NFT rewards.</li>
-        <li><b>Q3 — Listings</b>: Liquidity, first CEX/DEX listings, market-maker.</li>
-        <li><b>Q4 — Ecosystem</b>: In-game integrations, partnerships, mobile mini-app.</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
 </main>
 
 <footer class="z-footer">
@@ -328,6 +317,25 @@
     </div>
   </div>
 </footer>
+
+<!-- ===== Connect Modal (çoklu cüzdan) ===== -->
+<div class="z-modal" id="walletModal" hidden>
+  <div class="z-modal__backdrop" data-close="1"></div>
+  <div class="z-modal__panel">
+    <div class="z-modal__head">
+      <b>Connect Wallet</b>
+      <button class="z-btn z-btn-ghost" data-close="1">✕</button>
+    </div>
+    <div class="z-wallets">
+      <button id="btnMetaMask" class="z-btn z-btn-primary">MetaMask / Browser Wallet</button>
+      <button id="btnWalletConnect" class="z-btn z-btn-ghost">WalletConnect (Trust, OKX, SafePal, Binance, Bitget…)</button>
+      <button id="btnCoinbase" class="z-btn z-btn-ghost">Coinbase Wallet</button>
+    </div>
+    <small style="display:block;margin-top:8px;color:#8aa2c9">
+      Supported: MetaMask, Rabby, Brave, Trust, OKX, SafePal, Binance Web3, Bitget, TokenPocket, imToken, Coinbase…
+    </small>
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>
