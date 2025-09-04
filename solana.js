@@ -1,6 +1,6 @@
-// === solana.js (DIŞ JS DOSYASI — script tag YOK) ===
+// === solana.js (EXTERNAL FILE — no <script> tags) ===
 (function(){
-  // Kütüphaneler gelmeden basılırsa nazik uyarı
+  // Kütüphaneler gelmeden tıklanırsa nazik uyarı
   window.__zuzuSolanaConnect = function(){
     alert('Loading Solana wallet… please wait a moment and try again.');
   };
@@ -9,15 +9,16 @@
     const web3 = window.solanaWeb3;
     const spl  = window.splToken;
     if(!web3 || !spl){
-      // henüz CDN’ler gelmemiş, birazdan tekrar dene
       return setTimeout(initWhenReady, 200);
     }
 
-    const { Connection, PublicKey, SystemProgram, Transaction, LAMPORTS_PER_SOL, clusterApiUrl } = web3;
+    const { Connection, PublicKey, SystemProgram, Transaction, TransactionInstruction, LAMPORTS_PER_SOL, clusterApiUrl } = web3;
+    const MEMO_PROGRAM_ID = new PublicKey('MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr');
+    const enc = new TextEncoder();
 
     // ===== Config =====
     const RPC = clusterApiUrl('mainnet-beta');
-    const USDT_MINT = new PublicKey('Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'); // USDT (SPL)
+    const USDT_MINT = new PublicKey('Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB');
     const TREASURY  = new PublicKey((window.CONFIG?.treasurySolana) || '31Cjkx2PA5oMapNxxGAiZhuHDcvAyQ7hogqB8Hx6f1pW');
 
     const conn = new Connection(RPC, 'confirmed');
@@ -50,12 +51,18 @@
         window.__zuzuSetConnectLabel('Connect Wallet');
       }
     };
-
     const detectWallet = () => {
       if (window.solana?.isPhantom || window.solana?.isBackpack) return window.solana;
       if (window.solflare?.isSolflare) return window.solflare;
       if (window.backpack?.solana) return window.backpack.solana;
       return null;
+    };
+    const memoIx = (text) => new TransactionInstruction({
+      keys: [], programId: MEMO_PROGRAM_ID, data: enc.encode(text)
+    });
+    const refString = () => {
+      const r = localStorage.getItem('zuzu_ref');
+      return r ? `ZUZU|ref:${r}` : 'ZUZU|ref:none';
     };
 
     async function connect() {
@@ -71,6 +78,10 @@
         pubkey = new PublicKey(res?.publicKey || adapter.publicKey);
         setConnectedUI(true);
         setStatus('Bağlandı');
+        // Referral linkini doldur
+        if (typeof window.__zuzuSetReferral === 'function') {
+          window.__zuzuSetReferral(pubkey.toBase58());
+        }
       }catch(e){
         console.error(e);
         setStatus('Bağlantı iptal edildi');
@@ -96,7 +107,8 @@
             fromPubkey: pubkey,
             toPubkey: TREASURY,
             lamports: BigInt(Math.floor(amt * LAMPORTS_PER_SOL))
-          })
+          }),
+          memoIx(refString())
         );
         tx.feePayer = pubkey;
         tx.recentBlockhash = (await conn.getLatestBlockhash()).blockhash;
@@ -136,12 +148,21 @@
             )
           );
         }
+        const fromInfo = await conn.getAccountInfo(fromATA);
+        if(!fromInfo){
+          ixs.push(
+            spl.createAssociatedTokenAccountInstruction(
+              payer, fromATA, payer, USDT_MINT, spl.TOKEN_PROGRAM_ID, spl.ASSOCIATED_TOKEN_PROGRAM_ID
+            )
+          );
+        }
 
         const amount = BigInt(Math.floor(amt * 1_000_000)); // USDT 6 decimals
         ixs.push(
           spl.createTransferInstruction(
             fromATA, toATA, payer, amount, [], spl.TOKEN_PROGRAM_ID
-          )
+          ),
+          memoIx(refString())
         );
 
         const tx = new Transaction().add(...ixs);
@@ -163,7 +184,7 @@
     if (btnBuySOL) btnBuySOL.onclick = sendSOL;
     if (btnBuyUSDT) btnBuyUSDT.onclick = sendUSDT;
 
-    // Global connect tetikleyici (script.js burayı çağırıyor)
+    // Global connect
     window.__zuzuSolanaConnect = connect;
 
     // Auto-connect ve accountChanged
@@ -184,6 +205,9 @@
                 pubkey = new PublicKey(pk);
                 setConnectedUI(true);
                 setStatus('Hesap değişti');
+                if (typeof window.__zuzuSetReferral === 'function') {
+                  window.__zuzuSetReferral(pubkey.toBase58());
+                }
               } else {
                 disconnect();
               }
@@ -197,7 +221,6 @@
     console.log('[ZUZU] Solana init OK');
   }
 
-  // DOM hazır olduğunda başlat
   if (document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', initWhenReady);
   } else {
