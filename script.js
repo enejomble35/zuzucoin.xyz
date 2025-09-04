@@ -21,7 +21,16 @@ const CONFIG = {
     { id:9, name:"ZUZU Titan",     rarity:"Legendary", supply:250 }
   ]
 };
-
+// (Opsiyonel) 50 gün ama cihazda sabitle
+(() => {
+  const KEY = "zuzu_launchAt";
+  let stored = Number(localStorage.getItem(KEY));
+  if (!stored || isNaN(stored)) {
+    stored = Date.now() + 50 * 24 * 60 * 60 * 1000;
+    localStorage.setItem(KEY, String(stored));
+  }
+  CONFIG.launchAt = stored;
+})();
 // Şebekeler ve USDT ayarları
 const CHAINS = {
   1: { // Ethereum
