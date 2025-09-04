@@ -5,7 +5,7 @@ const CONFIG = {
   ownerAddress: "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", 
   contractAddress: "0xF2bbbEcB417725813BF5E940d678793fACDa9729",
   collectionUrl: "https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts",
-  launchAt: Date.now() + 50 * 24 * 60 * 60 * 1000,
+  launchAt: Date.parse("2025-10-15T18:00:00Z"), // TRT 21:00
   saleStart: Date.now(),
   weekPrices: [0.0050, 0.0065, 0.0080, 0.0100],
   nfts: [
