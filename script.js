@@ -257,12 +257,33 @@ updateCosts();
 
 let provider, signer, currentAccount = null, currentChainId = null;
 
-async function ensureProvider() {
-  if (!window.ethereum) {
-    alert("MetaMask not found. Please install MetaMask.");
+// ---- Multi-provider seçici + mobil deep-link ----
+function getInjectedProvider(){
+  const eth = window.ethereum;
+  if (!eth) return null;
+  // Birden fazla provider varsa MetaMask'i seç
+  if (eth.providers?.length){
+    const mm = eth.providers.find(p => p.isMetaMask);
+    return mm || eth.providers[0];
+  }
+  return eth;
+}
+
+async function ensureProvider(){
+  const injected = getInjectedProvider();
+  if (!injected) {
+    // Mobil ise sayfayı MetaMask uygulamasında aç
+    const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
+    if (isMobile) {
+      const dapp = encodeURIComponent(location.href.replace(/^http:/,'https:'));
+      // Deep link (MetaMask in-app browser)
+      window.location.href = `https://metamask.app.link/dapp/${dapp}`;
+      throw new Error("Redirecting to MetaMask app");
+    }
+    alert("MetaMask not detected. Please install MetaMask extension/app and reload.");
     throw new Error("No MetaMask");
   }
-  provider = new ethers.providers.Web3Provider(window.ethereum, "any");
+  provider = new ethers.providers.Web3Provider(injected, "any");
   return provider;
 }
 
