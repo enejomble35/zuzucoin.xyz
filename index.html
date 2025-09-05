@@ -5,16 +5,20 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ZUZUCOIN — Pre-Sale • Stake • NFT Rewards</title>
 <meta name="theme-color" content="#0e1522">
+
+<!-- Security meta -->
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<!-- NAV -->
 <header class="z-nav">
   <div class="z-container z-nav-inner">
     <a class="brand" href="#">
@@ -33,8 +37,6 @@
       <select id="langSel" class="lang">
         <option value="en" selected>EN</option>
         <option value="tr">TR</option>
-        <option value="fr">FR</option>
-        <option value="es">ES</option>
       </select>
       <button id="connectBtn" class="z-btn z-btn-primary" data-i="connect">Connect Wallet</button>
     </nav>
@@ -42,6 +44,8 @@
 </header>
 
 <main>
+
+<!-- HERO -->
 <section class="z-section hero-2">
   <div class="z-container grid-2">
     <div>
@@ -50,15 +54,19 @@
       <p class="lead" data-i="hero_lead">
         Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high <b>utility</b>.
       </p>
+
       <div class="hero-cta">
         <a href="#stake" class="z-btn z-btn-primary" data-i="cta_stake">Start Staking</a>
         <a href="#nft" class="z-btn z-btn-ghost" data-i="cta_nft">NFT Rewards</a>
       </div>
+
       <div class="z-chip-row">
         <a id="thirdwebNFTRoute" class="z-chip" href="#" target="_blank" rel="noopener" data-i="collection_page">Collection Page</a>
         <span class="z-chip" data-i="contract">Contract:</span>
         <span class="z-chip" id="contractDisplay">—</span>
       </div>
+
+      <!-- Countdown -->
       <div class="counter" style="margin-top:14px">
         <div class="flip"><div id="cdDays" class="num">00</div><small data-i="days">DAYS</small></div>
         <div class="flip"><div id="cdHours" class="num">00</div><small data-i="hours">HOURS</small></div>
@@ -76,6 +84,7 @@
   </div>
 </section>
 
+<!-- PRE-SALE -->
 <section id="presale" class="z-section presale">
   <div class="z-container">
     <div class="section-head">
@@ -83,7 +92,7 @@
       <p  data-i="presale_lead">Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.</p>
     </div>
 
-    <!-- EVM kutusu HTML olarak kalıyor ama JS ile gizliyoruz -->
+    <!-- (Eski EVM kutusu – gizlenecek) -->
     <div class="card" style="margin-bottom:12px">
       <div class="buybox">
         <div class="row">
@@ -104,52 +113,51 @@
       </div>
     </div>
 
-    <!-- SOLANA WALLET -->
-    <div class="card" id="solanaWalletBox" style="margin-bottom:12px">
+    <!-- SOLANA WALLET BOX -->
+    <div class="card" id="solanaWalletBox">
+      <h3 style="margin:0 0 10px">Solana Wallet</h3>
       <div class="buybox">
-        <div class="row" style="align-items:center; gap:12px">
-          <strong>Solana Wallet</strong>
-          <button id="btnDisconnect" class="z-btn z-btn-ghost" disabled>Disconnect</button>
-          <span id="walletAddr" class="z-chip">Not connected</span>
-        </div>
         <div class="row">
           <div>
             <label>SOL ile satın al</label>
-            <input class="input" id="solAmount" type="number" min="0" step="0.0001" placeholder="0.10">
-            <button id="btnBuySOL" class="z-btn z-btn-primary" disabled>SOL Gönder</button>
+            <input class="input" id="solAmount" placeholder="0.10" inputmode="decimal">
           </div>
           <div>
             <label>USDT (SPL) ile satın al</label>
-            <input class="input" id="usdtAmount" type="number" min="0" step="0.01" placeholder="25">
-            <button id="btnBuyUSDT" class="z-btn z-btn-primary" disabled>USDT Gönder</button>
+            <input class="input" id="usdtAmount" placeholder="25" inputmode="decimal">
           </div>
         </div>
-
-        <!-- Referral -->
-        <div class="row">
-          <div style="flex:1">
-            <label>Referral (Invite & Earn)</label>
-            <input id="refLink" class="input" readonly value="">
-            <div class="ref-actions">
-              <button id="btnCopyRef" class="z-btn z-btn-ghost">Copy Link</button>
-              <button id="btnShareRef" class="z-btn z-btn-ghost">Share</button>
-            </div>
-            <small class="muted" id="refYouWereInvited" style="display:none"></small>
-          </div>
+        <div class="buy">
+          <button class="z-btn z-btn-ghost" id="btnBuySOL">SOL Gönder</button>
+          <button class="z-btn z-btn-ghost" id="btnBuyUSDT">USDT Gönder</button>
+          <button class="z-btn" id="btnDisconnect">Disconnect</button>
         </div>
+        <div class="z-chip-row" style="margin-top:8px">
+          <span class="z-chip">Status: <span id="solanaStatus">Hazır</span></span>
+          <span class="z-chip">Wallet: <span id="walletAddr">Not connected</span></span>
+        </div>
+      </div>
 
-        <small class="muted" id="solanaStatus">Durum: Hazır</small>
+      <div class="buybox" style="margin-top:10px">
+        <label>Referral (Invite & Earn)</label>
+        <input class="input" id="refLink" readonly value="">
+        <div id="refYouWereInvited" class="muted" style="display:none;margin-top:6px"></div>
+        <div class="z-chip-row" style="margin-top:8px">
+          <button class="z-btn z-btn-ghost" onclick="navigator.clipboard&&navigator.clipboard.writeText(document.getElementById('refLink').value)">Copy Link</button>
+          <a class="z-btn z-btn-ghost" target="_blank" rel="noopener"
+             href="https://twitter.com/intent/tweet?text=Join%20ZUZUCOIN%20pre-sale!%20">Share</a>
+        </div>
       </div>
     </div>
 
-    <!-- Haftalara göre fiyat -->
+    <!-- Haftalara göre fiyat kutuları -->
     <div class="presale-grid">
       <div class="card buybox">
         <h4 data-i="w1">Week 1 (Cheapest)</h4>
         <div class="price">1 ZUZU = <b id="p0">0.0050</b> USDT</div>
         <div class="cost"><span data-i="cost">Cost:</span> <b id="c0">0</b> USDT</div>
         <div class="buy">
-          <button class="z-btn z-btn-primary" id="buyW0" data-i="buy">Buy</button>
+          <button class="z-btn z-btn-primary" data-week="0" id="buyW0" data-i="buy">Buy</button>
           <button class="z-btn z-btn-ghost">Details</button>
         </div>
       </div>
@@ -158,7 +166,7 @@
         <div class="price">1 ZUZU = <b id="p1">0.0065</b> USDT</div>
         <div class="cost"><span data-i="cost">Cost:</span> <b id="c1">0</b> USDT</div>
         <div class="buy">
-          <button class="z-btn z-btn-primary" id="buyW1" data-i="buy">Buy</button>
+          <button class="z-btn z-btn-primary" data-week="1" id="buyW1" data-i="buy">Buy</button>
           <button class="z-btn z-btn-ghost">Details</button>
         </div>
       </div>
@@ -167,7 +175,7 @@
         <div class="price">1 ZUZU = <b id="p2">0.0080</b> USDT</div>
         <div class="cost"><span data-i="cost">Cost:</span> <b id="c2">0</b> USDT</div>
         <div class="buy">
-          <button class="z-btn z-btn-primary" id="buyW2" data-i="buy">Buy</button>
+          <button class="z-btn z-btn-primary" data-week="2" id="buyW2" data-i="buy">Buy</button>
           <button class="z-btn z-btn-ghost">Details</button>
         </div>
       </div>
@@ -176,12 +184,13 @@
         <div class="price">1 ZUZU = <b id="p3">0.0100</b> USDT</div>
         <div class="cost"><span data-i="cost">Cost:</span> <b id="c3">0</b> USDT</div>
         <div class="buy">
-          <button class="z-btn z-btn-primary" id="buyW3" data-i="buy">Buy</button>
+          <button class="z-btn z-btn-primary" data-week="3" id="buyW3" data-i="buy">Buy</button>
           <button class="z-btn z-btn-ghost">Details</button>
         </div>
       </div>
     </div>
 
+    <!-- Exchanges ticker -->
     <div class="card" style="margin-top:16px">
       <h3 style="margin:0 0 10px" data-i="exchanges">Supported Exchanges</h3>
       <div class="ticker">
@@ -192,6 +201,7 @@
           <div class="ticker__item"><img src="assets/images/exchanges/mxc.png" alt="mexc" loading="lazy"></div>
           <div class="ticker__item"><img src="assets/images/exchanges/bitmart.png" alt="bitmart" loading="lazy"></div>
           <div class="ticker__item"><img src="assets/images/exchanges/bybit.png" alt="bybit" loading="lazy"></div>
+          <!-- loop -->
           <div class="ticker__item"><img src="assets/images/exchanges/gateio.png" alt=""></div>
           <div class="ticker__item"><img src="assets/images/exchanges/kucoin.png" alt=""></div>
           <div class="ticker__item"><img src="assets/images/exchanges/okx.png" alt=""></div>
@@ -205,6 +215,7 @@
   </div>
 </section>
 
+<!-- STAKE -->
 <section id="stake" class="z-section">
   <div class="z-container">
     <div class="section-head">
@@ -268,6 +279,7 @@
   </div>
 </section>
 
+<!-- NFT REWARDS -->
 <section id="nft" class="z-section">
   <div class="z-container">
     <div class="section-head">
@@ -280,6 +292,7 @@
   </div>
 </section>
 
+<!-- TOKENOMICS -->
 <section id="tokenomics" class="z-section">
   <div class="z-container">
     <div class="section-head">
@@ -311,6 +324,22 @@
     </div>
   </div>
 </section>
+
+<!-- ROADMAP -->
+<section id="roadmap" class="z-section">
+  <div class="z-container">
+    <div class="section-head"><h2 data-i="road_title">Roadmap</h2><p data-i="road_lead">Clear plan focused on community, staking, NFT drops, listings.</p></div>
+    <div class="card">
+      <ul>
+        <li><b>Q1 — Core Setup</b>: Web, contract tests, community channels, security.</li>
+        <li><b>Q2 — Pre-Sale & Stake</b>: Sale rounds, staking launch, Maskot NFT rewards.</li>
+        <li><b>Q3 — Listings</b>: Liquidity, first CEX/DEX listings, market-maker.</li>
+        <li><b>Q4 — Ecosystem</b>: In-game integrations, partnerships, mobile mini-app.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
 </main>
 
 <footer class="z-footer">
@@ -325,20 +354,26 @@
   </div>
 </footer>
 
-<!-- Hata yakalayıcı (beklenmedik sorunları pop-up gösterir) -->
+<!-- Error popup (hata olursa göstermesi için) -->
 <script>
   window.onerror=function(m,s,l,c,e){ alert("JS Error: "+m); };
 </script>
+
+<!-- Solana hızlı-bağlantı (kütüphane gerektirmez) -->
+<script src="wallet-lite.js"></script>
 
 <!-- Solana kütüphaneleri (defer) -->
 <script defer src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.3/lib/index.iife.min.js" crossorigin="anonymous"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/@solana/spl-token@0.4.6/lib/index.iife.min.js" crossorigin="anonymous"></script>
 
-<!-- Uygulama dosyaları: yeni isim (cache kırar) -->
+<!-- Uygulama dosyaları (cache kırılmış isimler) -->
 <script defer src="app.v1.js"></script>
 <script defer src="solana.v1.js"></script>
 
-<!-- EVM kutusunu garanti gizle (JS çalışmasa bile) -->
-<style>.presale .z-container > .card:first-of-type{display:none!important}</style>
+<!-- EVM kutusunu garanti gizle (JS hiç çalışmasa bile) -->
+<style>
+  .presale .z-container > .card:first-of-type{display:none!important}
+</style>
+
 </body>
 </html>
