@@ -1,179 +1,158 @@
-// solana.js — dış JS (script tag yok)
 (function(){
-  // Kütüphaneler gelmeden tıklanırsa uyarı
-  window.__zuzuSolanaConnect = function(){
-    alert('Loading Solana wallet… please wait a moment and try again.');
-  };
+  // Kütüphaneler geç gelirse tıklama boşa gitmesin
+  window.__zuzuSolanaConnect = function(){ alert("Loading Solana wallet… please wait a moment and try again."); };
 
-  // Fallback: global adları otomatik bul
-  function resolveSplGlobal(){
-    return window.splToken || window.spl || window.spl_token || null;
+  function loadScript(src, cb){
+    var s=document.createElement("script"); s.src=src; s.async=true;
+    s.onload=function(){ cb(true); }; s.onerror=function(){ cb(false); };
+    document.head.appendChild(s);
+  }
+  function ensureLibs(cb){
+    if (window.solanaWeb3 && (window.splToken || window.spl || window.spl_token)) return cb();
+    // web3
+    var once=false;
+    function next(){ if(once) return; once=true; cb(); }
+    if(!window.solanaWeb3){
+      loadScript("https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.3/lib/index.iife.min.js", function(ok){
+        if(!ok) loadScript("https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js", function(){});
+      });
+    }
+    if(!(window.splToken || window.spl || window.spl_token)){
+      loadScript("https://cdn.jsdelivr.net/npm/@solana/spl-token@0.4.6/lib/index.iife.min.js", function(ok){
+        if(!ok) loadScript("https://unpkg.com/@solana/spl-token@0.4.6/lib/index.iife.min.js", function(){});
+      });
+    }
+    // küçük bekleme sonra devam
+    setTimeout(next, 600);
   }
 
-  // Dinamik yükleme (yine de index.html’de zaten var)
-  function loadScript(src){ return new Promise((res,rej)=>{ const s=document.createElement('script'); s.src=src; s.async=true; s.onload=res; s.onerror=()=>rej(new Error('load fail '+src)); document.head.appendChild(s); }); }
-  async function ensureLibs(){
-    if (window.solanaWeb3 && resolveSplGlobal()) return;
-    // web3.js
-    if (!window.solanaWeb3){
-      try{ await loadScript('https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.3/lib/index.iife.min.js'); }
-      catch{ try{ await loadScript('https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js'); }catch{} }
-    }
-    // spl-token
-    if (!resolveSplGlobal()){
-      try{ await loadScript('https://cdn.jsdelivr.net/npm/@solana/spl-token@0.4.6/lib/index.iife.min.js'); }
-      catch{ try{ await loadScript('https://unpkg.com/@solana/spl-token@0.4.6/lib/index.iife.min.js'); }catch{} }
-    }
-  }
+  function init(){
+    ensureLibs(function(){
+      var web3 = window.solanaWeb3;
+      var spl  = window.splToken || window.spl || window.spl_token;
+      if(!web3 || !spl){ setTimeout(init,400); return; }
 
-  async function init(){
-    await ensureLibs();
+      var Connection=web3.Connection, PublicKey=web3.PublicKey, SystemProgram=web3.SystemProgram,
+          Transaction=web3.Transaction, TransactionInstruction=web3.TransactionInstruction,
+          LAMPORTS_PER_SOL=web3.LAMPORTS_PER_SOL, clusterApiUrl=web3.clusterApiUrl;
 
-    const web3 = window.solanaWeb3;
-    const spl  = resolveSplGlobal();
-    if(!web3 || !spl){ setTimeout(init, 400); return; }
+      var RPC = clusterApiUrl("mainnet-beta");
+      var USDT_MINT = new PublicKey("Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB");
+      var TREASURY  = new PublicKey((window.CONFIG&&window.CONFIG.treasurySolana)||"31Cjkx2PA5oMapNxxGAiZhuHDcvAyQ7hogqB8Hx6f1pW");
+      var MEMO_PROGRAM_ID = new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr");
+      var enc = new TextEncoder();
+      var conn = new Connection(RPC, "confirmed");
 
-    const { Connection, PublicKey, SystemProgram, Transaction, TransactionInstruction, LAMPORTS_PER_SOL, clusterApiUrl } = web3;
-    const MEMO_PROGRAM_ID = new PublicKey('MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr');
-    const enc = new TextEncoder();
+      var btnDisconnect=document.getElementById("btnDisconnect");
+      var btnBuySOL=document.getElementById("btnBuySOL");
+      var btnBuyUSDT=document.getElementById("btnBuyUSDT");
+      var walletAddrEl=document.getElementById("walletAddr");
+      var statusEl=document.getElementById("solanaStatus");
+      var solAmountEl=document.getElementById("solAmount");
+      var usdtAmountEl=document.getElementById("usdtAmount");
 
-    // Config
-    const RPC = clusterApiUrl('mainnet-beta');
-    const USDT_MINT = new PublicKey('Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB');
-    const TREASURY  = new PublicKey((window.CONFIG?.treasurySolana) || '31Cjkx2PA5oMapNxxGAiZhuHDcvAyQ7hogqB8Hx6f1pW');
-    const conn = new Connection(RPC, 'confirmed');
+      var adapter=null, pubkey=null;
 
-    // UI
-    const btnDisconnect = document.getElementById('btnDisconnect');
-    const btnBuySOL = document.getElementById('btnBuySOL');
-    const btnBuyUSDT = document.getElementById('btnBuyUSDT');
-    const walletAddrEl = document.getElementById('walletAddr');
-    const statusEl = document.getElementById('solanaStatus');
-    const solAmountEl = document.getElementById('solAmount');
-    const usdtAmountEl = document.getElementById('usdtAmount');
+      function setStatus(t){ if(statusEl) statusEl.textContent="Durum: "+t; }
+      function short(s){ return s.slice(0,4)+"..."+s.slice(-4); }
+      function setConnectedUI(on){
+        if(btnDisconnect) btnDisconnect.disabled=!on;
+        if(btnBuySOL) btnBuySOL.disabled=!on;
+        if(btnBuyUSDT) btnBuyUSDT.disabled=!on;
+        if(walletAddrEl) walletAddrEl.textContent = (on&&pubkey)? short(pubkey.toBase58()):"Not connected";
+        if(typeof window.__zuzuSetConnectLabel==="function") window.__zuzuSetConnectLabel(on&&pubkey? short(pubkey.toBase58()):"Connect Wallet");
+      }
+      function detectWallet(){
+        if (window.phantom && window.phantom.solana) return window.phantom.solana;
+        if (window.solana && (window.solana.isPhantom || window.solana.isBackpack)) return window.solana;
+        if (window.solflare && window.solflare.isSolflare) return window.solflare;
+        if (window.backpack && window.backpack.solana) return window.backpack.solana;
+        return null;
+      }
+      function memoIx(text){ return new TransactionInstruction({keys:[], programId:MEMO_PROGRAM_ID, data:enc.encode(text)}); }
+      function refString(){ var r=localStorage.getItem("zuzu_ref"); return r?("ZUZU|ref:"+r):"ZUZU|ref:none"; }
 
-    // State
-    let adapter = null;
-    let pubkey  = null;
-
-    // Helpers
-    const setStatus = (msg)=>{ if(statusEl) statusEl.textContent=`Durum: ${msg}`; };
-    const short=(s)=>s.slice(0,4)+'...'+s.slice(-4);
-    const setConnectedUI = (connected)=>{
-      if (btnDisconnect) btnDisconnect.disabled = !connected;
-      if (btnBuySOL) btnBuySOL.disabled = !connected;
-      if (btnBuyUSDT) btnBuyUSDT.disabled = !connected;
-      if (walletAddrEl) walletAddrEl.textContent = connected && pubkey ? short(pubkey.toBase58()) : 'Not connected';
-      if (connected && typeof window.__zuzuSetConnectLabel === 'function') window.__zuzuSetConnectLabel(short(pubkey.toBase58()));
-      if (!connected && typeof window.__zuzuSetConnectLabel === 'function') window.__zuzuSetConnectLabel('Connect Wallet');
-    };
-    const detectWallet = ()=>{
-      if (window.phantom?.solana) return window.phantom.solana;
-      if (window.solana?.isPhantom || window.solana?.isBackpack) return window.solana;
-      if (window.solflare?.isSolflare) return window.solflare;
-      if (window.backpack?.solana) return window.backpack.solana;
-      return null;
-    };
-    const memoIx = (text)=> new TransactionInstruction({ keys:[], programId: MEMO_PROGRAM_ID, data: (new TextEncoder()).encode(text) });
-    const refString = ()=>{
-      const r = localStorage.getItem('zuzu_ref');
-      return r ? `ZUZU|ref:${r}` : 'ZUZU|ref:none';
-    };
-
-    async function connect(){
-      try{
-        setStatus('Cüzdan aranıyor…');
-        adapter = detectWallet();
-        if(!adapter){
-          setStatus('Cüzdan bulunamadı. Phantom / Solflare / Backpack kur.');
-          window.open('https://phantom.app/download', '_blank'); return;
-        }
-        const res = await adapter.connect();
-        pubkey = new PublicKey(res?.publicKey || adapter.publicKey);
-        setConnectedUI(true);
-        setStatus('Bağlandı');
-        if (typeof window.__zuzuSetReferral === 'function') window.__zuzuSetReferral(pubkey.toBase58());
-      }catch(e){ console.error(e); setStatus('Bağlantı iptal edildi'); }
-    }
-    async function disconnect(){
-      try{ if(adapter?.disconnect) await adapter.disconnect(); }catch{}
-      pubkey=null; setConnectedUI(false); setStatus('Bağlantı kesildi');
-    }
-    async function sendSOL(){
-      if(!pubkey) return setStatus('Önce cüzdan bağla');
-      const amt=parseFloat(solAmountEl?.value||'0'); if(!amt||amt<=0) return setStatus('Geçerli SOL miktarı gir');
-      try{
-        setStatus('SOL işlemi hazırlanıyor…');
-        const tx=new Transaction().add(
-          SystemProgram.transfer({ fromPubkey: pubkey, toPubkey: TREASURY, lamports: BigInt(Math.floor(amt * LAMPORTS_PER_SOL)) }),
-          memoIx(refString())
-        );
-        tx.feePayer=pubkey; tx.recentBlockhash=(await conn.getLatestBlockhash()).blockhash;
-        const signed=await adapter.signTransaction(tx);
-        const sig=await conn.sendRawTransaction(signed.serialize(),{skipPreflight:false,preflightCommitment:'confirmed'});
-        await conn.confirmTransaction(sig,'confirmed');
-        setStatus(`Başarılı ✔ Tx: ${sig}`);
-      }catch(e){ console.error(e); setStatus('SOL transferi başarısız veya reddedildi'); }
-    }
-    async function sendUSDT(){
-      if(!pubkey) return setStatus('Önce cüzdan bağla');
-      const amt=parseFloat(usdtAmountEl?.value||'0'); if(!amt||amt<=0) return setStatus('Geçerli USDT miktarı gir');
-      try{
-        setStatus('USDT işlemi hazırlanıyor…');
-        const payer=pubkey;
-        const fromATA = await spl.getAssociatedTokenAddress(USDT_MINT, payer, false, spl.TOKEN_PROGRAM_ID, spl.ASSOCIATED_TOKEN_PROGRAM_ID);
-        const toATA   = await spl.getAssociatedTokenAddress(USDT_MINT, TREASURY, false, spl.TOKEN_PROGRAM_ID, spl.ASSOCIATED_TOKEN_PROGRAM_ID);
-
-        const ixs=[];
-        if(!await conn.getAccountInfo(toATA)){
-          ixs.push(spl.createAssociatedTokenAccountInstruction(payer, toATA, TREASURY, USDT_MINT, spl.TOKEN_PROGRAM_ID, spl.ASSOCIATED_TOKEN_PROGRAM_ID));
-        }
-        if(!await conn.getAccountInfo(fromATA)){
-          ixs.push(spl.createAssociatedTokenAccountInstruction(payer, fromATA, payer, USDT_MINT, spl.TOKEN_PROGRAM_ID, spl.ASSOCIATED_TOKEN_PROGRAM_ID));
-        }
-        const amount = BigInt(Math.floor(amt * 1_000_000)); // USDT 6 decimals
-        ixs.push(spl.createTransferInstruction(fromATA, toATA, payer, amount, [], spl.TOKEN_PROGRAM_ID));
-        ixs.push(memoIx(refString()));
-
-        const tx=new Transaction().add(...ixs);
-        tx.feePayer=payer; tx.recentBlockhash=(await conn.getLatestBlockhash()).blockhash;
-        const signed=await adapter.signTransaction(tx);
-        const sig=await conn.sendRawTransaction(signed.serialize(),{skipPreflight:false,preflightCommitment:'confirmed'});
-        await conn.confirmTransaction(sig,'confirmed');
-        setStatus(`USDT gönderildi ✔ Tx: ${sig}`);
-      }catch(e){ console.error(e); setStatus('USDT transferi başarısız (cüzdanda USDT var mı?)'); }
-    }
-
-    // UI bağla
-    document.getElementById('btnDisconnect')?.addEventListener('click', disconnect);
-    document.getElementById('btnBuySOL')?.addEventListener('click', sendSOL);
-    document.getElementById('btnBuyUSDT')?.addEventListener('click', sendUSDT);
-
-    // Global connect
-    window.__zuzuSolanaConnect = connect;
-
-    // Account change
-    const w = detectWallet();
-    if (w && !w._zuzuBound && w.on){
-      try{
-        w.on('accountChanged', (pk)=>{
-          if(pk){
+      function connect(){
+        try{
+          setStatus("Cüzdan aranıyor…");
+          adapter = detectWallet();
+          if(!adapter){ setStatus("Cüzdan bulunamadı. Phantom / Solflare / Backpack kur."); window.open("https://phantom.app/download","_blank"); return; }
+          adapter.connect().then(function(res){
+            var pk = (res && res.publicKey) ? res.publicKey : adapter.publicKey;
             pubkey = new PublicKey(pk);
-            setConnectedUI(true);
-            setStatus('Hesap değişti');
-            if (typeof window.__zuzuSetReferral === 'function') window.__zuzuSetReferral(pubkey.toBase58());
-          }else{
-            disconnect();
-          }
-        });
-        w._zuzuBound=true;
-      }catch{}
-    }
+            setConnectedUI(true); setStatus("Bağlandı");
+            if (typeof window.__zuzuSetReferral==="function") window.__zuzuSetReferral(pubkey.toBase58());
+          }).catch(function(){ setStatus("Bağlantı iptal edildi"); });
+        }catch(e){ setStatus("Hata"); }
+      }
+      function disconnect(){
+        try{ if(adapter && adapter.disconnect) adapter.disconnect(); }catch(e){}
+        pubkey=null; setConnectedUI(false); setStatus("Bağlantı kesildi");
+      }
+      function sendSOL(){
+        if(!pubkey) return setStatus("Önce cüzdan bağla");
+        var amt=parseFloat((solAmountEl&&solAmountEl.value)||"0"); if(!amt||amt<=0) return setStatus("Geçerli SOL miktarı gir");
+        try{
+          setStatus("SOL işlemi hazırlanıyor…");
+          var lamports = Math.floor(amt * LAMPORTS_PER_SOL);
+          var tx = new Transaction().add(
+            SystemProgram.transfer({fromPubkey:pubkey,toPubkey:TREASURY,lamports:lamports}),
+            memoIx(refString())
+          );
+          tx.feePayer=pubkey;
+          conn.getLatestBlockhash().then(function(bh){
+            tx.recentBlockhash=bh.blockhash;
+            adapter.signTransaction(tx).then(function(signed){
+              conn.sendRawTransaction(signed.serialize(),{skipPreflight:false,preflightCommitment:"confirmed"})
+              .then(function(sig){ return conn.confirmTransaction(sig,"confirmed").then(function(){ setStatus("Başarılı ✔ Tx: "+sig); }); })
+              .catch(function(){ setStatus("Gönderim başarısız"); });
+            });
+          });
+        }catch(e){ setStatus("SOL transfer hatası"); }
+      }
+      function sendUSDT(){
+        if(!pubkey) return setStatus("Önce cüzdan bağla");
+        var amt=parseFloat((usdtAmountEl&&usdtAmountEl.value)||"0"); if(!amt||amt<=0) return setStatus("Geçerli USDT miktarı gir");
+        try{
+          setStatus("USDT işlemi hazırlanıyor…");
+          var payer=pubkey;
+          Promise.all([
+            spl.getAssociatedTokenAddress(USDT_MINT, payer, false, spl.TOKEN_PROGRAM_ID, spl.ASSOCIATED_TOKEN_PROGRAM_ID),
+            spl.getAssociatedTokenAddress(USDT_MINT, TREASURY, false, spl.TOKEN_PROGRAM_ID, spl.ASSOCIATED_TOKEN_PROGRAM_ID)
+          ]).then(function(addrs){
+            var fromATA=addrs[0], toATA=addrs[1], ixs=[];
+            conn.getAccountInfo(toATA).then(function(toInfo){
+              if(!toInfo) ixs.push(spl.createAssociatedTokenAccountInstruction(payer,toATA,TREASURY,USDT_MINT,spl.TOKEN_PROGRAM_ID,spl.ASSOCIATED_TOKEN_PROGRAM_ID));
+              conn.getAccountInfo(fromATA).then(function(fromInfo){
+                if(!fromInfo) ixs.push(spl.createAssociatedTokenAccountInstruction(payer,fromATA,payer,USDT_MINT,spl.TOKEN_PROGRAM_ID,spl.ASSOCIATED_TOKEN_PROGRAM_ID));
+                var amount = Math.floor(amt * 1000000); // 6 decimals (no _)
+                ixs.push(spl.createTransferInstruction(fromATA,toATA,payer,amount,[],spl.TOKEN_PROGRAM_ID));
+                ixs.push(memoIx(refString()));
+                var tx=new Transaction().add.apply(new Transaction(), ixs);
+                tx.feePayer=payer;
+                conn.getLatestBlockhash().then(function(bh){
+                  tx.recentBlockhash=bh.blockhash;
+                  adapter.signTransaction(tx).then(function(signed){
+                    conn.sendRawTransaction(signed.serialize(),{skipPreflight:false,preflightCommitment:"confirmed"})
+                    .then(function(sig){ return conn.confirmTransaction(sig,"confirmed").then(function(){ setStatus("USDT gönderildi ✔ Tx: "+sig); }); })
+                    .catch(function(){ setStatus("USDT gönderim hatası"); });
+                  });
+                });
+              });
+            });
+          });
+        }catch(e){ setStatus("USDT transfer hatası"); }
+      }
 
-    setConnectedUI(false);
-    setStatus('Hazır');
+      var d=document;
+      var b1=d.getElementById("btnDisconnect"); if(b1) b1.addEventListener("click",disconnect);
+      var b2=d.getElementById("btnBuySOL"); if(b2) b2.addEventListener("click",sendSOL);
+      var b3=d.getElementById("btnBuyUSDT"); if(b3) b3.addEventListener("click",sendUSDT);
+
+      window.__zuzuSolanaConnect = connect;
+      setConnectedUI(false); setStatus("Hazır");
+    });
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", init); else init();
 })();
