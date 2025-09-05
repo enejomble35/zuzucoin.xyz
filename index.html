@@ -11,28 +11,24 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-
 <link rel="stylesheet" href="style.css" />
 
-<!-- CountDown hedefi (İstanbul): 5 Kasım 2025 13:00 -->
+<!-- Geri sayım hedefi (İstanbul): 5 Kasım 2025 13:00 -->
 <script>window.LAUNCH_AT_ISO="2025-11-05T13:00:00+03:00";</script>
 
 <!-- Solana kütüphaneleri -->
 <script defer src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.3/lib/index.iife.min.js" crossorigin="anonymous"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/@solana/spl-token@0.4.6/lib/index.iife.min.js" crossorigin="anonymous"></script>
 
-<!-- Küçük modal stilleri (genel stile dokunmadan) -->
+<!-- Küçük modal/overlay stilleri (genel stile dokunmadan) -->
 <style>
-  .z-modal-back{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:999}
+  .z-modal-back{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:9999}
   .z-modal{width:min(520px,92%);background:#111b2d;border:1px solid #1b2a49;border-radius:16px;padding:12px 12px 8px}
-  .z-modal h3{margin:.2rem .4rem .6rem}
   .z-list{display:grid;gap:8px;margin:8px 0}
   .z-list button{width:100%;border:1px solid #23395d;background:#0f1c33;color:#e8f1ff;border-radius:12px;padding:.9rem;font-weight:800}
-  .z-row{display:flex;gap:8px;flex-wrap:wrap}
   .muted-sm{color:#9cb6e6;font-size:.9rem}
   .hide{display:none!important}
-  /* eski EVM kutusunu tamamen kaldırıyoruz */
-  .presale .z-container > .card:first-of-type{display:none!important}
+  #tapConnect{position:fixed;inset:0;z-index:10000;background:rgba(2,10,24,.66);display:flex;align-items:center;justify-content:center}
 </style>
 </head>
 
@@ -49,6 +45,7 @@
       <a href="#tokenomics" data-i="nav_token">Tokonomi</a>
       <a href="stake-simulator.html" class="z-chip">Stake Simulator ↗</a>
       <a href="claim.html" class="z-chip">Claim Portal ↗</a>
+
       <select id="langSel" class="lang">
         <option value="tr" selected>TR</option>
         <option value="en">EN</option>
@@ -59,22 +56,29 @@
 </header>
 
 <main>
+
 <!-- HERO -->
 <section class="z-section hero-2">
   <div class="z-container grid-2">
     <div>
       <div class="badge" data-i="hero_badge">Ön Satış • Stake ile NFT Kazan</div>
       <h1 data-i="hero_title">ZUZU — Geleceğin Robotic Kirpisi 🦔⚡</h1>
-      <p class="lead" data-i="hero_lead">Stake et ve <b>ZUZU Maskot NFT</b> kazan. Sınırlı arz, yüksek <b>utility</b>.</p>
+      <p class="lead" data-i="hero_lead">
+        Stake et ve <b>ZUZU Maskot NFT</b> kazan. Sınırlı arz, yüksek <b>utility</b>.
+      </p>
+
       <div class="hero-cta">
         <a href="#stake" class="z-btn z-btn-primary" data-i="cta_stake">Stake Etmeye Başla</a>
         <a href="#nft" class="z-btn z-btn-ghost" data-i="cta_nft">NFT Ödülleri</a>
       </div>
+
       <div class="z-chip-row">
         <a id="thirdwebNFTRoute" class="z-chip" href="#" target="_blank" rel="noopener" data-i="collection_page">Koleksiyon Sayfası</a>
         <span class="z-chip" data-i="contract">Kontrat:</span>
         <span class="z-chip" id="contractDisplay">—</span>
       </div>
+
+      <!-- Countdown -->
       <div class="counter" style="margin-top:14px">
         <div class="flip"><div id="cdDays" class="num">00</div><small data-i="days">GÜN</small></div>
         <div class="flip"><div id="cdHours" class="num">00</div><small data-i="hours">SAAT</small></div>
@@ -82,11 +86,18 @@
         <div class="flip"><div id="cdSecs" class="num">00</div><small data-i="secs">SANİYE</small></div>
       </div>
     </div>
-    <div class="hero-visual"><img id="zuzuLogo" class="logo-big" src="assets/images/branding/zuzu-logo.svg" alt="ZUZU Logo" onerror="this.onerror=null;this.src='assets/images/branding/zuzu-logo.png'"></div>
+
+    <!-- Sağ kolon — Büyük ZUZU Logo -->
+    <div class="hero-visual">
+      <img id="zuzuLogo" class="logo-big"
+           src="assets/images/branding/zuzu-logo.svg"
+           alt="ZUZU Logo"
+           onerror="this.onerror=null; this.src='assets/images/branding/zuzu-logo.png';">
+    </div>
   </div>
 </section>
 
-<!-- PRESALE (sadece Solana) -->
+<!-- PRE-SALE (Solana only) -->
 <section id="presale" class="z-section presale">
   <div class="z-container">
     <div class="section-head">
@@ -94,12 +105,14 @@
       <p data-i="presale_lead">ZUZU ön satışına hazır ol! <b>Sınırlı tahsis</b>, topluluğa özel fiyat.</p>
     </div>
 
-    <div class="card">
+    <!-- SOLANA CÜZDAN KUTUSU -->
+    <div class="card" id="solanaBox">
       <h3>Solana Wallet</h3>
-      <div class="z-row">
+      <div class="z-row" style="gap:.6rem;flex-wrap:wrap">
         <button id="btnConnect" class="z-btn z-btn-primary">Cüzdan Bağla</button>
         <button id="btnDisconnect" class="z-btn z-btn-ghost">Disconnect</button>
-        <div id="status" class="muted-sm">Durum: Hazır (cüzdan bekleniyor)</div>
+        <div class="z-chip">Status: <span id="solanaStatus">Hazır (cüzdan bekleniyor)</span></div>
+        <div class="z-chip">Wallet: <span id="walletAddr">Not connected</span></div>
       </div>
 
       <div class="z-row" style="margin-top:10px">
@@ -118,21 +131,17 @@
         <div><button id="sendUSDT" class="z-btn z-btn-primary">USDT Gönder</button></div>
       </div>
 
-      <div class="z-row" style="margin-top:10px">
-        <div class="muted-sm">Wallet: <b id="walletState">Not connected</b></div>
-      </div>
-
       <div style="margin-top:10px">
         <label>Referral (Invite & Earn)</label>
         <div class="z-row">
           <input id="refLink" class="input" readonly />
-          <button id="copyRef" class="z-btn z-btn-ghost">Copy Link</button>
+          <button id="copyRef" class="z-btn">Copy</button>
           <button id="shareRef" class="z-btn z-btn-ghost">Share</button>
         </div>
       </div>
     </div>
 
-    <!-- Haftalara göre fiyat bilgisi (butonlar USDT inputunu doldurur) -->
+    <!-- Haftalara göre fiyat kutuları -->
     <div class="presale-grid">
       <div class="card buybox"><h4 data-i="w1">1. Hafta (En Ucuz)</h4>
         <div class="price">1 ZUZU = <b id="p0">0.0050</b> USDT</div>
@@ -156,7 +165,7 @@
       </div>
     </div>
 
-    <!-- Borsa logoları ticker (eski görseller) -->
+    <!-- Exchanges ticker -->
     <div class="card" style="margin-top:16px">
       <h3 style="margin:0 0 10px" data-i="exchanges">Desteklenen Borsalar</h3>
       <div class="ticker">
@@ -181,30 +190,78 @@
   </div>
 </section>
 
-<!-- STAKE (kısa) -->
+<!-- STAKE -->
 <section id="stake" class="z-section">
   <div class="z-container">
     <div class="section-head">
       <h2 data-i="stake_title">Stake Pro — Kilitle, Kazan, NFT Kap ✨</h2>
-      <p data-i="stake_lead">ZUZU’larını kilitle, <b>APY + NFT BOOST</b> ile pasif gelir elde et.</p>
+      <p data-i="stake_lead">ZUZU’larını kilitle, <b>APY + NFT BOOST</b> ile pasif gelir elde et. Erken stake edenler rozet & airdrop önceliği alır.</p>
     </div>
+
     <div class="stake-grid">
-      <div class="stake-card"><div class="tier">Bronze</div><ul><li>30 days lock</li><li><b>12% APY</b></li><li>Early access raffles</li></ul></div>
-      <div class="stake-card"><div class="tier silver">Silver</div><ul><li>90 days lock</li><li><b>24% APY</b></li><li>+5% NFT boost</li></ul></div>
-      <div class="stake-card"><div class="tier gold">Gold</div><ul><li>180 days lock</li><li><b>40% APY</b></li><li>Whitelist + ZUZU badge</li></ul></div>
-      <div class="stake-card"><div class="tier diamond">Diamond</div><ul><li>365 days lock</li><li><b>65% APY</b></li><li>+10% NFT boost</li></ul></div>
-      <div class="stake-card"><div class="tier obsidian">Obsidian</div><ul><li>540 days lock</li><li><b>85% APY</b></li><li>VIP rewards + airdrop priority</li></ul></div>
+      <div class="stake-card"><div class="tier">Bronze</div><ul>
+        <li>30 days lock</li><li><b>12% APY</b></li><li>Early access raffles</li></ul></div>
+      <div class="stake-card"><div class="tier silver">Silver</div><ul>
+        <li>90 days lock</li><li><b>24% APY</b></li><li>+5% NFT boost</li></ul></div>
+      <div class="stake-card"><div class="tier gold">Gold</div><ul>
+        <li>180 days lock</li><li><b>40% APY</b></li><li>Whitelist + ZUZU badge</li></ul></div>
+      <div class="stake-card"><div class="tier diamond">Diamond</div><ul>
+        <li>365 days lock</li><li><b>65% APY</b></li><li>+10% NFT boost</li></ul></div>
+      <div class="stake-card"><div class="tier obsidian">Obsidian</div><ul>
+        <li>540 days lock</li><li><b>85% APY</b></li><li>VIP rewards + airdrop priority</li></ul></div>
+    </div>
+
+    <div class="card calc">
+      <h3 data-i="calc_title">Kazanç Hesaplayıcı</h3>
+      <div class="calc-grid">
+        <div><label data-i="amount2">Miktar (ZUZU)</label><input class="input" id="stakeAmount" placeholder="10,000"></div>
+        <div><label data-i="lock">Kilit Süresi</label>
+          <select id="stakeDuration" class="input">
+            <option value="30">30 days (12% APY)</option>
+            <option value="90">90 days (24% APY)</option>
+            <option value="180">180 days (40% APY)</option>
+            <option value="365">365 days (65% APY)</option>
+            <option value="540">540 days (85% APY)</option>
+          </select></div>
+        <div><label data-i="nft_have">Elinde NFT var mı?</label>
+          <select id="nftBoost" class="input">
+            <option value="0">No</option>
+            <option value="5">ZUZU Hero (+5%)</option>
+            <option value="8">ZUZU Rogue (+8%)</option>
+            <option value="10">ZUZU Berserker (+10%)</option>
+            <option value="6">ZUZU Hacker (+6%)</option>
+            <option value="9">ZUZU Sorceress (+9%)</option>
+            <option value="7">ZUZU Warrior (+7%)</option>
+            <option value="5">ZUZU Maiden (+5%)</option>
+            <option value="9">ZUZU Scientist (+9%)</option>
+            <option value="12">ZUZU Titan (+12%)</option>
+          </select></div>
+        <div><label data-i="early">Erken Rozet</label>
+          <select id="earlyBoost" class="input">
+            <option value="0">None</option>
+            <option value="3">Badge +3%</option>
+            <option value="5">Badge+ +5%</option>
+          </select></div>
+      </div>
+      <div style="margin-top:8px"><button id="calcBtn" class="z-btn z-btn-primary" data-i="calc_btn">Hesapla</button></div>
+      <div class="statwrap">
+        <div class="stat"><div class="label" data-i="ret">Toplam Getiri</div><div class="value" id="resultTotal">0 ZUZU</div></div>
+        <div class="stat"><div class="label" data-i="avg">Aylık Ortalama</div><div class="value" id="resultMonthly">0 ZUZU</div></div>
+        <div class="stat"><div class="label" data-i="boost">Toplam Boost</div><div class="value" id="resultBoost">+0%</div></div>
+      </div>
+      <div class="chart-wrap"><img src="assets/images/charts/staking-curve.png" alt="APY Curve"></div>
     </div>
   </div>
 </section>
 
-<!-- NFT REWARDS (grid) -->
+<!-- NFT REWARDS -->
 <section id="nft" class="z-section">
   <div class="z-container">
     <div class="section-head">
       <h2>ZUZU Maskot NFT Ödülleri 🎁</h2>
-      <p>Stakers nadir NFT’ler kazanır. Kontrat: <code id="contractDisplay2"></code> •
-      <a id="thirdwebNFTRoute2" href="#" target="_blank" rel="noopener">Koleksiyon sayfası</a></p>
+      <p>Stakers win rare NFTs from the collection. Contract:
+        <code id="contractDisplay2"></code> •
+        <a id="thirdwebNFTRoute2" href="#" target="_blank" rel="noopener">Collection Page</a></p>
     </div>
     <div class="nft-grid" id="nftGrid"></div>
   </div>
@@ -219,6 +276,7 @@
     </div>
     <div class="card tk">
       <div>
+        <!-- 500M yazılı donut -->
         <svg viewBox="0 0 42 42" width="100%" style="max-width:360px">
           <circle cx="21" cy="21" r="15.915" fill="#0e172a"/>
           <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#8E69FF" stroke-width="6" stroke-dasharray="35 65" stroke-dashoffset="25"></circle>
@@ -246,8 +304,7 @@
 <!-- ROADMAP -->
 <section id="roadmap" class="z-section">
   <div class="z-container">
-    <div class="section-head"><h2 data-i="road_title">Yol Haritası</h2>
-      <p data-i="road_lead">Topluluk, staking, NFT drop’ları ve listelemelere odaklı plan.</p></div>
+    <div class="section-head"><h2 data-i="road_title">Yol Haritası</h2><p data-i="road_lead">Topluluk, staking, NFT drop’ları ve listelemelere odaklı plan.</p></div>
     <div class="card">
       <ul>
         <li><b>Q1 — Core Setup</b>: Web, contract tests, community channels, security.</li>
@@ -258,68 +315,81 @@
     </div>
   </div>
 </section>
+
 </main>
 
 <footer class="z-footer">
   <div class="z-container between center-v">
     <small>© ZUZUCOIN 2025</small>
     <div class="z-chip-row">
-      <a class="z-chip" href="#presale">Ön Satış</a>
+      <a class="z-chip" href="#presale">Pre-Sale</a>
       <a class="z-chip" href="#stake">Stake</a>
       <a class="z-chip" href="#nft">NFT</a>
-      <a class="z-chip" href="#tokenomics">Tokonomi</a>
+      <a class="z-chip" href="#tokenomics">Tokenomics</a>
     </div>
   </div>
 </footer>
 
-<!-- ====== UYGULAMA JS (tek blok) ====== -->
+<!-- Wallet seçim sheet -->
+<div id="walletSheet" class="z-modal-back">
+  <div class="z-modal">
+    <h3>Cüzdan Seç</h3>
+    <div class="z-list">
+      <button data-w="phantom">Phantom</button>
+      <button data-w="solflare">Solflare</button>
+      <button data-w="backpack">Backpack</button>
+    </div>
+    <div class="muted-sm">Masaüstü: eklentiniz varsa doğrudan bağlanır. Mobil: cüzdanın iç tarayıcısında açılır, “Bağlan” onayı gelir.</div>
+    <div style="margin-top:8px"><button id="wsClose" class="z-btn z-btn-ghost" style="width:100%">Kapat</button></div>
+  </div>
+</div>
+
+<!-- ====== APP JS ====== -->
 <script>
-/* ========= Global Config ========= */
+/* ============= Global Config ============= */
 const CFG = {
-  // Alıcı (senin SOL adresin)
-  ownerSol: "FniLJmY5L6zQyQfot6xsiYojHeEzoGs2xZXYZh1U9QwF",       // <-- BURAYA kendi Solana (SOL) adresini koy
-  // USDT (SPL) mint (mainnet)
-  usdtMint: "Es9vMFrzaCERMfYMgANJwWaJ3WmZ5eWQGj1iG3Vr3yY", // USDT (SPL) - mainnet. Kaynak: Solana token list. 
-  // NFT linkleri + kontrat
+  ownerSol: "31Cjkx2PA5oMapNxxGAiZhuHDcvAyQ7hogqB8Hx6f1pW", // alıcı SOL hesabın
+  usdtMint: "Es9vMFrzaCERz8iYhGMXfMV64N6V7kJphQ8usAqyx3Pf", // USDT SPL mint (mainnet)
   contractAddress:"0xF2bbbEcB417725813BF5E940d678793fACDa9729",
   collectionUrl:"https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts",
-  // Presale fiyatları
   weekPrices:[0.0050,0.0065,0.0080,0.0100],
-  // NFT grid
   nfts:[
-    { id:0, name:"ZUZU Hero", rarity:"Epic", supply:200 },
-    { id:1, name:"ZUZU Rogue", rarity:"Rare", supply:2500 },
-    { id:2, name:"ZUZU Berserker", rarity:"Epic", supply:800 },
-    { id:3, name:"ZUZU Hacker", rarity:"Rare", supply:600 },
-    { id:4, name:"ZUZU Sorceress", rarity:"Epic", supply:750 },
-    { id:5, name:"ZUZU Warrior", rarity:"Rare", supply:900 },
-    { id:6, name:"ZUZU Maiden", rarity:"Rare", supply:1100 },
-    { id:7, name:"ZUZU Ranger", rarity:"Rare", supply:1000 },
-    { id:8, name:"ZUZU Scientist", rarity:"Epic", supply:1100 },
-    { id:9, name:"ZUZU Titan", rarity:"Legendary", supply:250 },
+    { id:0, name:"ZUZU Hero",      rarity:"Epic",      supply:200 },
+    { id:1, name:"ZUZU Rogue",     rarity:"Rare",      supply:2500 },
+    { id:2, name:"ZUZU Berserker", rarity:"Epic",      supply:800 },
+    { id:3, name:"ZUZU Hacker",    rarity:"Rare",      supply:600 },
+    { id:4, name:"ZUZU Sorceress", rarity:"Epic",      supply:750 },
+    { id:5, name:"ZUZU Warrior",   rarity:"Rare",      supply:900 },
+    { id:6, name:"ZUZU Maiden",    rarity:"Rare",      supply:1100 },
+    { id:7, name:"ZUZU Ranger",    rarity:"Rare",      supply:1000 },
+    { id:8, name:"ZUZU Scientist", rarity:"Epic",      supply:1100 },
+    { id:9, name:"ZUZU Titan",     rarity:"Legendary", supply:250 }
   ]
 };
 
-/* ========= i18n (TR / EN) ========= */
+/* ============= i18n (TR/EN) ============= */
 const I = {
- tr:{nav_presale:"Ön Satış",nav_stake:"Stake",nav_nft:"NFT Ödülleri",nav_roadmap:"Yol Haritası",nav_token:"Tokonomi",connect:"Cüzdan Bağla",
-     hero_badge:"Ön Satış • Stake ile NFT Kazan",hero_title:"ZUZU — Geleceğin Robotic Kirpisi 🦔⚡",
-     hero_lead:"Stake et ve <b>ZUZU Maskot NFT</b> kazan. Sınırlı arz, yüksek <b>utility</b>.",
-     cta_stake:"Stake Etmeye Başla",cta_nft:"NFT Ödülleri",collection_page:"Koleksiyon Sayfası",contract:"Kontrat:",
-     days:"GÜN",hours:"SAAT",mins:"DAKİKA",secs:"SANİYE",
-     presale_title:"Ön Satış — Geri Sayım",presale_lead:"ZUZU ön satışına hazır ol! <b>Sınırlı tahsis</b>, topluluğa özel fiyat.",
-     w1:"1. Hafta (En Ucuz)",w2:"2. Hafta",w3:"3. Hafta",w4:"4. Hafta (Son Fırsat)",cost:"Maliyet:",buy:"Satın Al",exchanges:"Desteklenen Borsalar",
-     stake_title:"Stake Pro — Kilitle, Kazan, NFT Kap ✨",stake_lead:"ZUZU’larını kilitle, <b>APY + NFT BOOST</b> ile pasif gelir elde et.",
-     token_title:"Tokonomi (Görselleştirilmiş)",road_title:"Yol Haritası",road_lead:"Topluluk, staking, NFT drop’ları ve listelemelere odaklı plan."},
- en:{nav_presale:"Pre-Sale",nav_stake:"Stake",nav_nft:"NFT Rewards",nav_roadmap:"Roadmap",nav_token:"Tokenomics",connect:"Connect Wallet",
-     hero_badge:"Pre-Sale • Stake to Win NFT",hero_title:"ZUZU — Robotic Hedgehog 🦔⚡",
-     hero_lead:"Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high <b>utility</b>.",
-     cta_stake:"Start Staking",cta_nft:"NFT Rewards",collection_page:"Collection Page",contract:"Contract:",
-     days:"DAYS",hours:"HOURS",mins:"MINUTES",secs:"SECONDS",
-     presale_title:"Pre-Sale — Countdown",presale_lead:"Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.",
-     w1:"Week 1 (Cheapest)",w2:"Week 2",w3:"Week 3",w4:"Week 4 (Last Chance)",cost:"Cost:",buy:"Buy",exchanges:"Supported Exchanges",
-     stake_title:"Stake Pro — Lock, Earn, Get NFT ✨",stake_lead:"Lock your ZUZU, earn <b>APY + NFT BOOST</b>.",
-     token_title:"Tokenomics (Visualized)",road_title:"Roadmap",road_lead:"Plan focused on community, staking, NFT drops, listings."}
+  tr:{nav_presale:"Ön Satış",nav_stake:"Stake",nav_nft:"NFT Ödülleri",nav_roadmap:"Yol Haritası",nav_token:"Tokonomi",connect:"Cüzdan Bağla",
+      hero_badge:"Ön Satış • Stake ile NFT Kazan",hero_title:"ZUZU — Geleceğin Robotic Kirpisi 🦔⚡",
+      hero_lead:"Stake et ve <b>ZUZU Maskot NFT</b> kazan. Sınırlı arz, yüksek <b>utility</b>.",
+      cta_stake:"Stake Etmeye Başla",cta_nft:"NFT Ödülleri",collection_page:"Koleksiyon Sayfası",contract:"Kontrat:",
+      days:"GÜN",hours:"SAAT",mins:"DAKİKA",secs:"SANİYE",
+      presale_title:"Ön Satış — Geri Sayım",presale_lead:"ZUZU ön satışına hazır ol! <b>Sınırlı tahsis</b>, topluluğa özel fiyat.",
+      w1:"1. Hafta (En Ucuz)",w2:"2. Hafta",w3:"3. Hafta",w4:"4. Hafta (Son Fırsat)",cost:"Maliyet:",buy:"Satın Al",exchanges:"Desteklenen Borsalar",
+      stake_title:"Stake Pro — Kilitle, Kazan, NFT Kap ✨",stake_lead:"ZUZU’larını kilitle, <b>APY + NFT BOOST</b> ile pasif gelir elde et. Erken stake edenler rozet & airdrop önceliği alır.",
+      calc_title:"Kazanç Hesaplayıcı",amount2:"Miktar (ZUZU)",lock:"Kilit Süresi",nft_have:"Elinde NFT var mı?",early:"Erken Rozet",calc_btn:"Hesapla",
+      ret:"Toplam Getiri",avg:"Aylık Ortalama",boost:"Toplam Boost",token_title:"Tokonomi (Görselleştirilmiş)",road_title:"Yol Haritası",
+      road_lead:"Topluluk, staking, NFT drop’ları ve listelemelere odaklı plan."},
+  en:{nav_presale:"Pre-Sale",nav_stake:"Stake",nav_nft:"NFT Rewards",nav_roadmap:"Roadmap",nav_token:"Tokenomics",connect:"Connect Wallet",
+      hero_badge:"Pre-Sale • Stake to Win NFT",hero_title:"ZUZU — Robotic Hedgehog 🦔⚡",
+      hero_lead:"Stake and win <b>ZUZU Mascot NFT</b>. Limited supply, high <b>utility</b>.",
+      cta_stake:"Start Staking",cta_nft:"NFT Rewards",collection_page:"Collection Page",contract:"Contract:",
+      days:"DAYS",hours:"HOURS",mins:"MINUTES",secs:"SECONDS",
+      presale_title:"Pre-Sale — Countdown",presale_lead:"Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.",
+      w1:"Week 1 (Cheapest)",w2:"Week 2",w3:"Week 3",w4:"Week 4 (Last Chance)",cost:"Cost:",buy:"Buy",exchanges:"Supported Exchanges",
+      stake_title:"Stake Pro — Lock, Earn, Get NFT ✨",stake_lead:"Lock your ZUZU, earn <b>APY + NFT BOOST</b>.",
+      calc_title:"Earnings Calculator",amount2:"Amount (ZUZU)",lock:"Lock Period",nft_have:"Have NFT?",early:"Early Badge",calc_btn:"Calculate",
+      ret:"Total Return",avg:"Monthly Avg",boost:"Total Boost",token_title:"Tokenomics (Visualized)",road_title:"Roadmap",road_lead:"Plan focused on community, staking, NFT drops, listings."}
 };
 function applyLang(lang="tr"){
   document.querySelectorAll("[data-i]").forEach(el=>{
@@ -330,250 +400,302 @@ function applyLang(lang="tr"){
 document.getElementById("langSel")?.addEventListener("change", e=>applyLang(e.target.value));
 applyLang("tr");
 
-/* ========= NFT Grid render ========= */
+/* ============= Countdown ============= */
+(function countdown(){
+  const target=new Date(window.LAUNCH_AT_ISO).getTime();
+  const pad=n=>n.toString().padStart(2,"0");
+  function tick(){
+    const left=Math.max(0,target-Date.now());
+    const d=Math.floor(left/86400000),h=Math.floor(left%86400000/3600000),
+          m=Math.floor(left%3600000/60000),s=Math.floor(left%60000/1000);
+    [["cdDays",d],["cdHours",h],["cdMins",m],["cdSecs",s]].forEach(([id,v])=>{
+      const el=document.getElementById(id); if(el && el.textContent!==pad(v)) el.textContent=pad(v);
+    });
+  }
+  tick(); setInterval(tick,1000);
+})();
+
+/* ============= NFT Grid ============= */
 (function renderNFTs(){
   const g=document.getElementById("nftGrid"); if(!g) return;
   let html="";
   CFG.nfts.forEach(n=>{
     const img=`assets/images/mask/${n.id}.png`;
     const link=`${CFG.collectionUrl}?tokenId=${n.id}`;
-    html+=`<div class="nft">
+    html+=`
+    <div class="nft">
       <img src="${img}" alt="${n.name}" loading="lazy"
            style="aspect-ratio:1/1;object-fit:contain;background:#0f1a30;padding:8px;border-bottom:1px solid #1d2d50"
            onerror="this.style.display='none'">
-      <div class="meta"><div><b>${n.name}</b>
-        <div style="color:#9fb6e6;font-size:.9rem">Supply: ${n.supply.toLocaleString()}</div></div>
-        <span class="tag">${n.rarity}</span></div>
+      <div class="meta">
+        <div>
+          <b>${n.name}</b>
+          <div style="color:#9fb6e6;font-size:.9rem">Supply: ${n.supply.toLocaleString()}</div>
+        </div>
+        <span class="tag">${n.rarity}</span>
+      </div>
       <a class="z-btn z-btn-ghost" style="margin:0 10px 10px" href="${link}" target="_blank" rel="noopener">View ↗</a>
     </div>`;
   });
-  g.innerHTML=html;
+  g.innerHTML = html;
 })();
 
-/* ========= Link & Kontrat yazıları ========= */
-(function setupLinks(){
-  const c=CFG.contractAddress;
-  const short=`${c.slice(0,6)}...${c.slice(-4)}`;
-  const cd=document.getElementById("contractDisplay");
-  const cd2=document.getElementById("contractDisplay2");
-  if(cd)cd.textContent=short; if(cd2)cd2.textContent=c;
-  const t1=document.getElementById("thirdwebNFTRoute");
-  const t2=document.getElementById("thirdwebNFTRoute2");
-  if(t1)t1.href=CFG.collectionUrl; if(t2)t2.href=CFG.collectionUrl;
-})();
+/* ============= Links / Presale cost UI ============= */
+(function(){
+  // kontrat + koleksiyon linkleri
+  const c=CFG.contractAddress, short=`${c.slice(0,6)}...${c.slice(-4)}`;
+  const cd=document.getElementById("contractDisplay"); const cd2=document.getElementById("contractDisplay2");
+  if(cd) cd.textContent=short; if(cd2) cd2.textContent=c;
+  const t1=document.getElementById("thirdwebNFTRoute"); const t2=document.getElementById("thirdwebNFTRoute2");
+  if(t1) t1.href=CFG.collectionUrl; if(t2) t2.href=CFG.collectionUrl;
 
-/* ========= Countdown (sabit tarih) ========= */
-(function countdown(){
-  const target=new Date(window.LAUNCH_AT_ISO).getTime();
-  function tick(){
-    const left=Math.max(0, target - Date.now());
-    const d=Math.floor(left/86400000);
-    const h=Math.floor((left%86400000)/3600000);
-    const m=Math.floor((left%3600000)/60000);
-    const s=Math.floor((left%60000)/1000);
-    const pad=n=>n.toString().padStart(2,"0");
-    ["cdDays","cdHours","cdMins","cdSecs"].forEach((id,i)=>{
-      const v=[d,h,m,s][i]; const el=document.getElementById(id);
-      if(el && el.textContent!==pad(v)) el.textContent=pad(v);
-    });
-  }
-  tick(); setInterval(tick,1000);
-})();
+  // sabit örnek: 10k ZUZU için maliyet yaz
+  const qty=10000;
+  CFG.weekPrices.forEach((p,i)=>{
+    const priceEl=document.getElementById("p"+i);
+    const costEl=document.getElementById("c"+i);
+    if(priceEl) priceEl.textContent=p.toFixed(4);
+    if(costEl) costEl.textContent=(qty*p).toLocaleString();
+  });
 
-/* ========= Presale — maliyet kutuları ========= */
-(function costs(){
-  const input=document.createElement('input'); input.id="buyAmountTmp"; input.value="10000"; // referans: 10k ZUZU
-  function update(){
-    const qty=10000; // örnek hesap kutuları için
-    CFG.weekPrices.forEach((p,i)=>{
-      const cost=qty*p;
-      const priceEl=document.getElementById("p"+i);
-      const costEl=document.getElementById("c"+i);
-      if(priceEl)priceEl.textContent=p.toFixed(4);
-      if(costEl)costEl.textContent=cost.toLocaleString();
-    });
-  }
-  ["p0","p1","p2","p3"].forEach(()=>{}); update();
+  // Presale kart butonları: USDT inputunu doldur
   ["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{
-    const b=document.getElementById(id); if(!b) return;
-    b.addEventListener("click", ()=>{
-      // 10,000 ZUZU varsayımı ile USDT inputunu doldur
-      const cost=(10000*CFG.weekPrices[i]).toFixed(2);
-      document.getElementById("amountUSDT").value=cost;
+    document.getElementById(id)?.addEventListener("click", ()=>{
+      document.getElementById("amountUSDT").value = (qty*CFG.weekPrices[i]).toFixed(2);
       document.getElementById("amountUSDT").focus();
     });
   });
+
+  // Ticker görünürlük hack
+  const track=document.getElementById('exTrack');
+  if(track){ track.style.willChange='transform'; track.style.transform='translateX(0)'; setTimeout(()=>{ track.style.transform=''; },50); }
 })();
 
-/* ========= Referral link ========= */
+/* ============= Referral ============= */
 (function referral(){
-  const u=new URL(location.href);
-  const my=u.origin+u.pathname+(u.search?u.search:"");
-  const ref=document.getElementById("refLink");
-  if(ref) ref.value = my + (u.search.includes("ref=") ? "" : (u.search?"&":"?")+"ref=") + (localStorage.getItem("zref")||makeId());
-  function makeId(){ const s=Math.random().toString(36).slice(2,8); localStorage.setItem("zref",s); return s; }
+  const makeId=()=>Math.random().toString(36).slice(2,10);
+  const myRef=localStorage.getItem("zref")||makeId(); localStorage.setItem("zref",myRef);
+  const url=new URL(location.href); url.searchParams.set("ref",myRef);
+  const refIn=document.getElementById("refLink"); if(refIn) refIn.value=url.toString();
   document.getElementById("copyRef")?.addEventListener("click", async()=>{
-    try{ await navigator.clipboard.writeText(ref.value); alert("Kopyalandı!"); }catch{ alert("Kopyalanamadı"); }
+    try{ await navigator.clipboard.writeText(refIn.value); alert("Kopyalandı!"); }catch{ alert("Kopyalanamadı"); }
   });
   document.getElementById("shareRef")?.addEventListener("click", async()=>{
-    try{
-      if(navigator.share){ await navigator.share({title:"ZUZUCOIN",text:"Join ZUZU!",url:ref.value}); }
-      else{ await navigator.clipboard.writeText(ref.value); alert("Link kopyalandı."); }
-    }catch(e){}
+    try{ if(navigator.share){ await navigator.share({title:"Join ZUZU",url:refIn.value}); } else { await navigator.clipboard.writeText(refIn.value); alert("Link kopyalandı."); } }catch(e){}
   });
 })();
 
-/* ========= Wallet Modal ========= */
-const modal = (function(){
-  const back=document.createElement("div"); back.className="z-modal-back"; back.id="walletModal";
-  back.innerHTML=`<div class="z-modal">
-      <h3>Cüzdan Seç</h3>
-      <div class="z-list">
-        <button data-w="phantom">Phantom</button>
-        <button data-w="solflare">Solflare</button>
-        <button data-w="backpack">Backpack</button>
-      </div>
-      <div class="muted-sm">Masaüstünde: Phantom / Solflare / Backpack eklentisiyle doğrudan bağlanır.<br>
-      Telefonda: Cüzdanın içindeki tarayıcıda açılır, orada “Bağlan” onayı gelir.</div>
-      <div style="margin-top:8px"><button id="mclose" class="z-btn z-btn-ghost" style="width:100%">Kapat</button></div>
-    </div>`;
-  document.body.appendChild(back);
-  back.addEventListener("click",e=>{ if(e.target===back) back.style.display="none"; });
-  back.querySelector("#mclose").onclick=()=>back.style.display="none";
-  return {
-    show(){ back.style.display="flex"; },
-    on(cb){ back.querySelectorAll("button[data-w]").forEach(b=>b.onclick=()=>cb(b.getAttribute("data-w"))); }
-  }
+/* ============= Wallet (desktop ext + mobile deeplink) ============= */
+const WalletUI = (()=> {
+  const back = document.getElementById("walletSheet");
+  function show(){ back.style.display="flex"; }
+  function hide(){ back.style.display="none"; }
+  function onSelect(cb){ back.querySelectorAll("[data-w]").forEach(b=>b.onclick=()=>cb(b.getAttribute("data-w"))); }
+  document.getElementById("wsClose").onclick=hide;
+  return {show,hide,onSelect};
 })();
 
-/* ========= Solana Connect/Send ========= */
-let provider=null, walletPubkey=null, connection=null;
+const Solana = (function(){
+  const AC_KEY="autoconnect", WAIT_MS=10000, TICK=200;
+  const $=id=>document.getElementById(id);
+  const setStatus=t=>{ const e=$("solanaStatus"); if(e) e.textContent=t; };
+  const setAddr=a=>{ const e=$("walletAddr"); if(e) e.textContent=a||"Not connected"; };
+  const setBtn =t=>{ const e=$("connectBtn"); if(e) e.textContent=t||I.tr.connect; };
+  const short=a=>a?(a.slice(0,4)+"…"+a.slice(-4)):"";
 
-function detectProvider(){
-  if(window.solana?.isPhantom) return window.solana;        // Phantom ext / in-app
-  if(window.backpack?.solana) return window.backpack.solana; // Backpack
-  if(window.solflare?.isSolflare) return window.solflare;    // Solflare ext / in-app
-  return null;
-}
+  function detect(){
+    if (window.phantom?.solana) return {name:"phantom", adapter:window.phantom.solana};
+    if (window.solana && (window.solana.isPhantom||window.solana.isBackpack)) return {name:(window.solana.isBackpack?"backpack":"phantom"), adapter:window.solana};
+    if (window.solflare?.isSolflare) return {name:"solflare", adapter:window.solflare};
+    if (window.backpack?.solana) return {name:"backpack", adapter:window.backpack.solana};
+    return null;
+  }
+  function inMobileBrowser(){
+    const ua=navigator.userAgent||"";
+    const mobile=/Android|iPhone|iPad|iPod/i.test(ua);
+    const inWallet=/Phantom|Solflare|Backpack/i.test(ua);
+    return mobile && !inWallet;
+  }
+  function withAutoConnect(url,wallet){
+    try{const u=new URL(url);const h=new URLSearchParams((u.hash||"").replace(/^#/,""));h.set(AC_KEY,wallet);u.hash="#"+h.toString();return u.toString();}
+    catch(_){return url+(url.includes("#")?"&":"#")+AC_KEY+"="+wallet;}
+  }
+  function deeplinkFor(name){
+    const target=withAutoConnect(location.href.split('#')[0],name);
+    const enc=encodeURIComponent(target);
+    if(name==="phantom")  return "https://phantom.app/ul/browse/"+enc;
+    if(name==="solflare") return "https://solflare.com/ul/browse/"+enc;
+    if(name==="backpack") return "https://backpack.app/ul/browse/"+enc;
+    return null;
+  }
+  function showTap(onTap){
+    if(document.getElementById("tapConnect")) return;
+    const w=document.createElement("div");
+    w.id="tapConnect";
+    w.innerHTML=`<div class="card" style="width:min(420px,92%);text-align:center">
+      <h3 style="margin-top:0">Cüzdana Bağlan</h3>
+      <p style="color:#9fb6e6">Devam etmek için dokunun.</p>
+      <button id="tapGo" class="z-btn z-btn-primary" style="justify-content:center">Bağlan</button>
+      <div style="margin-top:8px"><button id="tapClose" class="z-btn" style="justify-content:center">İptal</button></div>
+    </div>`;
+    document.body.appendChild(w);
+    document.getElementById("tapGo").onclick=()=>{onTap(); w.remove();};
+    document.getElementById("tapClose").onclick=()=>w.remove();
+  }
 
-async function connectAuto(){
-  provider = detectProvider();
-  if(provider){
+  let adapter=null, publicKey=null;
+  async function doConnect(a){
+    const res = await a.connect({onlyIfTrusted:false});
+    const key = (res && res.publicKey) ? res.publicKey : a.publicKey;
+    const b58 = key && key.toString ? key.toString() : String(key||"");
+    adapter=a; publicKey=key;
+    setStatus("Bağlandı"); setAddr(short(b58)); setBtn(short(b58));
+    window.__zuzuWallet={adapter,publicKey:key};
+  }
+  async function waitProvider(expect){
+    const t0=Date.now();
+    while(Date.now()-t0<WAIT_MS){
+      const f=detect();
+      if(f && (!expect || f.name===expect)) return f.adapter;
+      await new Promise(r=>setTimeout(r,TICK));
+    }
+    return null;
+  }
+  async function start(choice){
     try{
-      const res = await provider.connect();
-      walletPubkey = (res.publicKey||res).toString?.() || provider.publicKey?.toString?.();
-      afterConnect();
-      return true;
-    }catch(e){ console.warn(e); return false; }
-  }else{
-    // Mobil tarayıcı – cüzdan yok: modal aç
-    modal.show();
-    return false;
+      const f=detect();
+      if(f && (!choice || f.name===choice)){ await doConnect(f.adapter); WalletUI.hide(); return; }
+      if(inMobileBrowser()){
+        const link=deeplinkFor(choice||"phantom"); if(link){ location.href=link; return; }
+      }
+      alert("Please install "+(choice||"a Solana wallet")+" (Phantom / Solflare / Backpack).");
+    }catch(e){ console.warn(e); alert("Wallet connect error."); }
   }
-}
+  function disconnect(){
+    try{ if(adapter?.disconnect) adapter.disconnect(); }catch(_){}
+    adapter=null; publicKey=null; setStatus("Hazır (cüzdan bekleniyor)"); setAddr("Not connected"); setBtn(I.tr.connect);
+    window.__zuzuWallet=null;
+  }
 
-function afterConnect(){
-  const btn=document.getElementById("connectBtn");
-  const btn2=document.getElementById("btnConnect");
-  const wlab=document.getElementById("walletState");
-  const status=document.getElementById("status");
-  const short = walletPubkey ? walletPubkey.slice(0,4)+"…"+walletPubkey.slice(-4) : "—";
-  if(btn) btn.textContent = short;
-  if(btn2) btn2.textContent = short;
-  if(wlab) wlab.textContent = "Connected";
-  if(status) status.textContent = "Durum: Bağlandı";
-}
+  function bind(){
+    document.getElementById("connectBtn")?.addEventListener("click", ()=>WalletUI.show());
+    document.getElementById("btnConnect")?.addEventListener("click",  ()=>WalletUI.show());
+    document.getElementById("btnDisconnect")?.addEventListener("click", disconnect);
+    WalletUI.onSelect(start);
 
-async function disconnect(){
-  try{ await provider?.disconnect?.(); }catch{}
-  walletPubkey=null; provider=null;
-  document.getElementById("connectBtn").textContent = I.tr.connect;
-  document.getElementById("btnConnect").textContent = I.tr.connect;
-  document.getElementById("walletState").textContent="Not connected";
-  document.getElementById("status").textContent="Durum: Hazır (cüzdan bekleniyor)";
-}
+    document.addEventListener("visibilitychange", async ()=>{
+      if(!document.hidden){
+        const want=new URLSearchParams((location.hash||"").replace(/^#/,"")).get(AC_KEY);
+        if(want && !window.__zuzuWallet){
+          const a=await waitProvider(want);
+          if(a) showTap(()=>doConnect(a));
+        }
+      }
+    });
+  }
 
-function openInWallet(app){ // deep-link “browse” (resmi yöntem)
-  const url = encodeURIComponent(location.href.split('#')[0]);
-  const ref = encodeURIComponent(location.origin);
-  let deeplink="";
-  if(app==="phantom")   deeplink=`https://phantom.app/ul/browse/${url}?ref=${ref}`;         // Phantom browse. Kaynak dokümantasyon. 2
-  if(app==="solflare")  deeplink=`https://solflare.com/ul/v1/browse?url=${url}&ref=${ref}`; // Solflare browse. 3
-  if(app==="backpack")  deeplink=`https://backpack.app/ul/browse/${url}`;                   // Backpack’in injection’ı mevcut; browse için genel şema.
-  location.href = deeplink;
-}
+  function get(){ if(!adapter) throw new Error("Wallet not connected"); return {adapter, publicKey}; }
+  function ready(){ return !!adapter; }
 
-modal.on(async (w)=>{
-  // masaüstünde extension varsa direkt bağlan; yoksa cüzdanın içinde aç
-  const hasExt = !!detectProvider();
-  if(hasExt){ modal.show(); await connectAuto(); document.getElementById("walletModal").style.display="none"; }
-  else{ openInWallet(w); }
-});
+  function init(){
+    bind();
+    const f=detect();
+    if(f && f.adapter.publicKey){
+      adapter=f.adapter; publicKey=f.adapter.publicKey;
+      const b58=publicKey.toString?publicKey.toString():String(publicKey);
+      setStatus("Hazır"); setAddr(short(b58)); setBtn(short(b58)); window.__zuzuWallet={adapter,publicKey};
+    } else {
+      setStatus("Hazır (cüzdan bekleniyor)");
+    }
+  }
+  return {init,get,ready,start,disconnect};
+})();
+document.readyState==="loading" ? document.addEventListener("DOMContentLoaded", Solana.init) : Solana.init();
 
-document.getElementById("connectBtn")?.addEventListener("click", ()=>modal.show());
-document.getElementById("btnConnect")?.addEventListener("click", ()=>modal.show());
-document.getElementById("btnDisconnect")?.addEventListener("click", disconnect);
+/* ============= SOL / USDT (SPL) Ödeme ============= */
+const Rpc = new solanaWeb3.Connection("https://api.mainnet-beta.solana.com","confirmed");
 
-// Solana RPC
-function getConn(){ return connection || (connection = new solanaWeb3.Connection("https://api.mainnet-beta.solana.com","confirmed")); }
-
-// SOL gönder
 async function sendSOL(){
-  if(!provider && !await connectAuto()) return;
-  const amount=parseFloat((document.getElementById("amountSOL").value||"0").toString().replace(/[^\d.]/g,""))||0;
-  if(amount<=0) return alert("Geçerli SOL miktarı gir.");
-  const from = new solanaWeb3.PublicKey(walletPubkey);
-  const to   = new solanaWeb3.PublicKey(CFG.ownerSol);
-  const lamports = Math.round(amount * solanaWeb3.LAMPORTS_PER_SOL);
-  const tx = new solanaWeb3.Transaction().add(
-    solanaWeb3.SystemProgram.transfer({fromPubkey:from, toPubkey:to, lamports})
-  );
-  tx.feePayer = from;
-  tx.recentBlockhash = (await getConn().getLatestBlockhash()).blockhash;
-  const signed = await provider.signAndSendTransaction(tx);
-  alert("Gönderildi! TX: "+(signed.signature||signed));
+  try{
+    if(!Solana.ready()) await Solana.start();
+    const {adapter, publicKey} = Solana.get();
+    const from = publicKey;
+    const to   = new solanaWeb3.PublicKey(CFG.ownerSol);
+    const amount=parseFloat((document.getElementById("amountSOL").value||"0").toString().replace(/[^\d.]/g,""))||0;
+    if(amount<=0) return alert("Geçerli SOL miktarı gir.");
+    const tx = new solanaWeb3.Transaction().add(
+      solanaWeb3.SystemProgram.transfer({fromPubkey:from, toPubkey:to, lamports: Math.round(amount*solanaWeb3.LAMPORTS_PER_SOL)})
+    );
+    tx.feePayer = from;
+    const {blockhash,lastValidBlockHeight}=await Rpc.getLatestBlockhash();
+    tx.recentBlockhash = blockhash;
+    const {signature} = await adapter.signAndSendTransaction(tx);
+    await Rpc.confirmTransaction({signature, blockhash, lastValidBlockHeight}, "confirmed");
+    alert("Success!\nTx: "+signature);
+  }catch(e){ console.error(e); alert("SOL gönderimi başarısız: "+(e.message||e)); }
 }
-
-// USDT (SPL) gönder
 async function sendUSDT(){
-  if(!provider && !await connectAuto()) return;
-  const amount=parseFloat((document.getElementById("amountUSDT").value||"0").toString().replace(/[^\d.]/g,""))||0;
-  if(amount<=0) return alert("Geçerli USDT miktarı gir.");
-  const fromPk = new solanaWeb3.PublicKey(walletPubkey);
-  const toPk   = new solanaWeb3.PublicKey(CFG.ownerSol);
-  const mint   = new solanaWeb3.PublicKey(CFG.usdtMint);
+  try{
+    if(!Solana.ready()) await Solana.start();
+    const {adapter, publicKey}=Solana.get();
+    const amount=parseFloat((document.getElementById("amountUSDT").value||"0").toString().replace(/[^\d.]/g,""))||0;
+    if(amount<=0) return alert("Geçerli USDT miktarı gir.");
+    const mint = new solanaWeb3.PublicKey(CFG.usdtMint);
+    const toOwner = new solanaWeb3.PublicKey(CFG.ownerSol);
 
-  const fromAta = await splToken.getAssociatedTokenAddress(mint, fromPk);
-  const toAta   = await splToken.getAssociatedTokenAddress(mint, toPk, false);
+    const fromAta = await splToken.getAssociatedTokenAddress(mint, publicKey);
+    const toAta   = await splToken.getAssociatedTokenAddress(mint, toOwner);
 
-  const ix = [];
-  const toInfo = await getConn().getAccountInfo(toAta);
-  if(!toInfo){
-    ix.push(splToken.createAssociatedTokenAccountInstruction(
-      fromPk, toAta, toPk, mint
-    ));
-  }
-  const dec = 6; // USDT
-  const qty = BigInt(Math.round(amount * 10**dec));
-  ix.push(splToken.createTransferInstruction(fromAta, toAta, fromPk, qty));
+    const ix=[];
+    const toInfo=await Rpc.getAccountInfo(toAta);
+    if(!toInfo){
+      ix.push(splToken.createAssociatedTokenAccountInstruction(
+        publicKey, toAta, toOwner, mint
+      ));
+    }
+    const qty = BigInt(Math.round(amount*1e6)); // USDT 6 decimals
+    ix.push(splToken.createTransferInstruction(fromAta, toAta, publicKey, qty));
 
-  const tx = new solanaWeb3.Transaction().add(...ix);
-  tx.feePayer = fromPk;
-  tx.recentBlockhash = (await getConn().getLatestBlockhash()).blockhash;
+    const tx = new solanaWeb3.Transaction().add(...ix);
+    tx.feePayer = publicKey;
+    const {blockhash,lastValidBlockHeight}=await Rpc.getLatestBlockhash();
+    tx.recentBlockhash = blockhash;
 
-  const signed = await provider.signAndSendTransaction(tx);
-  alert("Gönderildi! TX: "+(signed.signature||signed));
+    const {signature} = await adapter.signAndSendTransaction(tx);
+    await Rpc.confirmTransaction({signature,blockhash,lastValidBlockHeight},"confirmed");
+    alert("Success!\nTx: "+signature);
+  }catch(e){ console.error(e); alert("USDT gönderimi başarısız: "+(e.message||e)); }
 }
-
 document.getElementById("sendSOL")?.addEventListener("click", sendSOL);
 document.getElementById("sendUSDT")?.addEventListener("click", sendUSDT);
 
-// Ticker görünürlük küçük hack
-(function ensureTickerVisible(){
-  const track=document.getElementById('exTrack'); if(!track) return;
-  track.style.willChange='transform'; track.style.transform='translateX(0)'; setTimeout(()=>{ track.style.transform=''; },50);
+/* ============= Stake hesaplayıcı ============= */
+(function setupCalc(){
+  const amount=document.getElementById("stakeAmount");
+  const duration=document.getElementById("stakeDuration");
+  const nft=document.getElementById("nftBoost");
+  const early=document.getElementById("earlyBoost");
+  const total=document.getElementById("resultTotal");
+  const monthly=document.getElementById("resultMonthly");
+  const boost=document.getElementById("resultBoost");
+  if(!amount||!duration||!nft||!early||!total||!monthly||!boost) return;
+
+  const apy={30:12,90:24,180:40,365:65,540:85};
+  const calc=()=>{
+    const a=parseFloat((amount.value||"0").toString().replace(/[^\d.]/g,""))||0;
+    const d=parseInt(duration.value,10)||0;
+    const base=apy[d]||0;
+    const nb=parseFloat(nft.value||"0"), eb=parseFloat(early.value||"0");
+    const tb=nb+eb;
+    const gross=a*((base+tb)/100)*(d/365);
+    const m=gross/(d/30);
+    total.textContent=(gross.toFixed(2))+" ZUZU";
+    monthly.textContent=(m.toFixed(2))+" ZUZU";
+    boost.textContent="+"+tb+"%";
+  };
+  document.getElementById("calcBtn")?.addEventListener("click",calc);
+  calc();
 })();
 </script>
-
 </body>
 </html>
