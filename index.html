@@ -5,20 +5,16 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ZUZUCOIN — Pre-Sale • Stake • NFT Rewards</title>
 <meta name="theme-color" content="#0e1522">
-
-<!-- Security meta -->
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
 
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- NAV -->
 <header class="z-nav">
   <div class="z-container z-nav-inner">
     <a class="brand" href="#">
@@ -46,8 +42,6 @@
 </header>
 
 <main>
-
-<!-- HERO + COUNTDOWN + HERO LOGO -->
 <section class="z-section hero-2">
   <div class="z-container grid-2">
     <div>
@@ -56,19 +50,15 @@
       <p class="lead" data-i="hero_lead">
         Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high <b>utility</b>.
       </p>
-
       <div class="hero-cta">
         <a href="#stake" class="z-btn z-btn-primary" data-i="cta_stake">Start Staking</a>
         <a href="#nft" class="z-btn z-btn-ghost" data-i="cta_nft">NFT Rewards</a>
       </div>
-
       <div class="z-chip-row">
         <a id="thirdwebNFTRoute" class="z-chip" href="#" target="_blank" rel="noopener" data-i="collection_page">Collection Page</a>
         <span class="z-chip" data-i="contract">Contract:</span>
         <span class="z-chip" id="contractDisplay">—</span>
       </div>
-
-      <!-- Countdown -->
       <div class="counter" style="margin-top:14px">
         <div class="flip"><div id="cdDays" class="num">00</div><small data-i="days">DAYS</small></div>
         <div class="flip"><div id="cdHours" class="num">00</div><small data-i="hours">HOURS</small></div>
@@ -86,7 +76,6 @@
   </div>
 </section>
 
-<!-- PRE-SALE -->
 <section id="presale" class="z-section presale">
   <div class="z-container">
     <div class="section-head">
@@ -94,7 +83,7 @@
       <p  data-i="presale_lead">Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.</p>
     </div>
 
-    <!-- Ağ seçimi (EVM) — gizlenecek, HTML kalır -->
+    <!-- EVM kutusu HTML olarak kalıyor ama JS ile gizliyoruz -->
     <div class="card" style="margin-bottom:12px">
       <div class="buybox">
         <div class="row">
@@ -115,7 +104,7 @@
       </div>
     </div>
 
-    <!-- SOLANA CÜZDAN -->
+    <!-- SOLANA WALLET -->
     <div class="card" id="solanaWalletBox" style="margin-bottom:12px">
       <div class="buybox">
         <div class="row" style="align-items:center; gap:12px">
@@ -123,7 +112,6 @@
           <button id="btnDisconnect" class="z-btn z-btn-ghost" disabled>Disconnect</button>
           <span id="walletAddr" class="z-chip">Not connected</span>
         </div>
-
         <div class="row">
           <div>
             <label>SOL ile satın al</label>
@@ -137,7 +125,7 @@
           </div>
         </div>
 
-        <!-- Referans sistemi -->
+        <!-- Referral -->
         <div class="row">
           <div style="flex:1">
             <label>Referral (Invite & Earn)</label>
@@ -154,14 +142,14 @@
       </div>
     </div>
 
-    <!-- Haftalara göre fiyat kutuları -->
+    <!-- Haftalara göre fiyat -->
     <div class="presale-grid">
       <div class="card buybox">
         <h4 data-i="w1">Week 1 (Cheapest)</h4>
         <div class="price">1 ZUZU = <b id="p0">0.0050</b> USDT</div>
         <div class="cost"><span data-i="cost">Cost:</span> <b id="c0">0</b> USDT</div>
         <div class="buy">
-          <button class="z-btn z-btn-primary" data-week="0" id="buyW0" data-i="buy">Buy</button>
+          <button class="z-btn z-btn-primary" id="buyW0" data-i="buy">Buy</button>
           <button class="z-btn z-btn-ghost">Details</button>
         </div>
       </div>
@@ -170,7 +158,7 @@
         <div class="price">1 ZUZU = <b id="p1">0.0065</b> USDT</div>
         <div class="cost"><span data-i="cost">Cost:</span> <b id="c1">0</b> USDT</div>
         <div class="buy">
-          <button class="z-btn z-btn-primary" data-week="1" id="buyW1" data-i="buy">Buy</button>
+          <button class="z-btn z-btn-primary" id="buyW1" data-i="buy">Buy</button>
           <button class="z-btn z-btn-ghost">Details</button>
         </div>
       </div>
@@ -179,7 +167,7 @@
         <div class="price">1 ZUZU = <b id="p2">0.0080</b> USDT</div>
         <div class="cost"><span data-i="cost">Cost:</span> <b id="c2">0</b> USDT</div>
         <div class="buy">
-          <button class="z-btn z-btn-primary" data-week="2" id="buyW2" data-i="buy">Buy</button>
+          <button class="z-btn z-btn-primary" id="buyW2" data-i="buy">Buy</button>
           <button class="z-btn z-btn-ghost">Details</button>
         </div>
       </div>
@@ -188,7 +176,7 @@
         <div class="price">1 ZUZU = <b id="p3">0.0100</b> USDT</div>
         <div class="cost"><span data-i="cost">Cost:</span> <b id="c3">0</b> USDT</div>
         <div class="buy">
-          <button class="z-btn z-btn-primary" data-week="3" id="buyW3" data-i="buy">Buy</button>
+          <button class="z-btn z-btn-primary" id="buyW3" data-i="buy">Buy</button>
           <button class="z-btn z-btn-ghost">Details</button>
         </div>
       </div>
@@ -217,7 +205,6 @@
   </div>
 </section>
 
-<!-- STAKE -->
 <section id="stake" class="z-section">
   <div class="z-container">
     <div class="section-head">
@@ -281,7 +268,6 @@
   </div>
 </section>
 
-<!-- NFT REWARDS -->
 <section id="nft" class="z-section">
   <div class="z-container">
     <div class="section-head">
@@ -294,7 +280,6 @@
   </div>
 </section>
 
-<!-- TOKENOMICS -->
 <section id="tokenomics" class="z-section">
   <div class="z-container">
     <div class="section-head">
@@ -326,7 +311,6 @@
     </div>
   </div>
 </section>
-
 </main>
 
 <footer class="z-footer">
@@ -341,12 +325,12 @@
   </div>
 </footer>
 
-<!-- Solana core libs: MUTLAKA script.js'den ÖNCE -->
-<script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@solana/spl-token@0.4.6/lib/index.iife.min.js"></script>
+<!-- Solana libs (defer + sırayla) -->
+<script defer src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@solana/spl-token@0.4.6/lib/index.iife.min.js"></script>
 
-<!-- Proje script'in -->
-<script src="script.js?v=5"></script>
-<script src="solana.js?v=5"></script>
+<!-- Proje scriptleri -->
+<script defer src="script.js?v=7"></script>
+<script defer src="solana.js?v=7"></script>
 </body>
 </html>
