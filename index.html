@@ -325,12 +325,20 @@
   </div>
 </footer>
 
-<!-- Solana libs (defer + sırayla) -->
-<script defer src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/@solana/spl-token@0.4.6/lib/index.iife.min.js"></script>
+<!-- Hata yakalayıcı (beklenmedik sorunları pop-up gösterir) -->
+<script>
+  window.onerror=function(m,s,l,c,e){ alert("JS Error: "+m); };
+</script>
 
-<!-- Proje scriptleri -->
-<script defer src="script.js?v=7"></script>
-<script defer src="solana.js?v=7"></script>
+<!-- Solana kütüphaneleri (defer) -->
+<script defer src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.3/lib/index.iife.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@solana/spl-token@0.4.6/lib/index.iife.min.js" crossorigin="anonymous"></script>
+
+<!-- Uygulama dosyaları: yeni isim (cache kırar) -->
+<script defer src="app.v1.js"></script>
+<script defer src="solana.v1.js"></script>
+
+<!-- EVM kutusunu garanti gizle (JS çalışmasa bile) -->
+<style>.presale .z-container > .card:first-of-type{display:none!important}</style>
 </body>
 </html>
