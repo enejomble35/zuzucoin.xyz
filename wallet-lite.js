@@ -1,20 +1,22 @@
 (function () {
-  // ------- helpers
-  const AC_KEY = "autoconnect"; // URL içinde hash/search anahtarı (#autoconnect=phantom)
-  function short(b){ return b ? (b.slice(0,4)+"..."+b.slice(-4)) : ""; }
-  function setStatus(t){ var s=document.getElementById("solanaStatus"); if(s) s.textContent=t; }
-  function setAddr(a){ var el=document.getElementById("walletAddr"); if(el) el.textContent=a||"Not connected"; }
-  function setConnectLabel(txt){
-    var b=document.getElementById("connectBtn");
-    if (b) b.textContent = txt || "Connect Wallet";
-  }
+  const AC_KEY = "autoconnect";        // #autoconnect=phantom|solflare|backpack
+  const WAIT_MS = 9000;                // provider enjekte olana kadar en fazla bekleme
+  const TICK_MS = 250;                 // yoklama aralığı
+
+  // ---------- tiny ui helpers
+  const $ = (id)=>document.getElementById(id);
+  const short = (a)=>a ? (a.slice(0,4)+"..."+a.slice(-4)) : "";
+  function setStatus(t){ const el=$("solanaStatus"); if(el) el.textContent=t; }
+  function setAddr(a){ const el=$("walletAddr"); if(el) el.textContent=a||"Not connected"; }
+  function setConnectLabel(t){ const b=$("connectBtn"); if(b) b.textContent=t||"Connect Wallet"; }
+
+  // ---------- env
   function isMobileWeb(){
-    var ua = navigator.userAgent || "";
-    var isMobile = /Android|iPhone|iPad|iPod/i.test(ua);
-    var inWallet = /Phantom/i.test(ua) || /Solflare/i.test(ua) || /Backpack/i.test(ua);
-    return isMobile && !inWallet;
+    const ua = navigator.userAgent||"";
+    const m  = /Android|iPhone|iPad|iPod/i.test(ua);
+    const inWallet = /Phantom/i.test(ua) || /Solflare/i.test(ua) || /Backpack/i.test(ua);
+    return m && !inWallet;
   }
-  // hangi cüzdan enjekte?
   function detect(){
     if (window.phantom && window.phantom.solana) return {name:"phantom", adapter:window.phantom.solana};
     if (window.solana && (window.solana.isPhantom||window.solana.isBackpack)) return {name:(window.solana.isBackpack?"backpack":"phantom"), adapter:window.solana};
@@ -23,135 +25,144 @@
     return null;
   }
 
-  // ------- modal
-  var sheet = null;
-  function openSheet(){ if(!sheet) sheet=document.getElementById("walletSheet"); if(sheet) sheet.style.display="block"; }
+  // ---------- modal
+  let sheet=null;
+  function openSheet(){ if(!sheet) sheet=$("walletSheet"); if(sheet) sheet.style.display="block"; }
   function closeSheet(){ if(sheet) sheet.style.display="none"; }
 
-  // Deeplink: dapp URL’ine #autoconnect=<wallet> ekleyip wallet’ın “browse” linkiyle açıyoruz
+  // dapp URL’ine #autoconnect paramı ekle
   function withAutoConnect(url, wallet){
     try{
       const u = new URL(url);
-      // hash’e ekle (ör: #autoconnect=phantom)
       const h = new URLSearchParams((u.hash||"").replace(/^#/, ""));
       h.set(AC_KEY, wallet);
       u.hash = "#"+h.toString();
       return u.toString();
-    }catch(e){ return url + (url.includes("#")?"&":"#") + AC_KEY+"="+wallet; }
+    }catch(_){
+      return url + (url.includes("#")?"&":"#") + AC_KEY+"="+wallet;
+    }
   }
+  // wallet deeplink
   function deeplinkFor(name){
-    // dapp url’ini autoconnect ile hazırlıyoruz
-    const target = withAutoConnect(window.location.href, name);
-    const encoded = encodeURIComponent(target);
-    if (name==="phantom")  return "https://phantom.app/ul/browse/"+encoded;
-    if (name==="solflare") return "https://solflare.com/ul/browse/"+encoded;
-    if (name==="backpack") return "https://backpack.app/ul/browse/"+encoded;
+    const target = withAutoConnect(location.href, name);
+    const enc = encodeURIComponent(target);
+    if (name==="phantom")  return "https://phantom.app/ul/browse/"+enc;
+    if (name==="solflare") return "https://solflare.com/ul/browse/"+enc;
+    if (name==="backpack") return "https://backpack.app/ul/browse/"+enc;
     return null;
   }
 
-  // ------- connect logic
-  var current=null, pubkey=null;
+  // ---------- connect core
+  let current=null;
 
-  async function doConnectNow(adapter){
-    const res = await adapter.connect();
+  async function doConnect(adapter){
+    const res = await adapter.connect();               // Phantom/Solflare prompt’u burada gelir
     const key = (res && res.publicKey) ? res.publicKey : adapter.publicKey;
     const b58 = key && key.toString ? key.toString() : String(key||"");
-    setStatus("Bağlandı");
-    setConnectLabel(short(b58));
-    setAddr(short(b58));
+    setStatus("Bağlandı"); setConnectLabel(short(b58)); setAddr(short(b58));
     window.__zuzuWallet = {adapter, publicKey:key};
   }
 
-  async function doConnectPrefer(name){
-    try{
-      // 1) Enjekte varsa bağlan (masaüstü veya wallet webview)
+  // provider gelene kadar bekle & bağlan
+  async function waitAndConnect(expectName){
+    const t0 = Date.now();
+    while (Date.now()-t0 < WAIT_MS) {
       const found = detect();
-      if(found && (!name || name===found.name)){
+      if (found && (!expectName || found.name===expectName)) {
         current = found.adapter;
-        if(current.isConnected && current.publicKey){
-          const b58 = current.publicKey.toString ? current.publicKey.toString() : String(current.publicKey);
+        try { await doConnect(current); } catch(e){ console.warn(e); setStatus("Bağlantı reddedildi"); }
+        return true;
+      }
+      await new Promise(r=>setTimeout(r,TICK_MS));
+    }
+    return false;
+  }
+
+  async function startConnectFlow(choice){
+    try{
+      // 1) Enjekte varsa direkt bağlan
+      const found = detect();
+      if (found && (!choice || found.name===choice)) {
+        current = found.adapter;
+        if (current.isConnected && current.publicKey) {
+          const b58 = current.publicKey.toString?current.publicKey.toString():String(current.publicKey);
           setStatus("Bağlandı"); setConnectLabel(short(b58)); setAddr(short(b58));
           window.__zuzuWallet = {adapter:current, publicKey:current.publicKey};
-          closeSheet();
-          return;
+        } else {
+          await doConnect(current);
         }
-        await doConnectNow(current);
         closeSheet();
         return;
       }
 
-      // 2) Mobil tarayıcı (enjekte yok): seçilen cüzdanın uygulamasında ayni URL’yi aç (autoconnect ile)
-      if(isMobileWeb()){
-        const link = deeplinkFor(name || "phantom");
-        if(link){ window.location.href = link; }
-        else alert("Wallet app link not available.");
+      // 2) Mobil tarayıcı → wallet app’e deeplink + autoconnect işareti
+      if (isMobileWeb()) {
+        const link = deeplinkFor(choice||"phantom");
+        if (link) {
+          // iOS/Android bazı durumlarda geç açılıyor; kullanıcı geri dönerse tekrar deneyeceğiz
+          location.href = link;
+        } else {
+          alert("Wallet app link not available.");
+        }
         return;
       }
 
       // 3) Masaüstünde eklenti yok
-      alert("Please install "+(name?name:"a Solana wallet")+" (Phantom / Solflare / Backpack).");
-    }catch(e){
-      console.warn(e); alert("Wallet connect error.");
+      alert("Please install "+(choice?choice:"a Solana wallet")+" (Phantom / Solflare / Backpack).");
+    }catch(err){
+      console.warn(err); alert("Wallet connect error.");
     }
   }
 
   function disconnect(){
-    try{ if(current && current.disconnect) current.disconnect(); }catch(e){}
-    current=null; pubkey=null;
-    setStatus("Hazır (cüzdan bekleniyor)"); setConnectLabel("Connect Wallet"); setAddr("Not connected");
+    try{ if(current && current.disconnect) current.disconnect(); }catch(_){}
+    current=null; setStatus("Hazır (cüzdan bekleniyor)"); setConnectLabel("Connect Wallet"); setAddr("Not connected");
   }
 
-  // ------- UI bindings
+  // ---------- bindings
   function bind(){
-    // connect button -> seçim penceresi
-    var c = document.getElementById("connectBtn");
-    if(c){
-      c.addEventListener("click", function(){
-        openSheet();
-      });
-    }
-
-    var bp = document.getElementById("btnDisconnect");
-    if(bp) bp.addEventListener("click", disconnect);
-
-    var ph = document.getElementById("wsPhantom");
-    var sf = document.getElementById("wsSolflare");
-    var bk = document.getElementById("wsBackpack");
-    var cl = document.getElementById("wsClose");
-
-    if(ph) ph.addEventListener("click", ()=>doConnectPrefer("phantom"));
-    if(sf) sf.addEventListener("click", ()=>doConnectPrefer("solflare"));
-    if(bk) bk.addEventListener("click", ()=>doConnectPrefer("backpack"));
+    const c = $("connectBtn"); if(c) c.addEventListener("click", openSheet);
+    const d = $("btnDisconnect"); if(d) d.addEventListener("click", disconnect);
+    const ph=$("wsPhantom"), sf=$("wsSolflare"), bk=$("wsBackpack"), cl=$("wsClose");
+    if(ph) ph.addEventListener("click", ()=>startConnectFlow("phantom"));
+    if(sf) sf.addEventListener("click", ()=>startConnectFlow("solflare"));
+    if(bk) bk.addEventListener("click", ()=>startConnectFlow("backpack"));
     if(cl) cl.addEventListener("click", closeSheet);
+
+    // Uygulama arkaplandan öne geldiğinde tekrar dene (deeplink dönüşü)
+    document.addEventListener("visibilitychange", ()=>{
+      if (!document.hidden) {
+        const want = new URLSearchParams((location.hash||"").replace(/^#/, "")).get(AC_KEY);
+        if (want && !window.__zuzuWallet) waitAndConnect(want);
+      }
+    });
   }
 
-  // ------- boot (sayfa wallet içi açıldıysa otomatik connect)
+  // ---------- boot
   async function boot(){
     bind();
 
-    // URL’de #autoconnect=<wallet> var mı?
-    const hashParams = new URLSearchParams((location.hash||"").replace(/^#/, ""));
-    const searchParams = new URLSearchParams(location.search||"");
-    const want = hashParams.get(AC_KEY) || searchParams.get(AC_KEY);
-
+    // halihazırda bağlı mı?
     const found = detect();
-    if(found && found.adapter.publicKey){
-      // zaten bağlı
-      const b58 = found.adapter.publicKey.toString ? found.adapter.publicKey.toString() : String(found.adapter.publicKey);
+    if (found && found.adapter.publicKey) {
+      const b58 = found.adapter.publicKey.toString?found.adapter.publicKey.toString():String(found.adapter.publicKey);
       setStatus("Hazır"); setConnectLabel(short(b58)); setAddr(short(b58));
       window.__zuzuWallet = {adapter:found.adapter, publicKey:found.adapter.publicKey};
-    }else if (found && want){
-      // wallet webview’da açıldık ve autoconnect işaretlenmiş → otomatik bağlanmayı dene
-      try{
-        await doConnectNow(found.adapter);
-      }catch(e){
-        console.warn(e);
-        setStatus("Bağlantı reddedildi");
-      }
-    }else{
+      return;
+    }
+
+    // autoconnect bayrağı var mı? (wallet app’te açıldı)
+    const pHash = new URLSearchParams((location.hash||"").replace(/^#/, ""));
+    const want = pHash.get(AC_KEY);
+    if (want) {
+      setStatus("Cüzdan bekleniyor…");
+      const ok = await waitAndConnect(want);   // provider enjekte olana kadar bekle
+      if (!ok) setStatus("Cüzdan görünmüyor. Uygulama içinde açtığınızdan emin olun.");
+    } else {
       setStatus("Hazır (cüzdan bekleniyor)");
     }
   }
 
-  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", boot); else boot();
+  if (document.readyState==="loading") document.addEventListener("DOMContentLoaded", boot);
+  else boot();
 })();
