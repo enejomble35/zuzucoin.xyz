@@ -1,20 +1,18 @@
+"use strict";
+
 /* =========================
    ZUZU – Global Config
 ========================= */
 const CONFIG = {
-  // EVM alanlarını saklıyoruz ama kullanmıyoruz
   ownerAddress: "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",
   contractAddress: "0xF2bbbEcB417725813BF5E940d678793fACDa9729",
   collectionUrl: "https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts",
 
-  // ✅ Solana kasası
   treasurySolana: "31Cjkx2PA5oMapNxxGAiZhuHDcvAyQ7hogqB8Hx6f1pW",
 
-  // ✅ Sabit hedef tarih istersen buraya ISO yaz (örn "2025-12-01T18:00:00Z").
-  // Boş bırakırsan ilk ziyarette 50 günlük sayaç basar ve localStorage'a kalıcı yazar.
+  // İstersen sabit tarih ver: "2025-12-01T18:00:00Z"
   launchAtISO: "",
 
-  // Haftalık fiyatlar (USDT)
   weekPrices: [0.0050, 0.0065, 0.0080, 0.0100],
   nfts: [
     { id:0, name:"ZUZU Hero",      rarity:"Epic",      supply:200 },
@@ -31,7 +29,7 @@ const CONFIG = {
 };
 
 /* =========================
-   Çoklu Dil (EN/TR/FR/ES)
+   Çoklu Dil
 ========================= */
 const I = {
   en:{nav_presale:"Pre-Sale",nav_stake:"Stake",nav_nft:"NFT Rewards",nav_roadmap:"Roadmap",nav_token:"Tokenomics",connect:"Connect Wallet",
@@ -80,10 +78,12 @@ const I = {
       road_lead:"Plan centrado en comunidad, staking, drops NFT y listados."}
 };
 function applyLang(lang="en"){
-  document.querySelectorAll("[data-i]").forEach(el=>{
-    const k = el.getAttribute("data-i");
-    if (I[lang] && I[lang][k]) el.innerHTML = I[lang][k];
-  });
+  try{
+    document.querySelectorAll("[data-i]").forEach(el=>{
+      const k = el.getAttribute("data-i");
+      if (I[lang] && I[lang][k]) el.innerHTML = I[lang][k];
+    });
+  }catch{}
 }
 (function initLang(){
   const sel = document.getElementById("langSel");
@@ -93,39 +93,38 @@ function applyLang(lang="en"){
 })();
 
 /* =========================
-   Countdown — sabit tarih ya da kalıcı 50g
+   Countdown — kalıcı
 ========================= */
 const DAY = 86400000;
-const LS_KEYS = { launch:"zuzu_launch_at", saleStart:"zuzu_sale_start" };
-function persistTs(key, ts){
-  const v = Number(localStorage.getItem(key));
-  if (Number.isFinite(v) && v>0) return v;
-  localStorage.setItem(key, String(ts));
-  return ts;
-}
-const LAUNCH_AT = (() => {
-  if (CONFIG.launchAtISO) return new Date(CONFIG.launchAtISO).getTime();
-  const first = Date.now() + 50*DAY;
-  return persistTs(LS_KEYS.launch, first);
+const LS = { launch:"zuzu_launch_at", saleStart:"zuzu_sale_start" };
+function setOnce(key, value){ const v=Number(localStorage.getItem(key)); if(Number.isFinite(v)&&v>0) return v; localStorage.setItem(key,String(value)); return value; }
+
+const LAUNCH_AT = (()=>{
+  try{
+    if (CONFIG.launchAtISO) return new Date(CONFIG.launchAtISO).getTime();
+    return setOnce(LS.launch, Date.now() + 50*DAY);
+  }catch{ return Date.now() + 50*DAY; }
 })();
-const SALE_START = persistTs(LS_KEYS.saleStart, Date.now());
+const SALE_START = (()=>{
+  try{ return setOnce(LS.saleStart, Date.now()); }catch{ return Date.now(); }
+})();
 
 function tick(){
-  const left = Math.max(0, LAUNCH_AT - Date.now());
-  const d = Math.floor(left / DAY);
-  const h = Math.floor((left % DAY) / 3600000);
-  const m = Math.floor((left % 3600000) / 60000);
-  const s = Math.floor((left % 60000) / 1000);
-  const pad = n=>n.toString().padStart(2,"0");
-  ["cdDays","cdHours","cdMins","cdSecs"].forEach((id,i)=>{
-    const v=[d,h,m,s][i], el=document.getElementById(id);
-    if(el && el.textContent!==pad(v)) el.textContent = pad(v);
-  });
+  try{
+    const left = Math.max(0, LAUNCH_AT - Date.now());
+    const d = Math.floor(left / DAY);
+    const h = Math.floor((left % DAY) / 3600000);
+    const m = Math.floor((left % 3600000) / 60000);
+    const s = Math.floor((left % 60000) / 1000);
+    const pad = n=>n.toString().padStart(2,"0");
+    const ids = ["cdDays","cdHours","cdMins","cdSecs"];
+    [d,h,m,s].forEach((v,i)=>{ const el=document.getElementById(ids[i]); if(el) el.textContent = pad(v); });
+  }catch{}
 }
 tick(); setInterval(tick, 1000);
 
 /* =========================
-   Presale – aktif hafta
+   Presale — aktif hafta
 ========================= */
 function getActiveWeek(){
   const days = Math.floor((Date.now() - SALE_START) / DAY);
@@ -135,13 +134,15 @@ function getActiveWeek(){
   return 3;
 }
 function updateActiveWeekUI(){
-  const w = getActiveWeek();
-  for(let i=0;i<4;i++){
-    const btn = document.getElementById("buyW"+i);
-    if (!btn) continue;
-    if (i === w){ btn.disabled=false; btn.classList.add("active-week"); }
-    else { btn.disabled=true; btn.classList.remove("active-week"); }
-  }
+  try{
+    const w = getActiveWeek();
+    for(let i=0;i<4;i++){
+      const btn = document.getElementById("buyW"+i);
+      if (!btn) continue;
+      if (i === w){ btn.disabled=false; btn.classList.add("active-week"); }
+      else { btn.disabled=true; btn.classList.remove("active-week"); }
+    }
+  }catch{}
 }
 updateActiveWeekUI();
 
@@ -149,89 +150,103 @@ updateActiveWeekUI();
    Maliyet hesap
 ========================= */
 function updateCosts(){
-  const qty = parseFloat((document.getElementById("buyAmount")?.value||"0").toString().replace(/[^\d.]/g,"")) || 0;
-  CONFIG.weekPrices.forEach((p,i)=>{
-    const cost = qty * p;
-    const priceEl = document.getElementById("p"+i);
-    const costEl  = document.getElementById("c"+i);
-    if (priceEl) priceEl.textContent = p.toFixed(4);
-    if (costEl)  costEl.textContent  = (isFinite(cost)?cost:0).toLocaleString();
-  });
+  try{
+    const qty = parseFloat((document.getElementById("buyAmount")?.value||"0").toString().replace(/[^\d.]/g,"")) || 0;
+    CONFIG.weekPrices.forEach((p,i)=>{
+      const cost = qty * p;
+      const priceEl = document.getElementById("p"+i);
+      const costEl  = document.getElementById("c"+i);
+      if (priceEl) priceEl.textContent = p.toFixed(4);
+      if (costEl)  costEl.textContent  = (isFinite(cost)?cost:0).toLocaleString();
+    });
+  }catch{}
 }
 document.getElementById("buyAmount")?.addEventListener("input", updateCosts);
 updateCosts();
 
 /* =========================
-   NFT grid / Calc / Links (aynı)
+   NFT Grid
 ========================= */
 (function renderNFTs(){
-  const g = document.getElementById("nftGrid");
-  if (!g) return;
-  let html = "";
-  CONFIG.nfts.forEach(n=>{
-    const img = `assets/images/mask/${n.id}.png`;
-    const link = `${CONFIG.collectionUrl}?tokenId=${n.id}`;
-    html += `
-    <div class="nft">
-      <img src="${img}" alt="${n.name}" loading="lazy"
-           style="aspect-ratio:1/1;object-fit:contain;background:#0f1a30;padding:8px;border-bottom:1px solid #1d2d50"
-           onerror="this.style.display='none'">
-      <div class="meta">
-        <div>
-          <b>${n.name}</b>
-          <div style="color:#9fb6e6;font-size:.9rem">Supply: ${n.supply.toLocaleString()}</div>
+  try{
+    const g = document.getElementById("nftGrid");
+    if (!g) return;
+    let html = "";
+    CONFIG.nfts.forEach(n=>{
+      const img = `assets/images/mask/${n.id}.png`;
+      const link = `${CONFIG.collectionUrl}?tokenId=${n.id}`;
+      html += `
+      <div class="nft">
+        <img src="${img}" alt="${n.name}" loading="lazy"
+             style="aspect-ratio:1/1;object-fit:contain;background:#0f1a30;padding:8px;border-bottom:1px solid #1d2d50"
+             onerror="this.style.display='none'">
+        <div class="meta">
+          <div>
+            <b>${n.name}</b>
+            <div style="color:#9fb6e6;font-size:.9rem">Supply: ${n.supply.toLocaleString()}</div>
+          </div>
+          <span class="tag">${n.rarity}</span>
         </div>
-        <span class="tag">${n.rarity}</span>
-      </div>
-      <a class="z-btn z-btn-ghost" style="margin:0 10px 10px" href="${link}" target="_blank" rel="noopener">View ↗</a>
-    </div>`;
-  });
-  g.innerHTML = html;
-})();
-(function setupCalc(){
-  const amount=document.getElementById("stakeAmount");
-  const duration=document.getElementById("stakeDuration");
-  const nft=document.getElementById("nftBoost");
-  const early=document.getElementById("earlyBoost");
-  const total=document.getElementById("resultTotal");
-  const monthly=document.getElementById("resultMonthly");
-  const boost=document.getElementById("resultBoost");
-  if(!amount||!duration||!nft||!early||!total||!monthly||!boost) return;
-
-  const apy={30:12,90:24,180:40,365:65,540:85};
-  const calc=()=>{
-    const a=parseFloat((amount.value||"0").toString().replace(/[^\d.]/g,""))||0;
-    const d=parseInt(duration.value,10)||0;
-    const base=apy[d]||0;
-    const tb=(parseFloat(nft.value||"0") + parseFloat(early.value||"0"));
-    const gross=a*((base+tb)/100)*(d/365);
-    const m=gross/(d/30);
-    total.textContent=(gross.toFixed(2))+" ZUZU";
-    monthly.textContent=(m.toFixed(2))+" ZUZU";
-    boost.textContent="+"+tb+"%";
-  };
-  document.getElementById("calcBtn")?.addEventListener("click",calc); calc();
-})();
-(function setupLinks(){
-  const c = CONFIG.contractAddress;
-  const short = `${c.slice(0,6)}...${c.slice(-4)}`;
-  document.getElementById("contractDisplay")?.textContent = short;
-  document.getElementById("contractDisplay2")?.textContent = c;
-  document.getElementById("thirdwebNFTRoute")?.setAttribute("href", CONFIG.collectionUrl);
-  document.getElementById("thirdwebNFTRoute2")?.setAttribute("href", CONFIG.collectionUrl);
+        <a class="z-btn z-btn-ghost" style="margin:0 10px 10px" href="${link}" target="_blank" rel="noopener">View ↗</a>
+      </div>`;
+    });
+    g.innerHTML = html;
+  }catch{}
 })();
 
 /* =========================
-   SOLANA akışı
+   Hesaplayıcı
 ========================= */
-// EVM kartını gizle
+(function setupCalc(){
+  try{
+    const amount=document.getElementById("stakeAmount");
+    const duration=document.getElementById("stakeDuration");
+    const nft=document.getElementById("nftBoost");
+    const early=document.getElementById("earlyBoost");
+    const total=document.getElementById("resultTotal");
+    const monthly=document.getElementById("resultMonthly");
+    const boost=document.getElementById("resultBoost");
+    if(!amount||!duration||!nft||!early||!total||!monthly||!boost) return;
+
+    const apy={30:12,90:24,180:40,365:65,540:85};
+    const calc=()=>{
+      const a=parseFloat((amount.value||"0").toString().replace(/[^\d.]/g,""))||0;
+      const d=parseInt(duration.value,10)||0;
+      const base=apy[d]||0;
+      const tb=(parseFloat(nft.value||"0") + parseFloat(early.value||"0"));
+      const gross=a*((base+tb)/100)*(d/365);
+      const m=gross/(d/30);
+      total.textContent=(gross.toFixed(2))+" ZUZU";
+      monthly.textContent=(m.toFixed(2))+" ZUZU";
+      boost.textContent="+"+tb+"%";
+    };
+    document.getElementById("calcBtn")?.addEventListener("click",calc);
+    calc();
+  }catch{}
+})();
+
+/* =========================
+   Linkler + kontrat
+========================= */
+(function setupLinks(){
+  try{
+    const c = CONFIG.contractAddress;
+    const short = `${c.slice(0,6)}...${c.slice(-4)}`;
+    document.getElementById("contractDisplay")?.textContent = short;
+    document.getElementById("contractDisplay2")?.textContent = c;
+    document.getElementById("thirdwebNFTRoute")?.setAttribute("href", CONFIG.collectionUrl);
+    document.getElementById("thirdwebNFTRoute2")?.setAttribute("href", CONFIG.collectionUrl);
+  }catch{}
+})();
+
+/* =========================
+   Solana akışı (UI tarafı)
+========================= */
 (function hideEvmCard(){
   const netSel = document.getElementById("networkSel");
   const card = netSel?.closest(".card");
   if (card) card.style.display = "none";
 })();
-
-// Connect Wallet triggger
 (function wireSolanaConnect(){
   const btn = document.getElementById("connectBtn");
   if (!btn) return;
@@ -243,8 +258,6 @@ updateCosts();
     }
   });
 })();
-
-// Haftalık buy → USDT alanını doldur
 function handleWeekClick(weekIndex){
   const qty = parseFloat((document.getElementById("buyAmount")?.value||"0").toString().replace(/[^\d.]/g,"")) || 0;
   if (qty <= 0) { alert("Enter a valid ZUZU amount."); return; }
@@ -260,43 +273,41 @@ function handleWeekClick(weekIndex){
 }
 ["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{ const b=document.getElementById(id); if(b) b.onclick=()=>handleWeekClick(i); });
 
-// Ticker küçük fix
+/* =========================
+   Ticker ve UI helpers
+========================= */
 (function ensureTickerVisible(){
   const track = document.getElementById('exTrack');
-  if(!track) return;
-  track.style.willChange = 'transform';
-  track.style.transform = 'translateX(0)';
-  setTimeout(()=>{ track.style.transform = ''; }, 50);
+  if(!track) return; track.style.willChange='transform'; track.style.transform='translateX(0)'; setTimeout(()=>{ track.style.transform=''; },50);
 })();
-
-// UI helpers
 window.__zuzuSetConnectLabel = (text)=>{ const b=document.getElementById('connectBtn'); if(b && text) b.textContent=text; };
 
-// Referral UI + param yakalama
+/* =========================
+   Referral
+========================= */
 (function referralInit(){
-  const url = new URL(window.location.href);
-  const ref = url.searchParams.get('ref');
-  if (ref) localStorage.setItem('zuzu_ref', ref);
-  const who = localStorage.getItem('zuzu_ref');
-  const note = document.getElementById('refYouWereInvited');
-  if (note && who){ note.style.display='block'; note.textContent=`Invited by: ${who.slice(0,4)}...${who.slice(-4)}`; }
+  try{
+    const url = new URL(window.location.href);
+    const ref = url.searchParams.get('ref');
+    if (ref) localStorage.setItem('zuzu_ref', ref);
+    const who = localStorage.getItem('zuzu_ref');
+    const note = document.getElementById('refYouWereInvited');
+    if (note && who){ note.style.display='block'; note.textContent=`Invited by: ${who.slice(0,4)}...${who.slice(-4)}`; }
 
-  const input = document.getElementById('refLink');
-  const copyBtn = document.getElementById('btnCopyRef');
-  const shareBtn = document.getElementById('btnShareRef');
-  if (copyBtn) copyBtn.onclick = async ()=>{
-    if (!input?.value) return alert('Connect wallet to get your referral link.');
-    await navigator.clipboard.writeText(input.value).catch(()=>{});
-    copyBtn.textContent='Copied ✔'; setTimeout(()=>copyBtn.textContent='Copy Link',1200);
-  };
-  if (shareBtn) shareBtn.onclick = async ()=>{
-    if (!input?.value) return alert('Connect wallet to get your referral link.');
-    const data={title:'ZUZUCOIN Presale',text:'Join ZUZU presale with my referral link!',url:input.value};
-    if(navigator.share){ try{ await navigator.share(data); }catch(_){}} else { try{ await navigator.clipboard.writeText(input.value); alert('Link copied.'); }catch(_){} }
-  };
+    const input = document.getElementById('refLink');
+    const copyBtn = document.getElementById('btnCopyRef');
+    const shareBtn = document.getElementById('btnShareRef');
+    if (copyBtn) copyBtn.onclick = async ()=>{
+      if (!input?.value) return alert('Connect wallet to get your referral link.');
+      try{ await navigator.clipboard.writeText(input.value); copyBtn.textContent='Copied ✔'; setTimeout(()=>copyBtn.textContent='Copy Link',1200);}catch{}
+    };
+    if (shareBtn) shareBtn.onclick = async ()=>{
+      if (!input?.value) return alert('Connect wallet to get your referral link.');
+      const data={title:'ZUZUCOIN Presale',text:'Join ZUZU presale with my referral link!',url:input.value};
+      if(navigator.share){ try{ await navigator.share(data); }catch{} } else { try{ await navigator.clipboard.writeText(input.value); alert('Link copied.'); }catch{} }
+    };
+  }catch{}
 })();
-
-// Cüzdan bağlanınca ref linki üret
 window.__zuzuSetReferral = (myAddr)=>{
   const input = document.getElementById('refLink');
   if (!input) return;
