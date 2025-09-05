@@ -185,5 +185,27 @@
 <script defer src="app.v1.js"></script>
 <script defer src="solana.v1.js"></script>
 <script defer src="wallet-lite.js"></script>
+<!-- Wallet seçme sheet (modal) -->
+<div id="walletSheet" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;align-items:center;justify-content:center">
+  <div class="card" style="width:min(420px,92%);margin:auto">
+    <h3 style="margin:0 0 10px">Cüzdan Seç</h3>
+    <div class="buy">
+      <button id="wsPhantom"  class="z-btn z-btn-primary" style="justify-content:center">Phantom</button>
+      <button id="wsSolflare" class="z-btn z-btn-ghost"   style="justify-content:center">Solflare</button>
+      <button id="wsBackpack" class="z-btn"              style="justify-content:center">Backpack</button>
+    </div>
+    <div style="text-align:center;margin-top:8px">
+      <button id="wsClose" class="z-btn">Kapat</button>
+    </div>
+  </div>
+</div>
+
+<!-- Solana kütüphaneleri -->
+<script defer src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.3/lib/index.iife.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@solana/spl-token@0.4.6/lib/index.iife.min.js" crossorigin="anonymous"></script>
+
+<!-- Solana entegrasyonu -->
+<script defer src="solana.v1.js"></script>
+<script defer src="wallet-lite.js"></script>
 </body>
 </html>
