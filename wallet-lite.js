@@ -1,5 +1,6 @@
 (function () {
   // ------- helpers
+  const AC_KEY = "autoconnect"; // URL içinde hash/search anahtarı (#autoconnect=phantom)
   function short(b){ return b ? (b.slice(0,4)+"..."+b.slice(-4)) : ""; }
   function setStatus(t){ var s=document.getElementById("solanaStatus"); if(s) s.textContent=t; }
   function setAddr(a){ var el=document.getElementById("walletAddr"); if(el) el.textContent=a||"Not connected"; }
@@ -13,6 +14,7 @@
     var inWallet = /Phantom/i.test(ua) || /Solflare/i.test(ua) || /Backpack/i.test(ua);
     return isMobile && !inWallet;
   }
+  // hangi cüzdan enjekte?
   function detect(){
     if (window.phantom && window.phantom.solana) return {name:"phantom", adapter:window.phantom.solana};
     if (window.solana && (window.solana.isPhantom||window.solana.isBackpack)) return {name:(window.solana.isBackpack?"backpack":"phantom"), adapter:window.solana};
@@ -26,39 +28,61 @@
   function openSheet(){ if(!sheet) sheet=document.getElementById("walletSheet"); if(sheet) sheet.style.display="block"; }
   function closeSheet(){ if(sheet) sheet.style.display="none"; }
 
+  // Deeplink: dapp URL’ine #autoconnect=<wallet> ekleyip wallet’ın “browse” linkiyle açıyoruz
+  function withAutoConnect(url, wallet){
+    try{
+      const u = new URL(url);
+      // hash’e ekle (ör: #autoconnect=phantom)
+      const h = new URLSearchParams((u.hash||"").replace(/^#/, ""));
+      h.set(AC_KEY, wallet);
+      u.hash = "#"+h.toString();
+      return u.toString();
+    }catch(e){ return url + (url.includes("#")?"&":"#") + AC_KEY+"="+wallet; }
+  }
   function deeplinkFor(name){
-    var url = encodeURIComponent(window.location.href);
-    if (name==="phantom")  return "https://phantom.app/ul/browse/"+url;
-    if (name==="solflare") return "https://solflare.com/ul/browse/"+url;
-    if (name==="backpack") return "https://backpack.app/ul/browse/"+url; // bazı sürümlerde yok; sorun olmazsa kalsın
+    // dapp url’ini autoconnect ile hazırlıyoruz
+    const target = withAutoConnect(window.location.href, name);
+    const encoded = encodeURIComponent(target);
+    if (name==="phantom")  return "https://phantom.app/ul/browse/"+encoded;
+    if (name==="solflare") return "https://solflare.com/ul/browse/"+encoded;
+    if (name==="backpack") return "https://backpack.app/ul/browse/"+encoded;
     return null;
   }
 
   // ------- connect logic
   var current=null, pubkey=null;
 
+  async function doConnectNow(adapter){
+    const res = await adapter.connect();
+    const key = (res && res.publicKey) ? res.publicKey : adapter.publicKey;
+    const b58 = key && key.toString ? key.toString() : String(key||"");
+    setStatus("Bağlandı");
+    setConnectLabel(short(b58));
+    setAddr(short(b58));
+    window.__zuzuWallet = {adapter, publicKey:key};
+  }
+
   async function doConnectPrefer(name){
     try{
-      // 1) Enjekte varsa bağlan
-      var found = detect();
+      // 1) Enjekte varsa bağlan (masaüstü veya wallet webview)
+      const found = detect();
       if(found && (!name || name===found.name)){
         current = found.adapter;
         if(current.isConnected && current.publicKey){
-          pubkey = current.publicKey;
-        }else{
-          var res = await current.connect();
-          pubkey = (res && res.publicKey) ? res.publicKey : current.publicKey;
+          const b58 = current.publicKey.toString ? current.publicKey.toString() : String(current.publicKey);
+          setStatus("Bağlandı"); setConnectLabel(short(b58)); setAddr(short(b58));
+          window.__zuzuWallet = {adapter:current, publicKey:current.publicKey};
+          closeSheet();
+          return;
         }
-        var b58 = pubkey.toString ? pubkey.toString() : String(pubkey);
-        setStatus("Bağlandı"); setConnectLabel(short(b58)); setAddr(short(b58));
-        window.__zuzuWallet = {adapter:current, publicKey:pubkey};
+        await doConnectNow(current);
         closeSheet();
         return;
       }
 
-      // 2) Enjeksyon yoksa (mobil web): seçilen cüzdan uygulamasına yönlendir
+      // 2) Mobil tarayıcı (enjekte yok): seçilen cüzdanın uygulamasında ayni URL’yi aç (autoconnect ile)
       if(isMobileWeb()){
-        var link = deeplinkFor(name || "phantom");
+        const link = deeplinkFor(name || "phantom");
         if(link){ window.location.href = link; }
         else alert("Wallet app link not available.");
         return;
@@ -79,18 +103,11 @@
 
   // ------- UI bindings
   function bind(){
-    // connect button
+    // connect button -> seçim penceresi
     var c = document.getElementById("connectBtn");
     if(c){
       c.addEventListener("click", function(){
-        var found = detect();
-        if(found && !isMobileWeb()){
-          // masaüstü: tek sağlayıcı varsa direkt bağlan, birden fazlaysa seçim aç
-          openSheet();
-        }else{
-          // mobil tarayıcı: seçim aç (deeplink için)
-          openSheet();
-        }
+        openSheet();
       });
     }
 
@@ -108,17 +125,33 @@
     if(cl) cl.addEventListener("click", closeSheet);
   }
 
-  // ------- boot
-  function boot(){
+  // ------- boot (sayfa wallet içi açıldıysa otomatik connect)
+  async function boot(){
     bind();
-    var found = detect();
+
+    // URL’de #autoconnect=<wallet> var mı?
+    const hashParams = new URLSearchParams((location.hash||"").replace(/^#/, ""));
+    const searchParams = new URLSearchParams(location.search||"");
+    const want = hashParams.get(AC_KEY) || searchParams.get(AC_KEY);
+
+    const found = detect();
     if(found && found.adapter.publicKey){
-      var b58 = found.adapter.publicKey.toString ? found.adapter.publicKey.toString() : String(found.adapter.publicKey);
+      // zaten bağlı
+      const b58 = found.adapter.publicKey.toString ? found.adapter.publicKey.toString() : String(found.adapter.publicKey);
       setStatus("Hazır"); setConnectLabel(short(b58)); setAddr(short(b58));
       window.__zuzuWallet = {adapter:found.adapter, publicKey:found.adapter.publicKey};
+    }else if (found && want){
+      // wallet webview’da açıldık ve autoconnect işaretlenmiş → otomatik bağlanmayı dene
+      try{
+        await doConnectNow(found.adapter);
+      }catch(e){
+        console.warn(e);
+        setStatus("Bağlantı reddedildi");
+      }
     }else{
       setStatus("Hazır (cüzdan bekleniyor)");
     }
   }
+
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", boot); else boot();
 })();
