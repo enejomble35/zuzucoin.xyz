@@ -5,9 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>ZUZUCOIN — Pre-Sale • Stake • NFT Rewards</title>
   <meta name="theme-color" content="#0e1522">
+
+  <!-- Security -->
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -15,7 +18,7 @@
   <!-- Hata yakalayıcı -->
   <script>window.onerror=function(m){ alert("JS Error: "+m); };</script>
 
-  <!-- Solana kütüphaneleri (defer) -->
+  <!-- Solana lib'leri -->
   <script defer src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.3/lib/index.iife.min.js" crossorigin="anonymous"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@solana/spl-token@0.4.6/lib/index.iife.min.js" crossorigin="anonymous"></script>
 </head>
@@ -50,7 +53,7 @@
 
 <main>
 
-<!-- HERO -->
+<!-- HERO + COUNTDOWN -->
 <section class="z-section hero-2">
   <div class="z-container grid-2">
     <div>
@@ -71,7 +74,6 @@
         <span class="z-chip" id="contractDisplay">—</span>
       </div>
 
-      <!-- Countdown -->
       <div class="counter" style="margin-top:14px">
         <div class="flip"><div id="cdDays" class="num">00</div><small data-i="days">DAYS</small></div>
         <div class="flip"><div id="cdHours" class="num">00</div><small data-i="hours">HOURS</small></div>
@@ -80,7 +82,6 @@
       </div>
     </div>
 
-    <!-- Sağ kolon — Logo -->
     <div class="hero-visual">
       <img id="zuzuLogo" class="logo-big"
            src="assets/images/branding/zuzu-logo.svg"
@@ -98,7 +99,7 @@
       <p  data-i="presale_lead">Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.</p>
     </div>
 
-    <!-- EVM kutusu (gizlenecek) -->
+    <!-- Eski EVM kutusu (gizlenecek) -->
     <div class="card" style="margin-bottom:12px">
       <div class="buybox">
         <div class="row">
@@ -119,7 +120,7 @@
       </div>
     </div>
 
-    <!-- SOLANA WALLET -->
+    <!-- Solana kutusu -->
     <div class="card" id="solanaWalletBox">
       <h3 style="margin:0 0 10px">Solana Wallet</h3>
       <div class="buybox">
@@ -156,7 +157,7 @@
       </div>
     </div>
 
-    <!-- Haftalara göre fiyat kutuları -->
+    <!-- Haftalar -->
     <div class="presale-grid">
       <div class="card buybox">
         <h4 data-i="w1">Week 1 (Cheapest)</h4>
@@ -347,7 +348,6 @@
 
 </main>
 
-<!-- FOOTER -->
 <footer class="z-footer">
   <div class="z-container between center-v">
     <small>© ZUZUCOIN 2025</small>
@@ -360,21 +360,25 @@
   </div>
 </footer>
 
-<!-- Wallet Deeplink Bar (mobil tarayıcılar için) -->
-<div id="walletOpeners" style="display:none;position:sticky;bottom:0;left:0;right:0;z-index:60;background:#0d1526;border-top:1px solid #1e2d4a">
-  <div class="z-container" style="padding:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-    <span style="color:#b9cffb">Cüzdan uygulamasında aç:</span>
-    <a id="openPhantom"  class="z-btn z-btn-primary"  href="#" rel="noopener">Phantom’da Aç</a>
-    <a id="openSolflare" class="z-btn z-btn-ghost"    href="#" rel="noopener">Solflare’da Aç</a>
+<!-- WALLET SELECT MODAL -->
+<div id="walletSheet" style="display:none;position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.45)">
+  <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#0f1a30;border:1px solid #22365a;border-radius:16px;padding:16px;width:min(420px,92%)">
+    <h3 style="margin:0 0 10px;color:#dbe7ff">Cüzdan Seç</h3>
+    <div style="display:grid;gap:8px">
+      <button id="wsPhantom"  class="z-btn z-btn-primary" style="justify-content:center">Phantom</button>
+      <button id="wsSolflare" class="z-btn z-btn-ghost"   style="justify-content:center">Solflare</button>
+      <button id="wsBackpack" class="z-btn z-btn-ghost"   style="justify-content:center">Backpack</button>
+      <button id="wsClose"    class="z-btn"               style="justify-content:center">Kapat</button>
+    </div>
   </div>
 </div>
 
-<!-- JS dosyaları -->
+<!-- JS -->
 <script defer src="app.v1.js"></script>
 <script defer src="solana.v1.js"></script>
 <script src="wallet-lite.js"></script>
 
-<!-- EVM kutusunu garanti gizle (JS çalışmasa bile) -->
+<!-- EVM kutusunu garanti gizle -->
 <style>.presale .z-container > .card:first-of-type{display:none!important}</style>
 
 </body>
