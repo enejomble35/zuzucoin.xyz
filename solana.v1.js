@@ -1,14 +1,13 @@
 /* ========= ZUZU – Solana config ========= */
 const ZUZU = {
-  // Satış açılış tarihi (ör. 5 Kasım 2025 13:00 +03:00)
+  // ÖRNEK: 5 Kasım 2025 13:00 (+03:00)
   launchAtISO: "2025-11-05T13:00:00+03:00",
 
-  // Ödeme toplayacağın SOL adresi
-  treasurySOL: "8vxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", // <-- kendi SOL adresin
+  // KENDİ ADRESLERİNİ YAZ
+  treasurySOL:  "8vxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", // SOL alacak hesap
+  treasuryUSDT: "8vxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", // USDT (SPL) alacak hesap
+  usdtMint:     "Es9vMFrzaCERz8iYhGMXfMV64N6V7kJphQ8usAqyx3Pf", // Mainnet USDT
 
-  // USDT (SPL) mint ve alıcı (aynı adresi kullanabilirsin)
-  usdtMint: "Es9vMFrzaCERz8iYhGMXfMV64N6V7kJphQ8usAqyx3Pf", // mainnet USDT
-  treasuryUSDT: "8vxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",  // <-- kendi USDT alan hesabın (SPL)
   priceByWeek: [0.0050,0.0065,0.0080,0.0100],
   collectionUrl: "https://thirdweb.com/",
   contractAddress: "0xF2bbbEcB417725813BF5E940d678793fACDa9729"
@@ -24,13 +23,25 @@ const ZUZU = {
     const m = Math.floor((left%3600000)/60000);
     const s = Math.floor((left%60000)/1000);
     const pad = n=>n.toString().padStart(2,"0");
-    const ids=["cdDays","cdHours","cdMins","cdSecs"];
-    [d,h,m,s].forEach((v,i)=>{const el=document.getElementById(ids[i]); if(el) el.textContent=pad(v);});
+    ["cdDays","cdHours","cdMins","cdSecs"].forEach((id,i)=>{
+      const v=[d,h,m,s][i], el=document.getElementById(id);
+      if(el) el.textContent = pad(v);
+    });
   }
   tick(); setInterval(tick,1000);
 })();
 
-/* ========= UI küçük bağlayıcılar ========= */
+/* ========= EVM bloklarını gizle (eski yazılar bozulmadan) ========= */
+(function(){
+  const cards = document.querySelectorAll("#presale .card");
+  cards.forEach(el=>{
+    if (el.textContent && /MetaMask|Payments in USDT via MetaMask/i.test(el.textContent)){
+      el.style.display="none";
+    }
+  });
+})();
+
+/* ========= Linkler / NFT / maliyet ========= */
 (function(){
   const c = ZUZU.contractAddress;
   const cd = document.getElementById("contractDisplay");
@@ -43,7 +54,6 @@ const ZUZU = {
   if(t1) t1.href=ZUZU.collectionUrl;
   if(t2) t2.href=ZUZU.collectionUrl;
 
-  // Week maliyetleri
   function updateCosts(){
     const qty=parseFloat((document.getElementById("buyAmount")?.value||"0").toString().replace(/[^\d.]/g,""))||0;
     ZUZU.priceByWeek.forEach((p,i)=>{
@@ -56,106 +66,90 @@ const ZUZU = {
   document.getElementById("buyAmount")?.addEventListener("input",updateCosts);
   updateCosts();
 
-  // referral link
+  // Referral
   const refIn=document.getElementById("refInput");
   const refCopy=document.getElementById("refCopy");
   const refShare=document.getElementById("refShare");
-  const myRef = (localStorage.getItem("zuzu_ref") || crypto.getRandomValues(new Uint8Array(8)).reduce((a,b)=>a+("abcdefghijklmnopqrstuvwxyz0123456789")[b%36],""));
+  const rand=()=>crypto.getRandomValues(new Uint8Array(8)).reduce((a,b)=>a+("abcdefghijklmnopqrstuvwxyz0123456789")[b%36],"");
+  const myRef=localStorage.getItem("zuzu_ref")||rand();
   localStorage.setItem("zuzu_ref", myRef);
-  const url = new URL(location.href);
-  url.searchParams.set("ref", myRef);
-  if(refIn) refIn.value = url.toString();
+  const u=new URL(location.href); u.searchParams.set("ref", myRef);
+  if(refIn) refIn.value=u.toString();
   refCopy?.addEventListener("click",()=>{ navigator.clipboard.writeText(refIn.value); alert("Copied!"); });
   refShare?.addEventListener("click",()=>{ if(navigator.share) navigator.share({title:"Join ZUZU",url:refIn.value}); else alert("Share not supported"); });
 })();
 
-/* ========= Solana – connect & buy ========= */
+/* ========= Solana – ödeme ========= */
 (async function(){
   const { Connection, PublicKey, SystemProgram, Transaction, LAMPORTS_PER_SOL } = solanaWeb3;
 
-  let adapter=null, publicKey=null;
-
-  function needWallet(){
-    const ua=navigator.userAgent||"";
-    const inWallet=/Phantom|Solflare|Backpack/i.test(ua);
-    return !inWallet;
-  }
-
-  function assertAdapter(){
+  function assertWallet(){
     if (!window.__zuzuWallet || !window.__zuzuWallet.adapter) throw new Error("Wallet not connected");
-    adapter = window.__zuzuWallet.adapter;
-    publicKey = adapter.publicKey;
+    return window.__zuzuWallet.adapter;
   }
 
-  async function makeSolPayment(amountSOL){
-    assertAdapter();
-    const conn = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+  async function paySOL(amountSOL){
+    const adapter = assertWallet();
+    const conn = new Connection("https://api.mainnet-beta.solana.com","confirmed");
+    const from = adapter.publicKey;
+    const to   = new PublicKey(ZUZU.treasurySOL);
     const tx = new Transaction().add(SystemProgram.transfer({
-      fromPubkey: publicKey,
-      toPubkey:   new PublicKey(ZUZU.treasurySOL),
-      lamports: Math.floor(amountSOL * LAMPORTS_PER_SOL)
+      fromPubkey: from, toPubkey: to, lamports: Math.floor(amountSOL*LAMPORTS_PER_SOL)
     }));
-    tx.feePayer = publicKey;
-    const { blockhash, lastValidBlockHeight } = await conn.getLatestBlockhash();
+    tx.feePayer = from;
+    const {blockhash,lastValidBlockHeight} = await conn.getLatestBlockhash();
     tx.recentBlockhash = blockhash;
-    const signed = await adapter.signAndSendTransaction(tx);
-    await conn.confirmTransaction({signature:signed.signature, blockhash, lastValidBlockHeight}, "confirmed");
-    return signed.signature;
+    const {signature} = await adapter.signAndSendTransaction(tx);
+    await conn.confirmTransaction({signature,blockhash,lastValidBlockHeight}, "confirmed");
+    return signature;
   }
 
-  async function makeUsdtPayment(amountUSDT){
-    assertAdapter();
+  async function payUSDT(amount){
+    const adapter = assertWallet();
     const conn = new Connection("https://api.mainnet-beta.solana.com","confirmed");
     const mint = new PublicKey(ZUZU.usdtMint);
     const to   = new PublicKey(ZUZU.treasuryUSDT);
 
-    // SPL Token transfer (basit IIFE build’lerinde helper fonk yok; raw instruction)
     const TOKEN_PROGRAM_ID = new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
     const { ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync, createAssociatedTokenAccountInstruction, createTransferInstruction } = splToken;
 
-    const fromAta = getAssociatedTokenAddressSync(mint, publicKey, false, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
-    const toAta   = getAssociatedTokenAddressSync(mint, to,        false, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
+    const from = adapter.publicKey;
+    const fromAta = getAssociatedTokenAddressSync(mint, from, false, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
+    const toAta   = getAssociatedTokenAddressSync(mint, to,   false, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
 
-    const ix = [];
+    const ix=[];
     const toInfo = await conn.getAccountInfo(toAta);
-    if(!toInfo){
-      ix.push(createAssociatedTokenAccountInstruction(publicKey, toAta, to, mint, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID));
-    }
-    const amount = BigInt(Math.round(amountUSDT * 1e6)); // USDT 6 decimals
-    ix.push(createTransferInstruction(fromAta, toAta, publicKey, Number(amount), [], TOKEN_PROGRAM_ID));
+    if(!toInfo) ix.push(createAssociatedTokenAccountInstruction(from, toAta, to, mint, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID));
+    ix.push(createTransferInstruction(fromAta, toAta, from, Math.round(amount*1e6), [], TOKEN_PROGRAM_ID));
 
     const tx = new Transaction().add(...ix);
-    tx.feePayer = publicKey;
-    const { blockhash, lastValidBlockHeight } = await conn.getLatestBlockhash();
+    tx.feePayer = from;
+    const {blockhash,lastValidBlockHeight} = await conn.getLatestBlockhash();
     tx.recentBlockhash = blockhash;
 
-    const signed = await adapter.signAndSendTransaction(tx);
-    await conn.confirmTransaction({signature:signed.signature, blockhash, lastValidBlockHeight}, "confirmed");
-    return signed.signature;
+    const {signature} = await adapter.signAndSendTransaction(tx);
+    await conn.confirmTransaction({signature,blockhash,lastValidBlockHeight}, "confirmed");
+    return signature;
   }
 
-  // UI EVENTS
+  // UI butonları (üstteki Solana kutusu)
   document.getElementById("btnBuySOL")?.addEventListener("click", async ()=>{
     try{
-      if (needWallet()) { alert("Lütfen Phantom / Solflare / Backpack içinden açın ve bağlanın."); return; }
-      const amt = parseFloat((document.getElementById("paySOL")?.value||"0").toString().replace(/[^\d.]/g,""))||0;
-      if (amt<=0) return alert("Geçerli SOL miktarı gir.");
-      const sig = await makeSolPayment(amt);
+      const amt=parseFloat((document.getElementById("paySOL")?.value||"0").toString().replace(/[^\d.]/g,""))||0;
+      if(amt<=0) return alert("Geçerli SOL miktarı gir.");
+      const sig=await paySOL(amt);
       alert("Success!\nTx: "+sig);
-    }catch(e){ console.error(e); alert("Transaction failed."); }
+    }catch(e){ console.error(e); alert("SOL gönderimi başarısız."); }
   });
-
   document.getElementById("btnBuyUSDT")?.addEventListener("click", async ()=>{
     try{
-      if (needWallet()) { alert("Lütfen Phantom / Solflare / Backpack içinden açın ve bağlanın."); return; }
-      // basit örnek: 25 USDT gönder
-      const sig = await makeUsdtPayment(25);
+      const sig=await payUSDT(25); // örnek: sabit 25 USDT
       alert("Success!\nTx: "+sig);
-    }catch(e){ console.error(e); alert("USDT transfer failed."); }
+    }catch(e){ console.error(e); alert("USDT gönderimi başarısız."); }
   });
 
-  // Hafta butonları sadece bilgi amaçlı (Solana ödeme yukarıdan)
-  ["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{
-    document.getElementById(id)?.addEventListener("click", ()=>alert("Ödeme üstteki Solana kutusundan yapılır."));
+  // Haftalık “Buy”’lar bilgi amaçlı
+  ["buyW0","buyW1","buyW2","buyW3"].forEach(id=>{
+    document.getElementById(id)?.addEventListener("click",()=>alert("Ödeme üstteki Solana kutusundan yapılır."));
   });
 })();
