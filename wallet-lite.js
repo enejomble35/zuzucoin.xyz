@@ -1,23 +1,25 @@
 (function () {
-  const AC_KEY="autoconnect", WAIT_MS=8000, TICK=200;
+  const AC_KEY="autoconnect", WAIT_MS=10000, TICK=200;
   const $=id=>document.getElementById(id);
   const short=a=>a?(a.slice(0,4)+"..."+a.slice(-4)):"";
   const setStatus=t=>{const e=$("solanaStatus"); if(e) e.textContent=t;};
   const setAddr=a=>{const e=$("walletAddr"); if(e) e.textContent=a||"Not connected";};
   const setBtn=t=>{const e=$("connectBtn"); if(e) e.textContent=t||"Connect Wallet";};
 
+  // -------- detect
+  function detect(){
+    if (window.phantom && window.phantom.solana) return {name:"phantom", adapter:window.phantom.solana};
+    if (window.solana && (window.solana.isPhantom||window.solana.isBackpack))
+      return {name:(window.solana.isBackpack?"backpack":"phantom"), adapter:window.solana};
+    if (window.solflare && window.solflare.isSolflare) return {name:"solflare", adapter:window.solflare};
+    if (window.backpack && window.backpack.solana) return {name:"backpack", adapter:window.backpack.solana};
+    return null;
+  }
   function inMobileBrowser(){
     const ua=navigator.userAgent||"";
     const mobile=/Android|iPhone|iPad|iPod/i.test(ua);
     const inWallet=/Phantom|Solflare|Backpack/i.test(ua);
     return mobile && !inWallet;
-  }
-  function detect(){
-    if (window.phantom && window.phantom.solana) return {name:"phantom",adapter:window.phantom.solana};
-    if (window.solana && (window.solana.isPhantom||window.solana.isBackpack)) return {name:(window.solana.isBackpack?"backpack":"phantom"),adapter:window.solana};
-    if (window.solflare && window.solflare.isSolflare) return {name:"solflare",adapter:window.solflare};
-    if (window.backpack && window.backpack.solana) return {name:"backpack",adapter:window.backpack.solana};
-    return null;
   }
   function withAutoConnect(url,wallet){
     try{const u=new URL(url);const h=new URLSearchParams((u.hash||"").replace(/^#/,""));h.set(AC_KEY,wallet);u.hash="#"+h.toString();return u.toString();}
@@ -32,12 +34,12 @@
     return null;
   }
 
-  // tap overlay -> connect jest garantisi
+  // -------- tap overlay (gesture guarantee)
   function showTap(onTap){
     if($("tapConnect")) return;
     const w=document.createElement("div");
     w.id="tapConnect";
-    w.style.cssText="position:fixed;inset:0;z-index:120;background:rgba(2,10,24,.66);display:flex;align-items:center;justify-content:center";
+    w.style.cssText="position:fixed;inset:0;z-index:10000;background:rgba(2,10,24,.66);display:flex;align-items:center;justify-content:center";
     w.innerHTML=`<div class="card" style="width:min(420px,92%);text-align:center">
       <h3 style="margin-top:0">Cüzdana Bağlan</h3>
       <p style="color:#9fb6e6">Devam etmek için dokunun.</p>
@@ -45,7 +47,7 @@
       <div style="margin-top:8px"><button id="tapClose" class="z-btn" style="justify-content:center">İptal</button></div>
     </div>`;
     document.body.appendChild(w);
-    $("tapGo").onclick=()=>{onTap();w.remove();};
+    $("tapGo").onclick=()=>{onTap(); w.remove();};
     $("tapClose").onclick=()=>w.remove();
   }
 
@@ -67,7 +69,8 @@
     return null;
   }
 
-  function openSheet(){const s=$("walletSheet"); if(s) s.style.display="block";}
+  // -------- sheet
+  function openSheet(){const s=$("walletSheet"); if(s) {s.style.display="block"; s.style.display="flex";}}
   function closeSheet(){const s=$("walletSheet"); if(s) s.style.display="none";}
 
   async function start(choice){
@@ -78,11 +81,10 @@
       }
       if(inMobileBrowser()){
         const link=deeplinkFor(choice||"phantom");
-        if(link) location.href=link; else alert("Wallet app link not available.");
-        return;
+        if(link){ location.href=link; return; }
       }
       alert("Please install "+(choice||"a Solana wallet")+" (Phantom / Solflare / Backpack).");
-    }catch(e){console.warn(e); alert("Wallet connect error.");}
+    }catch(e){ console.warn(e); alert("Wallet connect error."); }
   }
   function disconnect(){
     try{ if(current&&current.disconnect) current.disconnect(); }catch(_){}
@@ -90,13 +92,19 @@
   }
 
   function bind(){
-    $("connectBtn")?.addEventListener("click",openSheet);
+    // Eski listener’ları bastır
+    const b=$("connectBtn");
+    if(b){
+      b.onclick=null;
+      b.addEventListener("click", (ev)=>{ev.preventDefault();ev.stopImmediatePropagation();openSheet();}, true);
+    }
     $("btnDisconnect")?.addEventListener("click",disconnect);
     $("wsPhantom")?.addEventListener("click",()=>start("phantom"));
     $("wsSolflare")?.addEventListener("click",()=>start("solflare"));
     $("wsBackpack")?.addEventListener("click",()=>start("backpack"));
     $("wsClose")?.addEventListener("click",closeSheet);
 
+    // Wallet app’ten dönünce / içinde açılınca
     document.addEventListener("visibilitychange",async ()=>{
       if(!document.hidden){
         const want=new URLSearchParams((location.hash||"").replace(/^#/,"")).get(AC_KEY);
@@ -111,6 +119,7 @@
   async function boot(){
     bind();
 
+    // Zaten bağlıysa UI’ı doldur
     const found=detect();
     if(found && found.adapter.publicKey){
       const b58=found.adapter.publicKey.toString?found.adapter.publicKey.toString():String(found.adapter.publicKey);
@@ -119,6 +128,7 @@
       return;
     }
 
+    // Wallet webview’ında autoconnect ile açıldıysa, provider gelince dokunarak bağlat
     const want=new URLSearchParams((location.hash||"").replace(/^#/,"")).get(AC_KEY);
     if(want){
       const adapter=await waitProvider(want);
