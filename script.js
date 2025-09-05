@@ -11,7 +11,7 @@ const CONFIG = {
   treasurySolana: "31Cjkx2PA5oMapNxxGAiZhuHDcvAyQ7hogqB8Hx6f1pW",
 
   // İstersen sabit tarih ver: "2025-12-01T18:00:00Z"
-  launchAtISO: "",
+  launchAtISO: "2025-11-05T13:00:00+03:00",
 
   weekPrices: [0.0050, 0.0065, 0.0080, 0.0100],
   nfts: [
