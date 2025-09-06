@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>ZUZUCOIN — Pre-Sale</title>
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
 
@@ -12,7 +12,7 @@
   <nav class="z-nav">
     <div class="z-container z-nav-inner">
       <a class="brand" href="/">
-        <img src="assets/images/branding/zuzu-logo.png" alt="ZUZU">
+        <img src="assets/images/branding/zuzu-logo.png" alt="ZUZU" class="brand-logo">
         <span>ZUZUCOIN</span>
       </a>
 
@@ -22,6 +22,9 @@
         <a href="#rewards" data-i18n="nav_rewards">NFT Ödülleri</a>
         <a href="#tokenomics" data-i18n="nav_token">Tokonomi</a>
         <a href="#roadmap" data-i18n="nav_roadmap">Yol Haritası</a>
+
+        <a class="mini-btn" href="stake-simulator.html" data-i18n="stake_sim">Stake Simulator ↗</a>
+        <a class="mini-btn" href="claim.html" data-i18n="claim_portal">Claim Portal ↗</a>
 
         <!-- Dil seçici -->
         <div id="langMenu" class="langmenu">
@@ -94,6 +97,15 @@
             <div class="stat"><div class="label">Wallet</div><div id="solWallet">Not connected</div></div>
             <div class="stat"><div class="label">Owner</div><div class="mono">FniL…9QwF</div></div>
           </div>
+
+          <div id="mobileOpen" class="open-wallet" style="display:none">
+            <div data-i18n="open_in_wallet">Mobilde bağlanmıyorsa, siteyi cüzdan tarayıcısında aç:</div>
+            <div class="wallet-links">
+              <a id="openPh" class="mini-btn">Open in Phantom</a>
+              <a id="openSf" class="mini-btn">Open in Solflare</a>
+              <a id="openBp" class="mini-btn">Open in Backpack</a>
+            </div>
+          </div>
         </div>
 
         <div class="buybox">
@@ -108,7 +120,7 @@
     </div>
   </section>
 
-  <!-- REWARDS (NFT GRID) -->
+  <!-- REWARDS -->
   <section class="z-section" id="rewards">
     <div class="z-container">
       <div class="section-head">
@@ -156,11 +168,11 @@
     </div>
   </section>
 
-  <!-- WALLET PICKER MODAL -->
+  <!-- WALLET PICKER -->
   <div id="wlModal" class="wl-modal" style="display:none">
     <div class="wl-box">
       <div class="wl-head"><b data-i18n="choose_wallet">Cüzdan Seç</b><button id="wlClose">×</button></div>
-      <button class="wl-item" data-w="phantom"><img src="https://cdn.jsdelivr.net/gh/solana-labs/token-list/assets/mainnet/So11111111111111111111111111111111111111112/logo.png"> Phantom</button>
+      <button class="wl-item" data-w="phantom"><img src="https://phantom.app/favicon.ico"> Phantom</button>
       <button class="wl-item" data-w="solflare"><img src="https://solflare.com/favicon-32x32.png"> Solflare</button>
       <button class="wl-item" data-w="backpack"><img src="https://backpack.app/favicon.ico"> Backpack</button>
       <div class="wl-hint" data-i18n="wallet_hint">Masaüstü: eklenti ile; Mobil: cüzdan uygulaması açılır, onay verince geri dönersin.</div>
@@ -168,10 +180,10 @@
   </div>
 
   <!-- SCRIPTS (SIRA ÖNEMLİ) -->
-  <script src="lang/lang.js?v=8"></script>
-  <script src="app.v1.js?v=9"></script>
-  <script src="wallet-lite.js?v=8"></script>
-  <script src="solana.v1.js?v=9"></script>
-  <script>document.addEventListener("DOMContentLoaded", ()=> I18N.buildMenu());</script>
+  <script defer src="lang/lang.js?v=10"></script>
+  <script defer src="app.v1.js?v=11"></script>
+  <script defer src="wallet-lite.js?v=11"></script>
+  <script defer src="solana.v1.js?v=11"></script>
+  <script>window.addEventListener("DOMContentLoaded", ()=> I18N.buildMenu());</script>
 </body>
 </html>
