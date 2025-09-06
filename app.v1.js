@@ -2,7 +2,7 @@
 window.ZUZU_CONFIG = {
   tokenSymbol: "ZUZU",
   tokenDecimals: 9,
-  presalePrice: 0.005,                   // 1 ZUZU = 0.005 USDT
+  presalePrice: 0.005,
   ownerSol: "FniLJmY5L6zQyQfot6xsiYojHeEzoGs2xZXYZh1U9QwF",
   launchAtISO: "2025-11-05T13:00:00Z",
   nftImages: [
@@ -17,11 +17,10 @@ function startCountdown(){
   const set = (id,v)=>{ const el=document.getElementById(id); if(el) el.textContent=String(v).padStart(2,"0"); };
   (function loop(){
     const d = Math.max(0, target - Date.now());
-    const day = Math.floor(d/86400000);
-    const hr  = Math.floor(d%86400000/3600000);
-    const mn  = Math.floor(d%3600000/60000);
-    const sc  = Math.floor(d%60000/1000);
-    set("cdDays", day); set("cdHours", hr); set("cdMins", mn); set("cdSecs", sc);
+    set("cdDays", Math.floor(d/86400000));
+    set("cdHours", Math.floor(d%86400000/3600000));
+    set("cdMins", Math.floor(d%3600000/60000));
+    set("cdSecs", Math.floor(d%60000/1000));
     requestAnimationFrame(loop);
   })();
 }
@@ -42,7 +41,7 @@ function buildNFTGrid(){
   });
 }
 
-// === Buttons ===
+// === UI wiring ===
 function wireUI(){
   document.querySelectorAll("#connectBtn,#btnConnect").forEach(b=>{
     b.addEventListener("click", ()=> WalletLite.openPicker());
@@ -57,6 +56,17 @@ function wireUI(){
       await ZUZU_SOL.buyTokens(qty, pay);
     }
   });
+
+  // Mobil fallback – cüzdan tarayıcısında aç
+  const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
+  const mf = document.getElementById("mobileOpen");
+  if(mf && isMobile){
+    mf.style.display = "block";
+    const here = encodeURIComponent(location.href.split('?')[0]);
+    document.getElementById("openPh").href = `https://phantom.app/ul/browse/${here}`;
+    document.getElementById("openSf").href = `https://solflare.com/ul/browse/${here}`;
+    document.getElementById("openBp").href = `https://backpack.app/ul/browse/${here}`;
+  }
 }
 
 document.addEventListener("DOMContentLoaded", ()=>{
