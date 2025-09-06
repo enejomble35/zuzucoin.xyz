@@ -1,89 +1,49 @@
-// =============================
-// Language Manager (lang.js)
-// =============================
+/* lang/lang.js */
+(function () {
+  const SUPPORTED = ["tr","en","fr","pt","ru"];
+  const NAMES = { tr:"Türkçe", en:"English", fr:"Français", pt:"Português", ru:"Русский" };
+  const FLAGS = { tr:"assets/flags/tr.png", en:"assets/flags/en.png", fr:"assets/flags/fr.png", pt:"assets/flags/pt.png", ru:"assets/flags/ru.png" };
 
-// Desteklenen diller
-const SUPPORTED = ["en", "tr", "fr", "pt", "ru"];
-const FALLBACK = "en";
+  let cur = (localStorage.getItem("zuzu_lang") || navigator.language || "tr").slice(0,2).toLowerCase();
+  if (!SUPPORTED.includes(cur)) cur = "tr";
 
-// Tarayıcı dilini veya daha önce seçileni bul
-function getInitialLang() {
-  const saved = localStorage.getItem("lang");
-  if (saved && SUPPORTED.includes(saved)) return saved;
+  const cache = {};
+  const $bar = document.getElementById("lang-select");
 
-  const nav = navigator.language.slice(0, 2).toLowerCase();
-  if (SUPPORTED.includes(nav)) return nav;
-
-  return FALLBACK;
-}
-
-// JSON sözlüğünü yükle
-async function loadDict(lang) {
-  const pick = SUPPORTED.includes(lang) ? lang : FALLBACK;
-  try {
-    const res = await fetch(`/lang/${pick}.json?v=1`);
-    if (!res.ok) throw new Error("dict fetch error");
-    return await res.json();
-  } catch (e) {
-    console.error("Dil dosyası yüklenemedi:", e);
-    if (pick !== FALLBACK) {
-      const res = await fetch(`/lang/${FALLBACK}.json?v=1`);
-      return await res.json();
-    }
-    return {};
-  }
-}
-
-// Çevirileri uygula
-async function applyLang(lang) {
-  const dict = await loadDict(lang);
-
-  // data-i18n attribute'una sahip elementleri değiştir
-  document.querySelectorAll("[data-i18n]").forEach(el => {
-    const key = el.getAttribute("data-i18n");
-    if (dict[key]) {
-      el.innerText = dict[key];
-    }
-  });
-
-  // seçilen dili kaydet
-  localStorage.setItem("lang", lang);
-
-  // seçili bayrağı işaretle
-  document.querySelectorAll(".lang-flag").forEach(flag => {
-    flag.classList.toggle("active", flag.dataset.lang === lang);
-  });
-}
-
-// Dil seçme menüsünü hazırla
-function setupLangSelector() {
-  const container = document.getElementById("lang-select");
-  if (!container) return;
-
-  container.innerHTML = ""; // önce temizle
-
-  SUPPORTED.forEach(code => {
-    const img = document.createElement("img");
-    img.src = `/flags/${code}.png`;
-    img.alt = code;
-    img.dataset.lang = code;
-    img.className = "lang-flag";
-    img.style.cursor = "pointer";
-    img.style.width = "32px";
-    img.style.height = "24px";
-    img.style.margin = "0 5px";
-
-    img.addEventListener("click", () => {
-      applyLang(code);
+  // bayrakları çiz
+  if ($bar) {
+    $bar.classList.add("lang-flags");
+    $bar.innerHTML = SUPPORTED.map(c => `
+      <button class="flag-btn" data-lang="${c}" title="${NAMES[c]}">
+        <img src="${FLAGS[c]}" alt="${c}">
+      </button>`).join("");
+    $bar.addEventListener("click",(e)=>{
+      const btn=e.target.closest(".flag-btn"); if(!btn) return;
+      setLang(btn.dataset.lang);
     });
+  }
 
-    container.appendChild(img);
-  });
-}
+  async function load(code){
+    if(cache[code]) return cache[code];
+    const res = await fetch(`lang/${code}.json?v=1`, {cache:"no-store"});
+    cache[code] = await res.json();
+    return cache[code];
+  }
 
-// İlk yükleme
-document.addEventListener("DOMContentLoaded", () => {
-  setupLangSelector();
-  const initLang = getInitialLang();
-  applyLang(initLang);
-});
+  function apply(dict){
+    document.querySelectorAll("[data-i18n]").forEach(el=>{
+      const k=el.getAttribute("data-i18n");
+      if(dict[k]) el.innerHTML = dict[k];
+    });
+    document.documentElement.lang = cur;
+  }
+
+  async function setLang(code){
+    if(!SUPPORTED.includes(code)) return;
+    cur = code; localStorage.setItem("zuzu_lang", code);
+    apply(await load(code));
+  }
+
+  window.ZUZU_I18N = { setLang, get lang(){return cur;} };
+  setLang(cur);
+})();
