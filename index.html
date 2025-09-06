@@ -273,5 +273,30 @@
 <script src="wallet-lite.js"></script>
 <script src="solana.v1.js"></script>
 <script src="script.js"></script>
+  <script>
+(function(){
+  const img = document.getElementById('zuzuLogo');
+  if(!img) return;
+  // hangi dosyayı yükledinse onu sırayla dene
+  const candidates = [
+    "assets/images/branding/zuzu-anim.webp",
+    "assets/images/branding/zuzu-anim.jpg",
+    "assets/images/branding/zuzu.webp",
+    "assets/images/branding/zuzu.jpg",
+    "assets/images/zuzu.webp",
+    "assets/images/zuzu.jpg",
+    "assets/images/logo-big.png"
+  ];
+  function tryNext(i){
+    if(i>=candidates.length) return;
+    const url=candidates[i];
+    const test=new Image();
+    test.onload=()=>{ img.src=url; };
+    test.onerror=()=>tryNext(i+1);
+    test.src=url;
+  }
+  tryNext(0);
+})();
+</script>
 </body>
 </html>
