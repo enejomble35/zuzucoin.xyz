@@ -1,1 +1,50 @@
+{
+  "__title": "ZUZUCOIN — Ön Satış • Stake • NFT Ödülleri",
+  "nav_presale": "Ön Satış",
+  "nav_stake": "Stake",
+  "nav_nft": "NFT Ödülleri",
+  "nav_roadmap": "Yol Haritası",
+  "nav_token": "Tokonomi",
+  "connect": "Cüzdan Bağla",
 
+  "hero_badge": "Ön Satış • Stake ile NFT Kazan",
+  "hero_title": "ZUZU — Geleceğin Robotic Kirpisi 🦔⚡",
+  "hero_lead": "Stake et ve <b>ZUZU Maskot NFT</b> kazan. Sınırlı arz, yüksek <b>utility</b>.",
+  "cta_stake": "Stake Etmeye Başla",
+  "cta_nft": "NFT Ödülleri",
+  "collection_page": "Koleksiyon Sayfası",
+  "contract": "Kontrat:",
+
+  "days": "GÜN",
+  "hours": "SAAT",
+  "mins": "DAKİKA",
+  "secs": "SANİYE",
+
+  "presale_title": "Ön Satış — Geri Sayım",
+  "presale_lead": "ZUZU ön satışına hazır ol! <b>Sınırlı tahsis</b>, topluluğa özel fiyat.",
+  "amount": "Miktar (ZUZU)",
+
+  "w1": "1. Hafta (En Ucuz)",
+  "w2": "2. Hafta",
+  "w3": "3. Hafta",
+  "w4": "4. Hafta (Son Fırsat)",
+  "cost": "Maliyet:",
+  "buy": "Satın Al",
+  "exchanges": "Desteklenen Borsalar",
+
+  "stake_title": "Stake Pro — Kilitle, Kazan, NFT Kap ✨",
+  "stake_lead": "ZUZU’larını kilitle, <b>APY + NFT BOOST</b> ile pasif gelir elde et. Erken stake edenler rozet & airdrop önceliği alır.",
+  "calc_title": "Kazanç Hesaplayıcı",
+  "amount2": "Miktar (ZUZU)",
+  "lock": "Kilit Süresi",
+  "nft_have": "Elinde NFT var mı?",
+  "early": "Erken Rozet",
+  "calc_btn": "Hesapla",
+  "ret": "Toplam Getiri",
+  "avg": "Aylık Ortalama",
+  "boost": "Toplam Boost",
+
+  "token_title": "Tokonomi (Görselleştirilmiş)",
+  "road_title": "Yol Haritası",
+  "road_lead": "Topluluk, staking, NFT drop’ları ve listelemelere odaklı plan."
+}
