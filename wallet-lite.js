@@ -3,11 +3,19 @@ const WalletLite = (()=>{
   const closeBtn = document.getElementById("wlClose");
   closeBtn && (closeBtn.onclick = ()=> modal.style.display="none");
 
+  // URL'de cüzdan dönüş parametreleri varsa temizle
+  (function cleanWalletParams(){
+    const q = location.search;
+    if(q.includes("phantom_encryption_public_key") || q.includes("errorCode") || q.includes("phantom_source")){
+      history.replaceState({}, "", location.pathname);
+    }
+  })();
+
   function setUI(pk){
     const short = pk ? pk.slice(0,4)+"…"+pk.slice(-4) : "Not connected";
     const w = document.getElementById("solWallet"); if(w) w.textContent = short;
     const s = document.getElementById("solStatus"); if(s) s.textContent = pk?"Bağlı":"Hazır (cüzdan bekleniyor)";
-    const top = document.getElementById("connectBtn"); if(top) top.textContent = pk?short:"Cüzdan Bağla";
+    const top = document.getElementById("connectBtn"); if(top) top.textContent = pk?short:I18N?.t?.("connect")||"Cüzdan Bağla";
     window.ZUZU_SOL && window.ZUZU_SOL.update(pk||null);
   }
 
@@ -43,17 +51,18 @@ const WalletLite = (()=>{
         if(w==="backpack") ok = await tryBackpackConnect();
 
         if(!ok){
-          const back = encodeURIComponent(location.href);
-          if(w==="phantom") location.href = `https://phantom.app/ul/v1/connect?redirect_link=${back}&app_url=${back}`;
+          // Deeplink: kullanıcıyı cüzdan app'ine götür
+          const back = encodeURIComponent(location.href.split('?')[0]);
+          if(w==="phantom") location.href = `https://phantom.app/ul/v1/connect?redirect_link=${back}`;
           if(w==="solflare") location.href = `https://solflare.com/ul/v1/connect?redirect_link=${back}`;
-          if(w==="backpack") alert("Backpack mobil deeplink sınırlı; uygulama içi tarayıcıdan açın.");
+          if(w==="backpack") alert("Backpack mobil deeplink sınırlı; uygulama içi tarayıcıyı kullanın.");
         }
       }catch(e){ alert(e.message||e); }
       modal.style.display="none";
     };
   });
 
-  // Deeplink dönüşü
+  // Deeplink dönüşünde tekrar dene (eklentili cihazlarda)
   document.addEventListener("visibilitychange", async ()=>{
     if(!document.hidden){
       await tryPhantomConnect().catch(()=>{});
