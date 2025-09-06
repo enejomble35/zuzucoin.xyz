@@ -61,6 +61,22 @@ a{color:#b8c7ff;text-decoration:none}
 .lead{color:#bfd2ff;font-size:1.05rem}
 .hero-cta{display:flex;gap:.6rem;margin:.8rem 0 1rem;flex-wrap:wrap}
 
+/* ZUZU animasyonlu logo (video) */
+.hero-visual .logo-big {
+  max-width: 420px;
+  width: 100%;
+  display: block;
+  border-radius: 14px;
+  filter: drop-shadow(0 16px 36px rgba(0,0,0,.4));
+  background: #0b1426;
+  object-fit: cover;
+}
+
+/* Hareketli içerikten rahatsız olanlar için sistem ayarı desteği */
+@media (prefers-reduced-motion: reduce) {
+  #zuzuHero { animation: none !important; }
+  #zuzuHero[autoplay] { -webkit-animation: none; }
+}
 /* Sağdaki büyük logo */
 .hero-visual{display:flex;justify-content:center;align-items:center}
 .hero-visual .logo-big{
