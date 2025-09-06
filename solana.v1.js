@@ -1,193 +1,136 @@
-// ========================================
-// ZUZU — SOLANA WALLET (connect + payments)
-// ========================================
-(function(){
-  const CFG = window.ZUZU_CONFIG || {};
-  const I18N = window.ZUZU_I18N || {};
-  const $ = id => document.getElementById(id);
+/* =========================
+   Solana Connect + Satın Al (SOL)
+   Desktop: eklenti ile bağlanır ve işlem imzalatır.
+   Mobile: Phantom deeplink v1 — onaydan sonra tarayıcıya geri döner.
+========================= */
+const { Connection, PublicKey, SystemProgram, LAMPORTS_PER_SOL } = solanaWeb3;
+const bs58 = window.bs58;
 
-  // UI helpers
-  const setStatus = (t)=>{ const e=$("solanaStatus"); if(e) e.textContent=t; };
-  const setAddr   = (a)=>{ const e=$("walletAddr"); if(e) e.textContent=a||"Not connected"; };
-  const setBtnLbl = (t)=>{ const e=$("connectBtn"); if(e) e.textContent=t; };
-  const short = a => a ? (a.slice(0,4)+"…"+a.slice(-4)) : "";
+const $btnConnect = document.getElementById("btnConnect");
+const $btnDisconnect = document.getElementById("btnDisconnect");
+const $status = document.getElementById("statusTxt");
+const $walletTxt = document.getElementById("walletTxt");
 
-  // Provider detect
-  function detect(){
-    if (window.phantom?.solana) return {name:"phantom", adapter:window.phantom.solana};
-    if (window.solana && (window.solana.isPhantom||window.solana.isBackpack)) return {name:(window.solana.isBackpack?"backpack":"phantom"), adapter:window.solana};
-    if (window.solflare?.isSolflare) return {name:"solflare", adapter:window.solflare};
-    if (window.backpack?.solana) return {name:"backpack", adapter:window.backpack.solana};
-    return null;
+let RPC = new Connection("https://api.mainnet-beta.solana.com","confirmed");
+let CURRENT_PUBKEY = null;
+
+/* ---------- helpers ---------- */
+function setStatus(t){ if($status) $status.textContent=t; }
+function setWallet(pk){
+  CURRENT_PUBKEY = pk ? new PublicKey(pk) : null;
+  $walletTxt.textContent = pk ? (pk.slice(0,6)+"..."+pk.slice(-4)) : "Not connected";
+  $btnDisconnect.disabled = !pk;
+  // buy butonlarını aç/kapat
+  document.querySelectorAll(".buyBtn").forEach(b=> b.disabled = !pk);
+}
+
+/* ---------- desktop extension connect ---------- */
+async function connectDesktop(){
+  const w=window.solana;
+  if(!w || (!w.isPhantom && !w.isSolflare && !w.isBackpack)) return false;
+  try{
+    const res = await w.connect({ onlyIfTrusted:false });
+    setWallet(res.publicKey.toString());
+    setStatus("Bağlandı");
+    return true;
+  }catch(e){ console.warn(e); setStatus("Bağlantı reddedildi"); return false; }
+}
+
+/* ---------- phantom deeplink connect (mobile) ---------- */
+function phantomDeepLinkConnect(){
+  const appUrl = location.origin;
+  const redirect = location.origin + location.pathname + "?phantom_callback=1";
+  const eph = nacl.box.keyPair();
+  const ephPubB58 = bs58.encode(eph.publicKey);
+  localStorage.setItem("zuzu_phantom_eph", bs58.encode(eph.secretKey));
+
+  const url = new URL("https://phantom.app/ul/v1/connect");
+  url.searchParams.set("app_url", appUrl);
+  url.searchParams.set("dapp_encryption_public_key", ephPubB58);
+  url.searchParams.set("cluster","mainnet-beta");
+  url.searchParams.set("redirect_link", redirect);
+  window.location.href = url.toString();
+}
+
+function handlePhantomCallbackIfAny(){
+  const q=new URLSearchParams(location.search);
+  if(!q.get("phantom_callback")) return;
+  const encB58=q.get("phantom_encryption_public_key");
+  const nonceB58=q.get("nonce");
+  const dataB58=q.get("data");
+  const err=q.get("errorCode");
+  if(err){ setStatus("Bağlantı iptal edildi"); history.replaceState({}, "", location.pathname); return; }
+
+  try{
+    const ephSk=bs58.decode(localStorage.getItem("zuzu_phantom_eph")||"");
+    const walletPub=bs58.decode(encB58);
+    const shared=nacl.box.before(walletPub, ephSk);
+    const decrypted=nacl.box.open.after(
+      bs58.decode(dataB58), bs58.decode(nonceB58), shared
+    );
+    const payload=JSON.parse(new TextDecoder().decode(decrypted));
+    const pk=payload.public_key;
+    setWallet(pk);
+    setStatus("Bağlandı (Phantom mobile)");
+  }catch(e){ console.error(e); setStatus("Bağlantı hatası"); }
+  finally{
+    history.replaceState({}, "", location.pathname);
+    localStorage.removeItem("zuzu_phantom_eph");
   }
+}
 
-  // Mobile browser?
-  function inMobileBrowser(){
-    const ua=navigator.userAgent||"";
-    const mobile=/Android|iPhone|iPad|iPod/i.test(ua);
-    const inWallet=/Phantom|Solflare|Backpack/i.test(ua);
-    return mobile && !inWallet;
-  }
+/* ---------- disconnect ---------- */
+function disconnectAll(){ try{window?.solana?.disconnect?.();}catch(_){} setWallet(null); setStatus("Hazır (cüzdan bekleniyor)"); }
 
-  // Deep-links (cüzdanın iç tarayıcıda siteyi açmak için)
-  function deeplinkFor(name){
-    const url = encodeURIComponent(location.href.split("#")[0]);
-    if(name==="phantom")  return `https://phantom.app/ul/browse/${url}`;
-    if(name==="solflare") return `https://solflare.com/ul/browse/${url}`;
-    if(name==="backpack") return `https://backpack.app/ul/browse/${url}`;
-    return null;
-  }
+/* ---------- buy with SOL (both desktop + mobile-injected) ---------- */
+async function buyWithSOL(week){
+  if(!CURRENT_PUBKEY){ alert("Önce cüzdan bağla."); return; }
+  const qty = parseFloat((document.getElementById("buyAmount")?.value||"0").toString().replace(/[^\d.]/g,""))||0;
+  if(qty<=0){ alert("Geçerli miktar gir."); return; }
 
-  // Basit seçim modalı
-  function ensureSheet(){
-    let back = $("walletSheet");
-    if(back) return back;
-    back = document.createElement("div");
-    back.id="walletSheet";
-    back.className="z-modal-back";
-    back.innerHTML=`<div class="z-modal">
-      <h3>Cüzdan Seç</h3>
-      <div class="z-list">
-        <button data-w="phantom">Phantom</button>
-        <button data-w="solflare">Solflare</button>
-        <button data-w="backpack">Backpack</button>
-      </div>
-      <div class="muted-sm">Masaüstü: eklenti varsa doğrudan bağlanır.<br>Mobil: cüzdanın iç tarayıcısında açılır, “Bağlan” onayı gelir.</div>
-      <div style="margin-top:8px"><button id="wsClose" class="z-btn z-btn-ghost" style="width:100%">Kapat</button></div>
-    </div>`;
-    back.addEventListener("click",e=>{ if(e.target===back) back.style.display="none"; });
-    document.body.appendChild(back);
-    $("wsClose").onclick = ()=> back.style.display="none";
-    return back;
-  }
-  function openSheet(){ ensureSheet().style.display="flex"; }
-  function closeSheet(){ const b=$("walletSheet"); if(b) b.style.display="none"; }
+  // USDT fiyatını SOL'a çevir
+  const usdtPrice = ZUZU_CONFIG.weekPrices[week];
+  const solPerUsdt = ZUZU_CONFIG.usdToSol;
+  const paySol = qty * usdtPrice * solPerUsdt;
 
-  let adapter=null, publicKey=null;
-  const Rpc = new solanaWeb3.Connection("https://api.mainnet-beta.solana.com","confirmed");
+  const lamports = Math.floor(paySol * LAMPORTS_PER_SOL);
+  const ix = SystemProgram.transfer({
+    fromPubkey: CURRENT_PUBKEY,
+    toPubkey: new PublicKey(ZUZU_CONFIG.ownerSol),
+    lamports
+  });
 
-  async function doConnect(a){
-    const res = await a.connect({ onlyIfTrusted:false });
-    const key = (res && res.publicKey) ? res.publicKey : a.publicKey;
-    const b58 = key && key.toString ? key.toString() : String(key||"");
-    adapter=a; publicKey=key;
-    setStatus("Bağlandı"); setAddr(short(b58)); setBtnLbl(short(b58));
-    window.__zuzuWallet = { adapter, publicKey };
-  }
+  const tx = new solanaWeb3.Transaction().add(ix);
+  tx.feePayer = CURRENT_PUBKEY;
+  tx.recentBlockhash = (await RPC.getLatestBlockhash()).blockhash;
 
-  async function start(choice){
+  const provider = window.solana;
+  if(provider && (provider.isPhantom || provider.isSolflare || provider.isBackpack)){
     try{
-      const f = detect();
-      // Masaüstünde eklenti varsa direkt bağlan
-      if(f && (!choice || f.name===choice)){ await doConnect(f.adapter); closeSheet(); return; }
-      // Mobil tarayıcıdaysa deep-link
-      if(inMobileBrowser()){
-        const link=deeplinkFor(choice||"phantom");
-        if(link){ location.href=link; return; }
-      }
-      alert("Phantom / Solflare / Backpack yükleyin lütfen.");
-    }catch(e){ console.warn(e); alert("Wallet connect error."); }
-  }
-
-  async function disconnect(){
-    try{ await adapter?.disconnect?.(); }catch(_){}
-    adapter=null; publicKey=null;
-    setStatus("Hazır (cüzdan bekleniyor)");
-    setAddr("Not connected");
-    setBtnLbl((I18N.tr?.connect)||"Cüzdan Bağla");
-    window.__zuzuWallet = null;
-  }
-
-  function ready(){ return !!adapter; }
-  function get(){ if(!adapter) throw new Error("Wallet not connected"); return {adapter, publicKey}; }
-
-  // ÖDEME: SOL
-  async function sendSOL(amountInputId){
-    try{
-      if(!ready()) await start();
-      const {adapter, publicKey} = get();
-      const to   = new solanaWeb3.PublicKey(CFG.ownerSol);
-      const amount = parseFloat(($(amountInputId)?.value||"0").toString().replace(/[^\d.]/g,""))||0;
-      if(amount<=0) return alert("Geçerli SOL miktarı gir.");
-      const tx = new solanaWeb3.Transaction().add(
-        solanaWeb3.SystemProgram.transfer({
-          fromPubkey: publicKey, toPubkey: to, lamports: Math.round(amount * solanaWeb3.LAMPORTS_PER_SOL)
-        })
-      );
-      tx.feePayer = publicKey;
-      const {blockhash,lastValidBlockHeight}=await Rpc.getLatestBlockhash();
-      tx.recentBlockhash = blockhash;
-      const {signature}=await adapter.signAndSendTransaction(tx);
-      await Rpc.confirmTransaction({signature, blockhash, lastValidBlockHeight}, "confirmed");
-      alert("Success!\nTx: "+signature);
-    }catch(e){ console.error(e); alert("SOL gönderimi başarısız: "+(e.message||e)); }
-  }
-
-  // ÖDEME: USDT (SPL)
-  async function sendUSDT(amountInputId, usdtMint){
-    try{
-      if(!ready()) await start();
-      const {adapter, publicKey}=get();
-      const amount=parseFloat(($(amountInputId)?.value||"0").toString().replace(/[^\d.]/g,""))||0;
-      if(amount<=0) return alert("Geçerli USDT miktarı gir.");
-      const mint = new solanaWeb3.PublicKey(usdtMint || CFG.usdtMint);
-      const toOwner = new solanaWeb3.PublicKey(CFG.ownerSol);
-
-      const fromAta = await splToken.getAssociatedTokenAddress(mint, publicKey);
-      const toAta   = await splToken.getAssociatedTokenAddress(mint, toOwner);
-
-      const ix=[];
-      const toInfo=await Rpc.getAccountInfo(toAta);
-      if(!toInfo){
-        ix.push(splToken.createAssociatedTokenAccountInstruction(
-          publicKey, toAta, toOwner, mint
-        ));
-      }
-      // USDT 6 decimals
-      const qty = BigInt(Math.round(amount * 1e6));
-      ix.push(splToken.createTransferInstruction(fromAta, toAta, publicKey, qty));
-
-      const tx = new solanaWeb3.Transaction().add(...ix);
-      tx.feePayer = publicKey;
-      const {blockhash,lastValidBlockHeight}=await Rpc.getLatestBlockhash();
-      tx.recentBlockhash = blockhash;
-
-      const {signature}=await adapter.signAndSendTransaction(tx);
-      await Rpc.confirmTransaction({signature,blockhash,lastValidBlockHeight},"confirmed");
-      alert("Success!\nTx: "+signature);
-    }catch(e){ console.error(e); alert("USDT gönderimi başarısız: "+(e.message||e)); }
-  }
-
-  // İlk durum
-  function init(){
-    setStatus("Hazır (cüzdan bekleniyor)");
-    const f = detect();
-    if(f && f.adapter?.publicKey){
-      adapter=f.adapter; publicKey=f.adapter.publicKey;
-      const b58=publicKey.toString?publicKey.toString():String(publicKey);
-      setAddr(short(b58)); setBtnLbl(short(b58));
-      window.__zuzuWallet={adapter,publicKey};
+      const { signature } = await provider.signAndSendTransaction(tx);
+      setStatus("Satın alım gönderildi: "+signature.slice(0,10)+"…");
+      alert("Satın alım gönderildi.\nTX: "+signature);
+    }catch(e){
+      console.error(e); alert("İşlem iptal edildi veya hata oluştu.");
     }
-    // sheet içinde seçimleri bağla
-    const back=ensureSheet();
-    back.querySelectorAll("[data-w]").forEach(b=>{
-      b.addEventListener("click", ()=>start(b.getAttribute("data-w")));
-    });
+  }else{
+    alert("Mobil tarayıcıda işlem imzalama için cüzdanın içinden açman gerekir.");
   }
+}
 
-  // Public API
-  window.ZUZU_Solana = {
-    init,
-    open: openSheet,
-    start,
-    disconnect,
-    ready,
-    get,
-    sendSOL,
-    sendUSDT
-  };
+/* ---------- events ---------- */
+$btnConnect?.addEventListener("click", async ()=>{
+  setStatus("Bağlanılıyor…");
+  const ok = await connectDesktop();
+  if(ok) return;
+  phantomDeepLinkConnect();
+});
+$btnDisconnect?.addEventListener("click", disconnectAll);
 
-  // otomatik init
-  if(document.readyState==="loading"){ document.addEventListener("DOMContentLoaded", init); }
-  else { init(); }
-})();
+// Buy buttons
+document.querySelectorAll(".buyBtn").forEach(btn=>{
+  btn.addEventListener("click", ()=> buyWithSOL(parseInt(btn.dataset.week,10)||0));
+});
+
+// handle phantom callback on load
+handlePhantomCallbackIfAny();
