@@ -1,80 +1,65 @@
-/* Basit cüzdan bağlayıcı (modalsız çağıracağız) */
 const WalletLite = (()=>{
-
   const modal = document.getElementById("wlModal");
   const closeBtn = document.getElementById("wlClose");
-  if(closeBtn) closeBtn.onclick = ()=>modal.style.display="none";
+  closeBtn && (closeBtn.onclick = ()=> modal.style.display="none");
 
-  // UI güncelle
-  function updateUI(pubkey){
-    const short = pubkey ? pubkey.slice(0,4)+"…"+pubkey.slice(-4) : "Not connected";
-    const wEl = document.getElementById("solWallet");
-    if(wEl) wEl.textContent = short;
-    const topBtn = document.getElementById("connectBtn");
-    if(topBtn) topBtn.textContent = pubkey ? short : (document.querySelector("#connectBtn[data-i18n]")?document.querySelector("#connectBtn[data-i18n]").innerText:"Cüzdan Bağla");
-    const stEl = document.getElementById("solStatus");
-    if(stEl) stEl.textContent = pubkey ? "Bağlı" : "Hazır (cüzdan bekleniyor)";
-    // global
-    window.ZUZU_SOL && window.ZUZU_SOL.update(pubkey||null);
+  function setUI(pk){
+    const short = pk ? pk.slice(0,4)+"…"+pk.slice(-4) : "Not connected";
+    const w = document.getElementById("solWallet"); if(w) w.textContent = short;
+    const s = document.getElementById("solStatus"); if(s) s.textContent = pk?"Bağlı":"Hazır (cüzdan bekleniyor)";
+    const top = document.getElementById("connectBtn"); if(top) top.textContent = pk?short:"Cüzdan Bağla";
+    window.ZUZU_SOL && window.ZUZU_SOL.update(pk||null);
   }
 
-  async function connectPhantom(){
-    const prov = window.phantom?.solana || window.solana;
-    if(prov && prov.isPhantom){
-      const r = await prov.connect();
-      updateUI(r.publicKey.toBase58());
-      return;
-    }
-    // yoksa yönlendir (mobile deeplink)
-    const back = encodeURIComponent(location.href);
-    location.href = `https://phantom.app/ul/v1/connect?app_url=${back}&redirect_link=${back}`;
+  async function tryPhantomConnect(){
+    const p = window.phantom?.solana || window.solana;
+    if(p?.isPhantom){ const r = await p.connect(); setUI(r.publicKey.toBase58()); return true; }
+    return false;
+  }
+  async function trySolflareConnect(){
+    const s = window.solflare;
+    if(s?.isSolflare){ const r = await s.connect(); setUI(r.publicKey.toBase58()); return true; }
+    return false;
+  }
+  async function tryBackpackConnect(){
+    const b = window.backpack?.solana;
+    if(b){ const r = await b.connect(); setUI(r.publicKey.toBase58()); return true; }
+    return false;
   }
 
-  async function connectSolflare(){
-    const sf = window.solflare;
-    if(sf && sf.isSolflare){
-      const r = await sf.connect();
-      updateUI(r.publicKey.toBase58());
-      return;
-    }
-    const back = encodeURIComponent(location.href);
-    location.href = `https://solflare.com/ul/v1/connect?redirect_link=${back}`;
-  }
-
-  async function connectBackpack(){
-    const bp = window.backpack?.solana;
-    if(bp){
-      const r = await bp.connect();
-      updateUI(r.publicKey.toBase58());
-      return;
-    }
-    alert("Backpack eklentisini kurun.");
-  }
-
+  function openPicker(){ modal.style.display="grid"; }
   async function disconnect(){
-    try{
-      const prov = window.phantom?.solana || window.solana;
-      if(prov?.disconnect) await prov.disconnect();
-    }catch{}
-    updateUI(null);
+    try{ await (window.phantom?.solana||window.solana)?.disconnect?.(); }catch{}
+    setUI(null);
   }
 
-  // modal aç
-  function openPicker(){
-    modal.style.display="grid";
-  }
-  // seçeneklere tık
   modal?.querySelectorAll("[data-w]").forEach(btn=>{
-    btn.addEventListener("click", async ()=>{
+    btn.onclick = async ()=>{
       try{
-        if(btn.dataset.w==="phantom") await connectPhantom();
-        if(btn.dataset.w==="solflare") await connectSolflare();
-        if(btn.dataset.w==="backpack") await connectBackpack();
+        const w = btn.dataset.w;
+        let ok = false;
+        if(w==="phantom") ok = await tryPhantomConnect();
+        if(w==="solflare") ok = await trySolflareConnect();
+        if(w==="backpack") ok = await tryBackpackConnect();
+
+        if(!ok){
+          const back = encodeURIComponent(location.href);
+          if(w==="phantom") location.href = `https://phantom.app/ul/v1/connect?redirect_link=${back}&app_url=${back}`;
+          if(w==="solflare") location.href = `https://solflare.com/ul/v1/connect?redirect_link=${back}`;
+          if(w==="backpack") alert("Backpack mobil deeplink sınırlı; uygulama içi tarayıcıdan açın.");
+        }
       }catch(e){ alert(e.message||e); }
       modal.style.display="none";
-    });
+    };
   });
 
-  // public API
-  return {openPicker, disconnect, updateUI};
+  // Deeplink dönüşü
+  document.addEventListener("visibilitychange", async ()=>{
+    if(!document.hidden){
+      await tryPhantomConnect().catch(()=>{});
+      await trySolflareConnect().catch(()=>{});
+    }
+  });
+
+  return {openPicker, disconnect, setUI};
 })();
