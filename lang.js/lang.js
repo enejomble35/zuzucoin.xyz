@@ -39,5 +39,7 @@ window.I18N = (function(){
     load(current);
   }
 
-  return {load, buildMenu};
+  function t(key){ return dict[key] || key; } // küçük yardımcı
+
+  return {load, buildMenu, t};
 })();
