@@ -1,59 +1,43 @@
-/* lang/lang.js — TR/EN/FR/PT/RU bayraklı; null güvenli */
-(function () {
-  const SUPPORTED = ["tr","en","fr","pt","ru"];
-  const NAMES = { tr:"Türkçe", en:"English", fr:"Français", pt:"Português", ru:"Русский" };
-  const FLAGS = {
-    tr:"assets/flags/tr.png",
-    en:"assets/flags/en.png",
-    fr:"assets/flags/fr.png",
-    pt:"assets/flags/pt.png",
-    ru:"assets/flags/ru.png"
-  };
-
-  // Eski i18n ile çakışmayı önle
-  try { if (window.applyLang) window.applyLang = function(){}; } catch(e){}
-
-  let cur = (localStorage.getItem("zuzu_lang") || navigator.language || "tr").slice(0,2).toLowerCase();
-  if (!SUPPORTED.includes(cur)) cur = "tr";
-  const cache = {};
+window.I18N = (function(){
+  const storeKey = "zuzu_lang";
+  const langs = [
+    {code:"tr", name:"Türkçe",    flag:"flags/tr.png"},
+    {code:"en", name:"English",   flag:"flags/en.png"},
+    {code:"fr", name:"Français",  flag:"flags/fr.png"},
+    {code:"pt", name:"Português", flag:"flags/pt.png"},
+    {code:"ru", name:"Русский",   flag:"flags/ru.png"},
+  ];
+  let dict = {}, current = localStorage.getItem(storeKey) || "tr";
 
   async function load(code){
-    if (cache[code]) return cache[code];
-    const r = await fetch(`lang/${code}.json?v=2`, {cache:"no-store"});
-    cache[code] = await r.json();
-    return cache[code];
+    try{
+      const r = await fetch(`lang/${code}.json?${Date.now()}`);
+      dict = await r.json(); current = code; localStorage.setItem(storeKey, code);
+      document.querySelectorAll("[data-i18n]").forEach(el=>{
+        const k = el.getAttribute("data-i18n");
+        if(dict[k]) el.innerHTML = dict[k];
+      });
+      const m = langs.find(l=>l.code===code);
+      if(m){ const f=document.getElementById("langFlag"); const c=document.getElementById("langCode");
+        if(f) f.src=m.flag; if(c) c.textContent=code.toUpperCase();
+      }
+    }catch(e){ console.error("Lang load", e); }
   }
 
-  function apply(dict){
-    const nodes = document.querySelectorAll ? document.querySelectorAll("[data-i18n]") : [];
-    nodes.forEach(el=>{
-      const k = el.getAttribute("data-i18n");
-      if (dict && dict[k]) el.innerHTML = dict[k];
+  function buildMenu(){
+    const drop=document.getElementById("langDrop"), btn=document.getElementById("langBtn");
+    if(!drop||!btn) return;
+    drop.innerHTML="";
+    langs.forEach(l=>{
+      const b=document.createElement("button");
+      b.innerHTML=`<img src="${l.flag}" width="18" height="18"><span>${l.name}</span>`;
+      b.onclick=()=>{ drop.style.display="none"; load(l.code); };
+      drop.appendChild(b);
     });
-    document.documentElement.lang = cur;
+    btn.onclick=()=> drop.style.display = drop.style.display==="block"?"none":"block";
+    document.addEventListener("click",(e)=>{ if(!document.getElementById("langMenu").contains(e.target)) drop.style.display="none"; });
+    load(current);
   }
 
-  async function setLang(code){
-    if (!SUPPORTED.includes(code)) return;
-    cur = code; localStorage.setItem("zuzu_lang", code);
-    apply(await load(code));
-  }
-
-  function mountFlags(){
-    const bar = document.getElementById("lang-select");
-    if (!bar) return;
-    bar.className = "lang-flags";
-    bar.innerHTML = SUPPORTED.map(c =>
-      `<button class="flag-btn" data-lang="${c}" title="${NAMES[c]}">
-         <img src="${FLAGS[c]}" alt="${c}">
-       </button>`).join("");
-    bar.addEventListener("click", e=>{
-      const btn = e.target.closest(".flag-btn"); if (btn) setLang(btn.dataset.lang);
-    });
-  }
-
-  function ready(fn){ document.readyState!=="loading" ? fn() : document.addEventListener("DOMContentLoaded",fn); }
-  ready(async ()=>{ mountFlags(); await setLang(cur); });
-
-  window.ZUZU_I18N = { setLang, get lang(){return cur;} };
+  return {load, buildMenu};
 })();
