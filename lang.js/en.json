@@ -1,1 +1,50 @@
+{
+  "__title": "ZUZUCOIN — Pre-Sale • Stake • NFT Rewards",
+  "nav_presale": "Pre-Sale",
+  "nav_stake": "Stake",
+  "nav_nft": "NFT Rewards",
+  "nav_roadmap": "Roadmap",
+  "nav_token": "Tokenomics",
+  "connect": "Connect Wallet",
 
+  "hero_badge": "Pre-Sale • Stake to Win NFT",
+  "hero_title": "ZUZU — Robotic Hedgehog 🦔⚡",
+  "hero_lead": "Stake and win <b>ZUZU Mascot NFT</b>. Limited supply, high <b>utility</b>.",
+  "cta_stake": "Start Staking",
+  "cta_nft": "NFT Rewards",
+  "collection_page": "Collection Page",
+  "contract": "Contract:",
+
+  "days": "DAYS",
+  "hours": "HOURS",
+  "mins": "MINUTES",
+  "secs": "SECONDS",
+
+  "presale_title": "Pre-Sale — Countdown",
+  "presale_lead": "Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.",
+  "amount": "Amount (ZUZU)",
+
+  "w1": "Week 1 (Cheapest)",
+  "w2": "Week 2",
+  "w3": "Week 3",
+  "w4": "Week 4 (Last Chance)",
+  "cost": "Cost:",
+  "buy": "Buy",
+  "exchanges": "Supported Exchanges",
+
+  "stake_title": "Stake Pro — Lock, Earn, Get NFT ✨",
+  "stake_lead": "Lock your ZUZU, earn <b>APY + NFT BOOST</b>. Early stakers get badge & airdrop priority.",
+  "calc_title": "Earnings Calculator",
+  "amount2": "Amount (ZUZU)",
+  "lock": "Lock Period",
+  "nft_have": "Have NFT?",
+  "early": "Early Badge",
+  "calc_btn": "Calculate",
+  "ret": "Total Return",
+  "avg": "Monthly Avg",
+  "boost": "Total Boost",
+
+  "token_title": "Tokenomics (Visualized)",
+  "road_title": "Roadmap",
+  "road_lead": "Clear plan focused on community, staking, NFT drops, listings."
+}
