@@ -1,40 +1,33 @@
 <!doctype html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>ZUZU — Robotic Hedgehog</title>
+  <link rel="stylesheet" href="style.css?v=2"/>
 
-  <!-- senin mevcut CSS’in -->
-  <link rel="stylesheet" href="style.css">
-
-  <!-- bayrak menüsü için ufak stil -->
-  <style>
-    .lang-flags{display:flex;gap:8px;align-items:center}
-    .flag-btn{border:0;background:#12203a;border-radius:10px;padding:4px;cursor:pointer;outline:none}
-    .flag-btn img{width:24px;height:18px;display:block;border-radius:3px}
-    /* hero büyük görsel alanı */
-    .hero-visual{display:flex;justify-content:center;align-items:center}
-    .hero-visual img#zuzuLogo{max-width:480px;width:100%;height:auto;display:block;
-      filter:drop-shadow(0 16px 36px rgba(0,0,0,.4));border-radius:12px}
-    /* dil menüsünün yeri (navbar sağında) */
-    .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px}
-    .right-actions{display:flex;gap:10px;align-items:center}
-  </style>
+  <!-- Hata yakalama: popup yok, sayfa kilitlenmez -->
+  <script>window.onerror=(m,s,l)=>console.error("JS Error:",m,"@",s+":"+l);</script>
 </head>
 <body>
 
   <!-- NAV -->
   <nav class="z-nav">
-    <div class="z-container z-nav-inner topbar">
+    <div class="z-container z-nav-inner">
       <div class="brand">
-        <img src="assets/images/logo-32.png" alt="ZUZU" width="40" height="40">
+        <img src="assets/images/branding/zuzu-logo.png" alt="ZUZU" width="40" height="40" onerror="this.src='assets/images/branding/logo.png'"/>
         <span>ZUZUCOIN</span>
       </div>
 
-      <div class="right-actions">
-        <!-- BAYRAKLI DİL MENÜSÜ -->
-        <div id="lang-select" class="lang-flags"></div>
+      <div class="z-menu">
+        <a href="#presale" data-i18n="nav_presale">Ön Satış</a>
+        <a href="#stake" data-i18n="nav_stake">Stake</a>
+        <a href="#rewards" data-i18n="nav_nft">NFT Ödülleri</a>
+        <a href="#roadmap" data-i18n="nav_roadmap">Yol Haritası</a>
+        <a href="#token" data-i18n="nav_token">Tokonomi</a>
+
+        <!-- Dil menüsü: bayraklar buraya basılır -->
+        <div id="lang-select" aria-label="Language"></div>
 
         <button id="connectBtn" class="z-btn z-btn-primary" data-i18n="connect">Cüzdan Bağla</button>
       </div>
@@ -42,7 +35,7 @@
   </nav>
 
   <!-- HERO -->
-  <section class="hero-2">
+  <section class="hero-2 z-section">
     <div class="z-container grid-2">
       <div>
         <div class="z-chip" data-i18n="hero_badge">Ön Satış • Stake ile NFT Kazan</div>
@@ -50,79 +43,39 @@
         <p class="lead" data-i18n="hero_lead">Stake et ve <b>ZUZU Maskot NFT</b> kazan. Sınırlı arz, yüksek <b>utility</b>.</p>
 
         <div class="hero-cta">
-          <a class="z-btn z-btn-primary" href="#stake" data-i18n="cta_stake">Stake Etmeye Başla</a>
-          <a class="z-btn z-btn-ghost" href="#nft" data-i18n="cta_nft">NFT Ödülleri</a>
+          <a href="#stake" class="z-btn z-btn-primary" data-i18n="cta_stake">Stake Etmeye Başla</a>
+          <a href="#rewards" class="z-btn z-btn-ghost" data-i18n="cta_nft">NFT Ödülleri</a>
         </div>
 
-        <!-- COUNTDOWN -->
+        <!-- Sayaç -->
         <div class="counter">
-          <div class="flip"><div class="num" id="cdDays">00</div><small data-i18n="days">GÜN</small></div>
-          <div class="flip"><div class="num" id="cdHours">00</div><small data-i18n="hours">SAAT</small></div>
-          <div class="flip"><div class="num" id="cdMins">00</div><small data-i18n="mins">DAKİKA</small></div>
-          <div class="flip"><div class="num" id="cdSecs">00</div><small data-i18n="secs">SANİYE</small></div>
+          <div class="flip"><div id="cdDays" class="num">00</div><small data-i18n="days">GÜN</small></div>
+          <div class="flip"><div id="cdHours" class="num">00</div><small data-i18n="hours">SAAT</small></div>
+          <div class="flip"><div id="cdMins" class="num">00</div><small data-i18n="mins">DAKİKA</small></div>
+          <div class="flip"><div id="cdSecs" class="num">00</div><small data-i18n="secs">SANİYE</small></div>
         </div>
       </div>
 
-      <!-- BÜYÜK ZUZU GÖRSELİ -->
       <div class="hero-visual">
-        <img id="zuzuLogo" alt="ZUZU">
+        <img id="zuzuLogo" alt="ZUZU" class="logo-big" loading="eager">
       </div>
     </div>
   </section>
 
-  <!-- … mevcut sayfa içeriğin (presale, stake, nft vs.) burada devam ediyor … -->
+  <!-- Presale kutusu (mevcut HTML’in) -->
+  <section id="presale" class="z-section">
+    <div class="z-container">
+      <!-- .. mevcut kartların/haftaların HTML’i (değiştirmene gerek yok) .. -->
+    </div>
+  </section>
 
-  <!-- Hata yakalayıcı -->
-  <script>window.onerror=function(m){alert("JS Error: "+m);};</script>
+  <!-- Tokenomics, Roadmap, NFT Grid vb. mevcut bölümler burada -->
+  <!-- … (mevcut içeriklerini koru) … -->
 
-  <!-- Mevcut app dosyaların -->
-  <script defer src="app.v1.js"></script>
-  <script defer src="solana.v1.js"></script>
-  <script defer src="wallet-lite.js"></script>
-  <script defer src="script.js"></script>
-
-  <!-- DİL MOTORU -->
-  <script src="lang/lang.js"></script>
-
-  <!-- Countdown (tarih: 2025-11-05 13:00 local) -->
-  <script>
-    (function(){
-      const target = new Date("2025-11-05T13:00:00").getTime();
-      function tick(){
-        const left = Math.max(0, target - Date.now());
-        const d = Math.floor(left/86400000),
-              h = Math.floor(left%86400000/3600000),
-              m = Math.floor(left%3600000/60000),
-              s = Math.floor(left%60000/1000);
-        const pad=n=>n.toString().padStart(2,"0");
-        const set=(id,v)=>{const el=document.getElementById(id); if(el) el.textContent=pad(v);};
-        set("cdDays",d); set("cdHours",h); set("cdMins",m); set("cdSecs",s);
-      }
-      tick(); setInterval(tick,1000);
-    })();
-  </script>
-
-  <!-- Büyük logo auto-loader: klasöründe hangisi varsa onu kullanır -->
-  <script>
-    (function(){
-      const img = document.getElementById('zuzuLogo'); if(!img) return;
-      const candidates = [
-        "assets/images/branding/zuzu-anim.webp",
-        "assets/images/branding/zuzu-anim.jpg",
-        "assets/images/branding/zuzu.webp",
-        "assets/images/branding/zuzu.jpg",
-        "assets/images/zuzu.webp",
-        "assets/images/zuzu.jpg",
-        "assets/images/logo-big.png"
-      ];
-      (function tryNext(i){
-        if(i>=candidates.length) return;
-        const test=new Image();
-        test.onload=()=>{ img.src=candidates[i]; };
-        test.onerror=()=>tryNext(i+1);
-        test.src=candidates[i];
-      })(0);
-    })();
-  </script>
+  <!-- JS -->
+  <script src="lang/lang.js?v=2"></script>
+  <script src="app.v1.js?v=4"></script>
+  <script src="wallet-lite.js?v=2"></script>
+  <script src="solana.v1.js?v=4"></script>
 </body>
 </html>
