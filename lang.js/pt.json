@@ -1,1 +1,50 @@
+{
+  "__title": "ZUZUCOIN — Pré-venda • Stake • Recompensas NFT",
+  "nav_presale": "Pré-venda",
+  "nav_stake": "Stake",
+  "nav_nft": "Recompensas NFT",
+  "nav_roadmap": "Roteiro",
+  "nav_token": "Tokenomics",
+  "connect": "Conectar Carteira",
 
+  "hero_badge": "Pré-venda • Faça stake e ganhe NFT",
+  "hero_title": "ZUZU — Ouriço Robótico 🦔⚡",
+  "hero_lead": "Faça stake e ganhe um <b>NFT Mascote ZUZU</b>. Oferta limitada, alta <b>utilidade</b>.",
+  "cta_stake": "Começar Stake",
+  "cta_nft": "Recompensas NFT",
+  "collection_page": "Página da Coleção",
+  "contract": "Contrato:",
+
+  "days": "DIAS",
+  "hours": "HORAS",
+  "mins": "MINUTOS",
+  "secs": "SEGUNDOS",
+
+  "presale_title": "Pré-venda — Contagem regressiva",
+  "presale_lead": "Prepare-se para a pré-venda ZUZU! <b>Alocação limitada</b>, preço da comunidade.",
+  "amount": "Quantidade (ZUZU)",
+
+  "w1": "Semana 1 (Mais barato)",
+  "w2": "Semana 2",
+  "w3": "Semana 3",
+  "w4": "Semana 4 (Última chance)",
+  "cost": "Custo:",
+  "buy": "Comprar",
+  "exchanges": "Exchanges suportadas",
+
+  "stake_title": "Stake Pro — Trave, Ganhe, Pegue NFT ✨",
+  "stake_lead": "Trave seu ZUZU, ganhe <b>APY + NFT BOOST</b>. Primeiros stakers recebem badge e prioridade em airdrop.",
+  "calc_title": "Calculadora de ganhos",
+  "amount2": "Quantidade (ZUZU)",
+  "lock": "Período de bloqueio",
+  "nft_have": "Tem NFT?",
+  "early": "Badge inicial",
+  "calc_btn": "Calcular",
+  "ret": "Retorno total",
+  "avg": "Média mensal",
+  "boost": "Boost total",
+
+  "token_title": "Tokenomics (Visualizado)",
+  "road_title": "Roteiro",
+  "road_lead": "Plano focado em comunidade, staking, drops de NFT e listagens."
+}
