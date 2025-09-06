@@ -1,51 +1,136 @@
-/* app.v1.js — görsel ve sayaç başlangıcı */
+/* ===============================
+   GLOBAL KONFİG
+=============================== */
+window.ZUZU_CONFIG = {
+  // *** Ödeme alıcı SOL adresi ***
+  ownerSol: "FniLJmY5L6zQyQfot6xsiYojHeEzoGs2xZXYZh1U9QwF",
 
-const CONFIG = {
-  // ISO örnek: 2025-11-05T13:00:00+03:00
-  launchAtISO: "2025-11-05T13:00:00+03:00",
+  // Ön satış hedef tarihi (yerelden bağımsız ISO)
+  launchAtISO: "2025-11-05T13:00:00Z",
+
+  // NFT görselleri (var olmayanı otomatik gizlemeyeceğiz; yerine hero koyarız)
+  nftImages: [
+    "assets/images/nft/1.png","assets/images/nft/2.png","assets/images/nft/3.png",
+    "assets/images/nft/4.png","assets/images/nft/5.png","assets/images/nft/6.png"
+  ],
+
+  // Diller (flags/xx.png ve lang/xx.json dosyaları mevcut)
+  languages: [
+    {code:"tr", name:"Türkçe", flag:"flags/tr.png"},
+    {code:"en", name:"English", flag:"flags/en.png"},
+    {code:"fr", name:"Français", flag:"flags/fr.png"},
+    {code:"pt", name:"Português", flag:"flags/pt.png"},
+    {code:"ru", name:"Русский", flag:"flags/ru.png"},
+  ],
 };
 
-(function initHeroImage(){
-  const el = document.getElementById("zuzuLogo");
-  if (!el) return;
-  const candidates = [
-    "assets/images/branding/zuzu-hero.png",
-    "assets/images/branding/zuzu-logo.png",
-    "assets/images/branding/logo.png",
-    "assets/images/zuzu.webp",
-    "assets/images/zuzu.jpg"
-  ];
-  let i=0;
-  function tryNext(){ if (i>=candidates.length) return; el.src=candidates[i++]; el.onerror=tryNext; }
-  tryNext();
-})();
+/* ===============================
+   DİL SİSTEMİ
+=============================== */
+const I18N = {
+  current: "tr",
+  dict: {},
+  async set(code){
+    try{
+      const res = await fetch(`lang/${code}.json?${Date.now()}`);
+      const data = await res.json();
+      I18N.dict = data; I18N.current = code;
+      // Uygula
+      document.querySelectorAll("[data-i18n]").forEach(el=>{
+        const k = el.getAttribute("data-i18n");
+        if(data[k]) el.innerHTML = data[k];
+      });
+      // Bayrak ve kod
+      const meta = ZUZU_CONFIG.languages.find(l=>l.code===code);
+      if(meta){
+        document.getElementById("langFlag").src = meta.flag;
+        document.getElementById("langCode").textContent = code.toUpperCase();
+      }
+      localStorage.setItem("zuzu_lang", code);
+    }catch(e){ console.error("Lang load error", e); }
+  },
+  buildMenu(){
+    const wrap = document.getElementById("langDrop");
+    wrap.innerHTML = "";
+    ZUZU_CONFIG.languages.forEach(l=>{
+      const b = document.createElement("button");
+      b.innerHTML = `<img src="${l.flag}" width="18" height="18" alt="${l.code}"><span>${l.name}</span>`;
+      b.onclick = ()=>{ wrap.style.display="none"; I18N.set(l.code); };
+      wrap.appendChild(b);
+    });
+    document.getElementById("langBtn").onclick = ()=>{
+      wrap.style.display = wrap.style.display==="block"?"none":"block";
+    };
+    document.addEventListener("click",(e)=>{
+      if(!document.getElementById("langMenu").contains(e.target)) wrap.style.display="none";
+    });
+    // önceki seçim
+    I18N.set(localStorage.getItem("zuzu_lang") || "tr");
+  }
+};
 
-(function countdown(){
-  const target = Date.parse(CONFIG.launchAtISO);
-  if (!isFinite(target)) return;
-  const ids = ["cdDays","cdHours","cdMins","cdSecs"];
-  function pad(n){return n.toString().padStart(2,"0");}
+/* ===============================
+   GÖRSELLER & NFT GRID
+=============================== */
+function buildNFTGrid(){
+  const grid = document.getElementById("nftGrid");
+  if(!grid) return;
+  grid.innerHTML = "";
+  ZUZU_CONFIG.nftImages.forEach((src,i)=>{
+    const card = document.createElement("div");
+    card.className = "nft";
+    card.innerHTML = `
+      <img src="${src}" alt="NFT #${i+1}" onerror="this.src='assets/images/branding/zuzu-hero.png'">
+      <div class="meta"><span>#${String(i+1).padStart(3,"0")}</span><span class="tag">ZUZU</span></div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+/* ===============================
+   COUNTDOWN
+=============================== */
+function startCountdown(){
+  const target = new Date(ZUZU_CONFIG.launchAtISO).getTime();
   function tick(){
-    const left = Math.max(0, target - Date.now());
-    const d = Math.floor(left/86400000);
-    const h = Math.floor((left%86400000)/3600000);
-    const m = Math.floor((left%3600000)/60000);
-    const s = Math.floor((left%60000)/1000);
-    [d,h,m,s].forEach((v,i)=>{
-      const el = document.getElementById(ids[i]); if (el) el.textContent = pad(v);
-    });
+    const now = Date.now();
+    let diff = Math.max(0, target - now);
+    const d = Math.floor(diff/86400000); diff -= d*86400000;
+    const h = Math.floor(diff/3600000); diff -= h*3600000;
+    const m = Math.floor(diff/60000);   diff -= m*60000;
+    const s = Math.floor(diff/1000);
+    const set = (id,v)=>{ const el=document.getElementById(id); if(el) el.textContent=String(v).padStart(2,"0"); };
+    set("cdDays",d); set("cdHours",h); set("cdMins",m); set("cdSecs",s);
+    requestAnimationFrame(tick);
   }
-  tick(); setInterval(tick,1000);
-})();
+  tick();
+}
 
-/* Connect butonu metin güncellemesi — sadece var ise */
-(function wireConnectButton(){
-  const btn = document.getElementById("connectBtn");
-  if (!btn) return;
-  // solana.v1.js içinde window.ZUZU_SOL.onStatus(fn) çağırılacak
-  if (window.ZUZU_SOL && window.ZUZU_SOL.onStatus){
-    window.ZUZU_SOL.onStatus(({connected,short})=>{
-      btn.textContent = connected ? short : (document.documentElement.lang==="en"?"Connect Wallet":"Cüzdan Bağla");
+/* ===============================
+   WALLET UI KANCALARI
+=============================== */
+function wireWalletButtons(){
+  const clickers = ["connectBtn","btnConnect"].map(id=>document.getElementById(id)).filter(Boolean);
+  clickers.forEach(btn=>btn.addEventListener("click", ()=>WalletLite.openPicker()));
+  const disc = document.getElementById("btnDisconnect");
+  if(disc) disc.onclick = ()=>WalletLite.disconnect();
+  // satın al
+  document.querySelectorAll(".buyBtn").forEach(b=>{
+    b.addEventListener("click", async ()=>{
+      const amount = Number(document.getElementById("amountIn").value||"0");
+      const pay = document.getElementById("paySel").value;
+      await ZUZU_SOL.buyTokens(amount, pay);
     });
-  }
-})();
+  });
+}
+
+/* ===============================
+   PAGE INIT
+=============================== */
+window.addEventListener("DOMContentLoaded", ()=>{
+  I18N.buildMenu();
+  buildNFTGrid();
+  startCountdown();
+  wireWalletButtons();
+  // büyük görsel fallback zaten HTML'de
+});
