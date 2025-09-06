@@ -121,3 +121,22 @@ a{color:#b8c7ff;text-decoration:none}
 .lang-flags{display:flex;gap:6px;align-items:center;padding:0 6px}
 .flag-btn{border:1px solid #243457;background:#0f1b31;border-radius:8px;padding:2px;cursor:pointer}
 .flag-btn img{display:block;width:24px;height:18px;object-fit:cover;border-radius:4px}
+
+/* mevcut stilinin en altına EKLE */
+
+/* Dil menüsü */
+.langmenu{position:relative}
+.langbtn{display:flex;gap:.4rem;align-items:center;background:#0f1b31;border:1px solid #1c2a46;color:#e8f1ff;border-radius:10px;padding:.38rem .55rem}
+.langdrop{position:absolute;right:0;top:110%;display:none;background:#0f1828;border:1px solid #1c2a46;border-radius:12px;padding:.35rem;min-width:180px;z-index:60}
+.langdrop button{display:flex;gap:.5rem;align-items:center;width:100%;background:transparent;border:0;color:#dce8ff;padding:.45rem .6rem;border-radius:10px;text-align:left}
+.langdrop button:hover{background:#12203a}
+
+/* Wallet picker */
+.wl-modal{position:fixed;inset:0;display:grid;place-items:center;background:rgba(3,6,12,.6);z-index:80}
+.wl-box{width:min(420px,92%);background:#0f1828;border:1px solid #1b2a49;border-radius:16px;overflow:hidden}
+.wl-head{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#101a2d;border-bottom:1px solid #1b2a49}
+.wl-head button{background:transparent;border:0;color:#9fbaff;font-size:20px}
+.wl-item{display:flex;gap:.6rem;align-items:center;width:100%;padding:12px;border:0;background:transparent;color:#e8f1ff;border-bottom:1px solid #12203a}
+.wl-item img{width:20px;height:20px;border-radius:4px}
+.wl-item:hover{background:#12203a}
+.wl-hint{padding:10px;color:#9ab1db;font-size:.9rem}
