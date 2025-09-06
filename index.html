@@ -4,78 +4,251 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>ZUZU — Robotic Hedgehog</title>
-  <link rel="stylesheet" href="style.css?v=2"/>
-
-  <!-- Hata yakalama: popup yok, sayfa kilitlenmez -->
+  <link rel="stylesheet" href="style.css?v=3"/>
   <script>window.onerror=(m,s,l)=>console.error("JS Error:",m,"@",s+":"+l);</script>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav class="z-nav">
-    <div class="z-container z-nav-inner">
-      <div class="brand">
-        <img src="assets/images/branding/zuzu-logo.png" alt="ZUZU" width="40" height="40" onerror="this.src='assets/images/branding/logo.png'"/>
-        <span>ZUZUCOIN</span>
+<!-- ================= NAV ================= -->
+<nav class="z-nav">
+  <div class="z-container z-nav-inner">
+    <a class="brand" href="#">
+      <img src="assets/images/branding/zuzu-logo.png" alt="ZUZU" onerror="this.src='assets/images/branding/logo.png'"/>
+      <span>ZUZUCOIN</span>
+    </a>
+
+    <div class="z-menu">
+      <a href="#presale" data-i18n="nav_presale">Ön Satış</a>
+      <a href="#stake" data-i18n="nav_stake">Stake</a>
+      <a href="#rewards" data-i18n="nav_nft">NFT Ödülleri</a>
+      <a href="#roadmap" data-i18n="nav_roadmap">Yol Haritası</a>
+      <a href="#token" data-i18n="nav_token">Tokonomi</a>
+      <div id="lang-select"></div>
+      <button id="connectBtn" class="z-btn z-btn-primary" data-i18n="connect">Cüzdan Bağla</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<section class="hero-2 z-section">
+  <div class="z-container grid-2">
+    <div>
+      <div class="z-chip" data-i18n="hero_badge">Ön Satış • Stake ile NFT Kazan</div>
+      <h1 data-i18n="hero_title">ZUZU — Geleceğin Robotic Kirpisi 🦔⚡</h1>
+      <p class="lead" data-i18n="hero_lead">Stake et ve <b>ZUZU Maskot NFT</b> kazan. Sınırlı arz, yüksek <b>utility</b>.</p>
+
+      <div class="hero-cta">
+        <a href="#stake" class="z-btn z-btn-primary" data-i18n="cta_stake">Stake Etmeye Başla</a>
+        <a href="#rewards" class="z-btn z-btn-ghost" data-i18n="cta_nft">NFT Ödülleri</a>
       </div>
 
-      <div class="z-menu">
-        <a href="#presale" data-i18n="nav_presale">Ön Satış</a>
-        <a href="#stake" data-i18n="nav_stake">Stake</a>
-        <a href="#rewards" data-i18n="nav_nft">NFT Ödülleri</a>
-        <a href="#roadmap" data-i18n="nav_roadmap">Yol Haritası</a>
-        <a href="#token" data-i18n="nav_token">Tokonomi</a>
-
-        <!-- Dil menüsü: bayraklar buraya basılır -->
-        <div id="lang-select" aria-label="Language"></div>
-
-        <button id="connectBtn" class="z-btn z-btn-primary" data-i18n="connect">Cüzdan Bağla</button>
+      <div class="counter">
+        <div class="flip"><div id="cdDays" class="num">00</div><small data-i18n="days">GÜN</small></div>
+        <div class="flip"><div id="cdHours" class="num">00</div><small data-i18n="hours">SAAT</small></div>
+        <div class="flip"><div id="cdMins" class="num">00</div><small data-i18n="mins">DAKİKA</small></div>
+        <div class="flip"><div id="cdSecs" class="num">00</div><small data-i18n="secs">SANİYE</small></div>
       </div>
     </div>
-  </nav>
 
-  <!-- HERO -->
-  <section class="hero-2 z-section">
-    <div class="z-container grid-2">
-      <div>
-        <div class="z-chip" data-i18n="hero_badge">Ön Satış • Stake ile NFT Kazan</div>
-        <h1 data-i18n="hero_title">ZUZU — Geleceğin Robotic Kirpisi 🦔⚡</h1>
-        <p class="lead" data-i18n="hero_lead">Stake et ve <b>ZUZU Maskot NFT</b> kazan. Sınırlı arz, yüksek <b>utility</b>.</p>
+    <div class="hero-visual">
+      <img id="zuzuLogo" class="logo-big" alt="ZUZU">
+    </div>
+  </div>
+</section>
 
-        <div class="hero-cta">
-          <a href="#stake" class="z-btn z-btn-primary" data-i18n="cta_stake">Stake Etmeye Başla</a>
-          <a href="#rewards" class="z-btn z-btn-ghost" data-i18n="cta_nft">NFT Ödülleri</a>
+<!-- ============== PRESALE (tam) ============== -->
+<section id="presale" class="z-section">
+  <div class="z-container">
+    <div class="section-head">
+      <h2 data-i18n="presale_title">Ön Satış — Geri Sayım</h2>
+      <p data-i18n="presale_sub">ZUZU ön satışına hazır ol! <b>Sınırlı tahsis</b>, topluluğa özel fiyat.</p>
+    </div>
+
+    <div class="card">
+      <div class="presale-grid">
+        <div>
+          <label data-i18n="amount">Miktar (ZUZU)</label>
+          <input id="amountIn" class="input" value="10000" inputmode="numeric"/>
         </div>
-
-        <!-- Sayaç -->
-        <div class="counter">
-          <div class="flip"><div id="cdDays" class="num">00</div><small data-i18n="days">GÜN</small></div>
-          <div class="flip"><div id="cdHours" class="num">00</div><small data-i18n="hours">SAAT</small></div>
-          <div class="flip"><div id="cdMins" class="num">00</div><small data-i18n="mins">DAKİKA</small></div>
-          <div class="flip"><div id="cdSecs" class="num">00</div><small data-i18n="secs">SANİYE</small></div>
+        <div>
+          <label data-i18n="paywith">Ödeme</label>
+          <select id="paySel" class="input">
+            <option value="SOL">SOL</option>
+            <option value="SPLUSDT">USDT (SPL)</option>
+          </select>
+        </div>
+        <div class="row" style="grid-column:1/-1">
+          <button id="btnConnect" class="z-btn z-btn-primary" style="flex:1" data-i18n="connect">Cüzdan Bağla</button>
+          <button id="btnDisconnect" class="z-btn z-btn-ghost" style="flex:1">Disconnect</button>
+        </div>
+        <div style="grid-column:1/-1;color:#9eb9ff">
+          <b data-i18n="status">Durum</b>:
+          <span id="solStatus">Hazır (cüzdan bekleniyor)</span>
+          • <b>Wallet</b>: <span id="solWallet" class="badge">Not connected</span>
         </div>
       </div>
+    </div>
 
-      <div class="hero-visual">
-        <img id="zuzuLogo" alt="ZUZU" class="logo-big" loading="eager">
+    <div class="z-section" style="padding-top:20px">
+      <div class="grid-2">
+        <div class="card">
+          <h4>1. Hafta (En Ucuz)</h4>
+          <div class="price">1 ZUZU = 0.0050 USDT</div>
+          <div class="cost">Maliyet: 50 USDT</div>
+          <div class="buy">
+            <button class="z-btn z-btn-primary" id="buyW1" data-i18n="buy">Satın Al</button>
+            <button class="z-btn z-btn-ghost">Detaylar</button>
+          </div>
+        </div>
+        <div class="card">
+          <h4>2. Hafta</h4>
+          <div class="price">1 ZUZU = 0.0065 USDT</div>
+          <div class="cost">Maliyet: 65 USDT</div>
+          <div class="buy">
+            <button class="z-btn z-btn-primary" id="buyW2" data-i18n="buy">Satın Al</button>
+            <button class="z-btn z-btn-ghost">Detaylar</button>
+          </div>
+        </div>
+        <div class="card">
+          <h4>3. Hafta</h4>
+          <div class="price">1 ZUZU = 0.0080 USDT</div>
+          <div class="cost">Maliyet: 80 USDT</div>
+          <div class="buy">
+            <button class="z-btn z-btn-primary" id="buyW3" data-i18n="buy">Satın Al</button>
+            <button class="z-btn z-btn-ghost">Detaylar</button>
+          </div>
+        </div>
+        <div class="card">
+          <h4>4. Hafta (Son Fırsat)</h4>
+          <div class="price">1 ZUZU = 0.0100 USDT</div>
+          <div class="cost">Maliyet: 100 USDT</div>
+          <div class="buy">
+            <button class="z-btn z-btn-primary" id="buyW4" data-i18n="buy">Satın Al</button>
+            <button class="z-btn z-btn-ghost">Detaylar</button>
+          </div>
+        </div>
       </div>
     </div>
-  </section>
 
-  <!-- Presale kutusu (mevcut HTML’in) -->
-  <section id="presale" class="z-section">
-    <div class="z-container">
-      <!-- .. mevcut kartların/haftaların HTML’i (değiştirmene gerek yok) .. -->
+    <div class="card">
+      <div class="section-head"><h3 data-i18n="exchanges">Desteklenen Borsalar</h3></div>
+      <div class="ticker">
+        <div class="ticker__track">
+          <div class="ticker__item"><img src="assets/images/exchanges/kucoin.png" alt="KuCoin"></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/okx.png" alt="OKX"></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/mexc.png" alt="MEXC"></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/bitmart.png" alt="Bitmart"></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/bybit.png" alt="Bybit"></div>
+        </div>
+      </div>
+      <p class="ex-note">Will Be Listed Soon</p>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- Tokenomics, Roadmap, NFT Grid vb. mevcut bölümler burada -->
-  <!-- … (mevcut içeriklerini koru) … -->
+<!-- ============== STAKE ================== -->
+<section id="stake" class="z-section">
+  <div class="z-container">
+    <div class="section-head">
+      <h2 data-i18n="stake_title">Stake Pro — Kilitle, Kazan, NFT Kap ✨</h2>
+      <p data-i18n="stake_sub">ZUZU'larını kilitle, <b>APY</b> + <b>NFT BOOST</b> ile pasif gelir elde et.</p>
+    </div>
 
-  <!-- JS -->
-  <script src="lang/lang.js?v=2"></script>
-  <script src="app.v1.js?v=4"></script>
-  <script src="wallet-lite.js?v=2"></script>
-  <script src="solana.v1.js?v=4"></script>
+    <div class="stake-grid">
+      <div class="stake-card"><div class="tier silver">Silver</div><ul><li>90 days lock</li><li>24% APY</li><li>+5% NFT boost</li></ul></div>
+      <div class="stake-card"><div class="tier gold">Gold</div><ul><li>180 days lock</li><li>40% APY</li><li>Whitelist + ZUZU badge</li></ul></div>
+      <div class="stake-card"><div class="tier diamond">Diamond</div><ul><li>365 days lock</li><li>65% APY</li><li>+10% NFT boost</li></ul></div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h3 data-i18n="calc">Kazanç Hesaplayıcı</h3>
+      <div class="calc-grid">
+        <input class="input" placeholder="Miktar (ZUZU)">
+        <select class="input"><option>30 days (12% APY)</option><option>90 days (24% APY)</option></select>
+        <select class="input"><option>Elinde NFT var mı?</option><option>Evet</option><option>Hayır</option></select>
+        <select class="input"><option>Erken Rozet</option><option>Yok</option></select>
+      </div>
+      <div class="statwrap">
+        <div class="stat"><div class="label">Toplam Getiri</div><b>0 ZUZU</b></div>
+        <div class="stat"><div class="label">Aylık Ortalama</div><b>0 ZUZU</b></div>
+        <div class="stat"><div class="label">Toplam Boost</div><b>+0%</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== NFT REWARDS ============== -->
+<section id="rewards" class="z-section">
+  <div class="z-container">
+    <div class="section-head">
+      <h2>ZUZU Maskot NFT Ödülleri 🎁</h2>
+      <p>Kazananlar koleksiyondan nadir NFT alır. Kontrat: 0xF2bbb…9729</p>
+    </div>
+    <div class="nft-grid">
+      <div class="nft"><img src="assets/images/nft/1.png" alt=""><div class="meta"><span>#001</span><span class="tag">Rare</span></div></div>
+      <div class="nft"><img src="assets/images/nft/2.png" alt=""><div class="meta"><span>#002</span><span class="tag">Epic</span></div></div>
+      <div class="nft"><img src="assets/images/nft/3.png" alt=""><div class="meta"><span>#003</span><span class="tag">Rare</span></div></div>
+      <div class="nft"><img src="assets/images/nft/4.png" alt=""><div class="meta"><span>#004</span><span class="tag">Legend</span></div></div>
+      <div class="nft"><img src="assets/images/nft/5.png" alt=""><div class="meta"><span>#005</span><span class="tag">Common</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== TOKENOMICS ============== -->
+<section id="token" class="z-section">
+  <div class="z-container tk">
+    <div>
+      <div class="section-head"><h2>Tokonomi (Görselleştirilmiş)</h2></div>
+      <img class="chart-wrap" src="assets/images/tokenomics/chart.png" alt="Tokenomics" onerror="this.style.display='none'">
+      <div class="legend">
+        <div><span class="dot" style="background:#7f9cff"></span> Community — 35%</div>
+        <div><span class="dot" style="background:#9aaeff"></span> Team (12m lock) — 15%</div>
+        <div><span class="dot" style="background:#16d2a6"></span> Staking Rewards — 15%</div>
+        <div><span class="dot" style="background:#ffb347"></span> Treasury — 10%</div>
+        <div><span class="dot" style="background:#8aa2c9"></span> Liquidity — 20%</div>
+        <div><span class="dot" style="background:#b3a8ff"></span> Partners — 5%</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Toplam Arz: 500,000,000 ZUZU</h3>
+      <p>Adil dağıtım, topluluk öncelikli, uzun vadeli sürdürülebilirlik.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============== ROADMAP ============== -->
+<section id="roadmap" class="z-section">
+  <div class="z-container">
+    <div class="section-head"><h2>Yol Haritası</h2></div>
+    <div class="card">
+      <ul>
+        <li><b>Q1 — Core Setup</b>: Web, testler, topluluk kanalları, güvenlik.</li>
+        <li><b>Q2 — Pre-Sale & Stake</b>: Satış turları, staking, Maskot NFT.</li>
+        <li><b>Q3 — Listings</b>: Likidite, ilk CEX/DEX listeleri, market-maker.</li>
+        <li><b>Q4 — Ecosystem</b>: Oyun entegrasyonları, partnerlikler, mini-app.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="z-footer">
+  <div class="z-container between center-v">
+    <div>© ZUZU Project 2025</div>
+    <div class="z-chip-row">
+      <span class="badge">Ön Satış</span>
+      <span class="badge">Stake</span>
+      <span class="badge">NFT</span>
+      <span class="badge">Tokonomi</span>
+    </div>
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="lang/lang.js?v=3"></script>
+<script src="app.v1.js?v=5"></script>
+<script src="wallet-lite.js?v=2"></script>
+<script src="solana.v1.js?v=5"></script>
+
 </body>
 </html>
