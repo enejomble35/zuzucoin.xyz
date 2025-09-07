@@ -5,16 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ZUZUCOIN — Pre-Sale • Stake • NFT Rewards</title>
 <meta name="theme-color" content="#0e1522">
-<meta http-equiv="X-Content-Type-Options" content="nosniff">
-<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
-
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-
-<!-- Solana web3 (extension’lar buna bakıyor) -->
-<script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -22,9 +15,10 @@
 <header class="z-nav">
   <div class="z-container z-nav-inner">
     <a class="brand" href="#">
-      <img src="assets/images/branding/logo.png" alt="ZUZU">
+      <img src="assets/images/branding/zuzu-logo.png" alt="ZUZU">
       <span>ZUZUCOIN</span>
     </a>
+
     <nav class="z-menu">
       <a href="#presale" data-i="nav_presale">Pre-Sale</a>
       <a href="#stake"   data-i="nav_stake">Stake</a>
@@ -34,7 +28,20 @@
       <a href="stake-simulator.html" class="z-chip">Stake Simulator ↗</a>
       <a href="claim.html" class="z-chip">Claim Portal ↗</a>
 
-      <!-- Dil açılır menüsü ve Connect butonu JS tarafında bağlanıyor -->
+      <!-- Dil seçimi (bayraklı dropdown) -->
+      <div class="lang-wrap" id="langWrap">
+        <button class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false">
+          <img id="langFlag" src="assets/flags/en.png" alt="lang">
+        </button>
+        <div class="lang-menu" id="langMenu" role="menu" aria-hidden="true">
+          <button data-lang="en" role="menuitem"><img src="assets/flags/en.png" alt=""> EN</button>
+          <button data-lang="tr" role="menuitem"><img src="assets/flags/tr.png" alt=""> TR</button>
+          <button data-lang="fr" role="menuitem"><img src="assets/flags/fr.png" alt=""> FR</button>
+          <button data-lang="es" role="menuitem"><img src="assets/flags/es.png" alt=""> ES</button>
+          <button data-lang="ru" role="menuitem"><img src="assets/flags/ru.png" alt=""> RU</button>
+        </div>
+      </div>
+
       <button id="connectBtn" class="z-btn z-btn-primary" data-i="connect">Connect Wallet</button>
     </nav>
   </div>
@@ -72,12 +79,12 @@
       </div>
     </div>
 
-    <!-- Sağdaki büyük logo -->
+    <!-- Büyük ZUZU görseli -->
     <div class="hero-visual">
       <img id="zuzuLogo" class="logo-big"
-           src="assets/images/branding/zuzu-logo.svg"
-           alt="ZUZU Logo"
-           onerror="this.onerror=null; this.src='assets/images/branding/zuzu-logo.png';">
+        src="assets/images/branding/zuzu-hero.png"
+        alt="ZUZU"
+        onerror="this.onerror=null;this.src='assets/images/branding/zuzu-logo.png'">
     </div>
   </div>
 </section>
@@ -87,7 +94,7 @@
   <div class="z-container">
     <div class="section-head">
       <h2 data-i="presale_title">Pre-Sale — Countdown</h2>
-      <p data-i="presale_lead">Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.</p>
+      <p  data-i="presale_lead">Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.</p>
     </div>
 
     <div class="card" style="margin-bottom:12px">
@@ -95,16 +102,17 @@
         <div class="row">
           <div>
             <label data-i="amount">Amount (ZUZU)</label>
-            <input class="input" id="buyAmount" value="10000" inputmode="decimal" />
+            <input class="input" id="buyAmount" value="10000" inputmode="decimal">
           </div>
           <div>
             <label>Ödeme</label>
-            <select class="input" id="networkSel" disabled>
-              <option value="solana" selected>Solana (SOL / USDT-SPL)</option>
+            <select class="input" id="paySel">
+              <option value="SOL" selected>SOL</option>
+              <option value="USDT">USDT (SPL)</option>
             </select>
           </div>
         </div>
-        <small class="muted">Satın alma için önce Solana cüzdanı bağla.</small>
+        <small class="muted">Payments with Phantom / Solflare / Backpack</small>
       </div>
     </div>
 
@@ -147,7 +155,7 @@
       </div>
     </div>
 
-    <!-- Borsalar -->
+    <!-- Borsa logoları -->
     <div class="card" style="margin-top:16px">
       <h3 style="margin:0 0 10px" data-i="exchanges">Supported Exchanges</h3>
       <div class="ticker">
@@ -158,12 +166,6 @@
           <div class="ticker__item"><img src="assets/images/exchanges/mxc.png" alt="mexc" loading="lazy"></div>
           <div class="ticker__item"><img src="assets/images/exchanges/bitmart.png" alt="bitmart" loading="lazy"></div>
           <div class="ticker__item"><img src="assets/images/exchanges/bybit.png" alt="bybit" loading="lazy"></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/gateio.png" alt=""></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/kucoin.png" alt=""></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/okx.png" alt=""></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/mxc.png" alt=""></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/bitmart.png" alt=""></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/bybit.png" alt=""></div>
         </div>
       </div>
       <div class="ex-note">Will Be Listed Soon</div>
@@ -306,10 +308,31 @@
       <a class="z-chip" href="#stake">Stake</a>
       <a class="z-chip" href="#nft">NFT</a>
       <a class="z-chip" href="#tokenomics">Tokenomics</a>
-      <a class="z-chip" href="javascript:zDisconnect()">Disconnect</a>
     </div>
   </div>
 </footer>
+
+<!-- Wallet Modal -->
+<div class="wallet-modal" id="walletModal" aria-hidden="true">
+  <div class="wallet-sheet" role="dialog" aria-modal="true" aria-labelledby="wmTitle">
+    <div class="wallet-head">
+      <h3 id="wmTitle">Connect Wallet</h3>
+      <button class="wm-close" id="wmClose">✕</button>
+    </div>
+    <div class="wallet-grid">
+      <button class="wallet-item" id="wPhantom">
+        <img src="assets/wallets/phantom.svg" alt="Phantom"><span>Phantom</span>
+      </button>
+      <button class="wallet-item" id="wSolflare">
+        <img src="assets/wallets/solflare.svg" alt="Solflare"><span>Solflare</span>
+      </button>
+      <button class="wallet-item" id="wBackpack">
+        <img src="assets/wallets/backpack.svg" alt="Backpack"><span>Backpack</span>
+      </button>
+    </div>
+    <p class="wallet-note">If the app opens, approve <b>zuzucoin.xyz</b> to connect. You’ll be redirected back automatically.</p>
+  </div>
+</div>
 
 <script src="script.js"></script>
 <script src="wallet-lite.js"></script>
