@@ -7,7 +7,7 @@ const CONFIG = {
   collectionUrl: "https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts",
   launchAt: Date.now() + 50*24*60*60*1000,
   saleStart: Date.now(),
-  weekPrices: [0.0050,0.0065,0.0080,0.0100], // USDT baz
+  weekPrices: [0.0050,0.0065,0.0080,0.0100],
   nfts: [
     { id:0, name:"ZUZU Hero", rarity:"Epic", supply:200 },
     { id:1, name:"ZUZU Rogue", rarity:"Rare", supply:2500 },
@@ -23,7 +23,7 @@ const CONFIG = {
 };
 
 /* =========================
-   I18N (EN/TR/FR/ES)
+   I18N
 ========================= */
 const I = {
   en:{nav_presale:"Pre-Sale",nav_stake:"Stake",nav_nft:"NFT Rewards",nav_roadmap:"Roadmap",nav_token:"Tokenomics",
@@ -90,12 +90,32 @@ function applyLang(lang="en"){
     if (I[lang] && I[lang][k]) el.innerHTML = I[lang][k];
   });
   localStorage.setItem("zuzu_lang", lang);
+  // butona güncel bayrak-kod yaz
+  const flagMap={en:"flags/en.png",tr:"flags/tr.png",fr:"flags/fr.png",es:"flags/es.png"};
+  const code = document.getElementById("langCode");
+  const img  = document.getElementById("langFlag");
+  if(code) code.textContent = lang.toUpperCase();
+  if(img)  img.src = flagMap[lang] || flagMap.en;
 }
 (function initLang(){
   const last = localStorage.getItem("zuzu_lang") || "tr";
   applyLang(last);
-  document.getElementById("langFlags").querySelectorAll(".flag").forEach(b=>{
-    b.addEventListener("click", ()=> applyLang(b.dataset.lang));
+  const wrap  = document.getElementById("langWrap");
+  const menu  = document.getElementById("langMenu");
+  const btn   = document.getElementById("langBtn");
+  btn.addEventListener("click", ()=>{
+    const open = menu.classList.toggle("open");
+    btn.setAttribute("aria-expanded", open?"true":"false");
+  });
+  menu.querySelectorAll(".langopt").forEach(opt=>{
+    opt.addEventListener("click", ()=>{
+      applyLang(opt.dataset.lang);
+      menu.classList.remove("open");
+      btn.setAttribute("aria-expanded","false");
+    });
+  });
+  document.addEventListener("click", (e)=>{
+    if(!wrap.contains(e.target)) { menu.classList.remove("open"); btn.setAttribute("aria-expanded","false"); }
   });
 })();
 
@@ -125,13 +145,14 @@ function getActiveWeek(){
   if (days < 21) return 2;
   return 3;
 }
-function updateActiveWeekUI(){
+function refreshBuyButtons(){
   const w = getActiveWeek();
+  const connected = Boolean(wallet.publicKey);
   for(let i=0;i<4;i++){
-    const btn = document.getElementById("buyW"+i);
-    if (!btn) continue;
-    btn.disabled = (i!==w) || !wallet.publicKey;
-    btn.classList.toggle("active-week", i===w);
+    const b = document.getElementById("buyW"+i);
+    if (!b) continue;
+    b.classList.toggle("active-week", i===w);
+    b.disabled = !(connected && i===w);
   }
 }
 function updateCosts(){
@@ -220,30 +241,26 @@ updateCosts();
 })();
 
 /* =========================
-   Solana Wallet (Phantom / Solflare / Backpack)
+   Solana Wallets (Phantom / Solflare / Backpack)
 ========================= */
-const wallet = {
-  type:null, provider:null, publicKey:null
-};
+const wallet = { type:null, provider:null, publicKey:null };
 const statusPill = document.getElementById("statusPill");
 const walletPill = document.getElementById("walletPill");
-
 function setStatus(txt){ if(statusPill) statusPill.textContent = txt; }
 function setWallet(addr){
   if(walletPill) walletPill.textContent = addr ? `Wallet: ${addr.slice(0,4)}…${addr.slice(-4)}` : "Wallet: Not connected";
-  const connected = Boolean(addr);
-  ["buyW0","buyW1","buyW2","buyW3"].forEach(id=>{
-    const b = document.getElementById(id); if(b){ b.disabled = !connected || !b.classList.contains("active-week"); }
-  });
+  refreshBuyButtons();
 }
 
+/* provider algılama */
 function detectProvider(kind){
-  if (kind==="phantom") return window.phantom?.solana || window.solana?.isPhantom && window.solana;
-  if (kind==="solflare") return window.solflare || window.solflare?.solana;
-  if (kind==="backpack") return window.backpack?.solana;
+  if (kind==="phantom")  return window.phantom?.solana || (window.solana?.isPhantom ? window.solana : null);
+  if (kind==="solflare") return window.solflare || window.solflare?.solana || null;
+  if (kind==="backpack") return window.backpack?.solana || null;
   return null;
 }
 
+/* bağlan (extension varsa doğrudan) */
 async function connectDetected(kind){
   try{
     const prov = detectProvider(kind);
@@ -259,71 +276,51 @@ async function connectDetected(kind){
   }
 }
 
-/* — Deep link fallback (mobil) — */
-function dl(kind){
-  const url = location.origin + location.pathname; // dönüş için aynı sayfa
-  const ret = encodeURIComponent(url + "?connected=1");
-  if(kind==="phantom"){
-    // Phantom: siteyi Phantom içinde aç (kullanıcı bağlan dediğinde onay penceresi gelir)
-    return `https://phantom.app/ul/browse/${encodeURIComponent(url)}`;
-  }
-  if(kind==="solflare"){
-    return `https://solflare.com/ul/v1/browse?url=${encodeURIComponent(url)}`;
-  }
-  if(kind==="backpack"){
-    return `https://backpack.app/ul/browse/${encodeURIComponent(url)}`;
-  }
+/* mobil deep-link (app içinde siteyi aç) */
+function deepLink(kind){
+  const url = location.origin + location.pathname; // geri dönüş aynı sayfa
+  if(kind==="phantom")  return `https://phantom.app/ul/browse/${encodeURIComponent(url)}`;
+  if(kind==="solflare") return `https://solflare.com/ul/v1/browse?url=${encodeURIComponent(url)}`;
+  if(kind==="backpack") return `https://backpack.app/ul/browse/${encodeURIComponent(url)}`;
   return url;
 }
-function openDeepLink(kind){
-  window.location.href = dl(kind);
-}
+function openDeepLink(kind){ window.location.href = deepLink(kind); }
 
-/* Modal control */
+/* modal kontrol */
 const modal = document.getElementById("walletModal");
 function openModal(){ modal.style.display="flex"; }
 function closeModal(){ modal.style.display="none"; }
-
 document.getElementById("openWalletModal")?.addEventListener("click", openModal);
+document.getElementById("connectBtn")?.addEventListener("click", openModal);
 document.getElementById("closeWallet")?.addEventListener("click", closeModal);
-
 document.querySelectorAll(".wbtn").forEach(b=>{
   b.addEventListener("click", ()=>{
     const kind = b.dataset.wallet;
-    const has = !!detectProvider(kind);
-    if(has){
-      connectDetected(kind);
-    }else{
-      // mobil yönlendirme
-      setStatus("Status: opening wallet app…");
-      openDeepLink(kind);
-    }
+    const has  = !!detectProvider(kind);
+    if(has){ connectDetected(kind); }
+    else { setStatus("Status: opening wallet app…"); openDeepLink(kind); }
   });
 });
 
-/* Sayfaya dönüşte otomatik bağlanmayı dene */
+/* sayfaya dönüşte otomatik bağlanmayı dene */
 (function autoReconnect(){
   const last = localStorage.getItem("zuzu_last_wallet");
-  const urlFlag = /[?&]connected=1/.test(location.search);
-  if(last && (detectProvider(last) || urlFlag)){
-    // kısa gecikme ile deneyelim
-    setTimeout(()=>{ if(detectProvider(last)) connectDetected(last); }, 300);
+  if(last && detectProvider(last)){
+    setTimeout(()=>connectDetected(last), 300);
   }
 })();
 
-/* Disconnect */
+/* disconnect */
 document.getElementById("disconnectBtn")?.addEventListener("click", async ()=>{
-  try{
-    if(wallet.provider?.disconnect) await wallet.provider.disconnect();
-  }catch(_){}
+  try{ if(wallet.provider?.disconnect) await wallet.provider.disconnect(); }catch(_){}
   wallet.type=null; wallet.provider=null; wallet.publicKey=null;
   setWallet(null); setStatus("Status: Ready");
 });
 
 /* =========================
    Purchase (SOL / USDT SPL)
-   — Örnek/mock: gerçek transfer yerine demo alert.
-   — Buraya Anchor/Web3.js ile gerçek işlem entegre edebilirsin.
+   — Bu örnek kullanıcı akışını gösterir. Gerçek transfer
+     için Anchor/Web3.js ile SPL işlemini burada yapabilirsin.
 ========================= */
 async function handleBuy(weekIndex){
   if(!wallet.publicKey){ alert("Connect your wallet first."); return; }
@@ -331,18 +328,11 @@ async function handleBuy(weekIndex){
   if(qty<=0){ alert("Enter a valid amount."); return; }
   const active = getActiveWeek();
   if(weekIndex!==active){ alert("This week is not active."); return; }
-
   const price = CONFIG.weekPrices[weekIndex];
-  const pay = document.getElementById("paySel").value; // "SOL" or "USDT"
+  const pay = document.getElementById("paySel").value; // "SOL" | "USDT"
   const costUSDT = qty * price;
 
-  // Burada gerçek transferi yapman için yer:
-  // - pay === "SOL": lamports hesapla, SystemProgram.transfer ile gönder
-  // - pay === "USDT": SPL Token Program ile transfer
-  // Bu örnekte sadece kullanıcı akışını gösteriyoruz:
-  alert(`Confirm in wallet:\nPay: ${pay}\nAmount: ${pay==="SOL" ? (costUSDT/0.15).toFixed(3)+" SOL (örnek)" : costUSDT.toFixed(2)+" USDT"}\nReceiver: ${CONFIG.ownerSol}`);
-
-  // onaydan sonra:
+  alert(`Confirm in wallet:\nPay: ${pay}\nAmount: ${pay==="SOL" ? (costUSDT/0.15).toFixed(3)+" SOL (example)" : costUSDT.toFixed(2)+" USDT"}\nReceiver: ${CONFIG.ownerSol}`);
   setStatus("Status: Purchase submitted");
 }
 
@@ -351,9 +341,9 @@ async function handleBuy(weekIndex){
   if (!b) return;
   b.addEventListener("click", ()=>handleBuy(i));
 });
-updateActiveWeekUI();
+refreshBuyButtons();
 
-/* Borsa ticker ufak tetikleme */
+/* ticker küçük tetikleme */
 (function ensureTickerVisible(){
   const track = document.getElementById('exTrack');
   if(!track) return;
