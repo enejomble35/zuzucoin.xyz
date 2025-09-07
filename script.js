@@ -1,33 +1,33 @@
-/* ========= Small config shared with wallet ========= */
+/* ========= Public config to share with wallet ========= */
 window.ZUZU_CONFIG = {
   tokenSymbol: "ZUZU",
   tokenDecimals: 9,
-  presalePrice: 0.0050,
+  presalePrice: 0.0050, // USDT
   ownerSol: "FniLJmY5L6zQyQfot6xsiYojHeEzoGs2xZXYZh1U9QwF"
 };
 
-/* ========= Page data ========= */
+/* ========= Page config & content ========= */
 const CONFIG = {
   contractAddress: "0xF2bbbEcB417725813BF5E940d678793fACDa9729",
   collectionUrl: "https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts",
-  launchAt: Date.now() + 50*24*60*60*1000,
+  launchAt: Date.now() + 49*24*60*60*1000 + 23*3600000 + 56*60000 + 50*1000, // örnek
   saleStart: Date.now(),
-  weekPrices: [0.0050,0.0065,0.0080,0.0100],
+  weekPrices: [0.0050, 0.0065, 0.0080, 0.0100],
   nfts: [
-    {id:0,name:"ZUZU Hero",rarity:"Epic",supply:200},
-    {id:1,name:"ZUZU Rogue",rarity:"Rare",supply:2500},
-    {id:2,name:"ZUZU Berserker",rarity:"Epic",supply:800},
-    {id:3,name:"ZUZU Hacker",rarity:"Rare",supply:600},
-    {id:4,name:"ZUZU Sorceress",rarity:"Epic",supply:750},
-    {id:5,name:"ZUZU Warrior",rarity:"Rare",supply:900},
-    {id:6,name:"ZUZU Maiden",rarity:"Rare",supply:1100},
-    {id:7,name:"ZUZU Ranger",rarity:"Rare",supply:1000},
-    {id:8,name:"ZUZU Scientist",rarity:"Epic",supply:1100},
-    {id:9,name:"ZUZU Titan",rarity:"Legendary",supply:250}
+    { id:0, name:"ZUZU Hero",      rarity:"Epic",      supply:200 },
+    { id:1, name:"ZUZU Rogue",     rarity:"Rare",      supply:2500 },
+    { id:2, name:"ZUZU Berserker", rarity:"Epic",      supply:800 },
+    { id:3, name:"ZUZU Hacker",    rarity:"Rare",      supply:600 },
+    { id:4, name:"ZUZU Sorceress", rarity:"Epic",      supply:750 },
+    { id:5, name:"ZUZU Warrior",   rarity:"Rare",      supply:900 },
+    { id:6, name:"ZUZU Maiden",    rarity:"Rare",      supply:1100 },
+    { id:7, name:"ZUZU Ranger",    rarity:"Rare",      supply:1000 },
+    { id:8, name:"ZUZU Scientist", rarity:"Epic",      supply:1100 },
+    { id:9, name:"ZUZU Titan",     rarity:"Legendary", supply:250 }
   ]
 };
 
-/* ========= i18n (EN/TR/FR/ES/RU) ========= */
+/* ========= i18n ========= */
 const I = {
   en:{nav_presale:"Pre-Sale",nav_stake:"Stake",nav_nft:"NFT Rewards",nav_roadmap:"Roadmap",nav_token:"Tokenomics",connect:"Connect Wallet",
       hero_badge:"Pre-Sale • Stake to Win NFT",hero_title:"ZUZU — Robotic Hedgehog 🦔⚡",
@@ -57,7 +57,7 @@ const I = {
       cta_stake:"Commencer le Stake",cta_nft:"Récompenses NFT",collection_page:"Page de la Collection",contract:"Contrat :",
       days:"JOURS",hours:"HEURES",mins:"MINUTES",secs:"SECONDES",
       presale_title:"Pré-vente — Compte à rebours",presale_lead:"Prépare-toi pour la pré-vente ZUZU ! <b>Allocation limitée</b>, prix communauté.",amount:"Montant (ZUZU)",
-      w1:"Semaine 1 (Moins cher)",w2:"Semaine 2",w3:"Semaine 3",w4:"Semaine 4 (Dernière chance)",cost:"Coût :",buy:"Acheter",exchanges:"Bourses prises en charge",
+      w1:"Semaine 1 (Moins cher)",w2:"Semaane 2",w3:"Semaine 3",w4:"Semaine 4 (Dernière chance)",cost:"Coût :",buy:"Acheter",exchanges:"Bourses prises en charge",
       stake_title:"Stake Pro — Verrouille, Gagne, Reçois un NFT ✨",stake_lead:"Verrouille ton ZUZU, gagne <b>APY + BOOST NFT</b>. Badge & airdrop prioritaires pour les premiers.",
       calc_title:"Calculateur de gains",amount2:"Montant (ZUZU)",lock:"Période de verrouillage",nft_have:"Tu as un NFT ?",early:"Badge précoce",calc_btn:"Calculer",
       ret:"Gain total",avg:"Moyenne mensuelle",boost:"Boost total",token_title:"Tokenomics (Visualisé)",road_title:"Feuille de route",
@@ -86,12 +86,8 @@ const I = {
       road_lead:"Фокус на сообществе, стейкинге, NFT-дропах и листингах."}
 };
 
-/* ========= helpers ========= */
-const pad2 = n=>n.toString().padStart(2,"0");
-const num = v => {
-  const n = parseFloat((v??"0").toString().replace(/[^\d.]/g,""));
-  return Number.isFinite(n)?n:0;
-};
+const pad2=n=>n.toString().padStart(2,"0");
+const num = v => {const n=parseFloat((v??"0").toString().replace(/[^\d.]/g,""));return Number.isFinite(n)?n:0;};
 const activeWeek=()=>{const d=Math.floor((Date.now()-CONFIG.saleStart)/86400000);if(d<7)return 0;if(d<14)return 1;if(d<21)return 2;return 3;};
 
 function applyLang(lang="en"){
@@ -99,15 +95,14 @@ function applyLang(lang="en"){
     const k=el.getAttribute("data-i");
     if(I[lang] && I[lang][k]) el.innerHTML = I[lang][k];
   });
-  // Connect butonunun metnini resetleme (adres gösteriyorsa dokunma)
   const btn=document.getElementById("connectBtn");
-  if(btn && btn.textContent==="Connect Wallet" || btn.textContent==="Cüzdan Bağla"){
+  if(btn && (!window.__walletLabelSet || btn.dataset.reset==="1")){
     btn.textContent = I[lang].connect;
   }
 }
 
 document.addEventListener("DOMContentLoaded", ()=>{
-  /* Dil dropdown */
+  /* Dil Dropdown */
   const wrap = document.getElementById("langWrap");
   const btn  = document.getElementById("langBtn");
   const flag = document.getElementById("langFlag");
@@ -135,8 +130,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
   /* Sayaç */
   function tick(){
     const left = Math.max(0, CONFIG.launchAt - Date.now());
-    const d = Math.floor(left/86400000), h = Math.floor((left%86400000)/3600000),
-          m = Math.floor((left%3600000)/60000), s = Math.floor((left%60000)/1000);
+    const d = Math.floor(left/86400000),
+          h = Math.floor((left%86400000)/3600000),
+          m = Math.floor((left%3600000)/60000),
+          s = Math.floor((left%60000)/1000);
     ["cdDays","cdHours","cdMins","cdSecs"].forEach((id,i)=>{
       const el=document.getElementById(id); if(el) el.textContent=pad2([d,h,m,s][i]);
     });
@@ -196,11 +193,12 @@ document.addEventListener("DOMContentLoaded", ()=>{
     if(t1) t1.href=CONFIG.collectionUrl; if(t2) t2.href=CONFIG.collectionUrl;
   })();
 
-  /* Wallet */
+  /* Wallet Aç */
   document.getElementById("connectBtn")?.addEventListener("click", ()=>{
     window.openWalletModal && window.openWalletModal();
   });
 
+  /* Buy buttons → solana.v1.js içindeki fonksiyona gider */
   ["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{
     const b=document.getElementById(id); if(!b) return;
     b.addEventListener("click", async ()=>{
