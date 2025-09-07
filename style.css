@@ -1,3 +1,28 @@
+/* ... senin mevcut CSS’in başı ... */
+
+/* Lang dropdown */
+.lang-wrap{position:relative}
+.lang-btn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border:1px solid #243457;border-radius:12px;background:#0f1b31}
+.lang-btn img{width:24px;height:18px;object-fit:cover;border-radius:3px}
+.lang-menu{position:absolute;right:0;top:48px;background:#0f1a30;border:1px solid #22365a;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:6px;display:none;min-width:150px;z-index:60}
+.lang-menu.open{display:block}
+.lang-menu button{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;background:transparent;border:0;color:#d9e7ff;border-radius:8px;cursor:pointer}
+.lang-menu button:hover{background:#14223b}
+.lang-menu img{width:20px;height:14px;object-fit:cover;border-radius:3px}
+
+/* Wallet modal */
+.wallet-modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;justify-content:center;z-index:90}
+.wallet-modal.show{display:flex}
+.wallet-sheet{width:min(520px,92%);background:#0f1828;border:1px solid #1b2a49;border-radius:16px 16px 0 0;padding:14px 14px 18px}
+.wallet-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.wm-close{background:#13213a;border:1px solid #24385f;color:#d9e7ff;border-radius:10px;padding:6px 10px;cursor:pointer}
+.wallet-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}
+.wallet-item{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px;background:#12203a;border:1px solid #22365a;border-radius:14px;cursor:pointer}
+.wallet-item:hover{background:#162745}
+.wallet-item img{height:34px}
+.wallet-note{color:#8aa2c9;margin-top:6px;font-size:.92rem}
+
+/* ... senin mevcut CSS’in devamı ... */
 /* =========================
    ZUZU – Global Styles
 ========================= */
