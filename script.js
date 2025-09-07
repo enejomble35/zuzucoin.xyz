@@ -1,4 +1,4 @@
-/* ===== Global config (wallet-lite da okur) ===== */
+/* ========= Small config shared with wallet ========= */
 window.ZUZU_CONFIG = {
   tokenSymbol: "ZUZU",
   tokenDecimals: 9,
@@ -6,7 +6,7 @@ window.ZUZU_CONFIG = {
   ownerSol: "FniLJmY5L6zQyQfot6xsiYojHeEzoGs2xZXYZh1U9QwF"
 };
 
-/* ===== Site content ===== */
+/* ========= Page data ========= */
 const CONFIG = {
   contractAddress: "0xF2bbbEcB417725813BF5E940d678793fACDa9729",
   collectionUrl: "https://thirdweb.com/team/enejomble35/Zuzu-Maskot-Drop-28b60a/contract/polygon/0xF2bbbEcB417725813BF5E940d678793fACDa9729/nfts",
@@ -27,25 +27,83 @@ const CONFIG = {
   ]
 };
 
-/* ===== i18n (EN/TR/FR/ES/RU) ===== */
-const I = {/* -- metinler uzun, önceki mesajımdakiyle birebir aynı -- */};
-I.en= {...I.en}; I.tr={...I.tr}; I.fr={...I.fr}; I.es={...I.es}; I.ru={...I.ru}; // kısaltım (içerikler önceki gönderide)
+/* ========= i18n (EN/TR/FR/ES/RU) ========= */
+const I = {
+  en:{nav_presale:"Pre-Sale",nav_stake:"Stake",nav_nft:"NFT Rewards",nav_roadmap:"Roadmap",nav_token:"Tokenomics",connect:"Connect Wallet",
+      hero_badge:"Pre-Sale • Stake to Win NFT",hero_title:"ZUZU — Robotic Hedgehog 🦔⚡",
+      hero_lead:"Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high <b>utility</b>.",
+      cta_stake:"Start Staking",cta_nft:"NFT Rewards",collection_page:"Collection Page",contract:"Contract:",
+      days:"DAYS",hours:"HOURS",mins:"MINUTES",secs:"SECONDS",
+      presale_title:"Pre-Sale — Countdown",presale_lead:"Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.",amount:"Amount (ZUZU)",
+      w1:"Week 1 (Cheapest)",w2:"Week 2",w3:"Week 3",w4:"Week 4 (Last Chance)",cost:"Cost:",buy:"Buy",exchanges:"Supported Exchanges",
+      stake_title:"Stake Pro — Lock, Earn, Get NFT ✨",stake_lead:"Lock your ZUZU, earn <b>APY + NFT BOOST</b>. Early stakers get badge & airdrop priority.",
+      calc_title:"Earnings Calculator",amount2:"Amount (ZUZU)",lock:"Lock Period",nft_have:"Have NFT?",early:"Early Badge",calc_btn:"Calculate",
+      ret:"Total Return",avg:"Monthly Avg",boost:"Total Boost",token_title:"Tokenomics (Visualized)",road_title:"Roadmap",
+      road_lead:"Clear plan focused on community, staking, NFT drops, listings."},
+  tr:{nav_presale:"Ön Satış",nav_stake:"Stake",nav_nft:"NFT Ödülleri",nav_roadmap:"Yol Haritası",nav_token:"Tokonomi",connect:"Cüzdan Bağla",
+      hero_badge:"Ön Satış • Stake ile NFT Kazan",hero_title:"ZUZU — Geleceğin Robotic Kirpisi 🦔⚡",
+      hero_lead:"Stake et ve <b>ZUZU Maskot NFT</b> kazan. Sınırlı arz, yüksek <b>utility</b>.",
+      cta_stake:"Stake Etmeye Başla",cta_nft:"NFT Ödülleri",collection_page:"Koleksiyon Sayfası",contract:"Kontrat:",
+      days:"GÜN",hours:"SAAT",mins:"DAKİKA",secs:"SANİYE",
+      presale_title:"Ön Satış — Geri Sayım",presale_lead:"ZUZU ön satışına hazır ol! <b>Sınırlı tahsis</b>, topluluğa özel fiyat.",amount:"Miktar (ZUZU)",
+      w1:"1. Hafta (En Ucuz)",w2:"2. Hafta",w3:"3. Hafta",w4:"4. Hafta (Son Fırsat)",cost:"Maliyet:",buy:"Satın Al",exchanges:"Desteklenen Borsalar",
+      stake_title:"Stake Pro — Kilitle, Kazan, NFT Kap ✨",stake_lead:"ZUZU’larını kilitle, <b>APY + NFT BOOST</b> ile pasif gelir elde et. Erken stake edenler rozet & airdrop önceliği alır.",
+      calc_title:"Kazanç Hesaplayıcı",amount2:"Miktar (ZUZU)",lock:"Kilit Süresi",nft_have:"Elinde NFT var mı?",early:"Erken Rozet",calc_btn:"Hesapla",
+      ret:"Toplam Getiri",avg:"Aylık Ortalama",boost:"Toplam Boost",token_title:"Tokonomi (Görselleştirilmiş)",road_title:"Yol Haritası",
+      road_lead:"Topluluk, staking, NFT drop’ları ve listelemelere odaklı plan."},
+  fr:{nav_presale:"Pré-vente",nav_stake:"Stake",nav_nft:"Récompenses NFT",nav_roadmap:"Feuille de route",nav_token:"Tokenomics",connect:"Connecter le Wallet",
+      hero_badge:"Pré-vente • Stake pour gagner un NFT",hero_title:"ZUZU — Hérisson Robotique 🦔⚡",
+      hero_lead:"Stake et gagne un <b>NFT Mascotte ZUZU</b>. Offre limitée, forte <b>utilité</b>.",
+      cta_stake:"Commencer le Stake",cta_nft:"Récompenses NFT",collection_page:"Page de la Collection",contract:"Contrat :",
+      days:"JOURS",hours:"HEURES",mins:"MINUTES",secs:"SECONDES",
+      presale_title:"Pré-vente — Compte à rebours",presale_lead:"Prépare-toi pour la pré-vente ZUZU ! <b>Allocation limitée</b>, prix communauté.",amount:"Montant (ZUZU)",
+      w1:"Semaine 1 (Moins cher)",w2:"Semaine 2",w3:"Semaine 3",w4:"Semaine 4 (Dernière chance)",cost:"Coût :",buy:"Acheter",exchanges:"Bourses prises en charge",
+      stake_title:"Stake Pro — Verrouille, Gagne, Reçois un NFT ✨",stake_lead:"Verrouille ton ZUZU, gagne <b>APY + BOOST NFT</b>. Badge & airdrop prioritaires pour les premiers.",
+      calc_title:"Calculateur de gains",amount2:"Montant (ZUZU)",lock:"Période de verrouillage",nft_have:"Tu as un NFT ?",early:"Badge précoce",calc_btn:"Calculer",
+      ret:"Gain total",avg:"Moyenne mensuelle",boost:"Boost total",token_title:"Tokenomics (Visualisé)",road_title:"Feuille de route",
+      road_lead:"Plan axé sur communauté, staking, drops NFT et listings."},
+  es:{nav_presale:"Pre-venta",nav_stake:"Stake",nav_nft:"Recompensas NFT",nav_roadmap:"Hoja de ruta",nav_token:"Tokenomics",connect:"Conectar Billetera",
+      hero_badge:"Pre-venta • Stake para ganar NFT",hero_title:"ZUZU — Erizo Robótico 🦔⚡",
+      hero_lead:"Haz stake y gana <b>NFT Mascota ZUZU</b>. Suministro limitado, gran <b>utilidad</b>.",
+      cta_stake:"Empezar Stake",cta_nft:"Recompensas NFT",collection_page:"Página de Colección",contract:"Contrato:",
+      days:"DÍAS",hours:"HORAS",mins:"MINUTOS",secs:"SEGUNDOS",
+      presale_title:"Pre-venta — Cuenta regresiva",presale_lead:"¡Prepárate para la pre-venta ZUZU! <b>Asignación limitada</b>, precio para la comunidad.",amount:"Cantidad (ZUZU)",
+      w1:"Semana 1 (Más barata)",w2:"Semana 2",w3:"Semana 3",w4:"Semana 4 (Última oportunidad)",cost:"Costo:",buy:"Comprar",exchanges:"Exchanges compatibles",
+      stake_title:"Stake Pro — Bloquea, Gana, Obtén NFT ✨",stake_lead:"Bloquea tu ZUZU, gana <b>APY + BOOST NFT</b>. Primeros obtienen insignia y prioridad de airdrop.",
+      calc_title:"Calculadora de ganancias",amount2:"Cantidad (ZUZU)",lock:"Periodo de bloqueo",nft_have:"¿Tienes NFT?",early:"Insignia temprana",calc_btn:"Calcular",
+      ret:"Retorno total",avg:"Promedio mensual",boost:"Impulso total",token_title:"Tokenomics (Visualizado)",road_title:"Hoja de ruta",
+      road_lead:"Plan centrado en comunidad, staking, drops NFT y listados."},
+  ru:{nav_presale:"Предпродажа",nav_stake:"Стейкинг",nav_nft:"NFT Награды",nav_roadmap:"Дорожная карта",nav_token:"Токеномика",connect:"Подключить кошелек",
+      hero_badge:"Предпродажа • Стейкинг и выигрыш NFT",hero_title:"ZUZU — Роботизированный ёж 🦔⚡",
+      hero_lead:"Делай стейкинг и получай <b>ZUZU Маскот NFT</b>. Ограниченная эмиссия, высокая <b>польза</b>.",
+      cta_stake:"Начать стейкинг",cta_nft:"NFT Награды",collection_page:"Страница коллекции",contract:"Контракт:",
+      days:"ДНИ",hours:"ЧАСЫ",mins:"МИНУТЫ",secs:"СЕКУНДЫ",
+      presale_title:"Предпродажа — Обратный отсчет",presale_lead:"Готовься к предпродаже ZUZU! <b>Ограниченный лимит</b>, цена для сообщества.",amount:"Количество (ZUZU)",
+      w1:"Неделя 1 (Дешевле всего)",w2:"Неделя 2",w3:"Неделя 3",w4:"Неделя 4 (Последний шанс)",cost:"Стоимость:",buy:"Купить",exchanges:"Поддерживаемые биржи",
+      stake_title:"Stake Pro — Замок, Доход, NFT ✨",stake_lead:"Заморозь ZUZU и получай <b>APY + NFT BOOST</b>. Ранние — значок и приоритет airdrop.",
+      calc_title:"Калькулятор дохода",amount2:"Количество (ZUZU)",lock:"Период блокировки",nft_have:"Есть NFT?",early:"Ранний значок",calc_btn:"Рассчитать",
+      ret:"Итоговый доход",avg:"В среднем в месяц",boost:"Общий буст",token_title:"Токеномика (Визуально)",road_title:"Дорожная карта",
+      road_lead:"Фокус на сообществе, стейкинге, NFT-дропах и листингах."}
+};
 
-/* === helpers === */
+/* ========= helpers ========= */
 const pad2 = n=>n.toString().padStart(2,"0");
 const num = v => {
   const n = parseFloat((v??"0").toString().replace(/[^\d.]/g,""));
   return Number.isFinite(n)?n:0;
 };
-function activeWeek(){
-  const d = Math.floor((Date.now()-CONFIG.saleStart)/86400000);
-  if(d<7) return 0; if(d<14) return 1; if(d<21) return 2; return 3;
-}
+const activeWeek=()=>{const d=Math.floor((Date.now()-CONFIG.saleStart)/86400000);if(d<7)return 0;if(d<14)return 1;if(d<21)return 2;return 3;};
+
 function applyLang(lang="en"){
   document.querySelectorAll("[data-i]").forEach(el=>{
     const k=el.getAttribute("data-i");
-    if(I[lang] && I[lang][k]) el.innerHTML=I[lang][k];
+    if(I[lang] && I[lang][k]) el.innerHTML = I[lang][k];
   });
+  // Connect butonunun metnini resetleme (adres gösteriyorsa dokunma)
+  const btn=document.getElementById("connectBtn");
+  if(btn && btn.textContent==="Connect Wallet" || btn.textContent==="Cüzdan Bağla"){
+    btn.textContent = I[lang].connect;
+  }
 }
 
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -54,13 +112,14 @@ document.addEventListener("DOMContentLoaded", ()=>{
   const btn  = document.getElementById("langBtn");
   const flag = document.getElementById("langFlag");
   const menu = document.getElementById("langMenu");
+
   function setLang(lc){
-    applyLang(lc);
-    flag.src = `assets/flags/${lc}.png`;
     localStorage.setItem("zuzu_lang", lc);
+    flag.src = `./flags/${lc}.png`;
+    applyLang(lc);
   }
-  const saved = localStorage.getItem("zuzu_lang") || "en";
-  setLang(saved);
+  setLang(localStorage.getItem("zuzu_lang") || "en");
+
   btn?.addEventListener("click", ()=>{
     const open = menu.classList.toggle("open");
     btn.setAttribute("aria-expanded", open?"true":"false");
@@ -71,36 +130,27 @@ document.addEventListener("DOMContentLoaded", ()=>{
       menu.classList.remove("open");
     });
   });
-  document.addEventListener("click", (e)=>{
-    if(!wrap.contains(e.target)) menu.classList.remove("open");
-  });
+  document.addEventListener("click",(e)=>{ if(!wrap.contains(e.target)) menu.classList.remove("open"); });
 
   /* Sayaç */
   function tick(){
     const left = Math.max(0, CONFIG.launchAt - Date.now());
-    const d = Math.floor(left/86400000);
-    const h = Math.floor((left%86400000)/3600000);
-    const m = Math.floor((left%3600000)/60000);
-    const s = Math.floor((left%60000)/1000);
+    const d = Math.floor(left/86400000), h = Math.floor((left%86400000)/3600000),
+          m = Math.floor((left%3600000)/60000), s = Math.floor((left%60000)/1000);
     ["cdDays","cdHours","cdMins","cdSecs"].forEach((id,i)=>{
-      const v=[d,h,m,s][i];
-      const el=document.getElementById(id);
-      if(el) el.textContent = pad2(v);
+      const el=document.getElementById(id); if(el) el.textContent=pad2([d,h,m,s][i]);
     });
-  }
-  tick(); setInterval(tick,1000);
+  } tick(); setInterval(tick,1000);
 
-  /* Aktif hafta vurgusu */
-  function paintWeeks(){
-    const w = activeWeek();
+  /* Aktif hafta */
+  (function paint(){
+    const w=activeWeek();
     for(let i=0;i<4;i++){
-      const b=document.getElementById("buyW"+i);
-      if(!b) continue;
+      const b=document.getElementById("buyW"+i); if(!b) continue;
       if(i===w){ b.disabled=false; b.classList.add("active-week"); }
       else { b.disabled=true; b.classList.remove("active-week"); }
     }
-  }
-  paintWeeks();
+  })();
 
   /* Maliyet */
   function recalc(){
@@ -146,27 +196,25 @@ document.addEventListener("DOMContentLoaded", ()=>{
     if(t1) t1.href=CONFIG.collectionUrl; if(t2) t2.href=CONFIG.collectionUrl;
   })();
 
-  /* Wallet modal aç */
+  /* Wallet */
   document.getElementById("connectBtn")?.addEventListener("click", ()=>{
     window.openWalletModal && window.openWalletModal();
   });
 
-  /* Satın al -> wallet-lite’e delege */
   ["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{
     const b=document.getElementById(id); if(!b) return;
     b.addEventListener("click", async ()=>{
       if(i!==activeWeek()){ alert("This week is not active."); return; }
       const qty = num(document.getElementById("buyAmount")?.value);
-      const pay = document.getElementById("paySel")?.value || "SOL"; // SOL ya da USDT(SPL)
+      const pay = document.getElementById("paySel")?.value || "SOL";
       if(qty<=0){ alert("Enter a valid amount."); return; }
-      if(typeof window.solanaPresaleBuy!=="function"){ alert("Wallet module not loaded"); return; }
       try{
         await window.solanaPresaleBuy({ quantity: qty, payment: pay, price: CONFIG.weekPrices[i] });
-      }catch(e){ console.error(e); alert("Transaction failed or cancelled."); }
+      }catch(e){ console.error(e); }
     });
   });
 
-  /* Exchange ticker mobil fix */
-  const tr = document.getElementById("exTrack");
+  /* ticker mobil fix */
+  const tr=document.getElementById("exTrack");
   if(tr){ tr.style.willChange="transform"; tr.style.transform="translateX(0)"; setTimeout(()=>tr.style.transform="",50); }
 });
