@@ -9,11 +9,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <style>
-  /* sadece modal ve bayraklar için minik dokunuş */
-  .flagbar{display:flex;gap:8px;align-items:center;margin-left:6px}
-  .flag{background:#12203a;border:1px solid #22375f;border-radius:10px;padding:4px;cursor:pointer}
-  .flag img{width:24px;height:16px;display:block}
-  .flag:focus,.flag:hover{outline:none;box-shadow:0 0 0 2px rgba(122,161,255,.35)}
+  /* --- yalnızca dil & cüzdan modal için küçük stiller --- */
+  .langwrap{position:relative}
+  .langbtn{display:flex;align-items:center;gap:6px;background:#12203a;border:1px solid #22375f;border-radius:12px;padding:6px 10px;cursor:pointer}
+  .langbtn img{width:20px;height:14px;display:block}
+  .langmenu{position:absolute;right:0;top:110%;background:#0f1828;border:1px solid #1b2a49;border-radius:12px;padding:6px;display:none;min-width:160px;z-index:100}
+  .langmenu.open{display:block}
+  .langopt{display:flex;align-items:center;gap:8px;padding:8px;border-radius:10px;cursor:pointer}
+  .langopt:hover{background:#13213a}
+  .langopt img{width:20px;height:14px}
+
   .wallet-modal{position:fixed;inset:0;background:rgba(4,8,14,.7);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:999}
   .wallet-card{width:min(420px,92%);background:#0f1828;border:1px solid #1b2a49;border-radius:16px;padding:16px}
   .wallet-card h3{margin:.2rem 0 10px}
@@ -42,15 +47,20 @@
       <a href="stake-simulator.html" class="z-chip">Stake Simulator ↗</a>
       <a href="claim.html" class="z-chip">Claim Portal ↗</a>
 
-      <!-- Bayraklı dil seçimi -->
-      <div class="flagbar" id="langFlags">
-        <button class="flag" data-lang="en" title="English"><img src="flags/en.png" alt="EN"></button>
-        <button class="flag" data-lang="tr" title="Türkçe"><img src="flags/tr.png" alt="TR"></button>
-        <button class="flag" data-lang="fr" title="Français"><img src="flags/fr.png" alt="FR"></button>
-        <button class="flag" data-lang="es" title="Español"><img src="flags/es.png" alt="ES"></button>
+      <!-- Dil seçici (bayraklı açılır) -->
+      <div class="langwrap" id="langWrap">
+        <button class="langbtn" id="langBtn" aria-haspopup="true" aria-expanded="false" title="Language">
+          <img id="langFlag" src="flags/en.png" alt="EN"><span id="langCode">EN</span>
+        </button>
+        <div class="langmenu" id="langMenu" role="menu">
+          <div class="langopt" data-lang="en"><img src="flags/en.png" alt=""><span>English</span></div>
+          <div class="langopt" data-lang="tr"><img src="flags/tr.png" alt=""><span>Türkçe</span></div>
+          <div class="langopt" data-lang="fr"><img src="flags/fr.png" alt=""><span>Français</span></div>
+          <div class="langopt" data-lang="es"><img src="flags/es.png" alt=""><span>Español</span></div>
+        </div>
       </div>
 
-      <button id="connectBtn" class="z-btn z-btn-primary" data-i="connect">Connect Wallet</button>
+      <button id="openWalletModal" class="z-btn z-btn-primary" data-i="connect">Connect Wallet</button>
     </nav>
   </div>
 </header>
@@ -76,7 +86,6 @@
         <span class="z-chip" id="contractDisplay">—</span>
       </div>
 
-      <!-- Countdown -->
       <div class="counter" style="margin-top:14px">
         <div class="flip"><div id="cdDays" class="num">00</div><small data-i="days">DAYS</small></div>
         <div class="flip"><div id="cdHours" class="num">00</div><small data-i="hours">HOURS</small></div>
@@ -119,7 +128,7 @@
           </div>
         </div>
         <div class="wallet-row" style="margin-top:8px">
-          <button id="openWalletModal" class="z-btn z-btn-primary" data-i="connect">Connect Wallet</button>
+          <button id="connectBtn" class="z-btn z-btn-primary" data-i="connect">Connect Wallet</button>
           <button id="disconnectBtn" class="z-btn z-btn-ghost">Disconnect</button>
           <span class="pill" id="statusPill">Status: Ready</span>
           <span class="pill" id="walletPill">Wallet: Not connected</span>
@@ -128,7 +137,6 @@
       </div>
     </div>
 
-    <!-- Haftalara göre fiyat kutuları -->
     <div class="presale-grid">
       <div class="card buybox">
         <h4 data-i="w1">Week 1 (Cheapest)</h4>
@@ -168,7 +176,6 @@
       </div>
     </div>
 
-    <!-- Borsalar -->
     <div class="card" style="margin-top:16px">
       <h3 style="margin:0 0 10px" data-i="exchanges">Supported Exchanges</h3>
       <div class="ticker">
@@ -302,21 +309,6 @@
   </div>
 </section>
 
-<!-- ROADMAP -->
-<section id="roadmap" class="z-section">
-  <div class="z-container">
-    <div class="section-head"><h2 data-i="road_title">Roadmap</h2><p data-i="road_lead">Clear plan focused on community, staking, NFT drops, listings.</p></div>
-    <div class="card">
-      <ul>
-        <li><b>Q1 — Core Setup</b>: Web, contract tests, community channels, security.</li>
-        <li><b>Q2 — Pre-Sale & Stake</b>: Sale rounds, staking launch, Maskot NFT rewards.</li>
-        <li><b>Q3 — Listings</b>: Liquidity, first CEX/DEX listings, market-maker.</li>
-        <li><b>Q4 — Ecosystem</b>: In-game integrations, partnerships, mobile mini-app.</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
 </main>
 
 <footer class="z-footer">
@@ -340,7 +332,7 @@
         <img src="assets/images/wallets/phantom.png" alt="">
         <div>
           <div>Phantom</div>
-          <small class="muted">Masaüstü: direkt bağlanır • Mobil: uygulamaya yönlenir</small>
+          <small class="muted">Desktop: connect • Mobile: open app</small>
         </div>
       </button>
       <button class="wbtn" data-wallet="solflare">
