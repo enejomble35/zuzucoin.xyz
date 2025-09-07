@@ -1,208 +1,154 @@
-/* =======================================================
-   ZUZUCOIN — Solana Wallet Modal
-   Phantom • Solflare • Backpack
-   - Uzantı varsa direkt bağlanır
-   - Uzantı yoksa deeplink + redirect (zuzucoin.xyz)
-   - Geri dönünce onlyIfTrusted ile auto-connect
-   - Bağlandıktan sonra Connect Wallet butonunda kısaltılmış
-     public key gösterilir ve localStorage'a yazılır.
-==========================================================*/
-(function () {
-  const APP_ORIGIN = location.origin || "https://zuzucoin.xyz";
-  const REDIRECT = location.href.split('#')[0]; // hash'i temizle
-  const LS_KEY = "zuzu_pubkey";
+/* =========================================================
+   Lightweight Solana wallet modal + deeplink connector
+   Wallets: Phantom, Solflare, Backpack
+   - Desktop: injected provider ile direct connect
+   - Mobile: universal link ile uygulamaya aç, dönüşte auto-connect
+========================================================= */
+(function(){
+  const APP_URL = "https://zuzucoin.xyz";
+  const $  = (s,root=document)=>root.querySelector(s);
 
-  const $ = sel => document.querySelector(sel);
-  const connectBtn = $("#connectBtn");
+  let pubkey = null;
 
-  // ------------------------------------------------------
-  // UI: Modal oluşturan helper
-  // ------------------------------------------------------
-  function ensureModal() {
-    if ($("#walletModal")) return $("#walletModal");
-
-    const wrap = document.createElement("div");
-    wrap.id = "walletModal";
-    wrap.className = "wallet-modal";
-    wrap.setAttribute("aria-hidden", "true");
-    wrap.innerHTML = `
-      <div class="wallet-backdrop"></div>
-      <div class="wallet-box">
-        <button id="wmClose" class="wm-close" aria-label="Close">×</button>
-        <h3>Connect Wallet</h3>
-        <div class="wallet-grid">
-          <button id="wPhantom"  class="wallet-item">
-            <img onerror="this.replaceWith(document.createTextNode('🟣'))"
-                 src="assets/wallets/phantom.svg" alt="Phantom">
-            <span>Phantom</span>
+  // -------- Modal UI --------
+  function ensureModal(){
+    let m = $("#walletModal");
+    if (m) return m;
+    m = document.createElement("div");
+    m.id = "walletModal";
+    m.className = "wallet-modal";
+    m.setAttribute("aria-hidden","true");
+    m.innerHTML = `
+      <div class="wm-backdrop"></div>
+      <div class="wm-box">
+        <div class="wm-head">
+          <h3>Connect Wallet</h3>
+          <button id="wmClose" aria-label="Close">✕</button>
+        </div>
+        <div class="wm-list">
+          <button class="wm-item" id="wPhantom">
+            <img src="assets/wallets/phantom.svg" alt="Phantom" loading="lazy"><span>Phantom</span>
           </button>
-          <button id="wSolflare" class="wallet-item">
-            <img onerror="this.replaceWith(document.createTextNode('🟠'))"
-                 src="assets/wallets/solflare.svg" alt="Solflare">
-            <span>Solflare</span>
+          <button class="wm-item" id="wSolflare">
+            <img src="assets/wallets/solflare.svg" alt="Solflare" loading="lazy"><span>Solflare</span>
           </button>
-          <button id="wBackpack" class="wallet-item">
-            <img onerror="this.replaceWith(document.createTextNode('🟡'))"
-                 src="assets/wallets/backpack.svg" alt="Backpack">
-            <span>Backpack</span>
+          <button class="wm-item" id="wBackpack">
+            <img src="assets/wallets/backpack.svg" alt="Backpack" loading="lazy"><span>Backpack</span>
           </button>
         </div>
-        <p class="note">
-          If the app opens, approve <b>zuzucoin.xyz</b> to connect.
-          You’ll be redirected back automatically.
-        </p>
+        <p class="wm-note">If the app opens, approve <b>zuzucoin.xyz</b> to connect. You’ll be redirected back automatically.</p>
       </div>`;
-    document.body.appendChild(wrap);
-
-    // kapatma
-    wrap.querySelector("#wmClose").addEventListener("click", hideModal);
-    wrap.querySelector(".wallet-backdrop").addEventListener("click", hideModal);
-
-    // buton clickleri
-    wrap.querySelector("#wPhantom").addEventListener("click", connectPhantom);
-    wrap.querySelector("#wSolflare").addEventListener("click", connectSolflare);
-    wrap.querySelector("#wBackpack").addEventListener("click", connectBackpack);
-
-    return wrap;
+    document.body.appendChild(m);
+    m.querySelector("#wmClose").addEventListener("click", hide);
+    m.querySelector(".wm-backdrop").addEventListener("click", hide);
+    return m;
   }
+  function show(){ const m=ensureModal(); m.classList.add("show"); m.setAttribute("aria-hidden","false"); }
+  function hide(){ const m=$("#walletModal"); if(m){ m.classList.remove("show"); m.setAttribute("aria-hidden","true"); } }
+  window.openWalletModal = show; // dışarı da sun
 
-  function showModal() {
-    const m = ensureModal();
-    m.classList.add("show");
-    m.setAttribute("aria-hidden", "false");
-  }
-  function hideModal() {
-    const m = $("#walletModal");
-    if (!m) return;
-    m.classList.remove("show");
-    m.setAttribute("aria-hidden", "true");
-  }
-
-  // ------------------------------------------------------
-  // Bağlantı durumu butona yaz
-  // ------------------------------------------------------
-  function setConnected(pk) {
-    try { localStorage.setItem(LS_KEY, pk || ""); } catch {}
-    if (connectBtn && pk) {
-      connectBtn.textContent = pk.slice(0, 4) + "..." + pk.slice(-4);
+  function setConnected(pk){
+    pubkey = pk || null;
+    try { localStorage.setItem("zuzu_pubkey", pubkey || ""); } catch {}
+    const btn = $("#connectBtn");
+    if(btn){
+      if (pubkey) {
+        btn.textContent = pubkey.slice(0,4)+"..."+pubkey.slice(-4);
+        btn.classList.add("connected");
+      } else {
+        btn.textContent = btn.dataset.iLabel || "Connect Wallet";
+        btn.classList.remove("connected");
+      }
     }
-    hideModal();
+    if (pubkey) hide();
   }
+  window.__zuzu_pubkey = () => pubkey || localStorage.getItem("zuzu_pubkey") || null;
 
-  // Global getter (isteğe bağlı)
-  window.__zuzu_pubkey = () => {
-    try { return localStorage.getItem(LS_KEY) || null; } catch { return null; }
-  };
-
-  // ------------------------------------------------------
-  // Auto connect (geri dönüşte tetiklenir)
-  // ------------------------------------------------------
-  async function tryTrustedConnect() {
+  // -------- Provider try helpers (desktop ve dönüş sonrası) --------
+  async function tryTrustedConnect(){
     // Phantom
-    try {
-      if (window.solana?.isPhantom && window.solana?.connect) {
-        const res = await window.solana.connect({ onlyIfTrusted: true });
+    try{
+      if (window.solana?.isPhantom) {
+        const res = await window.solana.connect({ onlyIfTrusted:true });
         if (res?.publicKey) return setConnected(res.publicKey.toString());
       }
-    } catch (_) {}
-
-    // Solflare (extension)
-    try {
+    }catch{}
+    // Solflare
+    try{
       if (window.solflare?.connect) {
-        await window.solflare.connect();
-        if (window.solflare?.publicKey)
-          return setConnected(window.solflare.publicKey.toString());
-    } } catch (_) {}
-
+        await window.solflare.connect({ onlyIfTrusted:true });
+        if (window.solflare?.publicKey) return setConnected(window.solflare.publicKey.toString());
+      }
+    }catch{}
     // Backpack
-    try {
+    try{
       if (window.backpack?.connect) {
-        const r = await window.backpack.connect();
-        const pk = (r?.publicKey || r)?.toString?.() || r?.[0];
+        const r = await window.backpack.connect({ onlyIfTrusted:true });
+        const pk = (r?.publicKey || r)?.toString?.();
         if (pk) return setConnected(pk);
       }
-    } catch (_) {}
+    }catch{}
+    return null;
   }
 
-  // İlk yüklemede ve görünürlük geri gelince dene
-  window.addEventListener("load", tryTrustedConnect);
-  document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) tryTrustedConnect();
+  // Sayfa geldiğinde ve geri görünür olduğunda otomatik dene
+  ["load","pageshow","visibilitychange","focus"].forEach(evt=>{
+    window.addEventListener(evt, ()=>{ if(evt!=="visibilitychange" || !document.hidden) tryTrustedConnect(); }, {passive:true});
   });
 
-  // ------------------------------------------------------
-  // ConnectBtn davranışı: önce modal aç
-  // (extension varsa zaten modal içinden tek tıkla bağlayacağız)
-  // ------------------------------------------------------
-  connectBtn?.addEventListener("click", showModal);
+  // -------- Universal links (mobile) --------
+  function deepLink(kind){
+    const redirect = encodeURIComponent(APP_URL);
+    const query    = `?app_url=${encodeURIComponent(APP_URL)}&redirect_link=${redirect}&dapp_enforce=true&cluster=mainnet-beta`;
+    if (kind==="phantom")   return `https://phantom.app/ul/v1/connect${query}`;
+    if (kind==="solflare")  return `https://solflare.com/ul/v1/connect${query}`;
+    if (kind==="backpack")  return `https://backpack.app/ul/v1/connect${query}`;
+    return "#";
+  }
 
-  // ------------------------------------------------------
-  // Sağlayıcılar
-  // ------------------------------------------------------
-  function phantomDeeplink() {
-    const base = "https://phantom.app/ul/v1/connect";
-    const q = new URLSearchParams({
-      app_url: APP_ORIGIN,
-      redirect_link: REDIRECT,
-      cluster: "mainnet-beta"
+  // -------- Click handlers --------
+  function wireButtons(){
+    const bOpen = $("#connectBtn");
+    bOpen?.addEventListener("click", (e)=>{
+      e.preventDefault();
+      show();
     });
-    return `${base}?${q.toString()}`;
-  }
-  function solflareDeeplink() {
-    const base = "https://solflare.com/ul/v1/connect";
-    const q = new URLSearchParams({
-      app_url: APP_ORIGIN,
-      redirect_link: REDIRECT,
-      cluster: "solana"
+
+    const bPh = $("#wPhantom");
+    const bSf = $("#wSolflare");
+    const bBp = $("#wBackpack");
+
+    bPh?.addEventListener("click", async ()=>{
+      try{
+        if (window.solana?.isPhantom) {
+          const res = await window.solana.connect();
+          return setConnected(res?.publicKey?.toString());
+        }
+      }catch{}
+      window.location.href = deepLink("phantom");
     });
-    return `${base}?${q.toString()}`;
-  }
-  function backpackDeeplink() {
-    const base = "https://www.backpack.app/ul/v1/connect";
-    const q = new URLSearchParams({
-      app_url: APP_ORIGIN,
-      redirect_link: REDIRECT
+
+    bSf?.addEventListener("click", async ()=>{
+      try{
+        if (window.solflare?.connect) {
+          await window.solflare.connect();
+          return setConnected(window.solflare?.publicKey?.toString());
+        }
+      }catch{}
+      window.location.href = deepLink("solflare");
     });
-    return `${base}?${q.toString()}`;
+
+    bBp?.addEventListener("click", async ()=>{
+      try{
+        if (window.backpack?.connect) {
+          const r = await window.backpack.connect();
+          const pk = (r?.publicKey || r)?.toString?.();
+          if (pk) return setConnected(pk);
+        }
+      }catch{}
+      window.location.href = deepLink("backpack");
+    });
   }
 
-  async function connectPhantom() {
-    // Extension varsa direkt bağlan
-    try {
-      if (window.solana?.isPhantom && window.solana?.connect) {
-        const res = await window.solana.connect({ onlyIfTrusted: false });
-        if (res?.publicKey) return setConnected(res.publicKey.toString());
-      }
-    } catch (e) {
-      console.warn("Phantom ext connect failed", e);
-    }
-    // Yoksa deeplink
-    location.href = phantomDeeplink();
-  }
-
-  async function connectSolflare() {
-    try {
-      if (window.solflare?.connect) {
-        await window.solflare.connect();
-        if (window.solflare?.publicKey)
-          return setConnected(window.solflare.publicKey.toString());
-      }
-    } catch (e) {
-      console.warn("Solflare ext connect failed", e);
-    }
-    location.href = solflareDeeplink();
-  }
-
-  async function connectBackpack() {
-    try {
-      if (window.backpack?.connect) {
-        const r = await window.backpack.connect();
-        const pk = (r?.publicKey || r)?.toString?.() || r?.[0];
-        if (pk) return setConnected(pk);
-      }
-    } catch (e) {
-      console.warn("Backpack ext connect failed", e);
-    }
-    location.href = backpackDeeplink();
-  }
+  window.addEventListener("DOMContentLoaded", wireButtons);
 })();
