@@ -1,77 +1,154 @@
-/* =========================================================
-   Solana Wallet Modal (Phantom, Solflare, Backpack)
-   - Desktop: injected provider connect()
-   - Mobile: universal deep links; dönüşte onlyIfTrusted:true auto-connect
-   - Public helpers: __zuzu_pubkey(), __zuzu_invite()
-========================================================= */
-(function(){
-  const APP_URL = "https://zuzucoin.xyz";
-  let pubkey = localStorage.getItem("zuzu_pubkey") || null;
-  const $ = (s,r=document)=>r.querySelector(s);
+/* ------------------------------------------------------
+   ZUZU — Solana Wallet Connect (Phantom / Solflare / Backpack)
+   - Masaüstü: injected provider ile bağlan
+   - Mobil: cüzdanın in-app browser’ına deeplink (browse) at,
+            site wallet içi açılınca otomatik connect iste.
+   - Bağlanınca "Connect Wallet" butonu kısaltılmış adres gösterir.
+------------------------------------------------------ */
 
-  function showModal(){
-    let m = $("#walletModal");
-    if(!m){
-      m = document.createElement("div");
-      m.id="walletModal";
-      m.className="wallet-modal show";
-      m.innerHTML = `
-        <div class="wm-backdrop"></div>
-        <div class="wm-box">
-          <div class="wm-head"><h3>Connect Wallet</h3><button id="wmClose">✕</button></div>
-          <div class="wm-list">
-            <button class="wm-item" id="wPhantom"><img src="assets/wallets/phantom.svg" alt="Phantom"><span>Phantom</span></button>
-            <button class="wm-item" id="wSolflare"><img src="assets/wallets/solflare.svg" alt="Solflare"><span>Solflare</span></button>
-            <button class="wm-item" id="wBackpack"><img src="assets/wallets/backpack.svg" alt="Backpack"><span>Backpack</span></button>
-          </div>
-          <p class="wm-note">If the app opens, approve <b>zuzucoin.xyz</b> to connect. You’ll be redirected back automatically.</p>
-        </div>`;
-      document.body.appendChild(m);
-      $("#wmClose").onclick = hide;
-      $(".wm-backdrop").onclick = hide;
+(function () {
+  const APP_URL = "https://zuzucoin.xyz";               // kendi alan adın
+  const EXPECT_FLAG = "__zuzu_expect_wallet";           // mobil dönüş işareti
+  const CONNECTED_KEY = "__zuzu_pubkey";
 
-      $("#wPhantom").onclick = async ()=>{
-        try{
-          if(window.solana?.isPhantom){ const r=await window.solana.connect(); return setConnected(r?.publicKey?.toString()); }
-        }catch{}
-        location.href = `https://phantom.app/ul/v1/connect?app_url=${encodeURIComponent(APP_URL)}&redirect_link=${encodeURIComponent(APP_URL)}&redirect_url=${encodeURIComponent(APP_URL)}&dapp_enforce=1&with_redirect=1&open_in_wallet=1&cluster=mainnet-beta`;
-      };
-      $("#wSolflare").onclick = async ()=>{
-        try{
-          if(window.solflare?.connect){ await window.solflare.connect(); return setConnected(window.solflare?.publicKey?.toString()); }
-        }catch{}
-        location.href = `https://solflare.com/ul/v1/connect?app_url=${encodeURIComponent(APP_URL)}&redirect_link=${encodeURIComponent(APP_URL)}&redirect_url=${encodeURIComponent(APP_URL)}&dapp_enforce=1&with_redirect=1&open_in_wallet=1&cluster=mainnet-beta`;
-      };
-      $("#wBackpack").onclick = async ()=>{
-        try{
-          if(window.backpack?.connect){ const r=await window.backpack.connect(); const pk=(r?.publicKey||r)?.toString?.(); if(pk) return setConnected(pk); }
-        }catch{}
-        location.href = `https://backpack.app/ul/v1/connect?app_url=${encodeURIComponent(APP_URL)}&redirect_link=${encodeURIComponent(APP_URL)}&redirect_url=${encodeURIComponent(APP_URL)}&dapp_enforce=1&with_redirect=1&open_in_wallet=1&cluster=mainnet-beta`;
-      };
-    } else {
-      m.classList.add("show");
+  const $ = (sel) => document.querySelector(sel);
+
+  const connectBtn = $("#connectBtn");
+  const modal = document.createElement("div");
+  modal.id = "walletModal";
+  modal.className = "wallet-modal";
+  modal.innerHTML = `
+    <div class="wallet-backdrop" id="wmBackdrop"></div>
+    <div class="wallet-box">
+      <div class="wallet-head">
+        <h3>Connect Wallet</h3>
+        <button id="wmClose" class="wm-x" aria-label="Close">×</button>
+      </div>
+      <div class="wallet-grid">
+        <button id="wPhantom"  class="wallet-item">
+          <img src="assets/wallets/phantom.svg" alt="Phantom"><span>Phantom</span>
+        </button>
+        <button id="wSolflare" class="wallet-item">
+          <img src="assets/wallets/solflare.svg" alt="Solflare"><span>Solflare</span>
+        </button>
+        <button id="wBackpack" class="wallet-item">
+          <img src="assets/wallets/backpack.svg" alt="Backpack"><span>Backpack</span>
+        </button>
+      </div>
+      <p class="note">If the app opens, approve <b>zuzucoin.xyz</b> to connect. You’ll be redirected back automatically.</p>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  const bPh = $("#wPhantom"), bSf = $("#wSolflare"), bBp = $("#wBackpack");
+  const closeBtn = $("#wmClose");
+  const backdrop = $("#wmBackdrop");
+
+  const show = () => modal.classList.add("show");
+  const hide = () => modal.classList.remove("show");
+
+  closeBtn?.addEventListener("click", hide);
+  backdrop?.addEventListener("click", hide);
+  connectBtn?.addEventListener("click", show);
+
+  function setConnected(pk) {
+    if (!pk) return;
+    localStorage.setItem(CONNECTED_KEY, pk);
+    if (connectBtn) {
+      connectBtn.textContent = pk.slice(0, 4) + "..." + pk.slice(-4);
+      connectBtn.classList.add("connected");
     }
-  }
-  function hide(){ $("#walletModal")?.classList.remove("show"); }
-  function setConnected(pk){
-    pubkey = pk || null;
-    try{ localStorage.setItem("zuzu_pubkey", pubkey||""); }catch{}
-    const b=$("#connectBtn"); if(b){ b.classList.add("connected"); b.textContent = pubkey.slice(0,4)+"..."+pubkey.slice(-4); }
     hide();
   }
 
-  window.__zuzu_pubkey = ()=> pubkey;
-  window.__zuzu_invite = ()=> pubkey ? `${APP_URL}/?ref=${encodeURIComponent(pubkey)}` : "";
+  // Sayfa tekrar açılmışsa kısa adresi geri yükle
+  (function restore() {
+    const pk = localStorage.getItem(CONNECTED_KEY);
+    if (pk && connectBtn) {
+      connectBtn.textContent = pk.slice(0, 4) + "..." + pk.slice(-4);
+      connectBtn.classList.add("connected");
+    }
+  })();
 
-  /* auto connect (trusted) on return / desktop */
-  async function tryTrusted(){
-    try{ if(window.solana?.isPhantom){ const r=await window.solana.connect({onlyIfTrusted:true}); if(r?.publicKey) return setConnected(r.publicKey.toString()); } }catch{}
-    try{ if(window.solflare?.connect){ await window.solflare.connect({onlyIfTrusted:true}); if(window.solflare?.publicKey) return setConnected(window.solflare.publicKey.toString()); } }catch{}
-    try{ if(window.backpack?.connect){ const r=await window.backpack.connect({onlyIfTrusted:true}); const pk=(r?.publicKey||r)?.toString?.(); if(pk) return setConnected(pk); } }catch{}
+  // ---- Masaüstü: injected provider ile bağlan
+  async function connectInjected() {
+    const prov =
+      window.solana          ||               // Phantom / Backpack (çoğu)
+      window.phantom?.solana ||               // eski phantom alias
+      window.backpack?.solana||
+      window.solflare;                        // Solflare injected
+
+    if (!prov) return null;
+
+    try {
+      const res = await prov.connect({ onlyIfTrusted: false });
+      const pk =
+        res?.publicKey?.toString?.() ||
+        prov.publicKey?.toString?.() ||
+        res?.publicKey ||
+        "";
+      if (pk) setConnected(pk);
+      return pk;
+    } catch (e) {
+      console.warn("Injected connect rejected", e);
+      return null;
+    }
   }
-  ["load","pageshow","focus","visibilitychange"].forEach(ev=>{
-    window.addEventListener(ev,()=>{ if(ev==="visibilitychange" && document.hidden) return; tryTrusted(); },{passive:true});
+
+  // ---- Mobil: cüzdan uygulamasının in-app browser’ına geç
+  function openInWallet(app) {
+    // Bu yöntem gerçek "connect" handshake istemez;
+    // app, bizim URL’yi kendi iç tarayıcısında açar → provider injected olur.
+    // Dönünce sayfa otomatik connect dener (aşağıdaki autoConnect).
+    localStorage.setItem(EXPECT_FLAG, "1");
+    let link = "";
+    if (app === "phantom")  link = `https://phantom.app/ul/browse/${location.host}`;
+    if (app === "solflare") link = `https://solflare.com/ul/v1/browse/${location.host}`;
+    if (app === "backpack") link = `https://backpack.app/ul/browse/${location.host}`;
+    window.location.href = link;
+  }
+
+  // ---- Butonlar
+  bPh?.addEventListener("click", async () => {
+    const pk = await connectInjected();
+    if (!pk) openInWallet("phantom");
+  });
+  bSf?.addEventListener("click", async () => {
+    const pk = await connectInjected();
+    if (!pk) openInWallet("solflare");
+  });
+  bBp?.addEventListener("click", async () => {
+    const pk = await connectInjected();
+    if (!pk) openInWallet("backpack");
   });
 
-  document.getElementById("connectBtn")?.addEventListener("click",(e)=>{ e.preventDefault(); showModal(); });
+  // ---- Wallet içi açıldıysa otomatik connect dene
+  async function autoConnect() {
+    if (!localStorage.getItem(EXPECT_FLAG)) return;
+    // wallet içindeki tarayıcıda provider gelir
+    const prov =
+      window.solana || window.phantom?.solana || window.backpack?.solana || window.solflare;
+    if (!prov) return; // henüz hazır değilse bekle
+    try {
+      const res = await prov.connect({ onlyIfTrusted: false });
+      const pk =
+        res?.publicKey?.toString?.() || prov.publicKey?.toString?.() || res?.publicKey || "";
+      if (pk) {
+        setConnected(pk);
+        localStorage.removeItem(EXPECT_FLAG);
+      }
+    } catch (e) {
+      console.warn("autoConnect fail", e);
+    }
+  }
+  // provider gelmesi gecikebilir; birkaç kez dene
+  let tries = 0;
+  const t = setInterval(() => {
+    tries++;
+    autoConnect();
+    if (tries > 20) clearInterval(t);
+  }, 600);
+
+  // Dışarıya util: bağlı adresi isteyen diğer dosyalar için
+  window.__zuzu_pk = () => localStorage.getItem(CONNECTED_KEY) || "";
 })();
