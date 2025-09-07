@@ -1,153 +1,109 @@
-/* ======================================================
-   ZUZUCOIN — App bootstrap (UI + i18n + wallet state)
-   Bu dosya, script.js ve wallet-lite.js ile birlikte çalışır.
-====================================================== */
+/* ------------------------------------------------------
+   ZUZU — App bootstrap (lang, countdown, buy)
+------------------------------------------------------ */
 
-(function(){
-  const $  = (s,root=document)=>root.querySelector(s);
-  const $$ = (s,root=document)=>Array.from(root.querySelectorAll(s));
-  const LS_LANG = "zuzu_lang";
+// ---- Dil yükleyici (lang.js/<code>.json)
+const SUPPORTED_LANGS = ["en", "tr", "fr", "es", "ru", "pl"];
+async function loadLang(code) {
+  let lang = SUPPORTED_LANGS.includes(code) ? code : "en";
+  try {
+    const res = await fetch(`lang.js/${lang}.json?ts=${Date.now()}`);
+    const dict = await res.json();
+    document.querySelectorAll("[data-i]").forEach((el) => {
+      const k = el.getAttribute("data-i");
+      if (dict[k]) el.innerHTML = dict[k];
+    });
+    localStorage.setItem("zuzu_lang", lang);
+  } catch (e) {
+    console.warn("lang load fail", e);
+  }
+}
+function setupLangMenu() {
+  const btn = document.getElementById("langBtn");
+  const menu = document.getElementById("langMenu");
+  if (!btn || !menu) return;
+  btn.addEventListener("click", () => menu.classList.toggle("open"));
+  menu.querySelectorAll("[data-lang]").forEach((it) =>
+    it.addEventListener("click", () => {
+      loadLang(it.dataset.lang);
+      menu.classList.remove("open");
+    })
+  );
+  const saved = localStorage.getItem("zuzu_lang") || "en";
+  loadLang(saved);
+}
 
-  // -------- Dil (bayrak menüsü) ----------
-  function setupLangMenu(){
-    const toggle = $("#langToggle");
-    const menu   = $("#langMenu");
-    if(!toggle || !menu) return;
+// ---- Sayaç
+function startCountdown(untilMs) {
+  const ids = ["cdDays", "cdHours", "cdMins", "cdSecs"];
+  function pad(n) { return n.toString().padStart(2, "0"); }
+  function tick() {
+    const left = Math.max(0, untilMs - Date.now());
+    const d = Math.floor(left / 86400000);
+    const h = Math.floor((left % 86400000) / 3600000);
+    const m = Math.floor((left % 3600000) / 60000);
+    const s = Math.floor((left % 60000) / 1000);
+    [d, h, m, s].forEach((v, i) => {
+      const el = document.getElementById(ids[i]);
+      if (el) el.textContent = pad(v);
+    });
+  }
+  tick();
+  setInterval(tick, 1000);
+}
 
-    // Bayrak görselleri garanti olsun
-    $$("#langMenu .lang-flag").forEach(li=>{
-      const code = li.dataset.lang;
-      const img  = li.querySelector("img");
-      if (img && !img.getAttribute("src")) {
-        img.src = `flags/${code}.png`;
-        img.alt = code.toUpperCase();
-        img.loading = "lazy";
-        img.onerror = () => { img.style.display="none"; li.prepend(document.createTextNode(code.toUpperCase()+" ")); };
+// ---- Satın alma (SOL veya USDT)
+function setupBuy() {
+  const amountEl = document.getElementById("buyAmount");
+  const methodEl = document.getElementById("payMethod"); // "SOL" | "USDT"
+  const weekBtns = ["buyW0", "buyW1", "buyW2", "buyW3"].map((id, i) => ({
+    el: document.getElementById(id),
+    idx: i,
+  }));
+
+  async function handleBuy(idx) {
+    const qty = parseFloat((amountEl?.value || "0").toString().replace(/[^\d.]/g, "")) || 0;
+    if (qty <= 0) return alert("Enter a valid amount.");
+    const prices = [0.0050, 0.0065, 0.0080, 0.0100]; // USDT per ZUZU
+    const costUSDT = qty * prices[idx];
+
+    try {
+      let sig = "";
+      if (methodEl?.value === "USDT") {
+        sig = await window.ZUZU_SOL.payUSDT(costUSDT);
+      } else {
+        // SOL ile öderken: basit örnek 1 SOL ~ 100 USDT varsayımı ile çeviri oranını kendin düzenle
+        const roughRate = 100; // !!! gerçek kur yerine backend/price feed bağla
+        const solAmt = costUSDT / roughRate;
+        sig = await window.ZUZU_SOL.paySOL(solAmt);
       }
-    });
-
-    // Aç-kapa
-    toggle.addEventListener("click", (e)=>{
-      e.preventDefault();
-      menu.classList.toggle("open");
-    });
-    document.addEventListener("click",(e)=>{
-      if(!menu.contains(e.target) && e.target!==toggle) menu.classList.remove("open");
-    });
-
-    // Tıklayınca dili uygula + kaydet
-    $$("#langMenu .lang-flag").forEach(li=>{
-      li.addEventListener("click", ()=>{
-        const lang = li.dataset.lang || "en";
-        try{ localStorage.setItem(LS_LANG, lang); }catch{}
-        applyLang(lang);                 // script.js içinden
-        toggle.querySelector("span").textContent = lang.toUpperCase();
-        menu.classList.remove("open");
-      });
-    });
-
-    // İlk dil
-    let initial = "en";
-    try{ initial = localStorage.getItem(LS_LANG) || "en"; }catch{}
-    applyLang(initial);
-    toggle.querySelector("span").textContent = initial.toUpperCase();
-  }
-
-  // -------- Sayaç, NFT grid, presale kutuları ----------
-  function setupUIBasics(){
-    // Sayaç anında bir kez ve sonra her sn
-    if (typeof tick === "function") {
-      tick();
-      setInterval(tick, 1000);
-    }
-    // NFT grid (script.js içindeki renderNFTs IIFE’ı varsa atlar)
-    if (typeof renderNFTs === "function") {
-      const g = $("#nftGrid");
-      if (g && g.children.length === 0) renderNFTs();
-    }
-
-    // Haftaya göre "Buy" düğmeleri etkin/pasif
-    if (typeof updateActiveWeekUI === "function") updateActiveWeekUI();
-
-    // Miktar değiştikçe maliyetleri güncelle
-    const amt = $("#buyAmount");
-    if (amt && typeof updateCosts === "function") {
-      amt.addEventListener("input", updateCosts);
-      updateCosts();
+      alert("Payment sent!\nTx Signature:\n" + sig + "\nYou can add receipt in Claim Portal.");
+    } catch (e) {
+      console.error(e);
+      alert("Payment rejected or failed.");
     }
   }
 
-  // -------- Cüzdan durumu ----------
-  function setWalletLabel(pk){
-    const b = $("#connectBtn");
-    if(!b) return;
-    if (pk && pk.length > 8) {
-      b.textContent = pk.slice(0,4)+"..."+pk.slice(-4);
-      b.classList.add("connected");
-    } else {
-      b.textContent = (b.dataset.iLabel || "Connect Wallet");
-      b.classList.remove("connected");
-    }
-  }
+  weekBtns.forEach(({ el, idx }) => el?.addEventListener("click", () => handleBuy(idx)));
+}
 
-  async function refreshWalletState(){
-    try{
-      // wallet-lite.js global helper
-      const pk = (window.__zuzu_pubkey && window.__zuzu_pubkey()) || null;
-      setWalletLabel(pk);
-    }catch{ setWalletLabel(null); }
-  }
+// ---- Referral (basit link üretimi)
+function setupReferral() {
+  const refOut = document.getElementById("refLink");
+  if (!refOut) return;
+  // cüzdan bağlıysa adresi linke koy; yoksa random id
+  const pk = (window.__zuzu_pk && window.__zuzu_pk()) || "";
+  const id = pk ? pk : "guest-" + Math.random().toString(36).slice(2, 8);
+  const url = new URL(location.href);
+  url.searchParams.set("ref", id);
+  refOut.value = url.toString();
+}
 
-  // Görünürlük geri gelince otomatik dene (wallet-lite da dener)
-  document.addEventListener("visibilitychange", ()=>{
-    if(!document.hidden) refreshWalletState();
-  });
-
-  // -------- Satın alma butonları ----------
-  function setupBuyButtons(){
-    const ids = ["buyW0","buyW1","buyW2","buyW3"];
-    ids.forEach((id,idx)=>{
-      const b = $("#"+id);
-      if(!b) return;
-      b.addEventListener("click", async ()=>{
-        const qtyRaw = ($("#buyAmount")?.value||"0").toString().replace(/[^\d.]/g,"");
-        const qty = parseFloat(qtyRaw)||0;
-        if (qty<=0) { alert("Enter a valid ZUZU amount."); return; }
-
-        // aktif hafta kontrol (script.js’teki fonksiyon)
-        if (typeof getActiveWeek === "function" && idx !== getActiveWeek()){
-          alert("This sale week is not active.");
-          return;
-        }
-
-        // Cüzdan bağlı mı? değilse modalı açtır
-        if (window.ZUZU_SOL?.requireConnection && !(await window.ZUZU_SOL.requireConnection())) {
-          return; // kullanıcı cüzdana gidecek, geri dönünce auto-connect
-        }
-
-        // İşlem (şimdilik cüzdanda yapılacağı için bilgi mesajı)
-        const price = (window.CONFIG?.weekPrices?.[idx]) || 0;
-        const cost  = +(qty * price).toFixed(2);
-        if (window.ZUZU_SOL?.startPurchase) {
-          window.ZUZU_SOL.startPurchase({ qty, price, cost });
-        } else {
-          alert(`Open your wallet to complete purchase.\n\nAmount: ${qty} ZUZU\nPrice: ${price} USDT\nTotal: ${cost} USDT`);
-        }
-      });
-    });
-  }
-
-  // -------- Başlat --------
-  window.addEventListener("DOMContentLoaded", ()=>{
-    // Connect butonu etiketini i18n anahtarıyla sakla
-    const b = $("#connectBtn");
-    if (b) b.dataset.iLabel = b.textContent.trim();
-
-    setupLangMenu();
-    setupUIBasics();
-    setupBuyButtons();
-    refreshWalletState();
-
-    console.log("ZUZUCOIN app.v1 booted ✅");
-  });
-})();
+window.addEventListener("DOMContentLoaded", () => {
+  setupLangMenu();
+  // 50 gün sayaç (index.html’deki CONFIG.launchAt aynı olmalı)
+  const target = window.ZUZU_CONFIG?.launchAt || Date.now() + 50 * 86400000;
+  startCountdown(target);
+  setupBuy();
+  setupReferral();
+});
