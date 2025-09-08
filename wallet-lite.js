@@ -1,18 +1,24 @@
-/* =========================
-   WALLET MODAL (Phantom / Solflare / Backpack)
-   - Mobile deeplink + return auto-connect (visibilitychange + retry)
-   - Desktop: injected provider ile direkt connect
-========================= */
+/* ===========================================
+   ZUZU – Wallet modal (Phantom / Solflare / Backpack)
+   Mobile: cüzdanın in-app browser’ında aç → injected provider ile bağlan
+   Desktop: extension varsa direkt bağlan
+   Auto-retry: görünür olunca 10s boyunca dene
+=========================================== */
 (function () {
   const APP_URL = "https://zuzucoin.xyz";
-  const LS_KEY = "zuzu_last_wallet"; // 'phantom' | 'solflare' | 'backpack'
-  const RETRY_MS = 500;
-  const RETRY_FOR = 10000; // 10s
+  const LS_KEY = "zuzu_last_wallet";
+  const RETRY_MS = 600, RETRY_FOR = 10000;
 
-  let pubkey = null;
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  const DL = {
+    // CÜZDAN İÇİNDE SİTEYİ AÇ (browse)
+    phantomBrowse:  "https://phantom.app/ul/browse/"   + encodeURIComponent(APP_URL),
+    solflareBrowse: "https://solflare.com/ul/v1/browse/" + encodeURIComponent(APP_URL),
+    backpackBrowse: "https://backpack.app/ul/browse/"  + encodeURIComponent(APP_URL),
+  };
 
   function setConnected(pk) {
-    pubkey = pk;
     const btn = document.getElementById("connectBtn");
     if (btn) {
       btn.textContent = pk.slice(0, 4) + "..." + pk.slice(-4);
@@ -21,112 +27,62 @@
     document.querySelector(".wallet-modal")?.remove();
   }
 
-  /* ---------- injected connect helpers ---------- */
-  async function tryConnectInjectedPhantom(trusted = true) {
+  /* ---------- injected tries ---------- */
+  async function tryPhantom(trusted = true) {
     try {
       const p = window.solana || window?.phantom?.solana;
       if (!p || !p.isPhantom) return false;
-      const res = await p.connect({ onlyIfTrusted: trusted ? true : false });
-      if (res?.publicKey) {
-        setConnected(res.publicKey.toString());
-        return true;
-      }
-    } catch (e) {}
+      const res = await p.connect({ onlyIfTrusted: !!trusted });
+      if (res?.publicKey) { setConnected(res.publicKey.toString()); return true; }
+    } catch (_) {}
     return false;
   }
-  async function tryConnectInjectedSolflare(trusted = true) {
+  async function trySolflare(trusted = true) {
     try {
       const s = window.solflare;
-      if (!s || !s.connect) return false;
+      if (!s?.connect) return false;
       await s.connect();
       const pk = s?.publicKey?.toString?.();
-      if (pk) {
-        setConnected(pk);
-        return true;
-      }
-    } catch (e) {}
+      if (pk) { setConnected(pk); return true; }
+    } catch (_) {}
     return false;
   }
-  async function tryConnectInjectedBackpack(trusted = true) {
+  async function tryBackpack(trusted = true) {
     try {
       const b = window.backpack;
-      if (!b || !b.connect) return false;
+      if (!b?.connect) return false;
       const r = await b.connect();
       const pk = r?.publicKey?.toString?.() || r?.[0];
-      if (pk) {
-        setConnected(pk);
-        return true;
-      }
-    } catch (e) {}
+      if (pk) { setConnected(pk); return true; }
+    } catch (_) {}
     return false;
   }
 
-  /* ---------- auto-connect on return ---------- */
-  async function autoConnectRetry() {
-    const choice = localStorage.getItem(LS_KEY);
-    if (!choice) return;
-
+  async function autoRetry() {
+    const target = localStorage.getItem(LS_KEY);
+    if (!target) return;
     const start = Date.now();
-    const tick = async () => {
-      const elapsed = Date.now() - start;
+    const step = async () => {
       let ok = false;
-      if (choice === "phantom") ok = await tryConnectInjectedPhantom(true);
-      else if (choice === "solflare") ok = await tryConnectInjectedSolflare(true);
-      else if (choice === "backpack") ok = await tryConnectInjectedBackpack(true);
-
-      if (ok) {
-        localStorage.removeItem(LS_KEY);
-        return;
-      }
-      if (elapsed < RETRY_FOR) setTimeout(tick, RETRY_MS);
+      if (target === "phantom")  ok = await tryPhantom(true);
+      if (target === "solflare") ok = await trySolflare(true);
+      if (target === "backpack") ok = await tryBackpack(true);
+      if (ok) { localStorage.removeItem(LS_KEY); return; }
+      if (Date.now() - start < RETRY_FOR) setTimeout(step, RETRY_MS);
     };
-    tick();
+    step();
   }
 
-  // Sayfa görünür olunca tekrar dene (wallet'tan dönünce tetiklenir)
   document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") autoConnectRetry();
+    if (document.visibilityState === "visible") autoRetry();
   });
-  // İlk yüklemede de dener
-  window.addEventListener("load", autoConnectRetry);
+  window.addEventListener("load", autoRetry);
 
-  /* ---------- deeplink launchers ---------- */
-  function launchPhantomDeeplink() {
-    localStorage.setItem(LS_KEY, "phantom");
-    const url =
-      "https://phantom.app/ul/v1/connect" +
-      "?app_url=" +
-      encodeURIComponent(APP_URL) +
-      "&redirect_link=" +
-      encodeURIComponent(APP_URL);
-    window.location.href = url;
-  }
-  function launchSolflareDeeplink() {
-    localStorage.setItem(LS_KEY, "solflare");
-    const url =
-      "https://solflare.com/ul/v1/connect" +
-      "?app_url=" +
-      encodeURIComponent(APP_URL) +
-      "&redirect_link=" +
-      encodeURIComponent(APP_URL);
-    window.location.href = url;
-  }
-  function launchBackpackDeeplink() {
-    localStorage.setItem(LS_KEY, "backpack");
-    const url =
-      "https://backpack.app/ul/v1/connect" +
-      "?app_url=" +
-      encodeURIComponent(APP_URL) +
-      "&redirect_link=" +
-      encodeURIComponent(APP_URL);
-    window.location.href = url;
-  }
-
-  /* ---------- main modal ---------- */
+  /* ---------- open modal ---------- */
   function openWalletModal() {
-    const modal = document.createElement("div");
-    modal.className = "wallet-modal";
-    modal.innerHTML = `
+    const el = document.createElement("div");
+    el.className = "wallet-modal";
+    el.innerHTML = `
       <div class="wallet-backdrop" onclick="this.parentNode.remove()"></div>
       <div class="wallet-box">
         <h3>Connect Wallet</h3>
@@ -134,51 +90,55 @@
 
           <button class="wallet-item" id="wPhantom">
             <img src="assets/wallets/phantom.svg"
-                 onerror="this.onerror=null;this.src='assets/wallets/phantom.png'"
-                 alt="Phantom">
+                 onerror="this.onerror=null;this.src='assets/wallets/phantom.png'" alt="Phantom">
             <span>Phantom</span>
           </button>
 
           <button class="wallet-item" id="wSolflare">
             <img src="assets/wallets/solflare.svg"
-                 onerror="this.onerror=null;this.src='assets/wallets/solflare.png'"
-                 alt="Solflare">
+                 onerror="this.onerror=null;this.src='assets/wallets/solflare.png'" alt="Solflare">
             <span>Solflare</span>
           </button>
 
           <button class="wallet-item" id="wBackpack">
             <img src="assets/wallets/backpack.svg"
-                 onerror="this.onerror=null;this.src='assets/wallets/backpack.png'"
-                 alt="Backpack">
+                 onerror="this.onerror=null;this.src='assets/wallets/backpack.png'" alt="Backpack">
             <span>Backpack</span>
           </button>
 
         </div>
         <p class="note">
-          If the app opens, approve <b>zuzucoin.xyz</b> to connect.<br>
-          You’ll be redirected back automatically.
+          On mobile, the site will open inside the wallet. Approve <b>zuzucoin.xyz</b> and you'll be connected.
         </p>
       </div>`;
-    document.body.appendChild(modal);
+    document.body.appendChild(el);
 
-    // Button handlers: önce web extension dene, olmazsa deeplink
+    // Her butonda: 1) extension/injected varsa bağlan  2) değilse cüzdanın BROWSE deeplink’ine git
     document.getElementById("wPhantom").onclick = async () => {
-      const ok = await tryConnectInjectedPhantom(false);
-      if (!ok) launchPhantomDeeplink();
+      localStorage.setItem(LS_KEY, "phantom");
+      if (await tryPhantom(false)) return;
+      window.location.href = DL.phantomBrowse;
     };
     document.getElementById("wSolflare").onclick = async () => {
-      const ok = await tryConnectInjectedSolflare(false);
-      if (!ok) launchSolflareDeeplink();
+      localStorage.setItem(LS_KEY, "solflare");
+      if (await trySolflare(false)) return;
+      window.location.href = DL.solflareBrowse;
     };
     document.getElementById("wBackpack").onclick = async () => {
-      const ok = await tryConnectInjectedBackpack(false);
-      if (!ok) launchBackpackDeeplink();
+      localStorage.setItem(LS_KEY, "backpack");
+      if (await tryBackpack(false)) return;
+      window.location.href = DL.backpackBrowse;
     };
   }
 
-  // public export
-  window.openWalletModal = openWalletModal;
-
-  // connect button bağla
+  // butona bağla
   document.getElementById("connectBtn")?.addEventListener("click", openWalletModal);
+
+  // Eğer zaten wallet webview’inde açıldıysak otomatik bağlanmayı dene
+  window.addEventListener("load", async () => {
+    // Phantom/Solflare/Backpack webview’lerinde injected provider mevcut oluyor
+    if (await tryPhantom(true)) return;
+    if (await trySolflare(true)) return;
+    await tryBackpack(true);
+  });
 })();
