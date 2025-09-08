@@ -1,14 +1,13 @@
 /* Lightweight Solana wallet modal (Phantom / Solflare / Backpack)
-   - Mobil: deep-link -> “zuzucoin.xyz’e bağlan?” onayı -> otomatik geri dönüş
-   - Web: window.solana / window.solflare / window.backpack ile bağlan
-   - Bağlanınca Connect Wallet butonunda kısaltılmış adres göster, localStorage'a yaz
+   - Mobil: deeplink -> “zuzucoin.xyz’e bağlan?” -> geri dön -> sessiz bağlan
+   - Web: provider ile bağlan
+   - Bağlanınca Connect Wallet butonunda kısaltılmış adres göster ve localStorage'a yaz
 */
 (function () {
-  const APP_URL = "https://zuzucoin.xyz";                   // sende canlı alan adı
+  const APP_URL = "https://zuzucoin.xyz";
   const CONNECT_BTN = document.getElementById("connectBtn");
   const MODAL_ID = "walletModal";
 
-  // --- Modal tek sefer üret ---
   function ensureModal() {
     if (document.getElementById(MODAL_ID)) return;
     const el = document.createElement("div");
@@ -40,7 +39,6 @@
   function showModal(){ ensureModal(); document.getElementById(MODAL_ID).classList.add("show"); }
   function hideModal(){ const m=document.getElementById(MODAL_ID); if(m) m.remove(); }
 
-  // --- UI: butonu güncelle ---
   function setConnected(pubkey) {
     if (!CONNECT_BTN) return;
     const short = pubkey.slice(0, 4) + "..." + pubkey.slice(-4);
@@ -49,7 +47,8 @@
     localStorage.setItem("zuzu_pk", pubkey);
     hideModal();
   }
-  // sayfa açılışında otomatik geri bağla
+
+  // açılışta butonu doldur
   (function restore(){
     const pk = localStorage.getItem("zuzu_pk");
     if (pk && CONNECT_BTN) {
@@ -58,12 +57,11 @@
     }
   })();
 
-  // --- Web ortamı: provider ile bağlan ---
   async function connectWeb() {
     try {
       if (window.solana?.isPhantom) {
-        const res = await window.solana.connect({ onlyIfTrusted: false });
-        if (res?.publicKey) return setConnected(res.publicKey.toString());
+        const r = await window.solana.connect({ onlyIfTrusted:false });
+        if (r?.publicKey) return setConnected(r.publicKey.toString());
       }
     } catch {}
     try {
@@ -79,13 +77,10 @@
         if (pk) return setConnected(pk);
       }
     } catch {}
-    // web’de provider yoksa modalda deep-link kullan
     showModal();
   }
 
-  // --- Mobil: deep-link oluşturucular (redirect_link zorunlu) ---
   function openPhantomDL() {
-    // v1 connect: https://phantom.app/ul/v1/connect?app_url=...&redirect_link=...
     const link =
       "https://phantom.app/ul/v1/connect" +
       "?app_url=" + encodeURIComponent(APP_URL) +
@@ -93,7 +88,6 @@
     window.location.href = link;
   }
   function openSolflareDL() {
-    // universal link:
     const link =
       "https://solflare.com/ul/v1/connect" +
       "?app_url=" + encodeURIComponent(APP_URL) +
@@ -108,9 +102,7 @@
     window.location.href = link;
   }
 
-  // --- Modal butonları ---
-  document.getElementById("connectBtn")?.addEventListener("click", async () => {
-    // masaüstü cüzdan varsa doğrudan bağla; yoksa modalı aç (mobil DL)
+  document.getElementById("connectBtn")?.addEventListener("click", () => {
     if (window.solana?.isPhantom || window.solflare || window.backpack) return connectWeb();
     showModal();
   });
@@ -120,13 +112,12 @@
     if (e.target?.id === "wBackpack") return openBackpackDL();
   });
 
-  // --- Deep-link’ten geri dönüşte “trusted reconnect” ---
   async function tryTrustedReconnect() {
-    const tag = (location.hash || "").slice(1); // w=phantom, solflare, backpack
+    const tag = (location.hash || "").slice(1);
     if (!tag) return;
     try {
       if (tag.includes("phantom") && window.solana?.connect) {
-        const r = await window.solana.connect({ onlyIfTrusted: true });
+        const r = await window.solana.connect({ onlyIfTrusted:true });
         if (r?.publicKey) return setConnected(r.publicKey.toString());
       }
     } catch {}
@@ -145,4 +136,7 @@
     } catch {}
   }
   window.addEventListener("load", tryTrustedReconnect);
+
+  // Dışarı aç
+  window.__zuzu_getPubkey = () => localStorage.getItem("zuzu_pk") || null;
 })();
