@@ -90,17 +90,24 @@ img{max-width:100%;display:block} a{color:#b8c7ff;text-decoration:none}
 .dot{width:12px;height:12px;border-radius:3px}
 .z-footer{border-top:1px solid #15243f;padding:16px 0;color:#9cb6e6}.between{display:flex;justify-content:space-between}.center-v{align-items:center}
 
-/* WALLET MODAL */
-.wallet-modal,.wm-backdrop{position:fixed;inset:0}
-.wallet-modal{display:none;z-index:100}
-.wallet-modal.show{display:block}
-.wm-backdrop{background:rgba(0,0,0,.55)}
-.wm-box{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:#0f172a;border:1px solid #223457;border-radius:16px;width:min(520px,92%);padding:16px}
-.wm-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.wm-head h3{margin:0}.wm-head button{background:#1a2442;border:1px solid #2a3b64;border-radius:10px;color:#cfe2ff;padding:.35rem .55rem;cursor:pointer}
-.wm-list{display:grid;gap:10px}
-.wm-item{display:flex;align-items:center;gap:.6rem;background:#14223f;border:1px solid #25406e;border-radius:12px;color:#dbe7ff;padding:.7rem .9rem;cursor:pointer}
-.wm-item img{width:28px;height:28px}
-.wm-item:hover{background:#172a56}
-.wm-note{color:#9fb6e6;margin:.6rem 0 0}
-.connected{outline:2px solid #88a6ff}
+/* Wallet modal */
+.wallet-modal{position:fixed;inset:0;display:flex;align-items:flex-end;justify-content:center;z-index:70}
+.wallet-modal .wallet-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.55)}
+.wallet-modal .wallet-box{position:relative;width:min(560px,92%);background:#0f1828;border:1px solid #1b2a49;border-radius:16px;margin:20px auto;padding:16px}
+.wallet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.wallet-head .x{background:#182640;border:1px solid #263a60;border-radius:10px;color:#cfe2ff;padding:.35rem .6rem;cursor:pointer}
+.wallet-grid{display:grid;grid-template-columns:1fr;gap:12px}
+.wallet-item{display:flex;gap:12px;align-items:center;background:#12203a;border:1px solid #1e2f52;border-radius:12px;padding:12px;cursor:pointer}
+.wallet-item img{width:28px;height:28px;object-fit:contain;display:block} /* SVG’ler için */
+.wallet-item:hover{background:#142645}
+.note{color:#8aa2c9;margin-top:8px}
+
+/* lang dropdown */
+.lang-trigger{display:flex;align-items:center;gap:6px;background:#0f1b31;border:1px solid #243457;border-radius:10px;padding:.35rem .55rem;cursor:pointer}
+.lang-menu{position:relative}
+.lang-menu ul{position:absolute;top:110%;right:0;background:#0f1828;border:1px solid #1b2a49;border-radius:12px;padding:6px;width:160px;display:none}
+.lang-menu.show ul{display:block}
+.lang-flag{display:flex;align-items:center;gap:8px;padding:8px;border-radius:10px;cursor:pointer}
+.lang-flag img{width:18px;height:12px;object-fit:cover}
+.lang-flag:hover{background:#152748}
+.lang-flag.active{outline:1px solid #345}
