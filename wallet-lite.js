@@ -1,19 +1,52 @@
-/* Solana Wallet Modal: Phantom / Solflare / Backpack
-   - Deeplink + dönüşte onlyIfTrusted ile sessiz bağlanma
-   - Bağlanınca Connect Wallet üzerine kısa adres yazılır
-*/
-(function(){
-  const APP_URL = "https://zuzucoin.xyz";
-  let pubkey = null;
+/* wallet-lite.js — Mobile solid flow (browse→connect) + desktop extension */
+(function () {
   const connectBtn = document.getElementById("connectBtn");
+  let pubkey = null;
 
+  function short(pk){ return pk ? pk.slice(0,4)+"..."+pk.slice(-4) : "Connect Wallet"; }
   function setConnected(pk){
     pubkey = pk;
-    if (connectBtn && pk) connectBtn.textContent = pk.slice(0,4)+"..."+pk.slice(-4);
+    if (connectBtn) connectBtn.textContent = short(pk);
+    // callback isteyen bölümler için
+    window.dispatchEvent(new CustomEvent("zuzu:wallet-connected",{detail:{pubkey:pk}}));
   }
-  window.__zuzu_pk = ()=>pubkey;
+  window.__zuzu_pk = () => pubkey;
 
-  function show(){
+  // --- Helpers -------------------------------------------------------------
+  const HERE = location.href.split("#")[0];
+  const BROWSE = {
+    phantom:  "https://phantom.app/ul/browse/" + encodeURIComponent(HERE),
+    solflare: "https://solflare.com/ul/v1/browse/" + encodeURIComponent(HERE),
+    backpack: "https://www.backpack.app/ul/browse/" + encodeURIComponent(HERE)
+  };
+
+  async function tryConnectAll(ask=false){
+    // Phantom
+    try{
+      if (window.solana?.isPhantom){
+        const r = await window.solana.connect({ onlyIfTrusted: !ask ? true : false });
+        if (r?.publicKey) return setConnected(r.publicKey.toString());
+      }
+    }catch{}
+    // Solflare (wallet-standard)
+    try{
+      if (window.solflare?.connect){
+        await window.solflare.connect();
+        const pk = window.solflare.publicKey?.toString?.();
+        if (pk) return setConnected(pk);
+      }
+    }catch{}
+    // Backpack (wallet-standard)
+    try{
+      if (window.backpack?.connect){
+        const r = await window.backpack.connect();
+        const pk = (r?.publicKey||r)?.toString?.();
+        if (pk) return setConnected(pk);
+      }
+    }catch{}
+  }
+
+  function openModal(){
     const wrap = document.createElement("div");
     wrap.className = "wallet-modal";
     wrap.innerHTML = `
@@ -39,84 +72,51 @@
     wrap.querySelector(".wallet-backdrop").addEventListener("click", close);
     wrap.querySelector("#wmClose").addEventListener("click", close);
 
-    // Phantom
+    // Desktop extensions: connect direkt
     wrap.querySelector("#wPhantom").addEventListener("click", async (e)=>{
       e.preventDefault();
-      try{
-        if (window.solana?.isPhantom){
+      if (window.solana?.isPhantom){
+        try{
           const r = await window.solana.connect({ onlyIfTrusted:false });
           if (r?.publicKey){ setConnected(r.publicKey.toString()); return close(); }
-        }
-      }catch(_){}
-      const link = "https://phantom.app/ul/v1/connect"
-        + "?app_url=" + encodeURIComponent(APP_URL)
-        + "&redirect_link=" + encodeURIComponent(location.href.split('#')[0])
-        + "&cluster=mainnet-beta";
-      location.href = link;
+        }catch{}
+      }
+      // Mobile: siteyi Phantom içinde aç
+      location.href = BROWSE.phantom;
     });
 
-    // Solflare
     wrap.querySelector("#wSolflare").addEventListener("click", async (e)=>{
       e.preventDefault();
-      try{
-        if (window.solflare?.connect){
+      if (window.solflare?.connect){
+        try{
           await window.solflare.connect();
           const pk = window.solflare.publicKey?.toString?.();
           if (pk){ setConnected(pk); return close(); }
-        }
-      }catch(_){}
-      const link = "https://solflare.com/ul/v1/connect"
-        + "?app_url=" + encodeURIComponent(APP_URL)
-        + "&redirect_link=" + encodeURIComponent(location.href.split('#')[0]);
-      location.href = link;
+        }catch{}
+      }
+      location.href = BROWSE.solflare;
     });
 
-    // Backpack
     wrap.querySelector("#wBackpack").addEventListener("click", async (e)=>{
       e.preventDefault();
-      try{
-        if (window.backpack?.connect){
+      if (window.backpack?.connect){
+        try{
           const r = await window.backpack.connect();
           const pk = (r?.publicKey||r)?.toString?.();
           if (pk){ setConnected(pk); return close(); }
-        }
-      }catch(_){}
-      const link = "https://backpack.app/ul/v1/connect"
-        + "?app_url=" + encodeURIComponent(APP_URL)
-        + "&redirect_link=" + encodeURIComponent(location.href.split('#')[0]);
-      location.href = link;
+        }catch{}
+      }
+      location.href = BROWSE.backpack;
     });
   }
 
-  connectBtn?.addEventListener("click",(e)=>{ e.preventDefault(); show(); });
+  // --- UI events -----------------------------------------------------------
+  connectBtn?.addEventListener("click",(e)=>{ e.preventDefault(); openModal(); });
 
-  // Geri dönüşte sessiz bağlanma
-  async function tryTrusted(){
-    try{
-      if (window.solana?.isPhantom){
-        const r = await window.solana.connect({ onlyIfTrusted:true });
-        if (r?.publicKey) return setConnected(r.publicKey.toString());
-      }
-    }catch(_){}
-    try{
-      if (window.solflare?.connect){
-        await window.solflare.connect();
-        const pk = window.solflare.publicKey?.toString?.();
-        if (pk) return setConnected(pk);
-      }
-    }catch(_){}
-    try{
-      if (window.backpack?.connect){
-        const r = await window.backpack.connect();
-        const pk = (r?.publicKey||r)?.toString?.();
-        if (pk) return setConnected(pk);
-      }
-    }catch(_){}
-  }
-  window.addEventListener("pageshow", tryTrusted);
-  document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) tryTrusted(); });
+  // Sayfa cüzdan içinde açıldıysa otomatik bağlanmayı dene
+  window.addEventListener("pageshow", ()=>tryConnectAll(false));
+  document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) tryConnectAll(false); });
 
-  if (location.search.includes("errorCode") || location.search.includes("connected")){
-    history.replaceState({}, "", location.pathname);
-  }
+  // İlk yükte buton etiketi
+  if (connectBtn) connectBtn.textContent = short(null);
 })();
