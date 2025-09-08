@@ -1,93 +1,170 @@
-/* ------------------------------------------------------
-   ZUZU — App bootstrap (lang, countdown, buy, referral)
------------------------------------------------------- */
+/* =========================
+   ZUZU — App Bootstrap (v1)
+   Tek dosyada: dil, sayaç, maliyet,
+   NFT grid, cüzdan modal, deeplink
+   dönüşünde sessiz bağlanma, event wiring.
+========================= */
 
-// ---- DİL: lang.js/<code>.json dosyalarını yükler
-const SUPPORTED_LANGS = ["en","tr","fr","es","ru","pl"];
-async function loadLang(code){
-  const lang = SUPPORTED_LANGS.includes(code) ? code : "en";
-  try{
-    const res = await fetch(`/lang.js/${lang}.json?ts=${Date.now()}`, {cache:"no-store"});
-    const dict = await res.json();
-    document.querySelectorAll("[data-i]").forEach(el=>{
-      const k = el.getAttribute("data-i");
-      if(dict[k]) el.innerHTML = dict[k];
-    });
-    localStorage.setItem("zuzu_lang", lang);
-  }catch(e){ console.warn("Lang load fail", e); }
-}
-function setupLangMenu(){
-  const btn  = document.getElementById("langBtn");
-  const menu = document.getElementById("langMenu");
-  if(!btn || !menu) return;
-  btn.addEventListener("click", ()=> menu.classList.toggle("open"));
-  menu.querySelectorAll("[data-lang]").forEach(it=>{
-    it.addEventListener("click", ()=>{
-      loadLang(it.dataset.lang);
-      menu.classList.remove("open");
-    });
-  });
-  const saved = localStorage.getItem("zuzu_lang") || "en";
-  loadLang(saved); // ilk açılışta uygula
-}
+(function () {
+  const on = (el, ev, fn, opt) => el && el.addEventListener(ev, fn, opt);
+  const $  = (sel, root=document) => root.querySelector(sel);
+  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
 
-// ---- Sayaç
-function startCountdown(untilMs){
-  const ids=["cdDays","cdHours","cdMins","cdSecs"];
-  const pad=n=>n.toString().padStart(2,"0");
-  function tick(){
-    const left=Math.max(0, untilMs - Date.now());
-    const d=Math.floor(left/86400000);
-    const h=Math.floor((left%86400000)/3600000);
-    const m=Math.floor((left%3600000)/60000);
-    const s=Math.floor((left%60000)/1000);
-    [d,h,m,s].forEach((v,i)=>{ const el=document.getElementById(ids[i]); if(el) el.textContent=pad(v); });
+  // ---- Dil kurulumu ----
+  function setupLang() {
+    const saved = localStorage.getItem("zuzu_lang") || "en";
+    if (typeof applyLang === "function") applyLang(saved);
+
+    // Dinleyiciler (langMenu hem otomatik hem statik olabiliyor)
+    const menu = $("#langMenu");
+    if (menu) {
+      on(menu, "click", (e) => {
+        const li = e.target.closest(".lang-flag");
+        if (!li) return;
+        const lang = li.dataset.lang || "en";
+        localStorage.setItem("zuzu_lang", lang);
+        if (typeof applyLang === "function") applyLang(lang);
+      });
+    }
   }
-  tick(); setInterval(tick,1000);
-}
 
-// ---- Satın alma (window.ZUZU_SOL: solana.v1.js)
-function setupBuy(){
-  const amountEl=document.getElementById("buyAmount");
-  const methodEl=document.getElementById("payMethod"); // "SOL" | "USDT"
-  const prices=[0.0050,0.0065,0.0080,0.0100]; // USDT per ZUZU
+  // ---- Sayaç & presale maliyetleri ----
+  function setupCountdownAndCosts() {
+    // anlık güncelleme
+    if (typeof tick === "function") tick();
+    // interval
+    if (!window.__zuzu_tickInterval) {
+      window.__zuzu_tickInterval = setInterval(() => {
+        if (typeof tick === "function") tick();
+      }, 1000);
+    }
+    // maliyet
+    if (typeof updateCosts === "function") updateCosts();
+    on($("#buyAmount"), "input", () => {
+      if (typeof updateCosts === "function") updateCosts();
+    });
+    if (typeof updateActiveWeekUI === "function") updateActiveWeekUI();
+  }
 
-  async function buy(week){
-    const qty=parseFloat((amountEl?.value||"0").toString().replace(/[^\d.]/g,""))||0;
-    if(qty<=0) return alert("Enter a valid amount.");
-    const cost=qty*prices[week];
+  // ---- NFT grid (görüntü garantisi) ----
+  function ensureNFTGrid() {
+    const g = $("#nftGrid");
+    // script.js zaten basıyor; ama boşsa tekrar basalım:
+    if (g && g.children.length === 0 && typeof CONFIG !== "undefined") {
+      try {
+        g.innerHTML = (CONFIG.nfts || []).map(n => `
+          <div class="nft">
+            <img src="assets/images/mask/${n.id}.png"
+                 onerror="this.onerror=null;this.src='assets/images/branding/zuzu-logo.png';"
+                 alt="${n.name}">
+            <div class="meta">
+              <div><b>${n.name}</b><div style="color:#9fb6e6">${n.rarity}</div></div>
+              <span class="tag">${(n.supply||0).toLocaleString()}</span>
+            </div>
+            <a class="z-btn z-btn-ghost" style="margin:0 10px 10px"
+               href="${CONFIG.collectionUrl}?tokenId=${n.id}" target="_blank" rel="noopener">View ↗</a>
+          </div>
+        `).join("");
+      } catch (e) { console.warn("NFT grid render skip", e); }
+    }
+  }
 
-    try{
-      let sig="";
-      if(methodEl?.value==="USDT"){ sig = await window.ZUZU_SOL.payUSDT(cost); }
-      else {
-        const rough=100; // örnek kur; backend ile güncelle
-        sig = await window.ZUZU_SOL.paySOL(cost/rough);
+  // ---- Cüzdan modal / deeplink dönüşü ----
+  function setupWallet() {
+    // Connect butonu -> modal
+    const connectBtn = $("#connectBtn");
+    on(connectBtn, "click", (e) => {
+      e.preventDefault();
+      if (typeof openWalletModal === "function") {
+        openWalletModal();
+      } else if (typeof window.showWalletModal === "function") {
+        window.showWalletModal();
+      } else {
+        alert("Wallet module not loaded.");
       }
-      alert("Payment sent!\nTx Signature:\n"+sig);
-    }catch(e){ console.error(e); alert("Payment failed or rejected."); }
+    });
+
+    // Deeplink dönüşünde sessiz bağlanma (Phantom/Solflare/Backpack)
+    async function tryTrusted() {
+      // wallet-lite.js uzun sürüm zaten bunu yapıyor; yoksa burada deneriz
+      try {
+        if (window.solana?.isPhantom) {
+          const r = await window.solana.connect({ onlyIfTrusted: true });
+          if (r?.publicKey) labelConnected(r.publicKey.toString());
+          return;
+        }
+      } catch {}
+      try {
+        if (window.solflare?.connect) {
+          await window.solflare.connect();
+          const pk = window.solflare.publicKey?.toString?.();
+          if (pk) labelConnected(pk);
+          return;
+        }
+      } catch {}
+      try {
+        if (window.backpack?.connect) {
+          const res = await window.backpack.connect();
+          const pk = (res?.publicKey||res)?.toString?.();
+          if (pk) labelConnected(pk);
+          return;
+        }
+      } catch {}
+      // wallet-lite export’u varsa onu kullan
+      if (typeof window.__zuzu_pk === "function") {
+        const pk = window.__zuzu_pk();
+        if (pk) labelConnected(pk);
+      }
+    }
+
+    function labelConnected(pk) {
+      if (!pk) return;
+      const short = pk.slice(0, 4) + "..." + pk.slice(-4);
+      const btn = $("#connectBtn");
+      if (btn) btn.textContent = short;
+      localStorage.setItem("zuzu_pk", pk);
+    }
+
+    // hash / query temizle & bağlanmayı dene
+    const q = new URLSearchParams(location.search);
+    if (q.has("errorCode") || q.has("phantom_encryption_public_key") || q.has("connected")) {
+      // Görsel temiz dönüş için parametreleri temizle
+      history.replaceState({}, "", location.pathname);
+    }
+    tryTrusted();
+    window.addEventListener("focus", tryTrusted);
   }
 
-  ["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{
-    document.getElementById(id)?.addEventListener("click", ()=>buy(i));
+  // ---- Satın alma butonları (script.js handleBuy çağırır) ----
+  function setupBuyButtons() {
+    ["buyW0","buyW1","buyW2","buyW3"].forEach((id)=>{
+      const b = $("#"+id);
+      on(b, "click", (e)=>{ e.preventDefault(); /* handleBuy script.js tarafında */ });
+    });
+
+    // payment selector default
+    const paySel = $("#payWith");
+    if (paySel && !paySel.children.length) {
+      paySel.innerHTML = `<option value="USDT">USDT (SPL)</option><option value="SOL">SOL</option>`;
+    }
+  }
+
+  // ---- Invite kutusunu dil değişince yeniden yaz ----
+  function observeLangReapply() {
+    // Dil değişince yeniden stringleri uygula
+    document.addEventListener("zuzu_lang_changed", ()=>{
+      const lang = localStorage.getItem("zuzu_lang") || "en";
+      if (typeof applyLang === "function") applyLang(lang);
+    });
+  }
+
+  // ---- INIT ----
+  window.addEventListener("DOMContentLoaded", () => {
+    setupLang();
+    setupCountdownAndCosts();
+    ensureNFTGrid();
+    setupWallet();
+    setupBuyButtons();
+    observeLangReapply();
   });
-}
-
-// ---- Referral
-function setupReferral(){
-  const out=document.getElementById("refLink");
-  if(!out) return;
-  const pk = (window.__zuzu_pk && window.__zuzu_pk()) || "";
-  const id = pk || ("guest-"+Math.random().toString(36).slice(2,8));
-  const url=new URL(location.href); url.searchParams.set("ref", id);
-  out.value=url.toString();
-}
-
-// ---- Başlat
-window.addEventListener("DOMContentLoaded", ()=>{
-  setupLangMenu();
-  const target = (window.ZUZU_CONFIG && window.ZUZU_CONFIG.launchAt) || Date.now()+50*86400000;
-  startCountdown(target);
-  setupBuy();
-  setupReferral();
-});
+})();
