@@ -1,104 +1,114 @@
-/* Lightweight Solana wallet layer (Phantom / Solflare / Backpack)
-   - Desktop: provider varsa direkt connect()
-   - Mobile: deeplink ile wallet in-app browser -> #connect=... paramı ile otomatik connect
-   - Başarı: localStorage 'zuzu_pk', butonda kısaltılmış adres
+/* ZUZU — Wallet layer (Phantom / Solflare / Backpack)
+   - Desktop: provider varsa doğrudan connect()
+   - Mobile: wallet'a deeplink (browse) -> wallet içi browser'da otomatik connect (#w=..)
+   - Başarılı bağlanınca buton etiketi kısalır ve localStorage 'zuzu_pk' tutulur
 */
 (function(){
-  const APP_ORIGIN =
-    location.hostname.endsWith("zuzucoin.xyz") ? "https://zuzucoin.xyz" : (location.origin);
-  const qs = new URLSearchParams(location.search);
-  const hash = new URLSearchParams(location.hash.replace(/^#/, ""));
+  const ORIGIN = location.origin; // zuzucoin.xyz ise otomatik o
   const connectBtn = document.getElementById("connectBtn");
 
-  function short(pk){ return pk.slice(0,4)+"…"+pk.slice(-4); }
+  // Eski modal/ekran altı kopyalar varsa temizle
+  document.querySelectorAll(".wallet-modal-clone").forEach(n=>n.remove());
 
+  function short(pk){ return pk.slice(0,4)+"…"+pk.slice(-4); }
   function setConnected(pk){
     localStorage.setItem("zuzu_pk", pk);
-    if(connectBtn){ connectBtn.textContent = short(pk); connectBtn.classList.remove("z-btn-primary"); connectBtn.classList.add("z-btn-ghost"); }
+    if (connectBtn) { connectBtn.textContent = short(pk); connectBtn.classList.add("z-btn-ghost"); connectBtn.classList.remove("z-btn-primary"); }
+    // modal kapat
+    document.getElementById("walletModal")?.classList.remove("show");
+    document.getElementById("walletModal")?.setAttribute("aria-hidden","true");
   }
-  function clearConnected(){
-    localStorage.removeItem("zuzu_pk");
-    if(connectBtn){ connectBtn.textContent = "Connect Wallet"; connectBtn.classList.add("z-btn-primary"); }
-  }
+  function cached(){ return localStorage.getItem("zuzu_pk"); }
 
-  async function connectPhantom(force=false){
-    if(window.phantom?.solana){
+  /* ---- Desktop/providers ---- */
+  async function tryPhantom(force=false){
+    if (window.phantom?.solana?.isPhantom) {
       try{
-        const res = await window.phantom.solana.connect({ onlyIfTrusted: !force ? true : false });
-        if(res?.publicKey) return setConnected(res.publicKey.toString());
-      }catch(e){}
+        const r = await window.phantom.solana.connect({ onlyIfTrusted: !force });
+        if (r?.publicKey) return setConnected(r.publicKey.toString());
+      }catch(_){}
       try{
-        const res = await window.phantom.solana.connect();
-        if(res?.publicKey) return setConnected(res.publicKey.toString());
-      }catch(e){}
-    }else{
-      // mobile dış tarayıcı → deeplink ile phantom içi browser
-      const url = window.__phantomBrowseURL?.("phantom", APP_ORIGIN) ||
-                  `https://phantom.app/ul/browse/${encodeURIComponent(APP_ORIGIN+'/#connect=phantom')}`;
-      location.href = url;
+        const r = await window.phantom.solana.connect();
+        if (r?.publicKey) return setConnected(r.publicKey.toString());
+      }catch(_){}
+    } else {
+      deeplink("phantom");
     }
   }
-  async function connectSolflare(){
-    if(window.solflare?.connect){
+  async function trySolflare(){
+    if (window.solflare?.connect) {
       try{
-        await window.solflare.connect(); // mobil/desktop
-        if(window.solflare?.publicKey) return setConnected(window.solflare.publicKey.toString());
-      }catch(e){}
-    }else{
-      const url = window.__solflareBrowseURL?.(APP_ORIGIN) ||
-                  `https://solflare.com/ul/v1/browse/${encodeURIComponent(APP_ORIGIN+'/#connect=solflare')}`;
-      location.href = url;
+        await window.solflare.connect();
+        const pk = window.solflare.publicKey?.toString?.();
+        if (pk) return setConnected(pk);
+      }catch(_){}
+    } else {
+      deeplink("solflare");
     }
   }
-  async function connectBackpack(){
-    if(window.backpack?.connect){
+  async function tryBackpack(){
+    if (window.backpack?.connect) {
       try{
         const r = await window.backpack.connect();
-        const pk = (r?.publicKey?.toString?.()) || r?.[0];
-        if(pk) return setConnected(pk);
-      }catch(e){}
-    }else{
-      const url = window.__backpackBrowseURL?.(APP_ORIGIN) ||
-                  `https://www.backpack.app/ul/browse/${encodeURIComponent(APP_ORIGIN+'/#connect=backpack')}`;
-      location.href = url;
+        const pk = r?.publicKey?.toString?.() || r?.[0];
+        if (pk) return setConnected(pk);
+      }catch(_){}
+    } else {
+      deeplink("backpack");
     }
   }
 
-  // Modaldaki butonlar
-  document.getElementById("wPhantom") ?.addEventListener("click", ()=>connectPhantom(true));
-  document.getElementById("wSolflare")?.addEventListener("click", connectSolflare);
-  document.getElementById("wBackpack")?.addEventListener("click", connectBackpack);
+  /* ---- Mobile deeplink ---- */
+  function deeplink(which){
+    const target = `${ORIGIN}/#w=${which}`;
+    const enc = encodeURIComponent(target);
+    let url = "";
+    if (which === "phantom")  url = `https://phantom.app/ul/browse/${enc}`;
+    if (which === "solflare") url = `https://solflare.com/ul/v1/browse/${enc}`;
+    if (which === "backpack") url = `https://www.backpack.app/ul/browse/${enc}`;
+    if (!url) return;
+    location.href = url;
+  }
 
-  // Sayfa wallet içinde #connect=.. ile açıldıysa otomatik bağlan
-  if(hash.get("connect")==="phantom")  connectPhantom(true);
-  if(hash.get("connect")==="solflare") connectSolflare();
-  if(hash.get("connect")==="backpack") connectBackpack();
+  // Modal içindeki butonlar
+  document.getElementById("wPhantom") ?.addEventListener("click", ()=>tryPhantom(true));
+  document.getElementById("wSolflare")?.addEventListener("click", trySolflare);
+  document.getElementById("wBackpack")?.addEventListener("click", tryBackpack);
 
-  // Desktop/Wallet içi: güvenilir bağlantı varsa otomatik label
-  async function tryTrusted(){
+  // Sayfa wallet içi browser’da #w=... ile açıldıysa otomatik bağlan
+  const hash = new URLSearchParams(location.hash.slice(1));
+  const w = hash.get("w");
+  if (w === "phantom")  tryPhantom(true);
+  if (w === "solflare") trySolflare();
+  if (w === "backpack") tryBackpack();
+
+  // Güvenilir bağlantı varsa etiketle
+  window.addEventListener("load", async ()=>{
     try{
-      if(window.phantom?.solana?.isPhantom){
+      if (window.phantom?.solana?.isPhantom) {
         const r = await window.phantom.solana.connect({ onlyIfTrusted:true });
-        if(r?.publicKey) return setConnected(r.publicKey.toString());
+        if (r?.publicKey) return setConnected(r.publicKey.toString());
       }
-    }catch(e){}
+    }catch(_){}
     try{
-      if(window.solflare?.isSolflare){ await window.solflare.connect(); if(window.solflare.publicKey) return setConnected(window.solflare.publicKey.toString()); }
-    }catch(e){}
+      if (window.solflare?.isSolflare) {
+        await window.solflare.connect();
+        if (window.solflare.publicKey) return setConnected(window.solflare.publicKey.toString());
+      }
+    }catch(_){}
     try{
-      if(window.backpack?.isBackpack){ const r = await window.backpack.connect(); const pk = r?.publicKey?.toString?.(); if(pk) return setConnected(pk); }
-    }catch(e){}
-    const cached = localStorage.getItem("zuzu_pk"); if(cached) setConnected(cached);
-  }
-  window.addEventListener("load", tryTrusted);
+      if (window.backpack?.isBackpack) {
+        const r = await window.backpack.connect();
+        const pk = r?.publicKey?.toString?.();
+        if (pk) return setConnected(pk);
+      }
+    }catch(_){}
+    const pk = cached(); if (pk) setConnected(pk);
+  });
 
-  // dışarıya basit API
-  window.__wallet = {
-    disconnect: clearConnected,
-    connect: {
-      phantom:  ()=>connectPhantom(true),
-      solflare: ()=>connectSolflare(),
-      backpack: ()=>connectBackpack()
-    }
+  // basit dış API (gerekirse)
+  window.ZUZU_WALLET = {
+    connect: { phantom: ()=>tryPhantom(true), solflare: trySolflare, backpack: tryBackpack },
+    disconnect: ()=>{ localStorage.removeItem("zuzu_pk"); if(connectBtn){ connectBtn.textContent="Connect Wallet"; connectBtn.classList.add("z-btn-primary"); } }
   };
 })();
