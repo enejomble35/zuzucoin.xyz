@@ -1,5 +1,16 @@
-/* ZUZU — UI core (dil, sayaç, NFT grid, hafta/ödeme, ref link, satın alma stub) */
-const SALE_END = Date.parse("2025-12-31T23:59:59Z");
+/* ZUZU core (dil, sayaç, NFT grid, haftalar/ödeme, ref link, satın alma stub) */
+
+// === Countdown target (kalıcı) ===
+(function persistSaleEnd(){
+  const url=new URL(location.href);
+  const override=url.searchParams.get("saleEnd"); // ISO/Timestamp
+  if(override){ localStorage.setItem("zuzu_sale_end", String(Date.parse(override))); }
+  if(!localStorage.getItem("zuzu_sale_end")){
+    const plus50d = Date.now() + 50*24*60*60*1000;
+    localStorage.setItem("zuzu_sale_end", String(plus50d));
+  }
+})();
+
 const WEEKS = [
   {name:"Week 1", price:0.0050},
   {name:"Week 2", price:0.0055},
@@ -8,47 +19,63 @@ const WEEKS = [
 ];
 
 window.addEventListener("DOMContentLoaded", ()=>{
+  // Lang
   applyLang(localStorage.getItem("zuzu_lang") || "en");
-
   const langBtn=$("langBtn"), langMenu=$("langMenu");
   langBtn?.addEventListener("click",()=>toggle(langMenu));
   $all(".lang-opt").forEach(b=>b.addEventListener("click",()=>{applyLang(b.dataset.lang);hide(langMenu);} ));
 
+  // Pay mode
   const payBtn=$("paySelect"), payMenu=$("payMenu");
   payBtn?.addEventListener("click",()=>toggle(payMenu));
   $all(".pay-opt").forEach(p=>p.addEventListener("click",()=>{payBtn.dataset.mode=p.dataset.mode;payBtn.textContent=p.textContent;hide(payMenu);} ));
 
+  // Price tabs
   let currentWeek=0;
   const tabs=$all(".buy-tabs .tab"), priceNote=$("priceNote");
-  function updatePriceNote(){const w=WEEKS[currentWeek];priceNote.textContent=`${w.name} • Price ${w.price.toFixed(4)} USDT per ZUZU`;}
+  const updatePriceNote=()=>{ const w=WEEKS[currentWeek]; priceNote.textContent=`${w.name} • Price ${w.price.toFixed(4)} USDT per ZUZU`; };
   tabs.forEach(t=>t.addEventListener("click",()=>{tabs.forEach(x=>x.classList.remove("active"));t.classList.add("active");currentWeek=+t.dataset.week;updatePriceNote();}));
   updatePriceNote();
 
+  // Referral link
   setRefLink();
   document.addEventListener("zuzu:walletConnected", setRefLink);
-  $("copyRef")?.addEventListener("click",()=>{const v=$("refLink")?.value||"";if(!v)return;navigator.clipboard.writeText(v);});
+  $("copyRef")?.addEventListener("click",()=>{
+    const v=$("refLink")?.value||""; if(!v) return;
+    navigator.clipboard.writeText(v).then(()=>alert("Copied")).catch(()=>{});
+  });
 
+  // NFT grid
   renderNFTs();
-  tick(); setInterval(tick,1000);
 
+  // Countdown
+  tick(); setInterval(tick, 1000);
+
+  // Buy action (stub)
   $("buyNow")?.addEventListener("click",()=>{
     const amt=Number($("buyAmount")?.value||0);
     if(!amt||amt<=0) return alert("Amount?");
     const mode=$("paySelect")?.dataset.mode||"SOL";
-    if(!window.__zuzu_pk?.()){document.getElementById("connectBtn")?.click();return;}
+    if(!window.__zuzu_pk?.()){
+      document.getElementById("connectBtn")?.click();
+      return;
+    }
     alert(`Redirecting to wallet…\nAmount: ${amt} ZUZU\nPay: ${mode}\n(${WEEKS[currentWeek].name})`);
   });
 });
 
 function $(id){return document.getElementById(id)}
 function $all(s){return Array.from(document.querySelectorAll(s))}
-function toggle(el){if(el) el.classList.toggle("show")}
-function hide(el){if(el) el.classList.remove("show")}
+function toggle(el){el?.classList.toggle("show")}
+function hide(el){el?.classList.remove("show")}
 
 function tick(){
-  const left=Math.max(0,SALE_END-Date.now());
-  const d=Math.floor(left/86400000), h=Math.floor((left%86400000)/3600000);
-  const m=Math.floor((left%3600000)/60000), s=Math.floor((left%60000)/1000);
+  const end=Number(localStorage.getItem("zuzu_sale_end")||0);
+  const left=Math.max(0,end-Date.now());
+  const d=Math.floor(left/86400000);
+  const h=Math.floor((left%86400000)/3600000);
+  const m=Math.floor((left%3600000)/60000);
+  const s=Math.floor((left%60000)/1000);
   const P=n=>String(n).padStart(2,"0");
   setText("cdDays",P(d)); setText("cdHours",P(h)); setText("cdMins",P(m)); setText("cdSecs",P(s));
 }
