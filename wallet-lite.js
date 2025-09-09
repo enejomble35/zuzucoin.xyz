@@ -23,11 +23,9 @@
       </div>`;
     document.body.appendChild(box);
 
-    // kapatma
     document.getElementById("wmClose").onclick = ()=>box.remove();
     box.querySelector(".wallet-backdrop").onclick = ()=>box.remove();
 
-    // butonlar
     document.getElementById("wPhantom").onclick = ()=>{
       if (window.ZUZU_PHANTOM?.openConnect) window.ZUZU_PHANTOM.openConnect();
       else alert("Wallet module not loaded.");
@@ -40,10 +38,11 @@
     };
   }
 
-  // ana buton
-  document.getElementById("connectBtn")?.addEventListener("click", openModal);
+  // Ana bağlan butonu
+  const connectBtn = document.getElementById("connectBtn");
+  if (connectBtn) connectBtn.addEventListener("click", openModal);
 
-  // geri dönünce olası injected bağlantıları dener
+  // Geri dönünce varsa otomatik bağlan
   document.addEventListener("visibilitychange", ()=>{
     if (document.visibilityState!=="visible") return;
     window.ZUZU_PHANTOM?.restore?.();
