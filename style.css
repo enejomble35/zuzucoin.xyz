@@ -1,70 +1,73 @@
-:root{--bg:#0b1220;--card:#0f172a;--panel:#111a2c;--line:#1b2a4d;--fg:#e9efff;--muted:#9fb0d8;--brand:#7b87ff;--brand2:#5a66ff}
-*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,Segoe UI,Roboto,Helvetica,Arial}
-a{color:#cfe0ff;text-decoration:none}
+:root{
+  --bg:#0b1220; --panel:#111a2b; --muted:#9db1d1;
+  --text:#e7efff; --brand:#8ea2ff; --btn:#7c89ff; --btn2:#263457;
+  --border:#1e2942; --ok:#00d68f; --x:#ff5d6c;
+}
+*{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.6 system-ui,Segoe UI,Roboto}
+a{color:var(--brand);text-decoration:none}
 img{display:block;max-width:100%}
+.btn{background:var(--btn);color:#fff;border:0;padding:.7rem 1rem;border-radius:.75rem;font-weight:600}
+.btn:hover{filter:brightness(1.08)}
+.btn-ghost{background:var(--btn2);color:#cfe0ff}
+.btn-primary{background:var(--btn)}
+.btn-link{padding:.4rem .6rem;border-radius:.5rem;background:#0f1a31;color:#cfe0ff}
 
-.nav{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 14px;background:rgba(10,15,28,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-.menu{display:flex;gap:14px;flex-wrap:wrap}
-.logo{width:40px;height:40px}
-.nav-left{display:flex;align-items:center;gap:10px}
-.nav-right{display:flex;align-items:center;gap:10px}
-.btn{border:1px solid var(--line);background:#152244;color:var(--fg);padding:10px 14px;border-radius:10px;cursor:pointer}
-.btn:hover{border-color:#2a3f78}.btn-ghost{background:transparent}
-.btn-primary{background:linear-gradient(180deg,var(--brand),var(--brand2));border-color:transparent}
-.btn-link{padding:8px 10px;border-radius:8px;border:1px solid var(--line)}
+.topbar{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:.7rem 1rem;background:rgba(11,18,32,.9);backdrop-filter:blur(6px);border-bottom:1px solid var(--border)}
+.brand img{height:28px}
+.menu{display:flex;gap:.8rem;align-items:center;flex-wrap:wrap}
+.menu a{padding:.35rem .55rem;border-radius:.5rem}
+.nav-right{display:flex;gap:.6rem;align-items:center}
+#langBtn{display:flex;gap:.45rem;align-items:center}
+#langBtn img{height:18px;border-radius:3px}
 
-.hero{padding:26px 14px 0;max-width:1100px;margin:0 auto}
-.kicker{opacity:.75;margin:2px 0 8px}
-.title{margin:0 0 6px;font-size:36px}
-.lead{opacity:.9;margin:0 0 12px}
-.cta-row{display:flex;gap:10px;margin:14px 0 8px}
+.lang-menu{position:fixed;top:60px;right:110px;background:var(--panel);border:1px solid var(--border);border-radius:.75rem;display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;padding:.6rem;box-shadow:0 10px 30px rgba(0,0,0,.35);opacity:0;pointer-events:none;transform:translateY(-6px);transition:.15s}
+.lang-menu.show{opacity:1;pointer-events:auto;transform:none}
+.lang-opt{display:flex;gap:.5rem;align-items:center;background:#0e172b;border:1px solid var(--border);padding:.45rem;border-radius:.6rem;color:#cee2ff}
+.lang-opt img{height:18px;border-radius:3px}
 
-.countdown{display:flex;gap:10px;margin:16px 0;flex-wrap:wrap}
-.cd-box{background:var(--panel);border:1px solid var(--line);padding:10px 14px;border-radius:12px;min-width:90px;text-align:center}
-.cd-box>div{font-weight:700;font-size:24px}
+main{max-width:980px;margin:20px auto;padding:0 14px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:16px;margin:14px 0}
+.hero-head .eyebrow{color:#a6b9da;font-weight:600;letter-spacing:.02em}
+.hero-img{border-radius:14px;border:1px solid var(--border)}
+.muted{color:var(--muted)}
+.cta-row{display:flex;gap:.6rem;margin-top:.6rem;flex-wrap:wrap}
 
-.hero-art{max-width:760px;margin:18px auto 6px;border-radius:16px;border:1px solid var(--line)}
+.countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin:14px 0}
+.countdown div{background:#0f1a2b;border:1px solid var(--border);border-radius:12px;padding:.7rem;text-align:center}
+.countdown span{font-size:1.5rem;font-weight:800;display:block}
+.countdown label{font-size:.74rem;color:#9cb2d6}
 
-.panel{max-width:1100px;margin:20px auto;padding:16px;border:1px solid var(--line);background:var(--panel);border-radius:16px}
-.panel h2{margin:0 0 12px}
-.sub{opacity:.85;margin:0 0 10px}
-
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:#0d162a;color:var(--fg)}
-.small{font-size:13px}.muted{color:var(--muted)}
-
-.buy-tabs{display:flex;gap:8px;margin:8px 0 12px}
-.tab{padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:#0d162a;color:var(--fg);cursor:pointer}
-.tab.active{background:#19254a;border-color:#3451a8}
-
-.nft-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
-.nft-card{background:#0d162a;border:1px solid var(--line);border-radius:12px;padding:10px}
-.nft-card .cap{display:flex;justify-content:space-between;opacity:.85;margin-top:6px;font-size:13px}
-
-.tk-list,.road{margin:8px 0 0 18px}
-.footer{max-width:1100px;margin:40px auto 22px;opacity:.75;display:flex;justify-content:space-between;padding:0 6px}
-
+.buy h3{margin:.2rem 0}
+.buy-grid{display:grid;grid-template-columns:1fr 180px;gap:.6rem}
+.buy-grid input{background:#0c162a;border:1px solid var(--border);border-radius:.6rem;padding:.7rem;color:#dfe9ff}
 .select{position:relative}
-.dropdown-menu{position:absolute;top:100%;left:0;background:#0d162a;border:1px solid var(--line);border-radius:10px;padding:6px;margin-top:6px;min-width:200px;z-index:20;display:none}
-.dropdown-menu.show{display:block}
-.dropdown-menu button{display:flex;gap:8px;align-items:center;width:100%;padding:9px 10px;border-radius:8px;background:transparent;border:0;color:var(--fg);cursor:pointer}
-.dropdown-menu button:hover{background:#17244a}
-#langBtn{display:flex;gap:8px;align-items:center}
-#langBtn img{width:20px;height:14px;object-fit:cover;border-radius:2px}
-.lang-opt img{width:18px;height:12px;border-radius:2px}
+.select-btn{width:100%;background:#0c162a;border:1px solid var(--border);border-radius:.6rem;padding:.7rem;color:#dfe9ff}
+.select-menu{position:absolute;left:0;right:0;top:calc(100% + 6px);background:#0c162a;border:1px solid var(--border);border-radius:.6rem;display:none}
+.select-menu.show{display:block}
+.select-menu li{list-style:none;padding:.6rem .7rem;border-top:1px solid var(--border);cursor:pointer}
+.buy-row{display:flex;gap:.6rem;margin-top:.6rem;flex-wrap:wrap}
 
-#walletModal{display:none;position:fixed;inset:0;z-index:40}
-#walletModal.show{display:block}
-.wallet-backdrop{position:absolute;inset:0;background:#0008}
-.wallet-box{position:relative;margin:10vh auto 0;max-width:520px;background:#0f172a;border:1px solid var(--line);border-radius:16px;padding:14px}
-.wallet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.wallet-item{display:flex;gap:10px;align-items:center;width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0a1326;color:var(--fg);cursor:pointer;margin:8px 0}
-.wallet-item img{width:28px;height:28px}.wallet-item:hover{border-color:#3657a8}
-.x{border:0;background:#1b2644;color:#cfe0ff;border-radius:8px;padding:6px 8px;cursor:pointer}
+.nft-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}
+.nft{background:#0f1a2a;border:1px solid var(--border);border-radius:12px;padding:8px}
+.nft img{border-radius:8px}
+
+.bullets{padding-left:18px}
+
+.footer{max-width:980px;margin:30px auto 40px;padding:0 14px;color:#9eb3d6;display:flex;justify-content:space-between}
+
+.wallet-modal{position:fixed;inset:0;display:none}
+.wallet-modal.show{display:block}
+.wallet-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(2px)}
+.wallet-box{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(420px,92vw);background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:14px}
+.wallet-head{display:flex;justify-content:space-between;align-items:center}
+.wallet-grid{display:grid;grid-template-columns:1fr;gap:.6rem;margin:10px 0}
+.wallet-item{display:flex;gap:.6rem;align-items:center;justify-content:flex-start;background:#0f1a31;border:1px solid var(--border);border-radius:.8rem;padding:.7rem;color:#dfe9ff}
+.wallet-item img{height:26px;width:26px}
+.wallet-box .note{color:#96add3}
+.x{background:#0f1a31;border:1px solid var(--border);border-radius:.5rem;color:#cfe0ff}
 
 @media (max-width:760px){
   .menu{display:none}
-  .grid-2{grid-template-columns:1fr}
-  .title{font-size:28px}
-  .logo{width:36px;height:36px}
+  .buy-grid{grid-template-columns:1fr}
+  .nft-grid{grid-template-columns:repeat(2,1fr)}
 }
