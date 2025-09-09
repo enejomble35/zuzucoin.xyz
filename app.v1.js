@@ -42,7 +42,36 @@
       return false;
     }
   }
+/* App boot */
+window.addEventListener("DOMContentLoaded", ()=>{
+  // dil – mevcut kodun varsa onunla kalır
+  // sayaç – mevcut kodun varsa onunla kalır
 
+  // cüzdandan dönüşte adres yazdırmak için:
+  // (wallet-lite.js zaten visibilitychange’te deniyor; burada da ilk boyada bir kez deneriz)
+  setTimeout(()=> {
+    if (window.ZUZU_WALLET?.setConnected && (window.solana || window.solflare || window.backpack)) {
+      // injected quick try
+      const p = window.solana || window?.phantom?.solana;
+      (async ()=>{
+        try{
+          if(p?.isPhantom){
+            const r = await p.connect({ onlyIfTrusted:true });
+            if(r?.publicKey){ window.ZUZU_WALLET.setConnected(r.publicKey.toString()); return; }
+          }
+        }catch{}
+        try{
+          const s = window.solflare;
+          if(s?.connect){ await s.connect(); const pk=s?.publicKey?.toString?.(); if(pk) return window.ZUZU_WALLET.setConnected(pk); }
+        }catch{}
+        try{
+          const b = window.backpack;
+          if(b?.connect){ const r=await b.connect(); const pk=r?.publicKey?.toString?.()||r?.[0]; if(pk) window.ZUZU_WALLET.setConnected(pk); }
+        }catch{}
+      })();
+    }
+  }, 300);
+});
   async function openWallet(){
     const ok = await ensureWalletModule();
     if (!ok) return alert("Wallet script couldn’t be loaded. Please refresh.");
