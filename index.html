@@ -4,82 +4,84 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ZUZUCOIN — Pre-Sale • Stake • NFT Rewards</title>
-
-  <!-- base styles -->
   <link rel="stylesheet" href="style.css" />
-
-  <!-- Fallback: CSS gelmezse menü ve modal kapalı kalsın -->
   <style>
-    .dropdown-menu{display:none}
-    .dropdown-menu.show{display:block}
-    #walletModal{display:none}
-    #walletModal.show{display:block}
+    /* Fallback */
+    .dropdown-menu{display:none}.dropdown-menu.show{display:block}
+    #walletModal{display:none}#walletModal.show{display:block}
   </style>
 </head>
 <body>
-  <!-- Header -->
+  <!-- NAV -->
   <header class="nav">
     <div class="nav-left">
-      <img src="assets/images/branding/zuzu-logo.svg" onerror="this.src='assets/images/branding/zuzu-logo.png'" class="logo" alt="ZUZU" />
+      <img class="logo" src="assets/images/branding/zuzu-logo.svg"
+           onerror="this.src='assets/images/branding/zuzu-logo.png'" alt="ZUZU" />
       <nav class="menu">
         <a href="#presale">Pre-Sale</a>
         <a href="#stake">Stake</a>
         <a href="#rewards">NFT Rewards</a>
         <a href="#roadmap">Roadmap</a>
         <a href="#tokenomics">Tokenomics</a>
-        <a href="stake-simulator.html" class="btn-link">Stake Simulator ↗</a>
-        <a href="claim.html" class="btn-link">Claim Portal ↗</a>
+        <a class="btn-link" href="stake-simulator.html">Stake Simulator ↗</a>
+        <a class="btn-link" href="claim.html">Claim Portal ↗</a>
       </nav>
     </div>
 
-    <!-- Language dropdown -->
     <div class="nav-right">
       <button id="langBtn" class="btn btn-ghost">
-        <img id="langFlag" src="flags/en.png" alt="EN" /> <span id="langCode">EN</span>
+        <img id="langFlag" src="flags/en.png" alt="EN" />
+        <span id="langCode">EN</span>
       </button>
       <div id="langMenu" class="dropdown-menu">
-        <button class="lang-opt" data-lang="en"><img src="flags/en.png" alt="EN" /> EN</button>
-        <button class="lang-opt" data-lang="tr"><img src="flags/tr.png" alt="TR" /> TR</button>
-        <button class="lang-opt" data-lang="fr"><img src="flags/fr.png" alt="FR" /> FR</button>
-        <button class="lang-opt" data-lang="es"><img src="flags/es.png" alt="ES" /> ES</button>
-        <button class="lang-opt" data-lang="ru"><img src="flags/ru.png" alt="RU" /> RU</button>
-        <button class="lang-opt" data-lang="pl"><img src="flags/pl.png" alt="PL" /> PL</button>
+        <button class="lang-opt" data-lang="en"><img src="flags/en.png" alt="EN">EN</button>
+        <button class="lang-opt" data-lang="tr"><img src="flags/tr.png" alt="TR">TR</button>
+        <button class="lang-opt" data-lang="fr"><img src="flags/fr.png" alt="FR">FR</button>
+        <button class="lang-opt" data-lang="es"><img src="flags/es.png" alt="ES">ES</button>
+        <button class="lang-opt" data-lang="ru"><img src="flags/ru.png" alt="RU">RU</button>
+        <button class="lang-opt" data-lang="pl"><img src="flags/pl.png" alt="PL">PL</button>
       </div>
 
       <button id="connectBtn" class="btn btn-primary">Connect Wallet</button>
     </div>
   </header>
 
-  <!-- Hero -->
+  <!-- HERO -->
   <section class="hero" id="presale">
     <p class="kicker" data-i18n="hero.kicker">Pre-Sale • Stake to Win NFT</p>
     <h1 class="title">ZUZU — <span data-i18n="hero.title">Robotic Hedgehog</span> 🦔⚡</h1>
-    <p class="lead" data-i18n="hero.lead">
-      Stake and win ZUZU Maskot NFT. Limited supply, high utility.
-    </p>
+    <p class="lead" data-i18n="hero.lead">Stake and win ZUZU Maskot NFT. Limited supply, high utility.</p>
 
     <div class="cta-row">
       <a href="#stake" class="btn btn-primary" data-i18n="cta.startStaking">Start Staking</a>
       <a href="#rewards" class="btn btn-ghost" data-i18n="cta.nftRewards">NFT Rewards</a>
     </div>
 
-    <!-- Countdown -->
+    <!-- COUNTDOWN -->
     <div class="countdown">
-      <div class="cd-box"><div id="cdDays">—</div><span data-i18n="time.days">DAYS</span></div>
-      <div class="cd-box"><div id="cdHours">—</div><span data-i18n="time.hours">HOURS</span></div>
-      <div class="cd-box"><div id="cdMins">—</div><span data-i18n="time.minutes">MINUTES</span></div>
-      <div class="cd-box"><div id="cdSecs">—</div><span data-i18n="time.seconds">SECONDS</span></div>
+      <div class="cd-box"><div id="cdDays">00</div><span data-i18n="time.days">DAYS</span></div>
+      <div class="cd-box"><div id="cdHours">00</div><span data-i18n="time.hours">HOURS</span></div>
+      <div class="cd-box"><div id="cdMins">00</div><span data-i18n="time.minutes">MINUTES</span></div>
+      <div class="cd-box"><div id="cdSecs">00</div><span data-i18n="time.seconds">SECONDS</span></div>
     </div>
 
-    <img class="hero-art" src="assets/images/branding/zuzu-hero.png" alt="ZUZU" />
+    <img class="hero-art" src="assets/images/branding/zuzu-hero.png" alt="ZUZU">
   </section>
 
-  <!-- Buy Box -->
+  <!-- BUY -->
   <section class="panel" id="buy">
     <h2 data-i18n="buy.title">Buy ZUZU</h2>
     <p class="sub" data-i18n="buy.rate">1 ZUZU = 0.0050 USDT</p>
+
+    <div class="buy-tabs">
+      <button class="tab active" data-week="0">Week 1</button>
+      <button class="tab" data-week="1">Week 2</button>
+      <button class="tab" data-week="2">Week 3</button>
+      <button class="tab" data-week="3">Week 4</button>
+    </div>
+
     <div class="grid-2">
-      <input id="buyAmount" type="number" placeholder="e.g. 250" />
+      <input id="buyAmount" type="number" min="1" placeholder="e.g. 250">
       <div class="select">
         <button id="paySelect" class="btn btn-ghost" data-mode="SOL" data-i18n="buy.paySol">Pay with SOL</button>
         <div id="payMenu" class="dropdown-menu">
@@ -88,29 +90,32 @@
         </div>
       </div>
     </div>
+
     <div class="grid-2">
       <button id="buyNow" class="btn btn-primary" data-i18n="buy.buyNow">Buy Now</button>
       <a class="btn btn-ghost" href="#" id="contractBtn">Contract</a>
     </div>
+
+    <p id="priceNote" class="small muted"></p>
   </section>
 
-  <!-- Invite -->
+  <!-- INVITE -->
   <section class="panel" id="invite">
     <h2 data-i18n="invite.title">Invite & Earn</h2>
     <p data-i18n="invite.lead">Share your link. Each purchase via your link earns bonus ZUZU.</p>
     <div class="grid-2">
-      <input id="refLink" readonly />
+      <input id="refLink" readonly>
       <button id="copyRef" class="btn">Copy</button>
     </div>
   </section>
 
-  <!-- NFT Rewards -->
+  <!-- NFT REWARDS -->
   <section class="panel" id="rewards">
     <h2>NFT Rewards</h2>
-    <div class="nft-grid" id="nftGrid"></div>
+    <div id="nftGrid" class="nft-grid"></div>
   </section>
 
-  <!-- Tokenomics -->
+  <!-- TOKENOMICS -->
   <section class="panel" id="tokenomics">
     <h2>Tokenomics</h2>
     <ul class="tk-list">
@@ -122,7 +127,7 @@
     </ul>
   </section>
 
-  <!-- Roadmap -->
+  <!-- ROADMAP -->
   <section class="panel" id="roadmap">
     <h2>Roadmap</h2>
     <ul class="road">
@@ -138,7 +143,7 @@
     <span>Solana • USDT</span>
   </footer>
 
-  <!-- Wallet Modal (single instance) -->
+  <!-- WALLET MODAL -->
   <div id="walletModal" aria-hidden="true">
     <div class="wallet-backdrop"></div>
     <div class="wallet-box">
@@ -148,27 +153,25 @@
       </div>
 
       <button id="wPhantom" class="wallet-item">
-        <img src="assets/wallets/phantom.svg" onerror="this.src='assets/wallets/phantom.png'" alt="Phantom" />
+        <img src="assets/wallets/phantom.svg" onerror="this.src='assets/wallets/phantom.png'" alt="Phantom">
         <span>Phantom</span>
       </button>
-
       <button id="wSolflare" class="wallet-item">
-        <img src="assets/wallets/solflare.svg" onerror="this.src='assets/wallets/solflare.png'" alt="Solflare" />
+        <img src="assets/wallets/solflare.svg" onerror="this.src='assets/wallets/solflare.png'" alt="Solflare">
         <span>Solflare</span>
       </button>
-
       <button id="wBackpack" class="wallet-item">
-        <img src="assets/wallets/backpack.svg" onerror="this.src='assets/wallets/backpack.png'" alt="Backpack" />
+        <img src="assets/wallets/backpack.svg" onerror="this.src='assets/wallets/backpack.png'" alt="Backpack">
         <span>Backpack</span>
       </button>
 
       <p class="small note">
-        On mobile, the site opens inside the wallet. Approve <b>zuzucoin.xyz</b> and you'll return here automatically.
+        On mobile, the site opens inside the wallet. Approve <b>zuzucoin.xyz</b> to connect. You’ll return here automatically.
       </p>
     </div>
   </div>
 
-  <!-- scripts (sadece bu üçü) -->
+  <!-- SCRIPTS -->
   <script src="lang.js/i18n.js"></script>
   <script src="script.js"></script>
   <script src="wallet-lite.js"></script>
