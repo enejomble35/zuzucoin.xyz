@@ -1,70 +1,125 @@
-/* ZUZU base script (layout bozmadan) */
+/* ZUZU — site logic (counter + nft grid + stake + referral + buy UI) */
 (function(){
-  const CONFIG = {
-    saleStart: Date.parse("2025-12-01T00:00:00Z"), // sabit—yenileyince sıfırlanmaz
-    weekPrices: [0.0050,0.0065,0.0080,0.0100],
-    contractAddr: "0xF2bbbEcB4177…9729",
-    collectionUrl: "https://thirdweb.com/team/zuzu/maskot",
-    nfts: Array.from({length:12},(_,i)=>({id:i,name:`ZUZU #${i+1}`,rarity:["Rare","Epic","Legendary"][i%3]}))
-  };
-  window.__ZUZU_CFG = CONFIG;
+  const $  = s=>document.querySelector(s);
+  const $$ = s=>Array.from(document.querySelectorAll(s));
 
-  /* ---------- Countdown ---------- */
-  const D=document.getElementById("cdDays"),H=document.getElementById("cdHours"),
-        M=document.getElementById("cdMins"),S=document.getElementById("cdSecs");
-  const pad=n=>String(n).padStart(2,"0");
+  // Sabit satış başlangıcı – Sıfırlanma olmasın diye sabit tarih
+  const CONFIG = {
+    saleStart: "2025-11-30T15:00:00Z",     // TGE/Presale start (UTC)
+    priceUSDT: [0.0050,0.0065,0.0080,0.0100], // haftalara göre
+    weeks: 4,
+    nftImages: Array.from({length:10}, (_,i)=>`assets/images/mask/${i+1}.png`)
+  };
+
+  // Sayaç
   function tick(){
-    const left=Math.max(0, CONFIG.saleStart - Date.now());
-    const d=Math.floor(left/86400000), h=Math.floor(left%86400000/3600000),
-          m=Math.floor(left%3600000/60000), s=Math.floor(left%60000/1000);
-    if(D)D.textContent=pad(d); if(H)H.textContent=pad(h); if(M)M.textContent=pad(m); if(S)S.textContent=pad(s);
+    const start = new Date(CONFIG.saleStart).getTime();
+    const now = Date.now();
+    const left = Math.max(0, start - now);
+    const d = Math.floor(left/864e5);
+    const h = Math.floor(left%864e5/36e5);
+    const m = Math.floor(left%36e5/6e4);
+    const s = Math.floor(left%6e4/1e3);
+    const pad = n => String(n).padStart(2,"0");
+    const ids = ["cdDays","cdHours","cdMins","cdSecs"];
+    [d,h,m,s].forEach((v,i)=>{ const el = document.getElementById(ids[i]); if(el) el.textContent = pad(v); });
   }
   tick(); setInterval(tick,1000);
 
-  /* ---------- Prices & costs ---------- */
-  ["p0","p1","p2","p3"].forEach((id,i)=>{ const el=document.getElementById(id); if(el) el.textContent=CONFIG.weekPrices[i].toFixed(4); });
-  const amt=document.getElementById("buyAmount");
-  const costEls=[0,1,2,3].map(i=>document.getElementById("c"+i));
-  function updateCosts(){
-    const n=parseFloat((amt?.value||"0").replaceAll(",",""))||0;
-    CONFIG.weekPrices.forEach((p,i)=>{ if(costEls[i]) costEls[i].textContent=(n*p).toFixed(2); });
+  // Aktif hafta & fiyat
+  function activeWeek(){
+    const start = new Date(CONFIG.saleStart).getTime();
+    const passed = Math.floor((Date.now()-start)/864e5);
+    if(passed < 7) return 0; if(passed<14) return 1; if(passed<21) return 2; return 3;
   }
-  amt?.addEventListener("input",updateCosts); updateCosts();
-
-  /* ---------- Buy buttons (demo) ---------- */
-  function buy(week){
-    const n=parseFloat((amt?.value||"0").replaceAll(",",""))||0; if(!n) return alert("Enter amount.");
-    if(!localStorage.getItem("zuzu_pk")){ document.getElementById("connectBtn")?.click(); return; }
-    const price=CONFIG.weekPrices[week], total=(n*price).toFixed(2);
-    const net=document.getElementById("networkSel")?.value || "sol";
-    alert(`(Demo)\nWallet: ${localStorage.getItem("zuzu_pk")}\nAmount: ${n} ZUZU\nPay: ${net.toUpperCase()}\nEst: ${total} USDT\n\nGerçek transfer SPL/Solana SDK ile cüzdan içinde yapılmalı.`);
+  function currentPrice(){
+    return CONFIG.priceUSDT[Math.min(activeWeek(), CONFIG.weeks-1)];
   }
-  [0,1,2,3].forEach(i=>document.getElementById("buyW"+i)?.addEventListener("click",()=>buy(i)));
+  const unitPriceEl = $("#unitPrice"); if(unitPriceEl) unitPriceEl.textContent = currentPrice().toFixed(4);
 
-  /* ---------- Stake cards ---------- */
-  (function(){
-    const host=document.getElementById("stakeCards"); if(!host) return;
-    const tiers=[{n:"Silver",d:30,a:"12%"},{n:"Gold",d:90,a:"28%"},{n:"Diamond",d:180,a:"45%"}];
-    host.innerHTML=tiers.map(t=>`
-      <div class="stake-card">
-        <div class="tier ${t.n.toLowerCase()}">${t.n}</div>
-        <div class="stat"><div class="label">Lock</div><b>${t.d} days</b></div>
-        <div class="stat"><div class="label">Base APY</div><b>${t.a}</b></div>
-        <button class="z-btn z-btn-primary" onclick="document.getElementById('connectBtn').click()">Stake</button>
-      </div>`).join("");
-  })();
+  // Satın alma tahmini maliyet
+  function updateCost(){
+    const amt = parseFloat($("#buyAmount")?.value||"0");
+    const pay = $("#paySelect")?.value||"USDT";
+    const price = currentPrice();
+    const cost = amt*price;
+    $("#estCost").textContent = amt>0 ? `Est. cost: ${cost.toFixed(2)} ${pay}` : "";
+  }
+  $("#buyAmount")?.addEventListener("input", updateCost);
+  $("#paySelect")?.addEventListener("change", updateCost);
+  updateCost();
 
-  /* ---------- NFT grid ---------- */
-  (function(){
-    const wrap=document.getElementById("nftGrid"); if(!wrap) return;
-    wrap.innerHTML = CONFIG.nfts.map(n=>`
-      <div class="nft">
-        <img src="assets/images/mask/${n.id}.png" alt="${n.name}" onerror="this.style.background='#0b1426';this.style.height='160px'">
-        <div class="meta"><div>${n.name}</div><span class="tag">${n.rarity}</span></div>
-      </div>`).join("");
-  })();
+  // Satın al (on-chain entegrasyon yerine wallet-lite deeplink akışı kullanılıyor)
+  $("#buyBtn")?.addEventListener("click", ()=>{
+    const amt = parseFloat($("#buyAmount")?.value||"0");
+    if(!amt || amt<10) return alert("Enter amount (min 10 ZUZU).");
+    const pay = $("#paySelect")?.value || "USDT";
+    const price = currentPrice();
+    const est = (amt*price).toFixed(2);
+    alert(`Redirecting to wallet...\nAmount: ${amt} ZUZU\nPayment: ${pay}\nEst: ${est} ${pay}\n\nApprove zuzucoin.xyz inside your wallet, you will be redirected back here.`);
+    // Asıl transfer/tx imzası mobil cüzdan içindeki Dapp webview'de gerçekleşecek.
+    document.getElementById("connectBtn")?.click(); // önce bağlanma modali
+  });
 
-  /* ---------- Contract/collection ---------- */
-  const cd=document.getElementById("contractDisplay"); if(cd) cd.textContent = CONFIG.contractAddr;
-  const cp=document.getElementById("thirdwebNFTRoute"); if(cp) cp.href = CONFIG.collectionUrl;
+  // Contract link (placeholder)
+  $("#viewContract")?.addEventListener("click", ()=> window.open("https://solscan.io", "_blank"));
+
+  // NFT grid
+  function renderNFTs(){
+    const cont = $("#nftGrid"); if(!cont) return;
+    cont.innerHTML = "";
+    CONFIG.nftImages.forEach((src,i)=>{
+      const card = document.createElement("div");
+      card.className = "nft";
+      card.innerHTML = `
+        <img src="${src}" alt="ZUZU #${i+1}">
+        <div class="meta">
+          <span>#${i+1}</span>
+          <span class="tag">Maskot</span>
+        </div>`;
+      cont.appendChild(card);
+    });
+  }
+  renderNFTs();
+
+  // Stake tiers (dummy UI)
+  function renderStake(){
+    const g = $("#stakeGrid"); if(!g) return;
+    const tiers = [
+      {d:30, apy:"12%"},
+      {d:90, apy:"28%"},
+      {d:180, apy:"45%"},
+      {d:365, apy:"70%"},
+      {d:540, apy:"85%"},
+    ];
+    g.innerHTML = "";
+    tiers.forEach(t=>{
+      const el = document.createElement("div");
+      el.className = "stake-card";
+      el.innerHTML = `
+        <div class="tier gold">${t.d} days</div>
+        <div class="stat"><div class="label">Base APY</div><b>${t.apy}</b></div>
+        <button class="z-btn z-btn-primary" style="margin-top:8px">Stake ${t.d}</button>`;
+      g.appendChild(el);
+    });
+  }
+  renderStake();
+
+  // Referral
+  function ensureRef(){
+    const my = localStorage.getItem("zuzu_ref") || (Math.random().toString(36).slice(2,10));
+    localStorage.setItem("zuzu_ref", my);
+    const base = location.origin + location.pathname;
+    const url = `${base}?ref=${my}`;
+    const inp = $("#refLink"); if(inp){ inp.value = url; }
+  }
+  ensureRef();
+  $("#copyRef")?.addEventListener("click", ()=>{
+    const v = $("#refLink")?.value||"";
+    navigator.clipboard.writeText(v).then(()=> alert("Copied!")).catch(()=>{});
+  });
+
+  // Eğer bir başkasının ref linkiyle geldiyse kaydet
+  const q = new URLSearchParams(location.search);
+  if(q.get("ref")) localStorage.setItem("zuzu_ref_source", q.get("ref"));
 })();
