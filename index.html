@@ -1,157 +1,358 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
-  <title>ZUZUCOIN — Pre-Sale</title>
-  <link rel="stylesheet" href="style.css?v=1.0.7">
-  <link rel="icon" href="assets/images/branding/zuzu-logo.png">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ZUZUCOIN — Pre-Sale • Stake • NFT Rewards</title>
+<meta name="theme-color" content="#0e1522" />
+
+<!-- Security -->
+<meta http-equiv="X-Content-Type-Options" content="nosniff" />
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="style.css" />
+
+<!-- Solana web3 (bağlantı için) -->
+<script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js" defer></script>
+<!-- Cüzdan mantığı -->
+<script src="wallet-lite.js" defer></script>
+<!-- UI / sayaç / dil / satın alma -->
+<script src="script.js" defer></script>
 </head>
 <body>
-<header class="topbar">
-  <div class="nav-left">
-    <a class="brand" href="#"><img src="assets/images/branding/zuzu-logo.png" alt="ZUZU" height="32"></a>
-    <nav class="menu">
-      <a href="#presale" data-t="nav_presale">Pre-Sale</a>
-      <a href="#stake" data-t="nav_stake">Stake</a>
-      <a href="#rewards" data-t="nav_rewards">NFT Rewards</a>
-      <a href="#roadmap" data-t="nav_roadmap">Roadmap</a>
-      <a href="#tokenomics" data-t="nav_tokenomics">Tokenomics</a>
-      <a class="btn-link" href="stake-simulator.html" target="_blank" data-t="nav_stake_sim">Stake Simulator ↗</a>
-      <a class="btn-link" href="claim.html" target="_blank" data-t="nav_claim">Claim Portal ↗</a>
-      <a class="btn-link" href="about.html" target="_blank" data-t="nav_about">About ↗</a>
+
+<!-- NAV -->
+<header class="z-nav">
+  <div class="z-container z-nav-inner">
+    <a class="brand" href="#">
+      <img src="assets/images/logo.png" alt="ZUZU" />
+      <span>ZUZUCOIN</span>
+    </a>
+
+    <nav class="z-menu">
+      <a href="#presale"    data-i="nav_presale">Pre-Sale</a>
+      <a href="#stake"      data-i="nav_stake">Stake</a>
+      <a href="#nft"        data-i="nav_nft">NFT Rewards</a>
+      <a href="#roadmap"    data-i="nav_roadmap">Roadmap</a>
+      <a href="#tokenomics" data-i="nav_token">Tokenomics</a>
+      <a href="stake-simulator.html" class="z-chip">Stake Simulator ↗</a>
+      <a href="claim.html"  class="z-chip">Claim Portal ↗</a>
+
+      <!-- Dil menüsü -->
+      <div class="lang-wrap">
+        <button id="langBtn" class="btn btn-ghost">
+          <img id="langFlag" src="flags/en.png" alt="EN" />
+          <span id="langCode">EN</span>
+        </button>
+        <div id="langMenu" class="lang-menu">
+          <button class="lang-opt" data-lang="en"><img src="flags/en.png" alt="EN" /> EN</button>
+          <button class="lang-opt" data-lang="tr"><img src="flags/tr.png" alt="TR" /> TR</button>
+          <button class="lang-opt" data-lang="fr"><img src="flags/fr.png" alt="FR" /> FR</button>
+          <button class="lang-opt" data-lang="es"><img src="flags/es.png" alt="ES" /> ES</button>
+          <button class="lang-opt" data-lang="ru"><img src="flags/ru.png" alt="RU" /> RU</button>
+          <button class="lang-opt" data-lang="pl"><img src="flags/pl.png" alt="PL" /> PL</button>
+        </div>
+      </div>
+
+      <button id="openWallet" class="z-btn z-btn-primary" data-i="connect">Connect Wallet</button>
     </nav>
-  </div>
-  <div class="nav-right">
-    <button id="langBtn" class="btn btn-ghost">
-      <img id="langFlag" src="flags/en.png" alt="EN"><span id="langCode">EN</span>
-    </button>
-    <button id="connectBtn" class="btn btn-primary" data-t="btn_connect">Connect Wallet</button>
   </div>
 </header>
 
-<!-- Dil menüsü -->
-<div id="langMenu" class="lang-menu" aria-hidden="true">
-  <button class="lang-opt" data-lang="en"><img src="flags/en.png" alt="EN">EN</button>
-  <button class="lang-opt" data-lang="tr"><img src="flags/tr.png" alt="TR">TR</button>
-  <button class="lang-opt" data-lang="fr"><img src="flags/fr.png" alt="FR">FR</button>
-  <button class="lang-opt" data-lang="es"><img src="flags/es.png" alt="ES">ES</button>
-  <button class="lang-opt" data-lang="ru"><img src="flags/ru.png" alt="RU">RU</button>
-  <button class="lang-opt" data-lang="pl"><img src="flags/pl.png" alt="PL">PL</button>
-</div>
-
 <main>
-  <!-- Kahraman -->
-  <section id="presale" class="hero card">
-    <div class="hero-head">
-      <div class="eyebrow"><span data-t="eyebrow">Pre-Sale • Stake to Win NFT</span></div>
-      <h1 id="hTitle">ZUZU — Robotic Hedgehog 🦔⚡</h1>
-      <p class="muted" data-t="subtitle">Stake and win ZUZU Maskot NFT. Limited supply, high utility.</p>
-      <div class="cta-row">
-        <a href="#stake" class="btn" data-t="start_staking">Start Staking</a>
-        <a href="#rewards" class="btn btn-ghost" data-t="nft_rewards">NFT Rewards</a>
+
+<!-- HERO + COUNTDOWN -->
+<section class="z-section hero-2">
+  <div class="z-container grid-2">
+    <div>
+      <div class="badge" data-i="hero_badge">Pre-Sale • Stake to Win NFT</div>
+      <h1 data-i="hero_title">ZUZU — Robotic Hedgehog 🦔⚡</h1>
+      <p class="lead" data-i="hero_lead">
+        Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high <b>utility</b>.
+      </p>
+
+      <div class="hero-cta">
+        <a href="#stake" class="z-btn z-btn-primary" data-i="cta_stake">Start Staking</a>
+        <a href="#nft" class="z-btn z-btn-ghost" data-i="cta_nft">NFT Rewards</a>
       </div>
-      <div class="countdown" id="cdWrap">
-        <div><span id="cdDays">–</span><label data-t="days">DAYS</label></div>
-        <div><span id="cdHours">–</span><label data-t="hours">HOURS</label></div>
-        <div><span id="cdMins">–</span><label data-t="minutes">MINUTES</label></div>
-        <div><span id="cdSecs">–</span><label data-t="seconds">SECONDS</label></div>
+
+      <div class="z-chip-row">
+        <a id="thirdwebNFTRoute" class="z-chip" href="#" target="_blank" rel="noopener" data-i="collection_page">Collection Page</a>
+        <span class="z-chip" data-i="contract">Contract:</span>
+        <span class="z-chip" id="contractDisplay">—</span>
+      </div>
+
+      <!-- Countdown -->
+      <div class="counter mt-14">
+        <div class="flip"><div id="cdDays"  class="num">00</div><small data-i="days">DAYS</small></div>
+        <div class="flip"><div id="cdHours" class="num">00</div><small data-i="hours">HOURS</small></div>
+        <div class="flip"><div id="cdMins"  class="num">00</div><small data-i="mins">MINUTES</small></div>
+        <div class="flip"><div id="cdSecs"  class="num">00</div><small data-i="secs">SECONDS</small></div>
       </div>
     </div>
 
-    <div class="hero-media">
-      <!-- Büyük ZUZU görseli -->
-      <img src="assets/images/branding/zuzu-hero.jpg" alt="ZUZU" class="hero-img" onerror="this.src='assets/images/branding/zuzu-hero-fallback.jpg'">
+    <!-- Büyük logo -->
+    <div class="hero-visual">
+      <img id="zuzuLogo" class="logo-big"
+           src="assets/images/branding/zuzu-logo.svg"
+           alt="ZUZU Logo"
+           onerror="this.onerror=null;this.src='assets/images/branding/zuzu-logo.png';" />
+    </div>
+  </div>
+</section>
+
+<!-- PRE-SALE -->
+<section id="presale" class="z-section presale">
+  <div class="z-container">
+    <div class="section-head">
+      <h2 data-i="presale_title">Pre-Sale — Countdown</h2>
+      <p  data-i="presale_lead">Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.</p>
     </div>
 
-    <!-- Satın alma -->
-    <div class="buy card">
-      <h3 data-t="buy_title">Buy ZUZU</h3>
-      <p class="muted">1 ZUZU = <span id="priceLbl">0.0050</span> USDT</p>
-      <div class="buy-grid">
-        <input id="buyAmount" type="number" inputmode="decimal" placeholder="e.g. 250">
-        <div class="select">
-          <button id="paySel" class="select-btn">Pay with SOL</button>
-          <ul id="payMenu" class="select-menu" aria-hidden="true">
-            <li data-pay="SOL">Pay with SOL</li>
-            <li data-pay="USDT">Pay with USDT (SPL)</li>
-          </ul>
+    <!-- Haftalara göre fiyat / adet -->
+    <div class="card" style="margin-bottom:12px">
+      <div class="buybox">
+        <div class="row">
+          <div>
+            <label data-i="amount">Amount (ZUZU)</label>
+            <input class="input" id="buyAmount" value="10000" inputmode="decimal" />
+          </div>
+          <div>
+            <label data-i="paywith">Pay with</label>
+            <select class="input" id="currencySel">
+              <option value="SOL">SOL</option>
+              <option value="USDT">USDT (SPL)</option>
+            </select>
+          </div>
+        </div>
+        <small class="muted">Payments via Phantom / Solflare / Backpack</small>
+      </div>
+    </div>
+
+    <div class="presale-grid">
+      <div class="card buybox">
+        <h4 data-i="w1">Week 1 (Cheapest)</h4>
+        <div class="price">1 ZUZU = <b id="p0">0.0050</b> USDT</div>
+        <div class="cost"><span data-i="cost">Cost:</span> <b id="c0">0</b> <span class="unit">USDT</span></div>
+        <div class="buy">
+          <button class="z-btn z-btn-primary buyBtn" data-week="0" data-i="buy">Buy</button>
+          <button class="z-btn z-btn-ghost">Details</button>
         </div>
       </div>
-      <div class="buy-row">
-        <button id="buyBtn" class="btn btn-primary" data-t="buy_now">Buy Now</button>
-        <a class="btn btn-ghost" href="#" id="contractBtn" data-t="contract">Contract</a>
+      <div class="card buybox">
+        <h4 data-i="w2">Week 2</h4>
+        <div class="price">1 ZUZU = <b id="p1">0.0065</b> USDT</div>
+        <div class="cost"><span data-i="cost">Cost:</span> <b id="c1">0</b> <span class="unit">USDT</span></div>
+        <div class="buy">
+          <button class="z-btn z-btn-primary buyBtn" data-week="1" data-i="buy">Buy</button>
+          <button class="z-btn z-btn-ghost">Details</button>
+        </div>
+      </div>
+      <div class="card buybox">
+        <h4 data-i="w3">Week 3</h4>
+        <div class="price">1 ZUZU = <b id="p2">0.0080</b> USDT</div>
+        <div class="cost"><span data-i="cost">Cost:</span> <b id="c2">0</b> <span class="unit">USDT</span></div>
+        <div class="buy">
+          <button class="z-btn z-btn-primary buyBtn" data-week="2" data-i="buy">Buy</button>
+          <button class="z-btn z-btn-ghost">Details</button>
+        </div>
+      </div>
+      <div class="card buybox">
+        <h4 data-i="w4">Week 4 (Last Chance)</h4>
+        <div class="price">1 ZUZU = <b id="p3">0.0100</b> USDT</div>
+        <div class="cost"><span data-i="cost">Cost:</span> <b id="c3">0</b> <span class="unit">USDT</span></div>
+        <div class="buy">
+          <button class="z-btn z-btn-primary buyBtn" data-week="3" data-i="buy">Buy</button>
+          <button class="z-btn z-btn-ghost">Details</button>
+        </div>
       </div>
     </div>
 
-    <!-- Davet -->
-    <div id="invite" class="card">
-      <h3 data-t="invite_title">Invite & Earn</h3>
-      <p class="muted" data-t="invite_desc">Share your link. Each purchase via your link earns bonus ZUZU.</p>
-      <input id="refLink" readonly>
-      <div class="buy-row"><button id="copyRef" class="btn" data-t="copy">Copy</button></div>
+    <!-- Borsalar -->
+    <div class="card mt-16">
+      <h3 style="margin:0 0 10px" data-i="exchanges">Supported Exchanges</h3>
+      <div class="ticker">
+        <div class="ticker__track" id="exTrack">
+          <div class="ticker__item"><img src="assets/images/exchanges/gateio.png"  alt="gate"   loading="lazy" /></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/kucoin.png"  alt="kucoin" loading="lazy" /></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/okx.png"     alt="okx"    loading="lazy" /></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/mxc.png"     alt="mexc"   loading="lazy" /></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/bitmart.png" alt="bitmart"loading="lazy" /></div>
+          <div class="ticker__item"><img src="assets/images/exchanges/bybit.png"   alt="bybit"  loading="lazy" /></div>
+        </div>
+      </div>
+      <div class="ex-note">Will Be Listed Soon</div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- NFT bölümü (kısa grid) -->
-  <section id="rewards" class="card">
-    <h2 data-t="rewards_title">NFT Rewards</h2>
-    <div id="nftGrid" class="nft-grid"></div>
-  </section>
+<!-- STAKE -->
+<section id="stake" class="z-section">
+  <div class="z-container">
+    <div class="section-head">
+      <h2 data-i="stake_title">Stake Pro — Lock, Earn, Get NFT ✨</h2>
+      <p data-i="stake_lead">Lock your ZUZU, earn <b>APY + NFT BOOST</b>. Early stakers get badge & airdrop priority.</p>
+    </div>
 
-  <section id="tokenomics" class="card">
-    <h2 data-t="tokenomics">Tokenomics</h2>
-    <ul class="bullets">
-      <li>Public Sale — 25%</li>
-      <li>Staking Rewards — 30%</li>
-      <li>Treasury — 20%</li>
-      <li>Team (locked) — 15%</li>
-      <li>Liquidity — 10%</li>
-    </ul>
-  </section>
+    <div class="stake-grid">
+      <div class="stake-card"><div class="tier">Bronze</div><ul><li>30 days lock</li><li><b>12% APY</b></li><li>Early access raffles</li></ul></div>
+      <div class="stake-card"><div class="tier silver">Silver</div><ul><li>90 days lock</li><li><b>24% APY</b></li><li>+5% NFT boost</li></ul></div>
+      <div class="stake-card"><div class="tier gold">Gold</div><ul><li>180 days lock</li><li><b>40% APY</b></li><li>Whitelist + ZUZU badge</li></ul></div>
+      <div class="stake-card"><div class="tier diamond">Diamond</div><ul><li>365 days lock</li><li><b>65% APY</b></li><li>+10% NFT boost</li></ul></div>
+      <div class="stake-card"><div class="tier obsidian">Obsidian</div><ul><li>540 days lock</li><li><b>85% APY</b></li><li>VIP rewards + airdrop priority</li></ul></div>
+    </div>
 
-  <section id="roadmap" class="card">
-    <h2 data-t="roadmap">Roadmap</h2>
-    <ul class="bullets">
-      <li>Q1 — Website Launch, Brand assets, Community setup</li>
-      <li>Q2 — NFT Drop + Pre-Sale, Staking (Pro tiers)</li>
-      <li>Q3 — CEX Listings, Partner integrations</li>
-      <li>Q4 — Mobile App + DAO voting</li>
-    </ul>
-  </section>
+    <div class="card calc">
+      <h3 data-i="calc_title">Earnings Calculator</h3>
+      <div class="calc-grid">
+        <div><label data-i="amount2">Amount (ZUZU)</label><input class="input" id="stakeAmount" placeholder="e.g., 10,000" /></div>
+        <div><label data-i="lock">Lock Period</label>
+          <select id="stakeDuration" class="input">
+            <option value="30">30 days (12% APY)</option>
+            <option value="90">90 days (24% APY)</option>
+            <option value="180">180 days (40% APY)</option>
+            <option value="365">365 days (65% APY)</option>
+            <option value="540">540 days (85% APY)</option>
+          </select></div>
+        <div><label data-i="nft_have">Have NFT?</label>
+          <select id="nftBoost" class="input">
+            <option value="0">No</option>
+            <option value="5">ZUZU Hero (+5%)</option>
+            <option value="8">ZUZU Rogue (+8%)</option>
+            <option value="10">ZUZU Berserker (+10%)</option>
+            <option value="6">ZUZU Hacker (+6%)</option>
+            <option value="9">ZUZU Sorceress (+9%)</option>
+            <option value="7">ZUZU Warrior (+7%)</option>
+            <option value="5">ZUZU Maiden (+5%)</option>
+            <option value="9">ZUZU Scientist (+9%)</option>
+            <option value="12">ZUZU Titan (+12%)</option>
+          </select></div>
+        <div><label data-i="early">Early Badge</label>
+          <select id="earlyBoost" class="input">
+            <option value="0">None</option>
+            <option value="3">Badge +3%</option>
+            <option value="5">Badge+ +5%</option>
+          </select></div>
+      </div>
+      <div class="mt-8"><button id="calcBtn" class="z-btn z-btn-primary" data-i="calc_btn">Calculate</button></div>
+      <div class="statwrap">
+        <div class="stat"><div class="label" data-i="ret">Total Return</div><div class="value" id="resultTotal">0 ZUZU</div></div>
+        <div class="stat"><div class="label" data-i="avg">Monthly Avg</div><div class="value" id="resultMonthly">0 ZUZU</div></div>
+        <div class="stat"><div class="label" data-i="boost">Total Boost</div><div class="value" id="resultBoost">+0%</div></div>
+      </div>
+      <div class="chart-wrap"><img src="assets/images/charts/staking-curve.png" alt="APY Curve" /></div>
+    </div>
+  </div>
+</section>
+
+<!-- NFT REWARDS -->
+<section id="nft" class="z-section">
+  <div class="z-container">
+    <div class="section-head">
+      <h2>ZUZU Maskot NFT Rewards 🎁</h2>
+      <p>Stakers win rare NFTs from the collection. Contract:
+        <code id="contractDisplay2"></code> •
+        <a id="thirdwebNFTRoute2" href="#" target="_blank" rel="noopener">Collection Page</a></p>
+    </div>
+    <div class="nft-grid" id="nftGrid"></div>
+  </div>
+</section>
+
+<!-- TOKENOMICS -->
+<section id="tokenomics" class="z-section">
+  <div class="z-container">
+    <div class="section-head">
+      <h2 data-i="token_title">Tokenomics (Visualized)</h2>
+      <p class="muted">Total Supply: 500,000,000 ZUZU</p>
+    </div>
+    <div class="card tk">
+      <div>
+        <svg viewBox="0 0 42 42" width="100%" style="max-width:360px">
+          <circle cx="21" cy="21" r="15.915" fill="#0e172a"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#8E69FF" stroke-width="6" stroke-dasharray="35 65" stroke-dashoffset="25"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#23d4e1" stroke-width="6" stroke-dasharray="20 80" stroke-dashoffset="-10"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#47cc6f" stroke-width="6" stroke-dasharray="15 85" stroke-dashoffset="-30"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#ffaa3a" stroke-width="6" stroke-dasharray="10 90" stroke-dashoffset="-45"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#d07bff" stroke-width="6" stroke-dasharray="15 85" stroke-dashoffset="-60"></circle>
+          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#ff6a6a" stroke-width="6" stroke-dasharray="5 95" stroke-dashoffset="-75"></circle>
+          <text x="21" y="21" text-anchor="middle" fill="#e9f2ff" font-size="3.2" font-weight="800">500,000,000</text>
+          <text x="21" y="26" text-anchor="middle" fill="#9fb4dd" font-size="2.4">Total Supply</text>
+        </svg>
+      </div>
+      <div class="legend">
+        <div><span class="dot" style="background:#8E69FF"></span><span>Community — 35%</span></div>
+        <div><span class="dot" style="background:#23d4e1"></span><span>Liquidity — 20%</span></div>
+        <div><span class="dot" style="background:#47cc6f"></span><span>Team (12m lock) — 15%</span></div>
+        <div><span class="dot" style="background:#ffaa3a"></span><span>Treasury — 10%</span></div>
+        <div><span class="dot" style="background:#d07bff"></span><span>Staking Rewards — 15%</span></div>
+        <div><span class="dot" style="background:#ff6a6a"></span><span>Partners — 5%</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap" class="z-section">
+  <div class="z-container">
+    <div class="section-head">
+      <h2 data-i="road_title">Roadmap</h2>
+      <p data-i="road_lead">Clear plan focused on community, staking, NFT drops, listings.</p>
+    </div>
+    <div class="card">
+      <ul>
+        <li><b>Q1 — Core Setup</b>: Web, contract tests, community channels, security.</li>
+        <li><b>Q2 — Pre-Sale & Stake</b>: Sale rounds, staking launch, Maskot NFT rewards.</li>
+        <li><b>Q3 — Listings</b>: Liquidity, first CEX/DEX listings, market-maker.</li>
+        <li><b>Q4 — Ecosystem</b>: In-game integrations, partnerships, mobile mini-app.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
 </main>
 
-<footer class="footer">
-  <div>© <span id="year"></span> ZUZUCOIN</div>
-  <div class="chain-foot">Solana • USDT</div>
+<footer class="z-footer">
+  <div class="z-container between center-v">
+    <small>© ZUZUCOIN 2025</small>
+    <div class="z-chip-row">
+      <a class="z-chip" href="#presale">Pre-Sale</a>
+      <a class="z-chip" href="#stake">Stake</a>
+      <a class="z-chip" href="#nft">NFT</a>
+      <a class="z-chip" href="#tokenomics">Tokenomics</a>
+    </div>
+  </div>
 </footer>
 
-<!-- Cüzdan modalı -->
-<div id="walletModal" class="wallet-modal" aria-hidden="true">
-  <div class="wallet-backdrop"></div>
-  <div class="wallet-box">
-    <div class="wallet-head">
-      <h3 data-t="connect_title">Connect Wallet</h3>
-      <button id="wmClose" class="x">×</button>
+<!-- Wallet Modal -->
+<div id="walletModal" class="modal hidden" aria-hidden="true">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3>Connect Wallet</h3>
+      <button class="modal-close" id="walletClose">✕</button>
     </div>
-    <div class="wallet-grid">
-      <button class="wallet-item" id="wPhantom">
-        <img src="assets/wallets/phantom.png" onerror="this.src='assets/wallets/phantom.svg'" alt="Phantom"><span>Phantom</span>
+    <div class="wallet-list">
+      <button class="wopt" id="wPhantom">
+        <img src="assets/wallets/phantom.png" alt="Phantom" />
+        <span>Phantom</span>
       </button>
-      <button class="wallet-item" id="wSolflare">
-        <img src="assets/wallets/solflare.png" onerror="this.src='assets/wallets/solflare.svg'" alt="Solflare"><span>Solflare</span>
+      <button class="wopt" id="wSolflare">
+        <img src="assets/wallets/solflare.png" alt="Solflare" />
+        <span>Solflare</span>
       </button>
-      <button class="wallet-item" id="wBackpack">
-        <img src="assets/wallets/backpack.png" onerror="this.src='assets/wallets/backpack.svg'" alt="Backpack"><span>Backpack</span>
+      <button class="wopt" id="wBackpack">
+        <img src="assets/wallets/backpack.png" alt="Backpack" />
+        <span>Backpack</span>
       </button>
     </div>
-    <p class="note" data-t="connect_note">
+    <p class="muted s mt-12">
       On mobile, the site opens inside the wallet. Approve <b>zuzucoin.xyz</b> and you’ll return here automatically.
     </p>
   </div>
 </div>
 
-<script src="script.js?v=1.0.7"></script>
-<script src="wallet-lite.js?v=1.0.7"></script>
 </body>
 </html>
