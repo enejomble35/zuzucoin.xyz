@@ -1,25 +1,21 @@
 /* ==========================================================
-   ZUZU Wallet (v4) – Phantom deep link handshake (MOBILE OK)
-   • Phantom: Resmi ul/v1/connect akışı (şifreli)
-     - Deeplink'e gider, onaydan sonra siteye geri döner
-     - Geri dönüş query paramlarını çözer (NaCl + bs58)
-     - Bağlandıysa Connect butonunda kısaltılmış adres yazar
-   • Solflare / Backpack: önce injected, yoksa browse deeplink
-   • Dış bağımlılıklar otomatik yüklenir (tweetnacl, bs58)
+   ZUZU Wallet (v4.1)
+   • Phantom (MOBİL): Resmi deep link connect akışı (şifreli)
+     FIX: shared key = nacl.box.before(peerPublicKey, mySecretKey)
+   • Solflare / Backpack: injected → yoksa browse deeplink
+   • Dış bağımlılıklar otomatik yüklenir (tweetnacl, bs58, util)
 ========================================================== */
 (function () {
-  const APP_URL = "https://zuzucoin.xyz";            // mağaza sayfaları için domainin
+  const APP_URL = "https://zuzucoin.xyz";
   const CLUSTER = "mainnet-beta";
-  const PH_RET_MARK = "provider=phantom";
-  const LS_KP  = "zuzu_phantom_dapp_keypair";        // dapp keypair (base58)
-  const LS_SES = "zuzu_phantom_session";             // phantom session (base58)
-  const LS_WAL = "zuzu_last_wallet";                 // phantom/solflare/backpack
+  const LS_KP  = "zuzu_phantom_dapp_keypair";
+  const LS_SES = "zuzu_phantom_session";
+  const LS_WAL = "zuzu_last_wallet";
   const BTN_ID = "connectBtn";
 
-  // Public API
   window.ZUZU_WALLET = { open, isReady: () => true };
 
-  /* -------------- utils -------------- */
+  /* ---------- helpers ---------- */
   function byId(id){ return document.getElementById(id); }
   function short(pk){ return pk.slice(0,4)+"..."+pk.slice(-4); }
   function setConnected(pk){
@@ -28,15 +24,14 @@
     document.querySelector(".wallet-modal")?.remove();
     localStorage.removeItem(LS_WAL);
   }
-  function loadScript(src){ return new Promise((res,rej)=>{ const s=document.createElement("script"); s.src=src; s.async=true; s.onload=res; s.onerror=rej; document.head.appendChild(s); }); }
+  function loadScript(src){ return new Promise((ok,err)=>{ const s=document.createElement("script"); s.src=src; s.async=true; s.onload=ok; s.onerror=err; document.head.appendChild(s); }); }
   async function ensureCryptoLibs(){
-    if(!window.nacl) await loadScript("https://unpkg.com/tweetnacl@1.0.3/nacl-fast.min.js");
-    if(!window.bs58) await loadScript("https://unpkg.com/bs58@5.0.0/dist/bs58.min.js");
-    if(window.nacl?.util) return;
-    await loadScript("https://unpkg.com/tweetnacl-util@0.15.1/nacl-util.min.js"); // TextEncoder/Decoder helpers
+    if(!window.nacl)  await loadScript("https://unpkg.com/tweetnacl@1.0.3/nacl-fast.min.js");
+    if(!window.bs58)  await loadScript("https://unpkg.com/bs58@5.0.0/dist/bs58.min.js");
+    if(!nacl.util)    await loadScript("https://unpkg.com/tweetnacl-util@0.15.1/nacl-util.min.js");
   }
 
-  /* -------------- Phantom deep link -------------- */
+  /* ---------- Phantom deep link ---------- */
   function getDappKeypair(){
     const saved = localStorage.getItem(LS_KP);
     if(saved){
@@ -52,14 +47,12 @@
     }));
     return kp;
   }
-
   function currentReturnUrl(){
-    // aynı sayfaya, provider işaretleyip dön
-    const url = new URL(window.location.href);
-    url.searchParams.set(PH_RET_MARK.split("=")[0], "1");
-    return url.toString();
+    const u = new URL(window.location.href);
+    // Phantom dönüş paramları çok uzun olabilir; query’i boş bırakıp sadece provider işareti eklemiyoruz,
+    // çünkü tespit için phantom_encryption_public_key yeterli.
+    return u.toString();
   }
-
   async function deepLinkPhantom(){
     await ensureCryptoLibs();
     const kp = getDappKeypair();
@@ -74,38 +67,36 @@
   }
 
   async function handlePhantomReturn(){
-    // Phantom geri geldiğinde ?provider=phantom & data & phantom_encryption_public_key & nonce olur
     const sp = new URLSearchParams(window.location.search);
-    if(!sp.has("provider") && !sp.has("phantom_encryption_public_key")) return false;
-
-    if(sp.get("provider")==="phantom" || sp.has("phantom_encryption_public_key")){
-      try{
-        await ensureCryptoLibs();
-        const dappKP  = getDappKeypair();
-        const encPK   = bs58.decode(sp.get("phantom_encryption_public_key"));
-        const nonce   = bs58.decode(sp.get("nonce"));
-        const data    = bs58.decode(sp.get("data"));
-        const shared  = nacl.scalarMult(dappKP.secretKey, encPK); // x25519
-        const opened  = nacl.box.open.after(data, nonce, shared);
-        if(!opened) throw new Error("decrypt failed");
-        const json    = JSON.parse(nacl.util.encodeUTF8(opened));
-        // json: { public_key, session } (ikisi de base58)
-        if(json?.public_key){
-          localStorage.setItem(LS_SES, json.session || "");
-          setConnected(json.public_key);
-          // URL’i temizle
-          const clean = new URL(window.location.href);
-          clean.search = ""; window.history.replaceState({}, "", clean.toString());
-          return true;
-        }
-      }catch(e){
-        console.warn("phantom return parse error", e);
+    if(!sp.has("phantom_encryption_public_key")) return false;
+    try{
+      await ensureCryptoLibs();
+      const dappKP  = getDappKeypair();
+      const peerPK  = bs58.decode(sp.get("phantom_encryption_public_key"));
+      const nonce   = bs58.decode(sp.get("nonce"));
+      const data    = bs58.decode(sp.get("data"));
+      // *** FIX: doğru shared secret hesaplama
+      const shared  = nacl.box.before(peerPK, dappKP.secretKey);
+      const opened  = nacl.box.open.after(data, nonce, shared);
+      if(!opened) throw new Error("decrypt failed");
+      const payload = JSON.parse(nacl.util.encodeUTF8(opened));
+      // payload -> { public_key, session }
+      if(payload?.public_key){
+        if(payload.session) localStorage.setItem(LS_SES, payload.session);
+        setConnected(payload.public_key);
+        // URL’i temizle (paramları kaldır)
+        const clean = new URL(window.location.href);
+        clean.search = ""; window.history.replaceState({}, "", clean.toString());
+        return true;
       }
+    }catch(e){
+      console.warn("phantom return parse error", e);
+      alert("Wallet module not loaded.\n(Phantom return parse error)");
     }
     return false;
   }
 
-  /* -------------- Solflare / Backpack (injected → browse) -------------- */
+  /* ---------- Solflare / Backpack (injected → browse) ---------- */
   async function tryInjected(){
     try{
       const p = window.solana || window?.phantom?.solana;
@@ -126,7 +117,7 @@
     return APP_URL;
   }
 
-  /* -------------- Modal UI -------------- */
+  /* ---------- Modal UI ---------- */
   function open(){
     const el = document.createElement("div");
     el.className = "wallet-modal";
@@ -145,22 +136,17 @@
             <img src="assets/wallets/backpack.svg" onerror="this.onerror=null;this.src='assets/wallets/backpack.png'"><span>Backpack</span>
           </button>
         </div>
-        <p class="note">On mobile, the wallet app will open. Approve <b>zuzucoin.xyz</b> and you'll be redirected back automatically.</p>
+        <p class="note">On mobile, the wallet app will open. Approve <b>zuzucoin.xyz</b> and you'll be connected automatically.</p>
         <button class="wm-close" id="wmClose">✕</button>
       </div>`;
     document.body.appendChild(el);
     document.getElementById("wmClose").onclick = ()=>el.remove();
 
-    // Phantom = doğrudan resmi connect akışı (garanti)
     document.getElementById("wPhantom").onclick = async ()=>{
       localStorage.setItem(LS_WAL, "phantom");
-      // Masaüstünde extension varsa önce onu dene
       const inj = await tryInjected(); if(inj) return setConnected(inj);
-      // Mobil/extension yok: resmi deeplink
       await deepLinkPhantom();
     };
-
-    // Solflare / Backpack: injected → yoksa browse deeplink (eski davranış)
     document.getElementById("wSolflare").onclick = async ()=>{
       localStorage.setItem(LS_WAL, "solflare");
       const inj = await tryInjected(); if(inj) return setConnected(inj);
@@ -173,22 +159,21 @@
     };
   }
 
-  /* -------------- otomatik yakalama: geri dönüş -------------- */
+  /* ---------- boot: geri dönüşü yakala ---------- */
   (async function boot(){
     const captured = await handlePhantomReturn();
     if(captured) return; // bağlandı
 
-    // wallet webview’inde açılırsa injected ile otomatik bağlanmayı dener
+    // Wallet webview içinde isek injected ile otomatik bağlanmayı dene
     const last = localStorage.getItem(LS_WAL);
     if(last){
       const t0 = Date.now();
       const tick = async ()=>{
         const inj = await tryInjected();
         if(inj) return setConnected(inj);
-        if(Date.now()-t0 < 10000) setTimeout(tick, 600);
+        if(Date.now()-t0 < 12000) setTimeout(tick, 700);
       };
       tick();
     }
   })();
-
 })();
