@@ -16,10 +16,12 @@ input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--lin
 .nft-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.nft-card{background:#0d162a;border:1px solid var(--line);border-radius:12px;padding:10px}.nft-card .cap{display:flex;justify-content:space-between;opacity:.85;margin-top:6px;font-size:13px}
 .tk-list,.road{margin:8px 0 0 18px}
 .footer{max-width:1100px;margin:40px auto 22px;opacity:.75;display:flex;justify-content:space-between;padding:0 6px}
-.select{position:relative}.dropdown-menu{position:absolute;top:100%;left:0;background:#0d162a;border:1px solid var(--line);border-radius:10px;padding:6px;margin-top:6px;min-width:200px;z-index:20}
+.select{position:relative}.dropdown-menu{position:absolute;top:100%;left:0;background:#0d162a;border:1px solid var(--line);border-radius:10px;padding:6px;margin-top:6px;min-width:200px;z-index:20;display:none}
+.dropdown-menu.show{display:block}
 .dropdown-menu button{display:flex;gap:8px;align-items:center;width:100%;padding:9px 10px;border-radius:8px;background:transparent;border:0;color:var(--fg);cursor:pointer}
 .dropdown-menu button:hover{background:#17244a}#langBtn{display:flex;gap:8px;align-items:center}#langBtn img{width:20px;height:14px;object-fit:cover;border-radius:2px}.lang-opt img{width:18px;height:12px;border-radius:2px}
-#walletModal{position:fixed;inset:0;z-index:40}.wallet-backdrop{position:absolute;inset:0;background:#0008}
+#walletModal{display:none;position:fixed;inset:0;z-index:40}.show#walletModal{display:block}
+.wallet-backdrop{position:absolute;inset:0;background:#0008}
 .wallet-box{position:relative;margin:10vh auto 0;max-width:520px;background:#0f172a;border:1px solid var(--line);border-radius:16px;padding:14px}
 .wallet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .wallet-item{display:flex;gap:10px;align-items:center;width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0a1326;color:var(--fg);cursor:pointer;margin:8px 0}
