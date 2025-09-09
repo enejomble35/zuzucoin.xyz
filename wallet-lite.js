@@ -1,118 +1,101 @@
-/* Lightweight Solana wallet modal (Phantom, Solflare, Backpack)
-   - Web + mobil: önce provider varsa direkt bağlanır, yoksa deeplink
-   - Bağlanınca Connect Wallet butonunda kısa adres gösterir
-   - Buy intent varsa cüzdan açıldıktan sonra açıklama alert’i verir (demo)
+<script>
+/* ZUZU – Solana wallet helper (Phantom / Solflare / Backpack)
+   - Modal aç/kapat
+   - Sağ üstte adres gösterimi
+   - Mobilde deep-link fallback
 */
 
 (function(){
-  const modal = $("#walletModal");
-  const closeB = $("#wmClose");
-  const bPh = $("#wPhantom"), bSf = $("#wSolflare"), bBp = $("#wBackpack");
-  const connectBtn = $("#connectBtn");
-  let pubkey = null;
+  const modal   = document.getElementById("walletModal");
+  const btnOpen = document.getElementById("openWallet");
+  const btnClose= document.getElementById("walletClose");
+  const bPhantom= document.getElementById("wPhantom");
+  const bSolflr = document.getElementById("wSolflare");
+  const bBackpk = document.getElementById("wBackpack");
 
-  function show(){ modal.classList.add("show"); modal.setAttribute("aria-hidden","false"); }
-  function hide(){ modal.classList.remove("show"); modal.setAttribute("aria-hidden","true"); }
+  let currentProvider = null;
+  let addressCb = (pk)=>{};
+  let connectedPubkey = null;
 
-  function setConnected(pk){
-    pubkey = pk;
-    window.__zuzu_pk = () => pk;
-    if (connectBtn){
-      connectBtn.textContent = pk.slice(0,4)+"…"+pk.slice(-4);
-      connectBtn.classList.remove("btn-primary");
-      connectBtn.classList.add("btn-ghost");
-    }
-    hide();
+  function detect(){
+    const prov = {};
+    prov.phantom  = window.solana && window.solana.isPhantom ? window.solana : null;
+    prov.solflare = window.solflare && window.solflare.isSolflare ? window.solflare : null;
+    prov.backpack = window.backpack && window.backpack.solana && window.backpack.solana.isBackpack ? window.backpack.solana : null;
+    return prov;
   }
 
-  window.openWalletModal = show;
-  closeB?.addEventListener("click", hide);
-  modal?.querySelector(".wallet-backdrop")?.addEventListener("click", hide);
+  function open(){ modal?.classList.remove("hidden"); modal?.setAttribute("aria-hidden","false"); }
+  function close(){ modal?.classList.add("hidden"); modal?.setAttribute("aria-hidden","true"); }
 
-  // Otomatik: önceden bağlandıysa bağlan
-  window.addEventListener("load", async ()=>{
-    try{
-      if (window.solana?.isPhantom){
-        const res = await window.solana.connect({ onlyIfTrusted:true });
-        if (res?.publicKey) return setConnected(res.publicKey.toString());
+  async function connect(which){
+    const P = detect();
+    let provider = null;
+    if(which==="phantom") provider = P.phantom;
+    if(which==="solflare")provider = P.solflare;
+    if(which==="backpack")provider = P.backpack;
+
+    // Mobil ve provider yoksa: uygulama içinde açma (deep-link benzeri)
+    if(!provider){
+      const host = location.origin.replace(/^https?:\/\//,'');
+      if(which==="phantom"){
+        location.href = `https://phantom.app/ul/browse/${host}`;
+      }else if(which==="solflare"){
+        location.href = `https://solflare.com/ul/v1/browse/${host}`;
+      }else if(which==="backpack"){
+        location.href = `https://backpack.app/ul/browse/${host}`;
+      }else{
+        alert("No wallet provider found.");
       }
-    }catch(e){}
-    // Diğer cüzdanlar sessiz geçilir
-  });
+      return false;
+    }
 
-  // Ortak bağlan
-  async function connect(provider){
     try{
-      const res = await provider.connect();
-      const pk = (res?.publicKey?.toString?.()) || res?.publicKey || res;
-      if (pk) return setConnected(String(pk));
-    }catch(e){
-      // mobil deeplink fallback
-      deeplink(provider);
+      const resp = await provider.connect({ onlyIfTrusted:false });
+      const pk = (resp?.publicKey || provider.publicKey)?.toString();
+      if(!pk) throw new Error("No publicKey");
+      connectedPubkey = pk;
+      localStorage.setItem("zuzu_pubkey", pk);
+      addressCb(pk);
+      close();
+      return true;
+    }catch(err){
+      console.warn("connect error:", err);
+      alert("Connection was cancelled or failed.");
+      return false;
     }
   }
 
-  // Deeplink’ler
-  function deeplink(provider){
-    const url = location.href.split('#')[0];
-    if (provider?.isPhantom || provider?.phantom) {
-      const link = "https://phantom.app/ul/v1/connect?" +
-        "app_url="+encodeURIComponent("https://zuzucoin.xyz")+
-        "&dapp_encryption_public_key=&cluster=solana"+
-        "&redirect_link="+encodeURIComponent(url+"#connected");
-      location.href = link;
-      return;
-    }
-    if (provider?.solflare || provider?.isSolflare){
-      const link = "https://solflare.com/ul/v1/connect?redirect_link="+encodeURIComponent(url+"#connected");
-      location.href = link; return;
-    }
-    // Backpack
-    const link = "https://backpack.app/ul/v1/connect?redirect_link="+encodeURIComponent(url+"#connected");
-    location.href = link;
-  }
-
-  // Butonlar
-  bPh?.addEventListener("click", ()=> {
-    const p = window.solana || window.phantom?.solana || {};
-    p.isPhantom = p.isPhantom || true;
-    connect(p);
-  });
-  bSf?.addEventListener("click", ()=> {
-    const p = window.solflare || {};
-    p.isSolflare = true;
-    connect(p);
-  });
-  bBp?.addEventListener("click", ()=> {
-    const p = window.backpack || {};
-    p.isBackpack = true;
-    connect(p);
-  });
-
-  // Connect Wallet ana butonu
-  connectBtn?.addEventListener("click", show);
-
-  // Deeplink dönüşünde hash kontrol
-  if (location.hash.includes("connected")) {
-    // Çoğu cüzdan dönüşte provider’ı enjekte eder; kısa bir dene
-    setTimeout(async ()=>{
+  async function ensureConnected(){
+    if(connectedPubkey) return true;
+    // sessiz bağlan (daha önce onaylıysa)
+    const P = detect();
+    for(const prov of [P.phantom,P.solflare,P.backpack]){
       try{
-        if (window.solana?.isPhantom){
-          const r = await window.solana.connect({ onlyIfTrusted:true });
-          if (r?.publicKey) return setConnected(r.publicKey.toString());
-        }
+        if(!prov) continue;
+        const r = await prov.connect({ onlyIfTrusted:true });
+        const pk = (r?.publicKey || prov.publicKey)?.toString();
+        if(pk){ connectedPubkey = pk; addressCb(pk); return true; }
       }catch(e){}
-    }, 400);
+    }
+    // değilse modal aç
+    open();
+    return false;
   }
 
-  // Demo satın alma yönlendirmesi
-  window.addEventListener("hashchange", ()=>{ /* sessiz */ });
-  window.addEventListener("focus", ()=>{
-    // Kullanıcı cüzdandan geri döndüyse ve buy intent varsa — gerçek on-chain burada uygulanır
-    if (window.__zuzu_buy_intent && pubkey){
-      const {amount, pay} = window.__zuzu_buy_intent;
-      alert(`Demo\n\nWallet: ${pubkey}\nAmount: ${amount} ZUZU\nPayment: ${pay}\n\nOn-chain transfer eklemek için SPL/Solana SDK ile işlem yazılmalı.`);
-      window.__zuzu_buy_intent = null;
-    }
-  });
+  function onAddress(cb){ addressCb = cb; if(connectedPubkey) cb(connectedPubkey); }
+
+  // Buttons
+  btnClose?.addEventListener("click", close);
+  modal?.addEventListener("click", e=>{ if(e.target===modal) close(); });
+  bPhantom?.addEventListener("click", ()=>connect("phantom"));
+  bSolflr ?.addEventListener("click", ()=>connect("solflare"));
+  bBackpk ?.addEventListener("click", ()=>connect("backpack"));
+
+  // Otomatik sessiz bağlanma
+  window.addEventListener("load", ()=>{ ensureConnected(); });
+
+  // Public API
+  window.WalletLite = { open, close, connect, ensureConnected, onAddress };
 })();
+</script>
