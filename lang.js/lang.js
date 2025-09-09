@@ -1,4 +1,4 @@
-// Simple i18n store
+// i18n store
 const I18N = {
   en:{
     "hero.kicker":"Pre-Sale • Stake to Win NFT",
@@ -20,22 +20,17 @@ const I18N = {
     "buy.title":"ZUZU Satın Al","buy.rate":"1 ZUZU = 0.0050 USDT","buy.paySol":"SOL ile Öde","buy.buyNow":"Şimdi Al",
     "invite.title":"Davet Et & Kazan","invite.lead":"Linkini paylaş. Linkin üzerinden yapılan her alış, bonus ZUZU kazandırır."
   },
-  fr:{...I18N?.en,}, es:{...I18N?.en,}, ru:{...I18N?.en,}, pl:{...I18N?.en,}
+  fr:{}, es:{}, ru:{}, pl:{}
 };
 
 // apply language
 window.applyLang = function(lang){
-  try{
-    const dict = I18N[lang] || I18N.en;
-    document.querySelectorAll("[data-i18n]").forEach(el=>{
-      const k = el.dataset.i18n;
-      if(dict[k]) el.textContent = dict[k];
-    });
-    // flag & code
-    const flag = document.getElementById("langFlag");
-    const code = document.getElementById("langCode");
-    if(flag) flag.src = `flags/${lang}.png`;
-    if(code) code.textContent = (lang||"EN").toUpperCase();
-    localStorage.setItem("zuzu_lang", lang);
-  }catch(e){ console.warn("i18n", e); }
+  const d = I18N[lang] && Object.keys(I18N[lang]).length ? I18N[lang] : I18N.en;
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const k = el.dataset.i18n; if(d[k]) el.textContent = d[k];
+  });
+  const flag=document.getElementById("langFlag"), code=document.getElementById("langCode");
+  if(flag) flag.src=`flags/${lang}.png`;
+  if(code) code.textContent=(lang||"EN").toUpperCase();
+  localStorage.setItem("zuzu_lang", lang);
 };
