@@ -3,11 +3,9 @@
   const bs58 = window.bs58, nacl = window.nacl;
   if (!bs58 || !nacl) { console.warn("deps missing"); return; }
 
-  const LS = {
-    DAPP_SK: "ph_dapp_sk_b58",
-    SESSION: "ph_session_b58",
-    ADDR: "ph_addr_b58",
-  };
+  const LS = { DAPP_SK:"ph_dapp_sk_b58", SESSION:"ph_session_b58", ADDR:"ph_addr_b58" };
+  const appUrl = "https://zuzucoin.xyz";
+
   function short(pk){ return pk.slice(0,4)+"..."+pk.slice(-4); }
   function setConnected(addr){
     try{ localStorage.setItem(LS.ADDR, addr); }catch{}
@@ -22,7 +20,6 @@
     const dappSkB58 = bs58.encode(kp.secretKey);
     try{ localStorage.setItem(LS.DAPP_SK, dappSkB58); }catch{}
 
-    const appUrl = "https://zuzucoin.xyz";
     const redirect = window.location.href.split('#')[0].split('?')[0];
     const url =
       "https://phantom.app/ul/v1/connect" +
@@ -30,7 +27,6 @@
       "&dapp_encryption_public_key=" + encodeURIComponent(dappPkB58) +
       "&redirect_link=" + encodeURIComponent(redirect) +
       "&cluster=mainnet-beta";
-
     const a = document.createElement("a"); a.href = url; a.rel="noopener"; document.body.appendChild(a); a.click(); a.remove();
   }
 
@@ -44,7 +40,6 @@
     if (!epk || !data || !nonce) return;
     try{
       const dappSkB58 = localStorage.getItem(LS.DAPP_SK);
-      if (!dappSkB58) throw new Error("missing dapp sk");
       const shared = nacl.box.before(bs58.decode(epk), bs58.decode(dappSkB58));
       const dec = nacl.box.open.after(bs58.decode(data), bs58.decode(nonce), shared);
       if (!dec) throw new Error("decrypt fail");
