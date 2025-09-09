@@ -1,0 +1,30 @@
+/* Solflare mobile helper:
+ * - Opens zuzucoin.xyz inside Solflare app (deep-link browse)
+ * - When user returns to browser, tries injected connect()
+ */
+(function(){
+  function setConnected(addr){
+    const btn = document.getElementById("connectBtn");
+    if (btn){ btn.textContent = addr.slice(0,4)+"..."+addr.slice(-4); btn.classList.add("connected"); btn.dataset.address = addr; }
+    document.querySelector(".wallet-modal")?.remove();
+  }
+
+  async function tryInjectedConnect(){
+    try{
+      if (window.solflare?.connect){
+        await window.solflare.connect();
+        const pk = window.solflare?.publicKey?.toString?.();
+        if (pk) setConnected(pk);
+      }
+    }catch(e){ /* sessiz */ }
+  }
+
+  function openApp(){
+    const app = "https://zuzucoin.xyz";
+    const url = "https://solflare.com/ul/v1/browse/" + encodeURIComponent(app);
+    const a = document.createElement("a"); a.href = url; a.rel="noopener"; document.body.appendChild(a); a.click(); a.remove();
+  }
+
+  window.ZUZU_SOLFLARE = { openApp, tryInjectedConnect };
+  document.addEventListener("visibilitychange", ()=>{ if (document.visibilityState==="visible") tryInjectedConnect(); });
+})();
