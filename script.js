@@ -4,7 +4,7 @@
 const CONFIG = {
   // geri sayımı sabitle: localStorage'a 1 kez yazılır (yenileyince sıfırlanmaz)
   launchKey: "zuzu_launchAt",
-  defaultLaunchISO: "2025-12-31T23:59:59Z",
+  defaultLaunchISO: "2025-11-31T23:59:59Z",
 
   weekPrices: [0.0050,0.0065,0.0080,0.0100], // USDT
   nfts: Array.from({length:10}).map((_,i)=>({
