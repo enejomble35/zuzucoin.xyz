@@ -350,3 +350,142 @@ function handleBuy(weekIdx){
     history.replaceState({}, '', url.toString());
   });
 })();
+/* ===== Robust Wallet Connect (Phantom / Solflare / Backpack) ===== */
+(function(){
+  const $ = (s, r=document)=>r.querySelector(s);
+  const connectBtn = $('#connectBtn');
+  const modal = $('#walletModal');
+  const closeBtn = modal?.querySelector('.z-close');
+
+  // --- DETECTION ---
+  function hasPhantom(){ return !!(window.solana?.isPhantom || window.phantom?.solana?.isPhantom); }
+  function getPhantom(){ return window.solana?.isPhantom ? window.solana : (window.phantom?.solana || null); }
+
+  function hasSolflare(){ return !!(window.solflare || window.solflareProvider); } // in-app exposes window.solflare
+  function getSolflare(){ return window.solflare || window.solflareProvider || null; }
+
+  function hasBackpack(){ return !!(window.backpack || window.xnft?.solana); }
+  function getBackpack(){ return window.backpack || window.xnft?.solana || null; }
+
+  const deeplink = {
+    phantom:  (u)=>`https://phantom.app/ul/browse/${encodeURIComponent(u)}`,
+    solflare: (u)=>`https://solflare.com/ul/v1/browse/${encodeURIComponent(u)}`,
+    backpack: (u)=>`https://backpack.app/ul/browse/${encodeURIComponent(u)}`
+  };
+
+  // --- UI helpers ---
+  function openModal(){ modal?.classList.add('show'); }
+  function closeModal(){ modal?.classList.remove('show'); }
+  function setConnected(addr){
+    if(!addr) return;
+    if (connectBtn) connectBtn.textContent = `${addr.slice(0,6)}...${addr.slice(-4)}`;
+    closeModal();
+  }
+  function showAlert(msg){ try{ alert(msg); }catch(_){ console.log('[wallet]', msg); } }
+
+  // --- CONNECT IMPLEMENTATIONS (wallet-specific) ---
+  async function connectPhantom(){
+    const p = getPhantom();
+    if(!p) throw new Error('Phantom provider not found');
+    // Bazı sürümlerde event lazım
+    try{ p.removeAllListeners?.('connect'); }catch(_){}
+    p.on?.('connect', (pub)=> setConnected((pub?.toString?.()) || p.publicKey?.toString?.()));
+    const res = await p.connect({ onlyIfTrusted:false });
+    const pk = res?.publicKey?.toString?.() || p.publicKey?.toString?.();
+    if(!pk) throw new Error('Phantom: publicKey missing');
+    setConnected(pk);
+  }
+
+  async function connectSolflare(){
+    const s = getSolflare();
+    if(!s) throw new Error('Solflare provider not found');
+    // Bazı sürümlerde isConnected flag var
+    if(!s.isConnected){ await s.connect(); }
+    const pk = s.publicKey?.toString?.();
+    if(!pk) throw new Error('Solflare: publicKey missing');
+    setConnected(pk);
+  }
+
+  async function connectBackpack(){
+    const b = getBackpack();
+    if(!b) throw new Error('Backpack provider not found');
+    // backpack ya da xnft.solana interface
+    if(b.connect) await b.connect();
+    const pk = b.publicKey?.toString?.();
+    if(!pk) throw new Error('Backpack: publicKey missing');
+    setConnected(pk);
+  }
+
+  // Kapı: içeride provider varsa connect; yoksa wallet tarayıcısında siteyi aç
+  function openInWalletBrowser(key){
+    const url = new URL(location.href);
+    url.searchParams.set('wallet', key); // dönüşte otomatik dene
+    location.href = deeplink[key](url.toString());
+  }
+
+  async function tryConnect(key){
+    try{
+      if (key==='phantom'){
+        if (hasPhantom()) return await connectPhantom();
+        return openInWalletBrowser('phantom');
+      }
+      if (key==='solflare'){
+        if (hasSolflare()) return await connectSolflare();
+        return openInWalletBrowser('solflare');
+      }
+      if (key==='backpack'){
+        if (hasBackpack()) return await connectBackpack();
+        return openInWalletBrowser('backpack');
+      }
+      showAlert('Unknown wallet.');
+    }catch(e){
+      console.warn('[wallet connect error]', e);
+      showAlert(e?.message || 'Wallet connection failed or was rejected.');
+    }
+  }
+
+  // --- WIRES ---
+  connectBtn?.addEventListener('click', ()=>{
+    const first = hasPhantom() ? 'phantom' : hasSolflare() ? 'solflare' : hasBackpack() ? 'backpack' : null;
+    if (first) tryConnect(first);
+    else openModal();
+  });
+  closeBtn?.addEventListener('click', closeModal);
+  modal?.addEventListener('click', (e)=>{ if(e.target===modal) closeModal(); });
+  modal?.querySelectorAll('.wbtn').forEach(btn=>{
+    btn.addEventListener('click', ()=> tryConnect(btn.dataset.k));
+  });
+
+  // Deeplinkten dönüş: sayfa görünür olunca otomatik dene
+  document.addEventListener('visibilitychange', ()=>{
+    if (document.visibilityState!=='visible') return;
+    const url = new URL(location.href);
+    const key = url.searchParams.get('wallet');
+    if (!key) return;
+    // kısa gecikme (bazı wallet tarayıcılarında provider geç enjekte ediliyor)
+    setTimeout(()=>{ tryConnect(key); }, 200);
+    url.searchParams.delete('wallet');
+    history.replaceState({}, '', url.toString());
+  });
+
+  // --- Optional Debug Panel (?debugwallet=1) ---
+  (function debug(){
+    const q = new URL(location.href).searchParams;
+    if(q.get('debugwallet')!=='1') return;
+    const box = document.createElement('div');
+    box.style.cssText='position:fixed;bottom:10px;left:10px;background:#111b2e;border:1px solid #29406a;color:#cfe2ff;padding:10px;border-radius:10px;z-index:99999;font:12px/1.3 monospace;max-width:90%';
+    const lines = [
+      `hasPhantom=${hasPhantom()}`, `hasSolflare=${hasSolflare()}`, `hasBackpack=${hasBackpack()}`,
+      `ua=${navigator.userAgent}`
+    ];
+    box.innerHTML = '<b>Wallet debug</b><br>'+lines.join('<br>')+
+      '<br><div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap">'+
+      '<button id="_dbg_p" style="padding:5px 8px">connectPhantom</button>'+
+      '<button id="_dbg_s" style="padding:5px 8px">connectSolflare</button>'+
+      '<button id="_dbg_b" style="padding:5px 8px">connectBackpack</button></div>';
+    document.body.appendChild(box);
+    box.querySelector('#_dbg_p')?.addEventListener('click', ()=>tryConnect('phantom'));
+    box.querySelector('#_dbg_s')?.addEventListener('click', ()=>tryConnect('solflare'));
+    box.querySelector('#_dbg_b')?.addEventListener('click', ()=>tryConnect('backpack'));
+  })();
+})();
