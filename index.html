@@ -258,7 +258,35 @@
 </section>
 
 </main>
-
+<!-- Wallet Modal (non-invasive) -->
+<div id="walletModal" class="z-modal">
+  <div class="z-dialog">
+    <div class="z-dialog-head">
+      <h3>Connect Wallet</h3>
+      <button class="z-close" aria-label="Close">×</button>
+    </div>
+    <div id="wlist" class="wlist">
+      <button class="wbtn" data-k="phantom">
+        <img class="wicon" src="assets/images/wallets/phantom.png" alt="Phantom"
+             onerror="this.replaceWith(document.createTextNode('Phantom'))">
+        <span>Phantom</span>
+      </button>
+      <button class="wbtn" data-k="solflare">
+        <img class="wicon" src="assets/images/wallets/solflare.png" alt="Solflare"
+             onerror="this.replaceWith(document.createTextNode('Solflare'))">
+        <span>Solflare</span>
+      </button>
+      <button class="wbtn" data-k="backpack">
+        <img class="wicon" src="assets/images/wallets/backpack.png" alt="Backpack"
+             onerror="this.replaceWith(document.createTextNode('Backpack'))">
+        <span>Backpack</span>
+      </button>
+    </div>
+    <p class="note">
+      On mobile, the site opens inside the wallet. Approve <b>zuzucoin.xyz</b>, then you'll return here automatically.
+    </p>
+  </div>
+</div>
 <footer class="z-footer">
   <div class="z-container between center-v">
     <small>© 2025 ZUZUCOIN</small>
