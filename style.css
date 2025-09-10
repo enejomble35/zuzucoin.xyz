@@ -118,3 +118,17 @@ a{color:#b8c7ff;text-decoration:none}
 .wlist{display:grid;gap:10px}
 .wbtn{display:flex;gap:10px;align-items:center;padding:10px;border-radius:12px;background:#12203a;border:1px solid #22375f;cursor:pointer}
 .wbtn img{width:28px;height:28px}
+/* Wallet modal */
+.z-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(2px);
+  display:none;align-items:center;justify-content:center;z-index:9999}
+.z-modal.show{display:flex}
+.z-dialog{width:min(520px,92%);background:#121b2d;border:1px solid #203251;border-radius:16px;padding:14px}
+.z-dialog-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.z-dialog h3{margin:0}
+.z-close{border:0;background:#1b2a49;color:#cfe2ff;border-radius:8px;padding:4px 10px;cursor:pointer}
+.wlist{display:grid;gap:10px}
+.wbtn{display:flex;gap:10px;align-items:center;background:#0f1b31;border:1px solid #253a62;
+  color:#e8f1ff;border-radius:12px;padding:12px;cursor:pointer}
+.wbtn:hover{background:#13223c}
+.wicon{width:28px;height:28px;object-fit:contain}
+.note{color:#8aa2c9;margin:10px 2px 4px}
