@@ -257,3 +257,96 @@ function handleBuy(weekIdx){
   const t=$("#exTrack"); if(!t) return;
   t.style.transform="translateX(0)"; setTimeout(()=>t.style.transform="", 60);
 })();
+/* ===== Wallet Connect (Phantom / Solflare / Backpack) – non-invasive ===== */
+(function(){
+  const $ = (s, r=document)=>r.querySelector(s);
+
+  const modal = $('#walletModal');
+  const connectBtn = $('#connectBtn');
+  const closeBtn = modal?.querySelector('.z-close');
+
+  function openModal(){ modal?.classList.add('show'); }
+  function closeModal(){ modal?.classList.remove('show'); }
+
+  function setConnected(addr){
+    if(!addr) return;
+    if (connectBtn) connectBtn.textContent = `${addr.slice(0,6)}...${addr.slice(-4)}`;
+    closeModal();
+  }
+
+  // Provider tespiti
+  const has = {
+    phantom: ()=>!!(window.phantom?.solana || (window.solana && window.solana.isPhantom)),
+    solflare:()=>!!window.solflare,
+    backpack:()=>!!(window.backpack || window.xnft?.solana),
+  };
+  const prov = {
+    phantom: ()=>window.phantom?.solana || window.solana,
+    solflare:()=>window.solflare,
+    backpack:()=>window.backpack || window.xnft?.solana,
+  };
+  const deeplink = {
+    phantom:  (u)=>`https://phantom.app/ul/browse/${encodeURIComponent(u)}`,
+    solflare: (u)=>`https://solflare.com/ul/v1/browse/${encodeURIComponent(u)}`,
+    backpack: (u)=>`https://backpack.app/ul/browse/${encodeURIComponent(u)}`
+  };
+
+  async function connectInside(key){
+    try{
+      if (key==='phantom'){
+        const p = prov.phantom();
+        p.addEventListener?.('connect', ()=>setConnected(p.publicKey?.toString?.()));
+        const res = await p.connect({ onlyIfTrusted:false });
+        setConnected(res?.publicKey?.toString?.() || p.publicKey?.toString?.());
+      }else if (key==='solflare'){
+        const p = prov.solflare();
+        const res = await p.connect();
+        setConnected(res?.publicKey?.toString?.() || p.publicKey?.toString?.());
+      }else if (key==='backpack'){
+        const p = prov.backpack();
+        await p.connect?.();
+        setConnected(p.publicKey?.toString?.());
+      }
+    }catch(e){
+      console.warn('wallet connect failed', e);
+      alert('Wallet connection failed or was rejected.');
+    }
+  }
+
+  function openInWalletBrowser(key){
+    const url = new URL(location.href);
+    url.searchParams.set('wallet', key); // dönüşte otomatik deneme için
+    location.href = deeplink[key](url.toString());
+  }
+
+  function tryConnect(key){
+    if (has[key]()) connectInside(key);
+    else openInWalletBrowser(key);
+  }
+
+  // UI bağlama
+  connectBtn?.addEventListener('click', ()=>{
+    // cihazda provider varsa direkt dene; yoksa modal aç
+    const first = has.phantom() ? 'phantom' : has.solflare() ? 'solflare' : has.backpack() ? 'backpack' : null;
+    if (first) tryConnect(first);
+    else openModal();
+  });
+  closeBtn?.addEventListener('click', closeModal);
+  modal?.addEventListener('click', (e)=>{ if(e.target===modal) closeModal(); });
+
+  // Modal içindeki butonlar
+  modal?.querySelectorAll('.wbtn').forEach(btn=>{
+    btn.addEventListener('click', ()=>tryConnect(btn.dataset.k));
+  });
+
+  // Deeplinkten dönünce görünür olduğunda otomatik dene
+  document.addEventListener('visibilitychange', ()=>{
+    if (document.visibilityState!=='visible') return;
+    const url = new URL(location.href);
+    const key = url.searchParams.get('wallet');
+    if (!key) return;
+    if (has[key]()) tryConnect(key);
+    url.searchParams.delete('wallet');
+    history.replaceState({}, '', url.toString());
+  });
+})();
