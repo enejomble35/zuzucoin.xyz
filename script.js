@@ -2,20 +2,20 @@
    CONFIG
 ========================= */
 const CONFIG = {
-  // Countdown (persist + migrate to 60 days)
+  // Countdown (persist)
   launchKey: "zuzu_launchAt",
-  defaultLaunchISO: "2025-12-31T23:59:59Z",   // fallback; ilk kurulumda 60 gün kullanacağız
+  // 60 gün (5184000000 ms) -> bugünden 60 gün sonrası
+  defaultLaunchISO: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(),
 
   weekPrices: [0.0050, 0.0065, 0.0080, 0.0100], // USDT
   nfts: Array.from({ length: 10 }).map((_, i) => ({
     id: i, name: `ZUZU #${i + 1}`, rarity: i % 5 === 0 ? 'Legendary' : (i % 2 ? 'Rare' : 'Epic')
   })),
 
-  // Solana
-  cluster: "mainnet-beta",                 // deeplink için doğru
-  treasury: "FILL_TREASURY_SOL_ADDRESS",   // ← gerçek hazine adresiniz (base58) olmalı
-
-  // LocalStorage keys
+  // Solana config
+  cluster: "mainnet",
+  treasury: "FniLJmY5L6zQyQfot6xsiYojHeEzoGs2xZXYZh1U9QwF", // ✅ senin gerçek hazine adresin
+  // Ref / session keys
   LS_ADDR: "zuzu_connected_addr",
   LS_WALLET: "zuzu_connected_wallet",
   LS_LANG: "zuzu_lang"
@@ -40,50 +40,18 @@ const I = {
       presale_title:"Ön Satış — Geri Sayım",presale_lead:"ZUZU ön satışına hazır ol! <b>Sınırlı tahsis</b>, topluluğa özel fiyat.",
       amount:"Miktar (ZUZU)",cost:"Maliyet:",buy:"Satın Al",exchanges:"Desteklenen Borsalar",
       stake_title:"Stake Pro — Kilitle, Kazan, NFT Kap ✨",stake_lead:"ZUZU’larını kilitle, <b>APY + NFT BOOST</b> ile kazan.",
-      token_title:"Tokonomi (Görsel)",road_title:"Yol Haritası"},
-  fr:{nav_presale:"Pré-vente",nav_stake:"Stake",nav_nft:"Récompenses NFT",nav_roadmap:"Feuille de route",nav_token:"Tokenomics",connect:"Connecter le Wallet",
-      hero_badge:"Pré-vente • Stake pour gagner un NFT",hero_title:"ZUZU — Hérisson Robotique 🦔⚡",
-      hero_lead:"Stake et gagne un <b>NFT Mascotte ZUZU</b>.",cta_stake:"Commencer le Stake",cta_nft:"Récompenses NFT",
-      days:"JOURS",hours:"HEURES",mins:"MINUTES",secs:"SECONDES",
-      presale_title:"Pré-vente — Compte à rebours",presale_lead:"Prépare-toi pour la pré-vente ZUZU ! <b>Allocation limitée</b>.",
-      amount:"Montant (ZUZU)",cost:"Coût :",buy:"Acheter",exchanges:"Bourses prises en charge",
-      stake_title:"Stake Pro — Verrouille, Gagne, Reçois un NFT ✨",stake_lead:"Verrouille ton ZUZU et gagne <b>APY + BOOST NFT</b>.",
-      token_title:"Tokenomics (Visualisé)",road_title:"Feuille de route"},
-  pt:{nav_presale:"Pré-venda",nav_stake:"Stake",nav_nft:"Recompensas NFT",nav_roadmap:"Roteiro",nav_token:"Tokenomics",connect:"Conectar Carteira",
-      hero_badge:"Pré-venda • Stake para ganhar NFT",hero_title:"ZUZU — Ouriço Robótico 🦔⚡",
-      hero_lead:"Faça stake e ganhe <b>NFT Mascote ZUZU</b>.",cta_stake:"Começar Stake",cta_nft:"Recompensas NFT",
-      days:"DIAS",hours:"HORAS",mins:"MINUTOS",secs:"SEGUNDOS",
-      presale_title:"Pré-venda — Contagem regressiva",presale_lead:"Prepare-se para a pré-venda ZUZU! <b>Alocação limitada</b>.",
-      amount:"Quantidade (ZUZU)",cost:"Custo:",buy:"Comprar",exchanges:"Exchanges suportadas",
-      stake_title:"Stake Pro — Trave, Ganhe, Receba NFT ✨",stake_lead:"Trave seu ZUZU e ganhe <b>APY + BOOST NFT</b>.",
-      token_title:"Tokenomics (Visualizado)",road_title:"Roteiro"},
-  ru:{nav_presale:"Предпродажа",nav_stake:"Стейкинг",nav_nft:"NFT награды",nav_roadmap:"Дорожная карта",nav_token:"Токеномика",connect:"Подключить кошелёк",
-      hero_badge:"Предпродажа • Стейкинг для NFT",hero_title:"ZUZU — Робо-Ёж 🦔⚡",
-      hero_lead:"Стейкай и получай <b>маскот NFT ZUZU</b>.",cta_stake:"Начать стейкинг",cta_nft:"NFT награды",
-      days:"ДНИ",hours:"ЧАСЫ",mins:"МИН.",secs:"СЕК.",
-      presale_title:"Предпродажа — Обратный отсчёт",presale_lead:"Готовься к предпродаже ZUZU! <b>Ограниченная аллокация</b>.",
-      amount:"Количество (ZUZU)",cost:"Стоимость:",buy:"Купить",exchanges:"Поддерживаемые биржи",
-      stake_title:"Stake Pro — Заморозь, Заработай, Получи NFT ✨",stake_lead:"Заморозь ZUZU и получай <b>APY + NFT BOOST</b>.",
-      token_title:"Токеномика (визуально)",road_title:"Дорожная карта"},
-  es:{nav_presale:"Pre-venta",nav_stake:"Stake",nav_nft:"Recompensas NFT",nav_roadmap:"Hoja de ruta",nav_token:"Tokenomics",connect:"Conectar Billetera",
-      hero_badge:"Pre-venta • Stake para ganar NFT",hero_title:"ZUZU — Erizo Robótico 🦔⚡",
-      hero_lead:"Haz stake y gana <b>NFT Mascota ZUZU</b>.",cta_stake:"Empezar Stake",cta_nft:"Recompensas NFT",
-      days:"DÍAS",hours:"HORAS",mins:"MINUTOS",secs:"SEGUNDOS",
-      presale_title:"Pre-venta — Cuenta regresiva",presale_lead:"¡Prepárate para la pre-venta ZUZU! <b>Asignación limitada</b>.",
-      amount:"Cantidad (ZUZU)",cost:"Costo:",buy:"Comprar",exchanges:"Exchanges compatibles",
-      stake_title:"Stake Pro — Bloquea, Gana, Obtén NFT ✨",stake_lead:"Bloquea tu ZUZU y gana <b>APY + BOOST NFT</b>.",
-      token_title:"Tokenomics (Visualizado)",road_title:"Hoja de ruta"}
+      token_title:"Tokonomi (Görsel)",road_title:"Yol Haritası"}
 };
 
-/* =============== helpers =============== */
-const $  = (q, root=document) => root.querySelector(q);
-const $$ = (q, root=document) => [...root.querySelectorAll(q)];
+/* =============== tiny dom helpers =============== */
+const $ = (q, root=document) => root.querySelector(q);
+const $$= (q, root=document) => [...root.querySelectorAll(q)];
 
 /* =============== Lang UI =============== */
 function applyLang(lang){
   localStorage.setItem(CONFIG.LS_LANG, lang);
-  $("#langCode") && ($("#langCode").textContent = lang.toUpperCase());
-  $("#langFlag") && ($("#langFlag").src = `flags/${lang}.png`);
+  $("#langCode")?.textContent = lang.toUpperCase();
+  $("#langFlag")?.setAttribute("src", `flags/${lang}.png`);
   document.querySelectorAll("[data-i]").forEach(el=>{
     const k=el.getAttribute("data-i");
     if(I[lang] && I[lang][k]) el.innerHTML=I[lang][k];
@@ -92,7 +60,7 @@ function applyLang(lang){
 (function initLang(){
   const saved = localStorage.getItem(CONFIG.LS_LANG) || "en";
   applyLang(saved);
-  const langBtn=$("#langBtn"), langMenu=$("#langMenu");
+  const langBtn  = $("#langBtn"), langMenu=$("#langMenu");
   if(langBtn && langMenu){
     langBtn.addEventListener("click", ()=>langMenu.classList.toggle("show"));
     $$(".lang-opt").forEach(b=>b.addEventListener("click", ()=>{
@@ -106,22 +74,12 @@ function applyLang(lang){
 
 /* =============== Countdown (60 gün) =============== */
 function getLaunchAt(){
-  const SIXTY_DAYS = 60*24*60*60*1000;
   let ts = localStorage.getItem(CONFIG.launchKey);
   if(!ts){
-    ts = (Date.now() + SIXTY_DAYS).toString();                // ilk kurulumda 60 gün
+    ts = new Date(CONFIG.defaultLaunchISO).getTime().toString();
     localStorage.setItem(CONFIG.launchKey, ts);
-    return parseInt(ts,10);
   }
-  const now = Date.now();
-  const nTs = parseInt(ts,10);
-  // 61 günden fazla ise migrasyon: 60 güne resetle
-  if(nTs - now > 61*24*60*60*1000){
-    const fix = (now + SIXTY_DAYS).toString();
-    localStorage.setItem(CONFIG.launchKey, fix);
-    return parseInt(fix,10);
-  }
-  return nTs;
+  return parseInt(ts,10);
 }
 function tick(){
   const left = Math.max(0, getLaunchAt() - Date.now());
@@ -130,10 +88,10 @@ function tick(){
   const m=Math.floor((left%3600000)/60000);
   const s=Math.floor((left%60000)/1000);
   const pad=n=>n.toString().padStart(2,"0");
-  $("#cdDays")  && ($("#cdDays").textContent = pad(d));
-  $("#cdHours") && ($("#cdHours").textContent = pad(h));
-  $("#cdMins")  && ($("#cdMins").textContent = pad(m));
-  $("#cdSecs")  && ($("#cdSecs").textContent = pad(s));
+  $("#cdDays")?.textContent=pad(d);
+  $("#cdHours")?.textContent=pad(h);
+  $("#cdMins")?.textContent=pad(m);
+  $("#cdSecs")?.textContent=pad(s);
 }
 tick(); setInterval(tick,1000);
 
@@ -142,8 +100,8 @@ function updateCosts(){
   const inp = $("#buyAmount");
   const qty = parseFloat((inp?.value||"0").toString().replace(/[^\d.]/g,""))||0;
   CONFIG.weekPrices.forEach((p,i)=>{
-    $("#p"+i) && ($("#p"+i).textContent = p.toFixed(4));
-    $("#c"+i) && ($("#c"+i).textContent = (qty*p).toLocaleString(undefined,{maximumFractionDigits:2}));
+    $("#p"+i)?.textContent = p.toFixed(4);
+    $("#c"+i)?.textContent = (qty*p).toLocaleString(undefined,{maximumFractionDigits:2});
   });
 }
 $("#buyAmount")?.addEventListener("input", updateCosts);
@@ -167,32 +125,32 @@ updateCosts();
   const addr = localStorage.getItem("zuzu_refAddr") || "";
   const out = $("#refLink"); const copyBtn = $("#copyRef");
   if(out){ out.value = `${location.origin}${location.pathname}?ref=${addr||"YOURCODE"}`; }
-  if(copyBtn){ copyBtn.addEventListener("click", ()=>{ navigator.clipboard.writeText(out.value); alert("Copied!"); }); }
+  copyBtn?.addEventListener("click", ()=>{ navigator.clipboard.writeText(out.value); alert("Copied!"); });
 })();
 
 /* =========================
-   Wallet Connect (Solana)
+   Wallet Connect (Phantom / Solflare / Backpack)
 ========================= */
 const Wallets = {
   phantom:{
-    key:'phantom', label:'Phantom', icon:`assets/images/wallets/phantom.png?v=2`,
-    has:()=>!!(window.solana && window.solana.isPhantom),
-    connect:async()=>{ const r=await window.solana.connect({ onlyIfTrusted:false }); return r.publicKey.toString(); },
+    key:'phantom', label:'Phantom', icon:'assets/images/wallets/phantom.png',
+    has:()=>!!(window.solana && (window.solana.isPhantom || window.solana.isPhantomApp)),
+    connect:async()=>{ const p=window.solana; const r=await p.connect({ onlyIfTrusted:false }); return (r?.publicKey||p.publicKey).toString(); },
     disconnect:async()=>{ try{ await window.solana.disconnect?.(); }catch{} },
-    deeplink:(url)=>`https://phantom.app/ul/browse/${encodeURIComponent(url)}?ref=zuzu&network=${encodeURIComponent(CONFIG.cluster)}`
+    deeplink:(url)=>`https://phantom.app/ul/browse/${encodeURIComponent(url)}?network=${encodeURIComponent(CONFIG.cluster)}`
   },
   solflare:{
-    key:'solflare', label:'Solflare', icon:`assets/images/wallets/solflare.png?v=2`,
-    has:()=>!!(window.solflare && window.solflare.isSolflare),
-    connect:async()=>{ const r=await window.solflare.connect(); return r.publicKey.toString(); },
+    key:'solflare', label:'Solflare', icon:'assets/images/wallets/solflare.png',
+    has:()=>!!(window.solflare && (window.solflare.isSolflare || typeof window.solflare.connect==="function")),
+    connect:async()=>{ const p=window.solflare; const r=await p.connect(); return (r?.publicKey||p.publicKey).toString(); },
     disconnect:async()=>{ try{ await window.solflare.disconnect?.(); }catch{} },
-    deeplink:(url)=>`https://solflare.com/ul/v1/browse/${encodeURIComponent(url)}?ref=zuzu&network=${encodeURIComponent(CONFIG.cluster)}`
+    deeplink:(url)=>`https://solflare.com/ul/v1/browse/${encodeURIComponent(url)}?network=${encodeURIComponent(CONFIG.cluster)}`
   },
   backpack:{
-    key:'backpack', label:'Backpack', icon:`assets/images/wallets/backpack.png?v=2`,
-    has:()=>!!(window.backpack && window.backpack.isBackpack),
-    connect:async()=>{ const r=await window.backpack.connect(); return r.publicKey.toString(); },
-    disconnect:async()=>{ try{ await window.backpack.disconnect?.(); }catch{} },
+    key:'backpack', label:'Backpack', icon:'assets/images/wallets/backpack.png',
+    has:()=>!!(window.backpack?.solana?.isBackpack || window.backpack?.isBackpack),
+    connect:async()=>{ const p=window.backpack?.solana || window.backpack; const r=await p.connect(); return (r?.publicKey||p.publicKey).toString(); },
+    disconnect:async()=>{ try{ await (window.backpack?.solana||window.backpack)?.disconnect?.(); }catch{} },
     deeplink:(url)=>`https://backpack.app/ul/browse/${encodeURIComponent(url)}?network=${encodeURIComponent(CONFIG.cluster)}`
   }
 };
@@ -201,221 +159,72 @@ let CURRENT_ADDRESS = null;
 let CURRENT_WALLET  = null;
 
 function walletListHTML(){
-  // PNG olmazsa aynı klasördeki SVG’ye düş
   return Object.values(Wallets).map(w=>`
     <button class="wbtn" data-key="${w.key}">
-      <img src="${w.icon}" alt="${w.label}" width="22" height="22"
-           onerror="this.onerror=null; this.src='assets/images/wallets/${w.key}.svg?v=2'">
-      <span>${w.label}</span>
+      <img src="${w.icon}" alt="${w.label}" onerror="this.onerror=null;this.src='assets/images/wallets/${w.key}.svg'"><span>${w.label}</span>
     </button>`).join("");
 }
 
-/* ---- Gerekirse modal ve butonları otomatik enjekte ---- */
-function ensureWalletUI(){
-  if(!$("#walletModal")){
-    const wrap = document.createElement("div");
-    wrap.id = "walletModal";
-    wrap.className = "modal";
-    wrap.innerHTML = `
-      <div class="sheet">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
-          <h3 style="margin:0">Connect Wallet</h3>
-          <button id="wmClose" class="z-btn z-btn-ghost small">✕</button>
-        </div>
-        <div id="wlist" class="wlist" style="margin-top:10px"></div>
-        <p style="color:#8aa2c9;margin:.8rem 0 0;font-size:.9rem">
-          On mobile, the site opens inside the wallet. Approve <b>zuzucoin.xyz</b>, then you’ll return here automatically.
-        </p>
-      </div>`;
-    document.body.appendChild(wrap);
-  }
-  // Bu sayfada özel bir Connect butonu yoksa, data-connect olanlara bağlan
-  $$('[data-connect]').forEach(el=>{
-    if(el.__zbound) return;
-    el.__zbound = true;
-    el.addEventListener('click', ()=> openConnectModal());
-  });
-}
-function openConnectModal(){ $("#walletModal")?.classList.add("show"); }
-
-/* ----- modal lifecycle ----- */
 (function initWalletModal(){
-  ensureWalletUI();
-
-  const modal = $("#walletModal"); const list = $("#wlist");
-  const btnConnect = $("#connectBtn"); const btnClose = $("#wmClose");
-  const btnDisconnect = $("#disconnectBtn"); // varsa
-  if(!modal || !list) return;
-
+  const modal = $("#walletModal"), list = $("#wlist"), btnConnect = $("#connectBtn"), btnClose = $("#wmClose");
+  if(!modal || !list || !btnConnect) return;
   list.innerHTML = walletListHTML();
 
-  // geri yükle
-  const savedAddr   = localStorage.getItem(CONFIG.LS_ADDR);
-  const savedWallet = localStorage.getItem(CONFIG.LS_WALLET);
-  if(savedAddr && savedWallet){
-    CURRENT_ADDRESS = savedAddr;
-    CURRENT_WALLET  = savedWallet;
-    if(btnConnect) btnConnect.textContent = `${savedAddr.slice(0,6)}...${savedAddr.slice(-4)}`;
-    btnDisconnect && (btnDisconnect.style.display = "inline-flex");
-    setBuyButtonsEnabled(true);
-    // Diğer sayfalardaki bağlan butonlarını da güncelle
-    $$('[data-connect]').forEach(el=> el.textContent = `${savedAddr.slice(0,6)}...${savedAddr.slice(-4)}`);
-  }
-
-  // backdrop & esc
-  modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.classList.remove("show"); });
-  btnClose?.addEventListener("click", ()=>modal.classList.remove("show"));
-  document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") modal.classList.remove("show"); });
-
-  // nav’daki connect butonu
-  btnConnect?.addEventListener("click", async ()=>{
+  btnConnect.addEventListener("click", ()=>{
     const direct = Wallets.phantom.has() ? Wallets.phantom :
                    (Wallets.solflare.has() ? Wallets.solflare :
                    (Wallets.backpack.has() ? Wallets.backpack : null));
-    if(direct){ await connectFlow(direct.key); }
-    else{ openConnectModal(); }
+    if(direct){ connectFlow(direct.key); } else { modal.classList.add("show"); }
   });
-
-  // data-connect butonları (stake simulator / claim)
-  $$('[data-connect]').forEach(el=>{
-    el.addEventListener('click', async ()=>{
-      const direct = Wallets.phantom.has() ? Wallets.phantom :
-                     (Wallets.solflare.has() ? Wallets.solflare :
-                     (Wallets.backpack.has() ? Wallets.backpack : null));
-      if(direct){ await connectFlow(direct.key); }
-      else{ openConnectModal(); }
-    });
+  btnClose?.addEventListener("click", ()=>modal.classList.remove("show"));
+  list.addEventListener("click", e=>{
+    const btn=e.target.closest(".wbtn"); if(!btn) return;
+    connectFlow(btn.dataset.key);
   });
-
-  // list click
-  list.addEventListener("click", async (e)=>{
-    const btn = e.target.closest(".wbtn"); if(!btn) return;
-    await connectFlow(btn.dataset.key);
-  });
-
-  // disconnect (varsa)
-  btnDisconnect?.addEventListener("click", async ()=>{
-    if(!CURRENT_WALLET) return;
-    try{ await Wallets[CURRENT_WALLET]?.disconnect?.(); }catch{}
-    CURRENT_WALLET = null; CURRENT_ADDRESS = null;
-    localStorage.removeItem(CONFIG.LS_ADDR);
-    localStorage.removeItem(CONFIG.LS_WALLET);
-    $("#connectBtn") && ($("#connectBtn").textContent = I[(localStorage.getItem(CONFIG.LS_LANG)||"en")].connect || "Connect Wallet");
-    btnDisconnect && (btnDisconnect.style.display = "none");
-    setBuyButtonsEnabled(false);
-    $$('[data-connect]').forEach(el=> el.textContent = I[(localStorage.getItem(CONFIG.LS_LANG)||"en")].connect || "Connect Wallet");
-    alert("Disconnected.");
-  });
-
-  // başlangıçta kapalı (adres yoksa)
-  if(!CURRENT_ADDRESS) setBuyButtonsEnabled(false);
 })();
 
 async function connectFlow(key){
-  const impl = Wallets[key];
-  const modal = $("#walletModal");
+  const impl = Wallets[key]; if(!impl) return;
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  const nowUrl   = location.href;
-
-  if(!impl.has() && isMobile){
-    modal?.classList.remove("show");
-    sessionStorage.setItem("zuzu_await_wallet","1");
-    window.open(impl.deeplink(nowUrl), "_blank");
-    return;
-  }
-
+  if(!impl.has() && isMobile){ window.open(impl.deeplink(location.href), "_blank"); return; }
   try{
-    const addr = await withTimeout(impl.connect(), 20000);
-    onConnected(key, addr);
-    modal?.classList.remove("show");
-  }catch(err){
-    if (sessionStorage.getItem("zuzu_await_wallet")==="1" && impl.has()){
-      sessionStorage.removeItem("zuzu_await_wallet");
-      try{
-        const addr = await withTimeout(impl.connect(), 20000);
-        onConnected(key, addr);
-        return;
-      }catch(e){}
-    }
-    console.warn("wallet connect failed:", err);
-    if(!impl.has()){
-      modal?.classList.add("show");
-      alert("Wallet provider not found. Please install or open on mobile wallet.");
-    }else{
-      alert("Wallet connection rejected or failed.");
-    }
-  }
+    const addr = await impl.connect();
+    CURRENT_ADDRESS = addr; CURRENT_WALLET = key;
+    localStorage.setItem(CONFIG.LS_ADDR, addr);
+    localStorage.setItem(CONFIG.LS_WALLET, key);
+    $("#connectBtn").textContent = `${addr.slice(0,6)}...${addr.slice(-4)}`;
+    $("#walletModal").classList.remove("show");
+    $("#refLink")?.setAttribute("value", `${location.origin}${location.pathname}?ref=${addr}`);
+  }catch(e){ alert("Wallet connection rejected or failed."); }
 }
 
-function onConnected(key, addr){
-  CURRENT_ADDRESS = addr;
-  CURRENT_WALLET  = key;
-  localStorage.setItem(CONFIG.LS_ADDR, addr);
-  localStorage.setItem(CONFIG.LS_WALLET, key);
-
-  $("#connectBtn") && ($("#connectBtn").textContent = `${addr.slice(0,6)}...${addr.slice(-4)}`);
-  $$('[data-connect]').forEach(el=> el.textContent = `${addr.slice(0,6)}...${addr.slice(-4)}`);
-  $("#disconnectBtn") && ($("#disconnectBtn").style.display = "inline-flex");
-
-  const out = $("#refLink");
-  if(out) out.value = `${location.origin}${location.pathname}?ref=${addr}`;
-
-  setBuyButtonsEnabled(true); // BAĞLANIR BAĞLANMAZ AÇ
-}
-
-function withTimeout(promise, ms){
-  return new Promise((resolve,reject)=>{
-    const t = setTimeout(()=>reject(new Error("timeout")), ms);
-    promise.then(v=>{ clearTimeout(t); resolve(v); }, e=>{ clearTimeout(t); reject(e); });
-  });
-}
-
-/* =============== Satın alma (stub) =============== */
+/* =============== Satın alma =============== */
 function activeWeek(){ return 0; }
 
 ["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{
-  const b = $("#"+id); if(!b) return;
-  b.addEventListener("click", ()=>handleBuy(i));
+  $("#"+id)?.addEventListener("click", ()=>handleBuy(i));
 });
 
-function setBuyButtonsEnabled(ok){
-  ["buyW0","buyW1","buyW2","buyW3"].forEach(id=>{
-    const b = document.getElementById(id); if(!b) return;
-    b.disabled = !ok;
-    b.style.opacity = ok ? "1" : ".5";
-    b.style.pointerEvents = ok ? "auto" : "none";
-  });
-}
-
 function handleBuy(weekIdx){
-  const qty = parseFloat(($("#buyAmount")?.value||"0").toString().replace(/[^\d.]/g,""))||0;
+  const qty = parseFloat(($("#buyAmount")?.value||"0").replace(/[^\d.]/g,""))||0;
   if(qty<=0){ alert("Geçerli miktar gir."); return; }
-
   if(weekIdx!==activeWeek()){ alert("Bu hafta aktif değil."); return; }
-  if(!CURRENT_ADDRESS){ alert("Önce cüzdan bağla (Phantom / Solflare / Backpack)."); return; }
+  if(!CURRENT_ADDRESS){ alert("Önce cüzdan bağla."); return; }
 
-  const price = CONFIG.weekPrices[weekIdx];
-  const usdtCost = qty * price;
+  const usdtCost = qty * CONFIG.weekPrices[weekIdx];
+  const payWith = $("#payWith").value;
 
-  if(!CONFIG.treasury || CONFIG.treasury.startsWith("FILL_")){
-    alert("Treasury adresi tanımlı değil. Lütfen script.js içindeki CONFIG.treasury alanını doldur.");
-    return;
-  }
-
-  const payWith = $("#payWith")?.value || "SOL";
   if(payWith==="SOL"){
-    // Placeholder kur: 1 USDT ≈ 0.01 SOL (örnek)
-    const solAmount = (usdtCost * 0.01).toFixed(4);
+    const solAmount = (usdtCost * 0.01).toFixed(4); // örnek dönüşüm
     const deeplink = `https://phantom.app/ul/transfer?recipient=${encodeURIComponent(CONFIG.treasury)}&amount=${solAmount}&reference=${encodeURIComponent(CURRENT_ADDRESS)}&network=${encodeURIComponent(CONFIG.cluster)}`;
     window.open(deeplink, "_blank");
-    alert(`Phantom açılacak. ~${solAmount} SOL gönderiyorsun.\n(Oran örnek; gerçek kur eklenecek.)`);
+    alert(`Phantom açılacak (~${solAmount} SOL). Gerçek kur entegrasyonu eklenecek.`);
   }else{
     alert("USDT (Solana) transferi için SPL-Token işlem entegrasyonu eklenecek.");
   }
 }
 
-/* =============== ufak dokunuş =============== */
+/* =============== küçük dokunuşlar =============== */
 (function ensureTickerVisible(){
-  const t=$("#exTrack"); if(!t) return;
-  t.style.transform="translateX(0)"; setTimeout(()=>t.style.transform="", 60);
+  const t=$("#exTrack"); if(t){ t.style.transform="translateX(0)"; setTimeout(()=>t.style.transform="", 60); }
 })();
