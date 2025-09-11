@@ -1,194 +1,82 @@
-/* ==========================================
-   ZUZU — Solana Wallet Connect (Vanilla JS)
-   Phantom • Solflare • Backpack
-   - Modal aç/kapat
-   - Tarayıcı eklentisi varsa bağlan
-   - Yoksa cüzdan tarayıcısına yönlendir (mobile)
-========================================== */
+<script>
+(function(){
+  const modal = document.getElementById('walletModal');
+  const btn   = document.getElementById('connectBtn');
+  const close = document.getElementById('wmClose');
 
-// (1) Bağlantı durumunu UI'ya yaz
-function setConnectedUI(pubkey) {
-  const btn = document.getElementById('connectBtn');
-  if (!btn) return;
-  const k = typeof pubkey === 'string' ? pubkey : String(pubkey || '');
-  if (k) {
-    const short = k.slice(0, 4) + '…' + k.slice(-4);
-    btn.textContent = short;
-    btn.dataset.connected = '1';
-  } else {
-    btn.textContent = (btn.dataset.iText || 'Connect Wallet');
-    btn.dataset.connected = '0';
+  // --- Protect: modal kendiliğinden açılmasın
+  function openModal(){
+    if (!modal) return;
+    modal.hidden = false;
+    document.documentElement.style.overflow = 'hidden';
   }
-}
-
-// (2) Modal yardımcıları
-const modal = document.getElementById('walletModal');
-const openModal  = () => modal && (modal.hidden = false);
-const closeModal = () => modal && (modal.hidden = true);
-
-// ESC ile kapat
-document.addEventListener('keydown', (e)=> {
-  if (e.key === 'Escape') closeModal();
-});
-
-// X butonu
-document.getElementById('wmClose')?.addEventListener('click', closeModal);
-
-// Backdrop tıkla-kapat
-modal?.addEventListener('click', (e)=>{
-  if (e.target === modal) closeModal();
-});
-
-// (3) Entegre buton — modal aç
-(function bindOpen(){
-  const btn = document.getElementById('connectBtn');
-  if (!btn) return;
-  if (!btn.dataset.iText) btn.dataset.iText = btn.textContent.trim() || 'Connect Wallet';
-  btn.addEventListener('click', openModal);
-})();
-
-// (4) ENV/Platform yardımcıları
-const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-// Domain’in tam url’i (wallet browser’a taşımak için)
-const ZUZU_URL = location.origin + location.pathname;  // query yoksa yeterli
-const encURL   = encodeURIComponent(ZUZU_URL);
-
-// (5) Cüzdan sağlayıcılarını yakala
-function getPhantom()  { return window?.solana?.isPhantom ? window.solana : null; }
-function getSolflare() { return window?.solflare?.isSolflare ? window.solflare : null; }
-// Backpack bazı sürümlerde window.backpack.solana, bazılarında window.solana.isBackpack olabilir.
-function getBackpack() {
-  if (window?.backpack?.solana) return window.backpack.solana;
-  if (window?.solana?.isBackpack) return window.solana;
-  return null;
-}
-
-// (6) Fallback — cüzdan uygulamasında siteyi aç
-function openInWalletBrowser(wallet){
-  try {
-    if (wallet === 'phantom') {
-      // Phantom universal link: cüzdan içi tarayıcıda siteyi açar
-      window.location.href = `https://phantom.app/ul/browse/${encURL}`;
-      return;
-    }
-    if (wallet === 'solflare') {
-      // Solflare UL (v1)
-      window.location.href = `https://solflare.com/ul/v1/browse?url=${encURL}`;
-      return;
-    }
-    if (wallet === 'backpack') {
-      // Backpack için resmi UL belgesi sınırlı; deneysel browse linki:
-      window.location.href = `https://www.backpack.app/ul/browse/${encURL}`;
-      // Çalışmazsa kullanıcı app içinden "Browser" > zuzucoin.xyz açabilir.
-      return;
-    }
-  } catch(e) {
-    console.warn('wallet deep link error', e);
+  function closeModal(){
+    if (!modal) return;
+    modal.hidden = true;
+    document.documentElement.style.overflow = '';
   }
-  alert('Open this site inside your wallet browser and try again.');
-}
 
-// (7) Bağlan fonksiyonları
-async function connectPhantom(){
-  const provider = getPhantom();
-  if (!provider) { 
-    if (isMobile) openInWalletBrowser('phantom');
-    else window.open('https://phantom.app/', '_blank');
-    return;
-  }
-  try {
-    const resp = await provider.connect({ onlyIfTrusted:false });
-    const pub = (resp?.publicKey || provider.publicKey)?.toString();
-    setConnectedUI(pub);
-    localStorage.setItem('zuzu_last_wallet','phantom');
-    closeModal();
-
-    // Değişimleri dinle
-    provider.on('accountChanged', (pk)=>{
-      setConnectedUI(pk ? pk.toString() : '');
-    });
-  } catch(e){
-    console.warn('phantom connect error', e);
-  }
-}
-
-async function connectSolflare(){
-  const sf = getSolflare();
-  if (!sf) { 
-    if (isMobile) openInWalletBrowser('solflare');
-    else window.open('https://solflare.com/', '_blank');
-    return;
-  }
-  try {
-    await sf.connect();
-    const pub = sf?.publicKey?.toString() || '';
-    setConnectedUI(pub);
-    localStorage.setItem('zuzu_last_wallet','solflare');
-    closeModal();
-
-    sf.on('accountChanged', (pk)=>{
-      setConnectedUI(pk ? pk.toString() : '');
-    });
-  } catch(e){
-    console.warn('solflare connect error', e);
-  }
-}
-
-async function connectBackpack(){
-  const bp = getBackpack();
-  if (!bp) {
-    if (isMobile) openInWalletBrowser('backpack');
-    else window.open('https://www.backpack.app/', '_blank');
-    return;
-  }
-  try {
-    const resp = await bp.connect();
-    const pub = (resp?.publicKey || bp.publicKey)?.toString() || '';
-    setConnectedUI(pub);
-    localStorage.setItem('zuzu_last_wallet','backpack');
-    closeModal();
-
-    bp.on?.('accountChanged', (pk)=>{
-      setConnectedUI(pk ? pk.toString() : '');
-    });
-  } catch(e){
-    console.warn('backpack connect error', e);
-  }
-}
-
-// (8) Modal içi buton davranışı
-modal?.querySelectorAll('.wm-item')?.forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    const w = btn.getAttribute('data-wallet');
-    if (w === 'phantom')  return connectPhantom();
-    if (w === 'solflare') return connectSolflare();
-    if (w === 'backpack') return connectBackpack();
+  // Aç/kapat bağla
+  btn && btn.addEventListener('click', openModal);
+  close && close.addEventListener('click', closeModal);
+  // Arka plana tıklayınca kapat
+  modal && modal.addEventListener('click', (e)=>{
+    if (e.target === modal) closeModal();
   });
-});
+  // ESC ile kapat
+  window.addEventListener('keydown', (e)=>{
+    if(e.key === 'Escape' && !modal.hidden) closeModal();
+  });
 
-// (9) Sayfa açılışında son kullanılan cüzdanı otomatik bağlamaya dene (sessiz)
-window.addEventListener('load', async ()=>{
-  try{
-    const last = localStorage.getItem('zuzu_last_wallet');
-    if (last === 'phantom' && getPhantom()?.isConnected) {
-      setConnectedUI(getPhantom().publicKey?.toString());
-      return;
-    }
-    if (last === 'solflare' && getSolflare()?.isConnected) {
-      setConnectedUI(getSolflare().publicKey?.toString());
-      return;
-    }
-    if (last === 'backpack' && getBackpack()?.isConnected) {
-      setConnectedUI(getBackpack().publicKey?.toString());
-      return;
-    }
-    // Bazı cüzdanlar onlyIfTrusted ile sessiz bağlanmaya izin veriyor:
-    if (last === 'phantom' && getPhantom()) {
-      try {
-        const r = await getPhantom().connect({ onlyIfTrusted:true });
-        setConnectedUI((r?.publicKey || getPhantom().publicKey)?.toString());
-      } catch(_) {}
-    }
-  }catch(e){ console.warn(e); }
-});
+  // --- Deep link yardımcıları
+  const SITE = encodeURIComponent(location.origin + location.pathname); // zuzucoin.xyz/…
+  function openUrl(u){
+    // iOS/Safari açılışını desteklemek için anchor yöntemi
+    const a = document.createElement('a');
+    a.href = u; a.rel = 'noopener'; a.target = '_self';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  // Her buton için yönlendirme
+  modal?.querySelectorAll('.wm-item').forEach(item=>{
+    item.addEventListener('click', ()=>{
+      const w = item.getAttribute('data-wallet');
+
+      // Varsayılan: cüzdanın yerleşik tarayıcısında siteyi aç
+      let url = null;
+
+      if (w === 'phantom'){
+        // Phantom deep link: https://phantom.app/ul/browse/<ENCODED_URL>
+        url = `https://phantom.app/ul/browse/${SITE}`;
+        // Bazı Android sürümlerinde custom scheme daha iyi çalışır:
+        setTimeout(()=>{ openUrl(`phantom://browse/${SITE}`); }, 200);
+      }
+      else if (w === 'solflare'){
+        // Solflare deep link: https://solflare.com/ul/v1/browse/<ENCODED_URL>
+        url = `https://solflare.com/ul/v1/browse/${SITE}`;
+      }
+      else if (w === 'backpack'){
+        // Backpack (Treasure/Backpack) varyasyonları
+        url = `https://www.backpack.app/ul/browse/${SITE}`;
+        setTimeout(()=>{ openUrl(`backpack://browse/${SITE}`); }, 200);
+      }
+
+      if (url) openUrl(url);
+
+      // Masaüstünde cüzdan eklentisi yoksa bilgi ver
+      if (!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){
+        // Masaüstünde: cüzdan eklentisini açamıyorsak yönlendirme yerine bilgi verelim
+        alert('On mobile, this will open inside the wallet browser. On desktop, please open this site from your wallet (Phantom / Solflare / Backpack).');
+      }
+
+      // Modalı kapat
+      closeModal();
+    });
+  });
+
+  // Güvenlik: Başlangıçta modalı **kapat**
+  if (modal) modal.hidden = true;
+})();
+</script>
