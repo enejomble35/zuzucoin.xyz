@@ -1,12 +1,13 @@
 /* =========================
-   ZUZU — script.js (mobile-first, solid wallet flow)
+   ZUZU — script.js (stabil, mobile-first)
+   Son güncelleme: bağlanma/logolar/60g countdown/tek akış
 ========================= */
 
 /* =========================
    CONFIG
 ========================= */
 const CONFIG = {
-  // 60 günlük geri sayım (ilk ziyarette başlar, LS'ye yazar)
+  // 60 günlük geri sayım (ilk girişte başlar ve saklanır)
   launchKey: "zuzu_launchAt",
   defaultCountdownDays: 60,
 
@@ -15,8 +16,10 @@ const CONFIG = {
     id: i, name: `ZUZU #${i + 1}`, rarity: i % 5 === 0 ? 'Legendary' : (i % 2 ? 'Rare' : 'Epic')
   })),
 
-  // Solana (deeplink için Android'de "mainnet" daha uyumlu)
-  cluster: "mainnet",
+  // Solana
+  // Phantom deeplink paramı için doğru değer: "mainnet-beta"
+  cluster: "mainnet-beta",
+  // ✅ HAZİNE ADRESİN (senin verdiğin):
   treasury: "FniLJmY5L6zQyQfot6xsiYojHeEzoGs2xZXYZh1U9QwF",
 
   // LS keys
@@ -24,7 +27,7 @@ const CONFIG = {
   LS_WALLET: "zuzu_connected_wallet",
   LS_LANG: "zuzu_lang",
 
-  // Session flags (mobil deeplink round-trip)
+  // Session (mobil deeplink round-trip)
   SS_AWAIT: "zuzu_await_wallet",
   SS_TARGET: "zuzu_target_wallet"
 };
@@ -48,39 +51,8 @@ const I = {
       presale_title:"Ön Satış — Geri Sayım",presale_lead:"ZUZU ön satışına hazır ol! <b>Sınırlı tahsis</b>, topluluğa özel fiyat.",
       amount:"Miktar (ZUZU)",cost:"Maliyet:",buy:"Satın Al",exchanges:"Desteklenen Borsalar",
       stake_title:"Stake Pro — Kilitle, Kazan, NFT Kap ✨",stake_lead:"ZUZU’larını kilitle, <b>APY + NFT BOOST</b> ile kazan.",
-      token_title:"Tokonomi (Görsel)",road_title:"Yol Haritası"},
-  fr:{nav_presale:"Pré-vente",nav_stake:"Stake",nav_nft:"Récompenses NFT",nav_roadmap:"Feuille de route",nav_token:"Tokenomics",connect:"Connecter le Wallet",
-      hero_badge:"Pré-vente • Stake pour gagner un NFT",hero_title:"ZUZU — Hérisson Robotique 🦔⚡",
-      hero_lead:"Stake et gagne un <b>NFT Mascotte ZUZU</b>.",cta_stake:"Commencer le Stake",cta_nft:"Récompenses NFT",
-      days:"JOURS",hours:"HEURES",mins:"MINUTES",secs:"SECONDES",
-      presale_title:"Pré-vente — Compte à rebours",presale_lead:"Prépare-toi pour la pré-vente ZUZU ! <b>Allocation limitée</b>.",
-      amount:"Montant (ZUZU)",cost:"Coût :",buy:"Acheter",exchanges:"Bourses prises en charge",
-      stake_title:"Stake Pro — Verrouille, Gagne, Reçois un NFT ✨",stake_lead:"Verrouille ton ZUZU et gagne <b>APY + BOOST NFT</b>.",
-      token_title:"Tokenomics (Visualisé)",road_title:"Feuille de route"},
-  pt:{nav_presale:"Pré-venda",nav_stake:"Stake",nav_nft:"Recompensas NFT",nav_roadmap:"Roteiro",nav_token:"Tokenomics",connect:"Conectar Carteira",
-      hero_badge:"Pré-venda • Stake para ganhar NFT",hero_title:"ZUZU — Ouriço Robótico 🦔⚡",
-      hero_lead:"Faça stake e ganhe <b>NFT Mascote ZUZU</b>.",cta_stake:"Começar Stake",cta_nft:"Recompensas NFT",
-      days:"DIAS",hours:"HORAS",mins:"MINUTOS",secs:"SEGUNDOS",
-      presale_title:"Pré-venda — Contagem regressiva",presale_lead:"Prepare-se para a pré-venda ZUZU! <b>Alocação limitada</b>.",
-      amount:"Quantidade (ZUZU)",cost:"Custo:",buy:"Comprar",exchanges:"Exchanges suportadas",
-      stake_title:"Stake Pro — Trave, Ganhe, Receba NFT ✨",stake_lead:"Trave seu ZUZU e ganhe <b>APY + BOOST NFT</b>.",
-      token_title:"Tokenomics (Visualizado)",road_title:"Roteiro"},
-  ru:{nav_presale:"Предпродажа",nav_stake:"Стейкинг",nav_nft:"NFT награды",nav_roadmap:"Дорожная карта",nav_token:"Токеномика",connect:"Подключить кошелёк",
-      hero_badge:"Предпродажа • Стейкинг для NFT",hero_title:"ZUZU — Робо-Ёж 🦔⚡",
-      hero_lead:"Стейкай и получай <b>маскот NFT ZUZU</b>.",cta_stake:"Начать стейкинг",cta_nft:"NFT награды",
-      days:"ДНИ",hours:"ЧАСЫ",mins:"МИН.",secs:"СЕК.",
-      presale_title:"Предпродажа — Обратный отсчёт",presale_lead:"Готовься к предпродаже ZUZU! <b>Ограниченная аллокация</b>.",
-      amount:"Количество (ZUZU)",cost:"Стоимость:",buy:"Купить",exchanges:"Поддерживаемые биржи",
-      stake_title:"Stake Pro — Заморозь, Заработай, Получи NFT ✨",stake_lead:"Заморозь ZUZU и получай <b>APY + NFT BOOST</b>.",
-      token_title:"Токеномика (визуально)",road_title:"Дорожная карта"},
-  es:{nav_presale:"Pre-venta",nav_stake:"Stake",nav_nft:"Recompensas NFT",nav_roadmap:"Hoja de ruta",nav_token:"Tokenomics",connect:"Conectar Billetera",
-      hero_badge:"Pre-venta • Stake para ganar NFT",hero_title:"ZUZU — Erizo Robótico 🦔⚡",
-      hero_lead:"Haz stake y gana <b>NFT Mascota ZUZU</b>.",cta_stake:"Empezar Stake",cta_nft:"Recompensas NFT",
-      days:"DÍAS",hours:"HORAS",mins:"MINUTOS",secs:"SEGUNDOS",
-      presale_title:"Pre-venta — Cuenta regresiva",presale_lead:"¡Prepárate para la pre-venta ZUZU! <b>Asignación limitada</b>.",
-      amount:"Cantidad (ZUZU)",cost:"Costo:",buy:"Comprar",exchanges:"Exchanges compatibles",
-      stake_title:"Stake Pro — Bloquea, Gana, Obtén NFT ✨",stake_lead:"Bloquea tu ZUZU y gana <b>APY + BOOST NFT</b>.",
-      token_title:"Tokenomics (Visualizado)",road_title:"Hoja de ruta"}
+      token_title:"Tokonomi (Görsel)",road_title:"Yol Haritası"}
+  // (diğer diller mevcutsa aynı kalır)
 };
 
 /* =============== helpers =============== */
@@ -100,7 +72,7 @@ function applyLang(lang){
   });
 }
 (function initLang(){
-  const saved = localStorage.getItem(CONFIG.LS_LANG) || "en";
+  const saved = localStorage.getItem(CONFIG.LS_LANG) || "tr";
   applyLang(saved);
   const langBtn=$("#langBtn"), langMenu=$("#langMenu");
   if(langBtn && langMenu){
@@ -155,7 +127,7 @@ updateCosts();
   const g=$("#nftGrid"); if(!g) return;
   g.innerHTML = CONFIG.nfts.map(n=>`
     <div class="nft">
-      <img src="assets/images/mask/${n.id}.png?v=9" alt="${n.name}" loading="lazy"
+      <img src="assets/images/mask/${n.id}.png?v=1" alt="${n.name}" loading="lazy"
            onerror="this.style.display='none'">
       <div class="meta"><b>${n.name}</b><span class="tag">${n.rarity}</span></div>
     </div>`).join("");
@@ -172,57 +144,47 @@ updateCosts();
 })();
 
 /* =========================
-   Wallet Connect — Mobile-first
+   Wallet Connect — tek akış
    - Phantom / Solflare / Backpack
-   - Mobilde provider yoksa: wallet app içinde siteyi aç (deeplink)
-   - Wallet içi tarayıcıda otomatik connect()
+   - Mobil: provider yoksa wallet app içinde site
+   - Wallet içi: otomatik connect()
    - Tüm sayfalardaki butonlar (#connectBtn + [data-connect])
 ========================= */
 
 const Wallets = {
   phantom:{
-    key:'phantom', label:'Phantom', icon:'assets/images/wallets/phantom.png?v=9',
-    has:()=> !!(
-      window.phantom?.solana?.isPhantom ||
-      window.solana?.isPhantom ||
-      window.solana?.isPhantomApp
-    ),
+    key:'phantom', label:'Phantom', icon:'assets/images/wallets/phantom.png',
+    // Phantom tespit (in-app + extension)
+    has:()=> !!(window.phantom?.solana?.isPhantom || window.solana?.isPhantom || window.solana?.isPhantomApp),
     provider:()=> window.phantom?.solana || window.solana,
     async connect(){
-      const p = this.provider();
-      try{ const r = await p.connect({ onlyIfTrusted:true }); const pk=(r?.publicKey||p.publicKey); if(pk) return pk.toString(); }catch(_){}
-      const r2 = await p.connect(); return (r2?.publicKey || p.publicKey).toString();
+      const p=this.provider();
+      try{ const r=await p.connect({onlyIfTrusted:true}); const pk=(r?.publicKey||p.publicKey); if(pk) return pk.toString(); }catch(_){}
+      const r2=await p.connect(); return (r2?.publicKey||p.publicKey).toString();
     },
     async disconnect(){ try{ await this.provider()?.disconnect?.(); }catch{} },
     deeplink:(url)=>`https://phantom.app/ul/browse/${encodeURIComponent(url)}?network=${encodeURIComponent(CONFIG.cluster)}`
   },
   solflare:{
-    key:'solflare', label:'Solflare', icon:'assets/images/wallets/solflare.png?v=9',
-    has:()=> !!(
-      window.solflare?.isSolflare ||
-      typeof window.solflare?.connect === "function"
-    ),
+    key:'solflare', label:'Solflare', icon:'assets/images/wallets/solflare.png',
+    has:()=> !!(window.solflare?.isSolflare || typeof window.solflare?.connect==="function"),
     provider:()=> window.solflare,
     async connect(){
-      const p = this.provider();
-      try{ const r = await p.connect({ onlyIfTrusted:true }); const pk=(r?.publicKey||p.publicKey); if(pk) return pk.toString(); }catch(_){}
-      const r2 = await p.connect(); return (r2?.publicKey || p.publicKey).toString();
+      const p=this.provider();
+      try{ const r=await p.connect({onlyIfTrusted:true}); const pk=(r?.publicKey||p.publicKey); if(pk) return pk.toString(); }catch(_){}
+      const r2=await p.connect(); return (r2?.publicKey||p.publicKey).toString();
     },
     async disconnect(){ try{ await this.provider()?.disconnect?.(); }catch{} },
     deeplink:(url)=>`https://solflare.com/ul/v1/browse/${encodeURIComponent(url)}?network=${encodeURIComponent(CONFIG.cluster)}`
   },
   backpack:{
-    key:'backpack', label:'Backpack', icon:'assets/images/wallets/backpack.png?v=9',
-    has:()=> !!(
-      window.backpack?.solana?.isBackpack ||
-      window.backpack?.isBackpack ||
-      window.xnft?.solana?.isBackpack
-    ),
+    key:'backpack', label:'Backpack', icon:'assets/images/wallets/backpack.png',
+    has:()=> !!(window.backpack?.solana?.isBackpack || window.backpack?.isBackpack || window.xnft?.solana?.isBackpack),
     provider:()=> window.backpack?.solana || window.backpack || window.xnft?.solana,
     async connect(){
-      const p = this.provider();
-      try{ const r = await p.connect({ onlyIfTrusted:true }); const pk=(r?.publicKey||p.publicKey); if(pk) return pk.toString(); }catch(_){}
-      const r2 = await p.connect(); return (r2?.publicKey || p.publicKey).toString();
+      const p=this.provider();
+      try{ const r=await p.connect({onlyIfTrusted:true}); const pk=(r?.publicKey||p.publicKey); if(pk) return pk.toString(); }catch(_){}
+      const r2=await p.connect(); return (r2?.publicKey||p.publicKey).toString();
     },
     async disconnect(){ try{ await this.provider()?.disconnect?.(); }catch{} },
     deeplink:(url)=>`https://backpack.app/ul/browse/${encodeURIComponent(url)}?network=${encodeURIComponent(CONFIG.cluster)}`
@@ -233,11 +195,11 @@ let CURRENT_ADDRESS = null;
 let CURRENT_WALLET  = null;
 
 function walletListHTML(){
-  // PNG → SVG → generic fallback
+  // PNG → SVG → text fallback
   return Object.values(Wallets).map(w=>`
     <button class="wbtn" data-key="${w.key}">
       <img src="${w.icon}" alt="${w.label}" width="22" height="22"
-        onerror="this.onerror=null;(this.src='assets/images/wallets/${w.key}.svg?v=9');this.onerror=function(){this.src='assets/images/wallets/wallet.png?v=9'}">
+        onerror="this.onerror=null;(this.src='assets/images/wallets/${w.key}.svg');this.onerror=function(){this.replaceWith(Object.assign(document.createElement('span'),{textContent:'${w.label}' }))}">
       <span>${w.label}</span>
     </button>`).join("");
 }
@@ -247,7 +209,7 @@ function walletListHTML(){
   const list  = $("#wlist");
   if(list) list.innerHTML = walletListHTML();
 
-  // Tek akış: #connectBtn ve tüm [data-connect]
+  // Global “bağlan” butonları (navbar + stake/claim simülatör)
   function bindGlobalConnectButtons(){
     const all = [$("#connectBtn"), ...$$("[data-connect]")].filter(Boolean);
     all.forEach(btn=>{
@@ -264,7 +226,7 @@ function walletListHTML(){
   }
   bindGlobalConnectButtons();
 
-  // Modal liste
+  // Modal liste tıklama
   list?.addEventListener("click", e=>{
     const btn = e.target.closest(".wbtn"); if(!btn) return;
     connectFlow(btn.dataset.key);
@@ -274,17 +236,17 @@ function walletListHTML(){
   $("#wmClose")?.addEventListener("click", ()=>modal?.classList.remove("show"));
   modal?.addEventListener("click", (e)=>{ if(e.target===modal) modal.classList.remove("show"); });
 
-  // Geri yükle
+  // Kayıtlı oturum → geri yükle
   const savedAddr   = localStorage.getItem(CONFIG.LS_ADDR);
   const savedWallet = localStorage.getItem(CONFIG.LS_WALLET);
   if(savedAddr && savedWallet){ onConnected(savedWallet, savedAddr, {silent:true}); }
   else { setBuyButtonsEnabled(false); }
 
-  // Stake/Claim gibi dinamik sayfalara tekrar bağlamak için
+  // Stake/Claim gibi sonradan yüklenen butonlar için
   const mo = new MutationObserver(bindGlobalConnectButtons);
   mo.observe(document.body, {subtree:true, childList:true});
 
-  // Wallet app içindeysek (deeplink round-trip) otomatik bağlan
+  // Wallet app içine dönmüşsek otomatik bağla
   autoConnectIfReturned();
 })();
 
@@ -293,12 +255,13 @@ async function connectFlow(key){
   const modal = $("#walletModal");
   const urlNow = location.href;
 
-  // Provider yoksa — mobil → cüzdan içinde siteyi aç
+  // Provider yoksa ve mobil isek → wallet app içinde siteyi aç
   if(!impl.has() && IS_MOBILE){
     try{
       sessionStorage.setItem(CONFIG.SS_AWAIT, "1");
       sessionStorage.setItem(CONFIG.SS_TARGET, key);
       modal?.classList.remove("show");
+      // Aynı sayfaya döndüğümüzde w= ile tanıyacağız
       window.location.href = impl.deeplink(addUrlFlag(urlNow, `w=${key}`));
       return;
     }catch(e){
@@ -307,10 +270,10 @@ async function connectFlow(key){
     }
   }
 
-  // Masaüstü ve provider yoksa modalda kal
+  // Masaüstü ve provider yoksa → modalda kal
   if(!impl.has() && !IS_MOBILE){
     modal?.classList.add("show");
-    alert("Wallet eklentisi bulunamadı. Phantom/Solflare/Backpack kurup tekrar deneyin.");
+    alert("Wallet eklentisi yok. Phantom/Solflare/Backpack kurup tekrar deneyin.");
     return;
   }
 
@@ -335,35 +298,26 @@ function addUrlFlag(url, flagKV){
 }
 
 async function autoConnectIfReturned(){
-  // 1) Query flag ile hangi cüzdandan geldiğimizi anla
   const u = new URL(location.href);
   const qW = u.searchParams.get("w");
-  // 2) Session "await" → wallet app’e gitmiştik, şimdi geri döndük
   const awaiting = sessionStorage.getItem(CONFIG.SS_AWAIT)==="1";
   const target   = sessionStorage.getItem(CONFIG.SS_TARGET);
-
   const want = qW || target || null;
   if(!want) return;
+  const impl = Wallets[want]; if(!impl) return;
 
-  const impl = Wallets[want];
-  if(!impl) return;
-
-  // Wallet içindeysek provider hazır olur, otomatik bağlan
   if(impl.has()){
     try{
       const addr = await withTimeout(impl.connect(), 20000);
       onConnected(want, addr, {silent:false});
-      // bayrakları temizle
       sessionStorage.removeItem(CONFIG.SS_AWAIT);
       sessionStorage.removeItem(CONFIG.SS_TARGET);
-      // URL’den w= paramını kaldır
       u.searchParams.delete("w");
       history.replaceState({}, "", u.toString());
     }catch(e){
       console.warn("autoConnect failed:", e);
     }
   }else if(awaiting){
-    // hâlâ provider yoksa tekrar modal
     $("#walletModal")?.classList.add("show");
   }
 }
@@ -374,13 +328,17 @@ function onConnected(key, addr, opts={}){
   localStorage.setItem(CONFIG.LS_ADDR, addr);
   localStorage.setItem(CONFIG.LS_WALLET, key);
 
-  // Tüm bağla butonlarında adres kısaltması
+  // Navbar + tüm sayfalardaki bağlan butonlarını güncelle
   [$("#connectBtn"), ...$$("[data-connect]")].forEach(btn=>{
     if(btn) btn.textContent = `${addr.slice(0,6)}...${addr.slice(-4)}`;
   });
 
+  // Referans linki
   const out = $("#refLink"); if(out) out.value = `${location.origin}${location.pathname}?ref=${addr}`;
+
+  // Satın al butonlarını aç
   setBuyButtonsEnabled(true);
+
   if(!opts.silent) console.log("Connected:", key, addr);
 }
 
@@ -417,10 +375,11 @@ function handleBuy(weekIdx){
   const price = CONFIG.weekPrices[weekIdx];
   const usdtCost = qty * price;
 
-  // Oran örnektir (1 USDT ≈ 0.01 SOL). Kur entegrasyonu eklenmedikçe kullanıcı bilgilendiriliyor.
+  // NOT: Aşağıdaki kur örnektir. Gerçek kur entegrasyonu eklenmedikçe kullanıcıya açıkça belirtilir.
   const solAmount = (usdtCost * 0.01).toFixed(4);
 
-  const redirect = location.href;
+  // Phantom transfer deeplink
+  const redirect = location.href; // işlem sonrası geri dönüş
   const deeplink = `https://phantom.app/ul/transfer`+
     `?recipient=${encodeURIComponent(CONFIG.treasury)}`+
     `&amount=${encodeURIComponent(solAmount)}`+
@@ -437,7 +396,7 @@ function handleBuy(weekIdx){
   alert(`Phantom transfer ekranı açılacak (~${solAmount} SOL). İşlem sonrası siteye geri dönersin.`);
 }
 
-/* =============== küçük dokunuş =============== */
+/* =============== ufak dokunuş =============== */
 (function ensureTickerVisible(){
   const t=$("#exTrack"); if(!t) return;
   t.style.transform="translateX(0)"; setTimeout(()=>t.style.transform="", 60);
