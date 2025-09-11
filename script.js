@@ -10,9 +10,9 @@ const CONFIG = {
     id: i, name: `ZUZU #${i + 1}`, rarity: i % 5 === 0 ? 'Legendary' : (i % 2 ? 'Rare' : 'Epic')
   })),
 
-  // Solana
-  cluster: "mainnet-beta",                 // deeplink için doğru değer
-  treasury: "FniLJmY5L6zQyQfot6xsiYojHeEzoGs2xZXYZh1U9QwF",   // ✅ gerçek SOL hazine adresin
+  // Solana (Phantom deeplink network paramı için "mainnet-beta" doğrudur)
+  cluster: "mainnet-beta",
+  treasury: "FniLJmY5L6zQyQfot6xsiYojHeEzoGs2xZXYZh1U9QwF",
 
   // LS keys
   LS_ADDR: "zuzu_connected_addr",
@@ -140,7 +140,7 @@ updateCosts();
   const g=$("#nftGrid"); if(!g) return;
   g.innerHTML = CONFIG.nfts.map(n=>`
     <div class="nft">
-      <img src="assets/images/mask/${n.id}.png" alt="${n.name}" loading="lazy"
+      <img src="assets/images/mask/${n.id}.png?v=5" alt="${n.name}" loading="lazy"
            onerror="this.style.display='none'">
       <div class="meta"><b>${n.name}</b><span class="tag">${n.rarity}</span></div>
     </div>`).join("");
@@ -158,26 +158,28 @@ updateCosts();
 
 /* =========================
    Wallet Connect (Solana)
+   - Phantom / Solflare / Backpack
+   - Global bağla: #connectBtn ve [data-connect]
 ========================= */
 const Wallets = {
   phantom:{
-    key:'phantom', label:'Phantom', icon:'assets/images/wallets/phantom.png',
+    key:'phantom', label:'Phantom', icon:'assets/images/wallets/phantom.png?v=5',
     has:()=>!!(window.solana && (window.solana.isPhantom || window.solana.isPhantomApp)),
     connect:async()=>{ const p=window.solana; const r=await p.connect({ onlyIfTrusted:false }); return (r?.publicKey||p.publicKey).toString(); },
     disconnect:async()=>{ try{ await window.solana.disconnect?.(); }catch{} },
-    deeplink:(url)=>`https://phantom.app/ul/browse/${encodeURIComponent(url)}?ref=zuzu&network=${encodeURIComponent(CONFIG.cluster)}`
+    deeplink:(url)=>`https://phantom.app/ul/browse/${encodeURIComponent(url)}?network=${encodeURIComponent(CONFIG.cluster)}`
   },
   solflare:{
-    key:'solflare', label:'Solflare', icon:'assets/images/wallets/solflare.png',
+    key:'solflare', label:'Solflare', icon:'assets/images/wallets/solflare.png?v=5',
     has:()=>!!(window.solflare && (window.solflare.isSolflare || typeof window.solflare.connect==="function")),
     connect:async()=>{ const p=window.solflare; const r=await p.connect(); return (r?.publicKey||p.publicKey).toString(); },
     disconnect:async()=>{ try{ await window.solflare.disconnect?.(); }catch{} },
-    deeplink:(url)=>`https://solflare.com/ul/v1/browse/${encodeURIComponent(url)}?ref=zuzu&network=${encodeURIComponent(CONFIG.cluster)}`
+    deeplink:(url)=>`https://solflare.com/ul/v1/browse/${encodeURIComponent(url)}?network=${encodeURIComponent(CONFIG.cluster)}`
   },
   backpack:{
-    key:'backpack', label:'Backpack', icon:'assets/images/wallets/backpack.png',
+    key:'backpack', label:'Backpack', icon:'assets/images/wallets/backpack.png?v=5',
     has:()=>!!(window.backpack?.solana?.isBackpack || window.backpack?.isBackpack),
-    connect:async()=>{ const p = window.backpack?.solana || window.backpack; const r=await p.connect(); return (r?.publicKey||p.publicKey).toString(); },
+    connect:async()=>{ const p=window.backpack?.solana || window.backpack; const r=await p.connect(); return (r?.publicKey||p.publicKey).toString(); },
     disconnect:async()=>{ try{ await (window.backpack?.solana||window.backpack)?.disconnect?.(); }catch{} },
     deeplink:(url)=>`https://backpack.app/ul/browse/${encodeURIComponent(url)}?network=${encodeURIComponent(CONFIG.cluster)}`
   }
@@ -187,98 +189,84 @@ let CURRENT_ADDRESS = null;
 let CURRENT_WALLET  = null;
 
 function walletListHTML(){
-  // PNG varsa onu göster; PNG yüklenemezse aynı klasördeki SVG’ye düş.
+  // PNG yüklenemezse SVG’ye düş (cache-bust için ?v=5)
   return Object.values(Wallets).map(w=>`
     <button class="wbtn" data-key="${w.key}">
       <img src="${w.icon}" alt="${w.label}" width="22" height="22"
-           onerror="this.onerror=null; this.src='assets/images/wallets/${w.key}.svg'">
+           onerror="this.onerror=null; this.src='assets/images/wallets/${w.key}.svg?v=5'">
       <span>${w.label}</span>
     </button>`).join("");
 }
 
-/* ----- modal lifecycle ----- */
-(function initWalletModal(){
+/* ---- modal & global bağla ---- */
+(function initWalletUI(){
   const modal = $("#walletModal"); const list = $("#wlist");
-  const btnConnect = $("#connectBtn"); const btnClose = $("#wmClose");
-  const btnDisconnect = $("#disconnectBtn");
-  if(!modal || !list || !btnConnect) return;
+  const btnClose = $("#wmClose");
+  if(list) list.innerHTML = walletListHTML();
 
-  list.innerHTML = walletListHTML();
+  // Tüm bağla butonları (#connectBtn + [data-connect]) aynı akışı kullansın
+  function bindGlobalConnectButtons(){
+    const all = [$("#connectBtn"), ...$$("[data-connect]")].filter(Boolean);
+    all.forEach(btn=>{
+      if(btn.dataset._bind) return;
+      btn.dataset._bind = "1";
+      btn.addEventListener("click", ()=>{
+        const direct = Wallets.phantom.has() ? Wallets.phantom :
+                       (Wallets.solflare.has() ? Wallets.solflare :
+                       (Wallets.backpack.has() ? Wallets.backpack : null));
+        if(direct){ connectFlow(direct.key); }
+        else{ modal?.classList.add("show"); }
+      });
+    });
+  }
+  bindGlobalConnectButtons();
 
-  // geri yükle
+  // Liste tıklaması
+  list?.addEventListener("click", e=>{
+    const btn = e.target.closest(".wbtn"); if(!btn) return;
+    connectFlow(btn.dataset.key);
+  });
+
+  // Modal kapat
+  btnClose?.addEventListener("click", ()=>modal?.classList.remove("show"));
+  modal?.addEventListener("click", (e)=>{ if(e.target===modal) modal.classList.remove("show"); });
+
+  // LocalStorage’dan geri yükle
   const savedAddr   = localStorage.getItem(CONFIG.LS_ADDR);
   const savedWallet = localStorage.getItem(CONFIG.LS_WALLET);
   if(savedAddr && savedWallet){
-    CURRENT_ADDRESS = savedAddr;
-    CURRENT_WALLET  = savedWallet;
-    btnConnect.textContent = `${savedAddr.slice(0,6)}...${savedAddr.slice(-4)}`;
-    btnDisconnect && (btnDisconnect.style.display = "inline-flex");
-    setBuyButtonsEnabled(true); // bağlandıysa aktif
+    onConnected(savedWallet, savedAddr, {silent:true});
+  }else{
+    setBuyButtonsEnabled(false);
   }
 
-  // backdrop & esc
-  modal.addEventListener("click", (e)=>{ if(e.target === modal) modal.classList.remove("show"); });
-  btnClose?.addEventListener("click", ()=>modal.classList.remove("show"));
-  document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") modal.classList.remove("show"); });
-
-  // connect
-  btnConnect.addEventListener("click", async ()=>{
-    const direct = Wallets.phantom.has() ? Wallets.phantom :
-                   (Wallets.solflare.has() ? Wallets.solflare :
-                   (Wallets.backpack.has() ? Wallets.backpack : null));
-    if(direct){ await connectFlow(direct.key); }
-    else{ modal.classList.add("show"); }
-  });
-
-  // list click
-  list.addEventListener("click", async (e)=>{
-    const btn = e.target.closest(".wbtn"); if(!btn) return;
-    await connectFlow(btn.dataset.key);
-  });
-
-  // disconnect
-  btnDisconnect?.addEventListener("click", async ()=>{
-    if(!CURRENT_WALLET) return;
-    try{ await Wallets[CURRENT_WALLET]?.disconnect?.(); }catch{}
-    CURRENT_WALLET = null; CURRENT_ADDRESS = null;
-    localStorage.removeItem(CONFIG.LS_ADDR);
-    localStorage.removeItem(CONFIG.LS_WALLET);
-    $("#connectBtn").textContent = I[(localStorage.getItem(CONFIG.LS_LANG)||"en")].connect || "Connect Wallet";
-    btnDisconnect.style.display = "none";
-    setBuyButtonsEnabled(false);
-    alert("Disconnected.");
-  });
-
-  if(!CURRENT_ADDRESS) setBuyButtonsEnabled(false); // başlangıçta kapalı
+  // Dinamik eklenen butonlar için (stake-simulator / claim gibi ayrı sayfalar)
+  const mo = new MutationObserver(bindGlobalConnectButtons);
+  mo.observe(document.body, {subtree:true, childList:true});
 })();
 
 async function connectFlow(key){
   const impl = Wallets[key];
   const modal = $("#walletModal");
-  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  const nowUrl   = location.href;
+  if(!impl) return;
 
-  // mobil + provider yok → wallet içinde site
+  const ua = navigator.userAgent || "";
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(ua);
+  const inPhantomWebview = /Phantom/i.test(ua) || window.solana?.isPhantomApp;
+
+  // Mobil ve provider yoksa → wallet içinde siteyi aç
   if(!impl.has() && isMobile){
     modal?.classList.remove("show");
-    sessionStorage.setItem("zuzu_await_wallet","1");
-    window.open(impl.deeplink(nowUrl), "_blank");
+    window.open(impl.deeplink(location.href), "_blank");
     return;
   }
 
+  // Provider varsa normal connect
   try{
     const addr = await withTimeout(impl.connect(), 20000);
     onConnected(key, addr);
     modal?.classList.remove("show");
   }catch(err){
-    if (sessionStorage.getItem("zuzu_await_wallet")==="1" && impl.has()){
-      sessionStorage.removeItem("zuzu_await_wallet");
-      try{
-        const addr = await withTimeout(impl.connect(), 20000);
-        onConnected(key, addr);
-        return;
-      }catch(e){}
-    }
     console.warn("wallet connect failed:", err);
     if(!impl.has()){
       modal?.classList.add("show");
@@ -289,21 +277,26 @@ async function connectFlow(key){
   }
 }
 
-function onConnected(key, addr){
+function onConnected(key, addr, opts={}){
   CURRENT_ADDRESS = addr;
   CURRENT_WALLET  = key;
   localStorage.setItem(CONFIG.LS_ADDR, addr);
   localStorage.setItem(CONFIG.LS_WALLET, key);
 
-  const btnConnect = $("#connectBtn");
-  if(btnConnect) btnConnect.textContent = `${addr.slice(0,6)}...${addr.slice(-4)}`;
-  const btnDisconnect = $("#disconnectBtn");
-  if(btnDisconnect) btnDisconnect.style.display = "inline-flex";
+  // Tüm bağla butonlarının metnini güncelle
+  [$("#connectBtn"), ...$$("[data-connect]")].forEach(btn=>{
+    if(!btn) return;
+    btn.textContent = `${addr.slice(0,6)}...${addr.slice(-4)}`;
+  });
 
-  const out = $("#refLink");
-  if(out) out.value = `${location.origin}${location.pathname}?ref=${addr}`;
+  $("#disconnectBtn") && ($("#disconnectBtn").style.display = "inline-flex");
+  const out = $("#refLink"); if(out) out.value = `${location.origin}${location.pathname}?ref=${addr}`;
 
-  setBuyButtonsEnabled(true); // BAĞLANIR BAĞLANMAZ AÇ
+  setBuyButtonsEnabled(true);
+
+  if(!opts.silent){
+    console.log("Connected:", key, addr);
+  }
 }
 
 function withTimeout(promise, ms){
@@ -313,7 +306,7 @@ function withTimeout(promise, ms){
   });
 }
 
-/* =============== Satın alma (stub) =============== */
+/* =============== Satın alma =============== */
 function activeWeek(){ return 0; }
 
 ["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{
@@ -333,28 +326,37 @@ function setBuyButtonsEnabled(ok){
 function handleBuy(weekIdx){
   const qty = parseFloat(($("#buyAmount")?.value||"0").toString().replace(/[^\d.]/g,""))||0;
   if(qty<=0){ alert("Geçerli miktar gir."); return; }
-
   if(weekIdx!==activeWeek()){ alert("Bu hafta aktif değil."); return; }
-  if(!CURRENT_ADDRESS){ alert("Önce cüzdan bağla (Phantom / Solflare / Backpack)."); return; }
+  if(!CURRENT_ADDRESS){ alert("Önce cüzdan bağla."); return; }
 
   const price = CONFIG.weekPrices[weekIdx];
   const usdtCost = qty * price;
 
-  if(!CONFIG.treasury){
-    alert("Treasury adresi tanımlı değil.");
-    return;
+  // SOL ile ödeme (deeplink)
+  const solAmount = (usdtCost * 0.01).toFixed(4); // örnek oran; kur entegrasyonu eklenebilir
+  const ua = navigator.userAgent || "";
+  const inPhantomWebview = /Phantom/i.test(ua) || window.solana?.isPhantomApp;
+  const redirect = location.href;
+
+  // Phantom transfer deeplink (asset, label, message, redirect_link ile)
+  const deeplink = `https://phantom.app/ul/transfer` +
+    `?recipient=${encodeURIComponent(CONFIG.treasury)}` +
+    `&amount=${encodeURIComponent(solAmount)}` +
+    `&asset=SOL` +
+    `&reference=${encodeURIComponent(CURRENT_ADDRESS)}` +
+    `&label=${encodeURIComponent("ZUZUCOIN Presale")}` +
+    `&message=${encodeURIComponent("ZUZU presale payment")}` +
+    `&network=${encodeURIComponent(CONFIG.cluster)}` +
+    `&redirect_link=${encodeURIComponent(redirect)}`;
+
+  // Cüzdan içi tarayıcıdaysa aynı pencerede, değilse yeni sekme
+  if(inPhantomWebview){
+    location.href = deeplink;
+  }else{
+    window.open(deeplink, "_blank");
   }
 
-  const payWith = $("#payWith").value;
-  if(payWith==="SOL"){
-    // Placeholder kur: 1 USDT ≈ 0.01 SOL (örnek). Kur entegrasyonu isteğe bağlı.
-    const solAmount = (usdtCost * 0.01).toFixed(4);
-    const deeplink = `https://phantom.app/ul/transfer?recipient=${encodeURIComponent(CONFIG.treasury)}&amount=${solAmount}&reference=${encodeURIComponent(CURRENT_ADDRESS)}&network=${encodeURIComponent(CONFIG.cluster)}`;
-    window.open(deeplink, "_blank");
-    alert(`Phantom açılacak. ~${solAmount} SOL gönderiyorsun.\n(Oran örnek; gerçek kur entegrasyonu eklenecek.)`);
-  }else{
-    alert("USDT (Solana) transferi için SPL-Token işlem entegrasyonu eklenecek.");
-  }
+  alert(`Phantom transfer ekranı açılacak (~${solAmount} SOL). İşlem sonrası siteye geri dönersin.`);
 }
 
 /* =============== ufak dokunuş =============== */
