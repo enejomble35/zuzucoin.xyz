@@ -2,14 +2,22 @@
    CONFIG
 ========================= */
 const CONFIG = {
-  // geri sayımı sabitle: localStorage'a 1 kez yazılır (yenileyince sıfırlanmaz)
+  // Countdown (persist)
   launchKey: "zuzu_launchAt",
   defaultLaunchISO: "2025-12-31T23:59:59Z",
 
-  weekPrices: [0.0050,0.0065,0.0080,0.0100], // USDT
-  nfts: Array.from({length:10}).map((_,i)=>({
-    id:i, name:`ZUZU #${i+1}`, rarity: i%5===0?'Legendary':(i%2?'Rare':'Epic')
-  }))
+  weekPrices: [0.0050, 0.0065, 0.0080, 0.0100], // USDT
+  nfts: Array.from({ length: 10 }).map((_, i) => ({
+    id: i, name: `ZUZU #${i + 1}`, rarity: i % 5 === 0 ? 'Legendary' : (i % 2 ? 'Rare' : 'Epic')
+  })),
+
+  // Solana config
+  cluster: "mainnet", // "mainnet" | "devnet"
+  treasury: "FILL_TREASURY_SOL_ADDRESS", // !!! BURAYA ZUZU HAZİNE ADRESİNİ YAZ !!!
+  // Ref / session keys
+  LS_ADDR: "zuzu_connected_addr",
+  LS_WALLET: "zuzu_connected_wallet",
+  LS_LANG: "zuzu_lang"
 };
 
 /* =========================
@@ -17,7 +25,7 @@ const CONFIG = {
 ========================= */
 const I = {
   en:{nav_presale:"Pre-Sale",nav_stake:"Stake",nav_nft:"NFT Rewards",nav_roadmap:"Roadmap",nav_token:"Tokenomics",connect:"Connect Wallet",
-      hero_badge:"Pre-Sale • Stake to Win NFT",hero_title:"ZUZU — Robotic Hedgehog 🦔⚡💤",
+      hero_badge:"Pre-Sale • Stake to Win NFT",hero_title:"ZUZU — Robotic Hedgehog 🦔⚡",
       hero_lead:"Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high <b>utility</b>.",
       cta_stake:"Start Staking",cta_nft:"NFT Rewards",days:"DAYS",hours:"HOURS",mins:"MINUTES",secs:"SECONDS",
       presale_title:"Pre-Sale — Countdown",presale_lead:"Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.",
@@ -25,7 +33,7 @@ const I = {
       stake_title:"Stake Pro — Lock, Earn, Get NFT ✨",stake_lead:"Lock your ZUZU, earn <b>APY + NFT BOOST</b>.",
       token_title:"Tokenomics (Visualized)",road_title:"Roadmap"},
   tr:{nav_presale:"Ön Satış",nav_stake:"Stake",nav_nft:"NFT Ödülleri",nav_roadmap:"Yol Haritası",nav_token:"Tokonomi",connect:"Cüzdan Bağla",
-      hero_badge:"Ön Satış • Stake ile NFT Kazan",hero_title:"ZUZU — Geleceğin Robotic Kirpisi 🦔⚡💤",
+      hero_badge:"Ön Satış • Stake ile NFT Kazan",hero_title:"ZUZU — Geleceğin Robotic Kirpisi 🦔⚡",
       hero_lead:"Stake et ve <b>ZUZU Maskot NFT</b> kazan. Sınırlı arz, yüksek <b>utility</b>.",
       cta_stake:"Stake Etmeye Başla",cta_nft:"NFT Ödülleri",days:"GÜN",hours:"SAAT",mins:"DAKİKA",secs:"SANİYE",
       presale_title:"Ön Satış — Geri Sayım",presale_lead:"ZUZU ön satışına hazır ol! <b>Sınırlı tahsis</b>, topluluğa özel fiyat.",
@@ -33,7 +41,7 @@ const I = {
       stake_title:"Stake Pro — Kilitle, Kazan, NFT Kap ✨",stake_lead:"ZUZU’larını kilitle, <b>APY + NFT BOOST</b> ile kazan.",
       token_title:"Tokonomi (Görsel)",road_title:"Yol Haritası"},
   fr:{nav_presale:"Pré-vente",nav_stake:"Stake",nav_nft:"Récompenses NFT",nav_roadmap:"Feuille de route",nav_token:"Tokenomics",connect:"Connecter le Wallet",
-      hero_badge:"Pré-vente • Stake pour gagner un NFT",hero_title:"ZUZU — Hérisson Robotique 🦔⚡💤",
+      hero_badge:"Pré-vente • Stake pour gagner un NFT",hero_title:"ZUZU — Hérisson Robotique 🦔⚡",
       hero_lead:"Stake et gagne un <b>NFT Mascotte ZUZU</b>.",cta_stake:"Commencer le Stake",cta_nft:"Récompenses NFT",
       days:"JOURS",hours:"HEURES",mins:"MINUTES",secs:"SECONDES",
       presale_title:"Pré-vente — Compte à rebours",presale_lead:"Prépare-toi pour la pré-vente ZUZU ! <b>Allocation limitée</b>.",
@@ -41,7 +49,7 @@ const I = {
       stake_title:"Stake Pro — Verrouille, Gagne, Reçois un NFT ✨",stake_lead:"Verrouille ton ZUZU et gagne <b>APY + BOOST NFT</b>.",
       token_title:"Tokenomics (Visualisé)",road_title:"Feuille de route"},
   pt:{nav_presale:"Pré-venda",nav_stake:"Stake",nav_nft:"Recompensas NFT",nav_roadmap:"Roteiro",nav_token:"Tokenomics",connect:"Conectar Carteira",
-      hero_badge:"Pré-venda • Stake para ganhar NFT",hero_title:"ZUZU — Ouriço Robótico 🦔⚡💤",
+      hero_badge:"Pré-venda • Stake para ganhar NFT",hero_title:"ZUZU — Ouriço Robótico 🦔⚡",
       hero_lead:"Faça stake e ganhe <b>NFT Mascote ZUZU</b>.",cta_stake:"Começar Stake",cta_nft:"Recompensas NFT",
       days:"DIAS",hours:"HORAS",mins:"MINUTOS",secs:"SEGUNDOS",
       presale_title:"Pré-venda — Contagem regressiva",presale_lead:"Prepare-se para a pré-venda ZUZU! <b>Alocação limitada</b>.",
@@ -49,7 +57,7 @@ const I = {
       stake_title:"Stake Pro — Trave, Ganhe, Receba NFT ✨",stake_lead:"Trave seu ZUZU e ganhe <b>APY + BOOST NFT</b>.",
       token_title:"Tokenomics (Visualizado)",road_title:"Roteiro"},
   ru:{nav_presale:"Предпродажа",nav_stake:"Стейкинг",nav_nft:"NFT награды",nav_roadmap:"Дорожная карта",nav_token:"Токеномика",connect:"Подключить кошелёк",
-      hero_badge:"Предпродажа • Стейкинг для NFT",hero_title:"ZUZU — Робо-Ёж 🦔⚡💤",
+      hero_badge:"Предпродажа • Стейкинг для NFT",hero_title:"ZUZU — Робо-Ёж 🦔⚡",
       hero_lead:"Стейкай и получай <b>маскот NFT ZUZU</b>.",cta_stake:"Начать стейкинг",cta_nft:"NFT награды",
       days:"ДНИ",hours:"ЧАСЫ",mins:"МИН.",secs:"СЕК.",
       presale_title:"Предпродажа — Обратный отсчёт",presale_lead:"Готовься к предпродаже ZUZU! <b>Ограниченная аллокация</b>.",
@@ -57,7 +65,7 @@ const I = {
       stake_title:"Stake Pro — Заморозь, Заработай, Получи NFT ✨",stake_lead:"Заморозь ZUZU и получай <b>APY + NFT BOOST</b>.",
       token_title:"Токеномика (визуально)",road_title:"Дорожная карта"},
   es:{nav_presale:"Pre-venta",nav_stake:"Stake",nav_nft:"Recompensas NFT",nav_roadmap:"Hoja de ruta",nav_token:"Tokenomics",connect:"Conectar Billetera",
-      hero_badge:"Pre-venta • Stake para ganar NFT",hero_title:"ZUZU — Erizo Robótico 🦔⚡💤",
+      hero_badge:"Pre-venta • Stake para ganar NFT",hero_title:"ZUZU — Erizo Robótico 🦔⚡",
       hero_lead:"Haz stake y gana <b>NFT Mascota ZUZU</b>.",cta_stake:"Empezar Stake",cta_nft:"Recompensas NFT",
       days:"DÍAS",hours:"HORAS",mins:"MINUTOS",secs:"SEGUNDOS",
       presale_title:"Pre-venta — Cuenta regresiva",presale_lead:"¡Prepárate para la pre-venta ZUZU! <b>Asignación limitada</b>.",
@@ -66,29 +74,35 @@ const I = {
       token_title:"Tokenomics (Visualizado)",road_title:"Hoja de ruta"}
 };
 
-/* =============== Lang UI =============== */
-const $ = (q,root=document)=>root.querySelector(q);
-const $$= (q,root=document)=>[...root.querySelectorAll(q)];
+/* =============== tiny dom helpers =============== */
+const $ = (q, root=document) => root.querySelector(q);
+const $$= (q, root=document) => [...root.querySelectorAll(q)];
 
+/* =============== Lang UI =============== */
 function applyLang(lang){
-  localStorage.setItem("zuzu_lang", lang);
-  $$("#langCode").forEach(el=>el.textContent=lang.toUpperCase());
-  $("#langFlag").src = `flags/${lang}.png`;
+  localStorage.setItem(CONFIG.LS_LANG, lang);
+  const langCode = $("#langCode");
+  if (langCode) langCode.textContent = lang.toUpperCase();
+  const flag = $("#langFlag");
+  if (flag) flag.src = `flags/${lang}.png`;
   document.querySelectorAll("[data-i]").forEach(el=>{
-    const k=el.getAttribute("data-i"); if(I[lang] && I[lang][k]) el.innerHTML=I[lang][k];
+    const k=el.getAttribute("data-i");
+    if(I[lang] && I[lang][k]) el.innerHTML=I[lang][k];
   });
 }
 (function initLang(){
-  const saved = localStorage.getItem("zuzu_lang") || "en";
+  const saved = localStorage.getItem(CONFIG.LS_LANG) || "en";
   applyLang(saved);
   const langBtn  = $("#langBtn"), langMenu=$("#langMenu");
-  langBtn.addEventListener("click", ()=>langMenu.classList.toggle("show"));
-  $$(".lang-opt").forEach(b=>b.addEventListener("click", ()=>{
-    applyLang(b.dataset.lang); langMenu.classList.remove("show");
-  }));
-  document.addEventListener("click", (e)=>{
-    if(!langMenu.contains(e.target) && e.target!==langBtn) langMenu.classList.remove("show");
-  });
+  if(langBtn && langMenu){
+    langBtn.addEventListener("click", ()=>langMenu.classList.toggle("show"));
+    $$(".lang-opt").forEach(b=>b.addEventListener("click", ()=>{
+      applyLang(b.dataset.lang); langMenu.classList.remove("show");
+    }));
+    document.addEventListener("click", (e)=>{
+      if(!langMenu.contains(e.target) && e.target!==langBtn) langMenu.classList.remove("show");
+    });
+  }
 })();
 
 /* =============== Countdown (persist) =============== */
@@ -104,27 +118,29 @@ function tick(){
   const m=Math.floor((left%3600000)/60000);
   const s=Math.floor((left%60000)/1000);
   const pad=n=>n.toString().padStart(2,"0");
-  $("#cdDays").textContent=pad(d);
-  $("#cdHours").textContent=pad(h);
-  $("#cdMins").textContent=pad(m);
-  $("#cdSecs").textContent=pad(s);
+  $("#cdDays") && ($("#cdDays").textContent=pad(d));
+  $("#cdHours") && ($("#cdHours").textContent=pad(h));
+  $("#cdMins") && ($("#cdMins").textContent=pad(m));
+  $("#cdSecs") && ($("#cdSecs").textContent=pad(s));
 }
 tick(); setInterval(tick,1000);
 
 /* =============== Presale fiyat / maliyet =============== */
 function updateCosts(){
-  const qty = parseFloat(($("#buyAmount")?.value||"0").toString().replace(/[^\d.]/g,""))||0;
+  const inp = $("#buyAmount");
+  const qty = parseFloat((inp?.value||"0").toString().replace(/[^\d.]/g,""))||0;
   CONFIG.weekPrices.forEach((p,i)=>{
-    $("#p"+i).textContent = p.toFixed(4);
-    $("#c"+i).textContent = (qty*p).toLocaleString(undefined,{maximumFractionDigits:2});
+    const priceEl = $("#p"+i), costEl = $("#c"+i);
+    if(priceEl) priceEl.textContent = p.toFixed(4);
+    if(costEl)  costEl.textContent = (qty*p).toLocaleString(undefined,{maximumFractionDigits:2});
   });
 }
-$("#buyAmount").addEventListener("input", updateCosts);
+$("#buyAmount")?.addEventListener("input", updateCosts);
 updateCosts();
 
 /* =============== NFT grid =============== */
 (function renderNFTs(){
-  const g=$("#nftGrid");
+  const g=$("#nftGrid"); if(!g) return;
   g.innerHTML = CONFIG.nfts.map(n=>`
     <div class="nft">
       <img src="assets/images/mask/${n.id}.png" alt="${n.name}" loading="lazy"
@@ -135,36 +151,46 @@ updateCosts();
 
 /* =============== Invite link =============== */
 (function refLink(){
-  const addr = localStorage.getItem("zuzu_refAddr") || "";
   const url = new URL(location.href);
   if(url.searchParams.get("ref")) localStorage.setItem("zuzu_refAddr", url.searchParams.get("ref"));
-  $("#refLink").value = `${location.origin}${location.pathname}?ref=${addr||"YOURCODE"}`;
-  $("#copyRef").addEventListener("click", ()=>{ navigator.clipboard.writeText($("#refLink").value); alert("Copied!"); });
+  const addr = localStorage.getItem("zuzu_refAddr") || "";
+  const out = $("#refLink"); const copyBtn = $("#copyRef");
+  if(out){ out.value = `${location.origin}${location.pathname}?ref=${addr||"YOURCODE"}`; }
+  if(copyBtn){ copyBtn.addEventListener("click", ()=>{ navigator.clipboard.writeText(out.value); alert("Copied!"); }); }
 })();
 
-/* =============== Wallets (Phantom / Solflare / Backpack) =============== */
+/* =========================
+   Wallet Connect (Solana)
+   - Phantom / Solflare / Backpack
+   - Desktop: window provider üzerinden
+   - Mobile: deeplink ile wallet içinde siteyi aç
+========================= */
 const Wallets = {
   phantom:{
     key:'phantom', label:'Phantom', icon:'assets/images/wallets/phantom.png',
     has:()=>!!(window.solana && window.solana.isPhantom),
-    connect:async()=>{ const r=await window.solana.connect(); return r.publicKey.toString(); },
-    deeplink:(url)=>`https://phantom.app/ul/browse/${encodeURIComponent(url)}`
+    connect:async()=>{ const r=await window.solana.connect({ onlyIfTrusted:false }); return r.publicKey.toString(); },
+    disconnect:async()=>{ try{ await window.solana.disconnect?.(); }catch{} },
+    deeplink:(url)=>`https://phantom.app/ul/browse/${encodeURIComponent(url)}?ref=zuzu&network=${encodeURIComponent(CONFIG.cluster)}`
   },
   solflare:{
     key:'solflare', label:'Solflare', icon:'assets/images/wallets/solflare.png',
     has:()=>!!(window.solflare && window.solflare.isSolflare),
     connect:async()=>{ const r=await window.solflare.connect(); return r.publicKey.toString(); },
-    deeplink:(url)=>`https://solflare.com/ul/v1/browse/${encodeURIComponent(url)}`
+    disconnect:async()=>{ try{ await window.solflare.disconnect?.(); }catch{} },
+    deeplink:(url)=>`https://solflare.com/ul/v1/browse/${encodeURIComponent(url)}?ref=zuzu&network=${encodeURIComponent(CONFIG.cluster)}`
   },
   backpack:{
     key:'backpack', label:'Backpack', icon:'assets/images/wallets/backpack.png',
     has:()=>!!(window.backpack && window.backpack.isBackpack),
     connect:async()=>{ const r=await window.backpack.connect(); return r.publicKey.toString(); },
-    deeplink:(url)=>`https://backpack.app/ul/browse/${encodeURIComponent(url)}`
+    disconnect:async()=>{ try{ await window.backpack.disconnect?.(); }catch{} },
+    deeplink:(url)=>`https://backpack.app/ul/browse/${encodeURIComponent(url)}?network=${encodeURIComponent(CONFIG.cluster)}`
   }
 };
 
 let CURRENT_ADDRESS = null;
+let CURRENT_WALLET  = null;
 
 function walletListHTML(){
   return Object.values(Wallets).map(w=>`
@@ -173,52 +199,125 @@ function walletListHTML(){
     </button>`).join("");
 }
 
+/* ----- modal lifecycle (otomatık açılmayı engelle) ----- */
 (function initWalletModal(){
-  $("#wlist").innerHTML = walletListHTML();
-  $("#wlist").addEventListener("click", async (e)=>{
-    const btn = e.target.closest(".wbtn"); if(!btn) return;
-    const w = Wallets[btn.dataset.key];
-    try{
-      if(w.has()){
-        const addr = await w.connect();
-        CURRENT_ADDRESS = addr;
-        $("#connectBtn").textContent = `${addr.slice(0,6)}...${addr.slice(-4)}`;
-        $("#walletModal").classList.remove("show");
-        localStorage.setItem("zuzu_refAddr", addr);
-        $("#refLink").value = `${location.origin}${location.pathname}?ref=${addr}`;
-      }else{
-        // mobil deep-link: cüzdan içinde siteyi aç
-        window.open(w.deeplink(location.href), "_blank");
-      }
-    }catch(err){ alert("Wallet connection rejected or failed."); console.warn(err); }
-  });
+  const modal = $("#walletModal"); const list = $("#wlist");
+  const btnConnect = $("#connectBtn"); const btnClose = $("#wmClose");
+  const btnDisconnect = $("#disconnectBtn");
+  if(!modal || !list || !btnConnect) return;
 
-  $("#walletModal").addEventListener("click", (e)=>{
-    if(e.target.id==="walletModal") $("#walletModal").classList.remove("show");
-  });
+  list.innerHTML = walletListHTML();
 
-  $("#connectBtn").addEventListener("click", ()=>{
-    // provider’lardan biri varsa önce onu dener, yoksa modal
+  // Geri yükle (adres/etiket)
+  const savedAddr   = localStorage.getItem(CONFIG.LS_ADDR);
+  const savedWallet = localStorage.getItem(CONFIG.LS_WALLET);
+  if(savedAddr && savedWallet){
+    CURRENT_ADDRESS = savedAddr;
+    CURRENT_WALLET  = savedWallet;
+    btnConnect.textContent = `${savedAddr.slice(0,6)}...${savedAddr.slice(-4)}`;
+    btnDisconnect.style.display = "inline-flex";
+  }
+
+  // backdrop & esc
+  modal.addEventListener("click", (e)=>{
+    if(e.target === modal) modal.classList.remove("show");
+  });
+  btnClose?.addEventListener("click", ()=>modal.classList.remove("show"));
+  document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") modal.classList.remove("show"); });
+
+  // connect button => önce masaüstü provider, yoksa modal
+  btnConnect.addEventListener("click", async ()=>{
+    // Önce hızlı direct provider (masaüstü)
     const direct = Wallets.phantom.has() ? Wallets.phantom :
                    (Wallets.solflare.has() ? Wallets.solflare :
                    (Wallets.backpack.has() ? Wallets.backpack : null));
-    if(direct){ $("#wlist .wbtn[data-key='"+direct.key+"']").click(); }
-    else { $("#walletModal").classList.add("show"); }
+    if(direct){
+      await connectFlow(direct.key);
+    }else{
+      // Mobil/eklentisiz: sadece modal aç
+      modal.classList.add("show");
+    }
+  });
+
+  // list click
+  list.addEventListener("click", async (e)=>{
+    const btn = e.target.closest(".wbtn"); if(!btn) return;
+    const key = btn.dataset.key;
+    await connectFlow(key);
+  });
+
+  // disconnect
+  btnDisconnect?.addEventListener("click", async ()=>{
+    if(!CURRENT_WALLET) return;
+    const impl = Wallets[CURRENT_WALLET];
+    try{ await impl?.disconnect?.(); }catch{}
+    CURRENT_WALLET = null; CURRENT_ADDRESS = null;
+    localStorage.removeItem(CONFIG.LS_ADDR);
+    localStorage.removeItem(CONFIG.LS_WALLET);
+    $("#connectBtn").textContent = I[(localStorage.getItem(CONFIG.LS_LANG)||"en")].connect || "Connect Wallet";
+    btnDisconnect.style.display = "none";
+    alert("Disconnected.");
   });
 })();
 
-/* =============== Satın alma (SOL / USDT on Solana) — stub akış =============== */
-/* Not: On-chain transfer/ATA oluşturma detayları uzun; burada
-   - SOL seçilirse: Phantom içinde “transfer penceresi”ne yönlendiren link açar.
-   - USDT seçilirse: şimdilik uyarı (contract entegrasyonu eklendiğinde imzalı tx).
-*/
-const ZUZU_TREASURY = "FILL_TREASURY_SOL_ADDRESS";   // Solana adresin (32 base58)
+async function connectFlow(key){
+  const impl = Wallets[key];
+  const modal = $("#walletModal");
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const nowUrl   = location.href;
 
-function activeWeek(){
-  // Satış başlangıcını sabit kabul edelim: ilk hafta aktif.
-  // İstersen burayı tarih bazlı yaparız.
-  return 0;
+  // Eğer eklenti yoksa ve mobilse: wallet içinde siteyi aç
+  if(!impl.has() && isMobile){
+    window.open(impl.deeplink(nowUrl), "_blank");
+    return;
+  }
+
+  // Bağlanmayı dener, iptal/hata yakalar
+  try{
+    const addr = await withTimeout(impl.connect(), 20000); // 20sn güvenli zaman aşımı
+    onConnected(key, addr);
+    modal?.classList.remove("show");
+  }catch(err){
+    // Kullanıcı iptal etmiş olabilir, timeout olabilir, gerçek hata olabilir
+    console.warn("wallet connect failed:", err);
+    // Eğer hiç provider yoksa ve desktop ise kullanıcıya modal göster.
+    if(!impl.has()){
+      modal?.classList.add("show");
+      alert("Wallet provider not found. Please install or open on mobile wallet.");
+    }else{
+      alert("Wallet connection rejected or failed.");
+    }
+  }
 }
+
+function onConnected(key, addr){
+  CURRENT_ADDRESS = addr;
+  CURRENT_WALLET  = key;
+  localStorage.setItem(CONFIG.LS_ADDR, addr);
+  localStorage.setItem(CONFIG.LS_WALLET, key);
+  const btnConnect = $("#connectBtn");
+  if(btnConnect) btnConnect.textContent = `${addr.slice(0,6)}...${addr.slice(-4)}`;
+  const btnDisconnect = $("#disconnectBtn");
+  if(btnDisconnect) btnDisconnect.style.display = "inline-flex";
+  // Referans linki otomatik güncelle
+  const out = $("#refLink");
+  if(out) out.value = `${location.origin}${location.pathname}?ref=${addr}`;
+}
+
+function withTimeout(promise, ms){
+  return new Promise((resolve,reject)=>{
+    const t = setTimeout(()=>reject(new Error("timeout")), ms);
+    promise.then(v=>{ clearTimeout(t); resolve(v); }, e=>{ clearTimeout(t); reject(e); });
+  });
+}
+
+/* =============== Satın alma (SOL / USDT on Solana) — stub akış =============== */
+/* Not:
+   - SOL seçilirse: Phantom transfer deeplink ile transfer ekranına gider (desktop: provider, mobile: app).
+   - USDT seçilirse: SPL-Token işlem entegrasyonu eklenecek (ATA + transfer).
+*/
+function activeWeek(){ return 0; } // İstersen tarih bazlı hale getiririz.
+
 ["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{
   const b = $("#"+id); if(!b) return;
   b.addEventListener("click", ()=>handleBuy(i));
@@ -231,21 +330,25 @@ function handleBuy(weekIdx){
   const aw = activeWeek();
   if(weekIdx!==aw){ alert("Bu hafta aktif değil."); return; }
 
+  if(!CURRENT_ADDRESS){ alert("Önce cüzdan bağla (Phantom / Solflare / Backpack)."); return; }
+
   const price = CONFIG.weekPrices[weekIdx];
   const usdtCost = qty * price; // USDT
-  const payWith = $("#payWith").value;
 
-  if(!CURRENT_ADDRESS){
-    alert("Önce cüzdan bağla (Phantom / Solflare / Backpack).");
+  if(!CONFIG.treasury || CONFIG.treasury.startsWith("FILL_")){
+    alert("Treasury adresi tanımlı değil. Lütfen script.js içindeki CONFIG.treasury alanını doldur.");
     return;
   }
 
+  const payWith = $("#payWith").value;
+
   if(payWith==="SOL"){
-    // basit dönüşüm (örnek): 1 USDT ~ 0.01 SOL gibi DUMMY (gerçek kur eklenmeli)
-    const solAmount = (usdtCost*0.01).toFixed(4);
-    const deeplink = `https://phantom.app/ul/transfer?recipient=${encodeURIComponent(ZUZU_TREASURY)}&amount=${solAmount}&reference=${encodeURIComponent(CURRENT_ADDRESS)}&network=mainnet`;
+    // ÖRNEK oran: 1 USDT ≈ 0.01 SOL (placeholder). Gerçek kur eklenecek.
+    const solAmount = (usdtCost * 0.01).toFixed(4);
+    // Phantom deeplink (desktop’ta da yeni sekme)
+    const deeplink = `https://phantom.app/ul/transfer?recipient=${encodeURIComponent(CONFIG.treasury)}&amount=${solAmount}&reference=${encodeURIComponent(CURRENT_ADDRESS)}&network=${encodeURIComponent(CONFIG.cluster)}`;
     window.open(deeplink, "_blank");
-    alert(`Phantom açılacak. ~${solAmount} SOL gönderiyorsun.\n(Oran sabit örnek; gerçek kur eklenecek.)`);
+    alert(`Phantom açılacak. ~${solAmount} SOL gönderiyorsun.\n(Oran örnek; gerçek kur entegrasyonu eklenecek.)`);
   }else{
     alert("USDT (Solana) transferi için SPL-Token işlem entegrasyonu eklenecek.");
   }
@@ -256,236 +359,4 @@ function handleBuy(weekIdx){
 (function ensureTickerVisible(){
   const t=$("#exTrack"); if(!t) return;
   t.style.transform="translateX(0)"; setTimeout(()=>t.style.transform="", 60);
-})();
-/* ===== Wallet Connect (Phantom / Solflare / Backpack) – non-invasive ===== */
-(function(){
-  const $ = (s, r=document)=>r.querySelector(s);
-
-  const modal = $('#walletModal');
-  const connectBtn = $('#connectBtn');
-  const closeBtn = modal?.querySelector('.z-close');
-
-  function openModal(){ modal?.classList.add('show'); }
-  function closeModal(){ modal?.classList.remove('show'); }
-
-  function setConnected(addr){
-    if(!addr) return;
-    if (connectBtn) connectBtn.textContent = `${addr.slice(0,6)}...${addr.slice(-4)}`;
-    closeModal();
-  }
-
-  // Provider tespiti
-  const has = {
-    phantom: ()=>!!(window.phantom?.solana || (window.solana && window.solana.isPhantom)),
-    solflare:()=>!!window.solflare,
-    backpack:()=>!!(window.backpack || window.xnft?.solana),
-  };
-  const prov = {
-    phantom: ()=>window.phantom?.solana || window.solana,
-    solflare:()=>window.solflare,
-    backpack:()=>window.backpack || window.xnft?.solana,
-  };
-  const deeplink = {
-    phantom:  (u)=>`https://phantom.app/ul/browse/${encodeURIComponent(u)}`,
-    solflare: (u)=>`https://solflare.com/ul/v1/browse/${encodeURIComponent(u)}`,
-    backpack: (u)=>`https://backpack.app/ul/browse/${encodeURIComponent(u)}`
-  };
-
-  async function connectInside(key){
-    try{
-      if (key==='phantom'){
-        const p = prov.phantom();
-        p.addEventListener?.('connect', ()=>setConnected(p.publicKey?.toString?.()));
-        const res = await p.connect({ onlyIfTrusted:false });
-        setConnected(res?.publicKey?.toString?.() || p.publicKey?.toString?.());
-      }else if (key==='solflare'){
-        const p = prov.solflare();
-        const res = await p.connect();
-        setConnected(res?.publicKey?.toString?.() || p.publicKey?.toString?.());
-      }else if (key==='backpack'){
-        const p = prov.backpack();
-        await p.connect?.();
-        setConnected(p.publicKey?.toString?.());
-      }
-    }catch(e){
-      console.warn('wallet connect failed', e);
-      alert('Wallet connection failed or was rejected.');
-    }
-  }
-
-  function openInWalletBrowser(key){
-    const url = new URL(location.href);
-    url.searchParams.set('wallet', key); // dönüşte otomatik deneme için
-    location.href = deeplink[key](url.toString());
-  }
-
-  function tryConnect(key){
-    if (has[key]()) connectInside(key);
-    else openInWalletBrowser(key);
-  }
-
-  // UI bağlama
-  connectBtn?.addEventListener('click', ()=>{
-    // cihazda provider varsa direkt dene; yoksa modal aç
-    const first = has.phantom() ? 'phantom' : has.solflare() ? 'solflare' : has.backpack() ? 'backpack' : null;
-    if (first) tryConnect(first);
-    else openModal();
-  });
-  closeBtn?.addEventListener('click', closeModal);
-  modal?.addEventListener('click', (e)=>{ if(e.target===modal) closeModal(); });
-
-  // Modal içindeki butonlar
-  modal?.querySelectorAll('.wbtn').forEach(btn=>{
-    btn.addEventListener('click', ()=>tryConnect(btn.dataset.k));
-  });
-
-  // Deeplinkten dönünce görünür olduğunda otomatik dene
-  document.addEventListener('visibilitychange', ()=>{
-    if (document.visibilityState!=='visible') return;
-    const url = new URL(location.href);
-    const key = url.searchParams.get('wallet');
-    if (!key) return;
-    if (has[key]()) tryConnect(key);
-    url.searchParams.delete('wallet');
-    history.replaceState({}, '', url.toString());
-  });
-})();
-/* ===== Robust Wallet Connect (Phantom / Solflare / Backpack) ===== */
-(function(){
-  const $ = (s, r=document)=>r.querySelector(s);
-  const connectBtn = $('#connectBtn');
-  const modal = $('#walletModal');
-  const closeBtn = modal?.querySelector('.z-close');
-
-  // --- DETECTION ---
-  function hasPhantom(){ return !!(window.solana?.isPhantom || window.phantom?.solana?.isPhantom); }
-  function getPhantom(){ return window.solana?.isPhantom ? window.solana : (window.phantom?.solana || null); }
-
-  function hasSolflare(){ return !!(window.solflare || window.solflareProvider); } // in-app exposes window.solflare
-  function getSolflare(){ return window.solflare || window.solflareProvider || null; }
-
-  function hasBackpack(){ return !!(window.backpack || window.xnft?.solana); }
-  function getBackpack(){ return window.backpack || window.xnft?.solana || null; }
-
-  const deeplink = {
-    phantom:  (u)=>`https://phantom.app/ul/browse/${encodeURIComponent(u)}`,
-    solflare: (u)=>`https://solflare.com/ul/v1/browse/${encodeURIComponent(u)}`,
-    backpack: (u)=>`https://backpack.app/ul/browse/${encodeURIComponent(u)}`
-  };
-
-  // --- UI helpers ---
-  function openModal(){ modal?.classList.add('show'); }
-  function closeModal(){ modal?.classList.remove('show'); }
-  function setConnected(addr){
-    if(!addr) return;
-    if (connectBtn) connectBtn.textContent = `${addr.slice(0,6)}...${addr.slice(-4)}`;
-    closeModal();
-  }
-  function showAlert(msg){ try{ alert(msg); }catch(_){ console.log('[wallet]', msg); } }
-
-  // --- CONNECT IMPLEMENTATIONS (wallet-specific) ---
-  async function connectPhantom(){
-    const p = getPhantom();
-    if(!p) throw new Error('Phantom provider not found');
-    // Bazı sürümlerde event lazım
-    try{ p.removeAllListeners?.('connect'); }catch(_){}
-    p.on?.('connect', (pub)=> setConnected((pub?.toString?.()) || p.publicKey?.toString?.()));
-    const res = await p.connect({ onlyIfTrusted:false });
-    const pk = res?.publicKey?.toString?.() || p.publicKey?.toString?.();
-    if(!pk) throw new Error('Phantom: publicKey missing');
-    setConnected(pk);
-  }
-
-  async function connectSolflare(){
-    const s = getSolflare();
-    if(!s) throw new Error('Solflare provider not found');
-    // Bazı sürümlerde isConnected flag var
-    if(!s.isConnected){ await s.connect(); }
-    const pk = s.publicKey?.toString?.();
-    if(!pk) throw new Error('Solflare: publicKey missing');
-    setConnected(pk);
-  }
-
-  async function connectBackpack(){
-    const b = getBackpack();
-    if(!b) throw new Error('Backpack provider not found');
-    // backpack ya da xnft.solana interface
-    if(b.connect) await b.connect();
-    const pk = b.publicKey?.toString?.();
-    if(!pk) throw new Error('Backpack: publicKey missing');
-    setConnected(pk);
-  }
-
-  // Kapı: içeride provider varsa connect; yoksa wallet tarayıcısında siteyi aç
-  function openInWalletBrowser(key){
-    const url = new URL(location.href);
-    url.searchParams.set('wallet', key); // dönüşte otomatik dene
-    location.href = deeplink[key](url.toString());
-  }
-
-  async function tryConnect(key){
-    try{
-      if (key==='phantom'){
-        if (hasPhantom()) return await connectPhantom();
-        return openInWalletBrowser('phantom');
-      }
-      if (key==='solflare'){
-        if (hasSolflare()) return await connectSolflare();
-        return openInWalletBrowser('solflare');
-      }
-      if (key==='backpack'){
-        if (hasBackpack()) return await connectBackpack();
-        return openInWalletBrowser('backpack');
-      }
-      showAlert('Unknown wallet.');
-    }catch(e){
-      console.warn('[wallet connect error]', e);
-      showAlert(e?.message || 'Wallet connection failed or was rejected.');
-    }
-  }
-
-  // --- WIRES ---
-  connectBtn?.addEventListener('click', ()=>{
-    const first = hasPhantom() ? 'phantom' : hasSolflare() ? 'solflare' : hasBackpack() ? 'backpack' : null;
-    if (first) tryConnect(first);
-    else openModal();
-  });
-  closeBtn?.addEventListener('click', closeModal);
-  modal?.addEventListener('click', (e)=>{ if(e.target===modal) closeModal(); });
-  modal?.querySelectorAll('.wbtn').forEach(btn=>{
-    btn.addEventListener('click', ()=> tryConnect(btn.dataset.k));
-  });
-
-  // Deeplinkten dönüş: sayfa görünür olunca otomatik dene
-  document.addEventListener('visibilitychange', ()=>{
-    if (document.visibilityState!=='visible') return;
-    const url = new URL(location.href);
-    const key = url.searchParams.get('wallet');
-    if (!key) return;
-    // kısa gecikme (bazı wallet tarayıcılarında provider geç enjekte ediliyor)
-    setTimeout(()=>{ tryConnect(key); }, 200);
-    url.searchParams.delete('wallet');
-    history.replaceState({}, '', url.toString());
-  });
-
-  // --- Optional Debug Panel (?debugwallet=1) ---
-  (function debug(){
-    const q = new URL(location.href).searchParams;
-    if(q.get('debugwallet')!=='1') return;
-    const box = document.createElement('div');
-    box.style.cssText='position:fixed;bottom:10px;left:10px;background:#111b2e;border:1px solid #29406a;color:#cfe2ff;padding:10px;border-radius:10px;z-index:99999;font:12px/1.3 monospace;max-width:90%';
-    const lines = [
-      `hasPhantom=${hasPhantom()}`, `hasSolflare=${hasSolflare()}`, `hasBackpack=${hasBackpack()}`,
-      `ua=${navigator.userAgent}`
-    ];
-    box.innerHTML = '<b>Wallet debug</b><br>'+lines.join('<br>')+
-      '<br><div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap">'+
-      '<button id="_dbg_p" style="padding:5px 8px">connectPhantom</button>'+
-      '<button id="_dbg_s" style="padding:5px 8px">connectSolflare</button>'+
-      '<button id="_dbg_b" style="padding:5px 8px">connectBackpack</button></div>';
-    document.body.appendChild(box);
-    box.querySelector('#_dbg_p')?.addEventListener('click', ()=>tryConnect('phantom'));
-    box.querySelector('#_dbg_s')?.addEventListener('click', ()=>tryConnect('solflare'));
-    box.querySelector('#_dbg_b')?.addEventListener('click', ()=>tryConnect('backpack'));
-  })();
 })();
