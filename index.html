@@ -8,6 +8,20 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Güvenli modal kapama & görünürlük düzeltmeleri */
+    .modal{position:fixed;inset:0;display:none;align-items:flex-end;background:rgba(2,8,20,.6);backdrop-filter:saturate(120%) blur(4px);z-index:60}
+    .modal.show{display:flex}
+    .sheet{width:100%;background:#0f1828;border-top-left-radius:18px;border-top-right-radius:18px;padding:18px 16px 22px;box-shadow:0 -10px 30px rgba(0,0,0,.35)}
+    .wlist{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .wbtn{display:flex;align-items:center;gap:10px;background:#142136;border:1px solid #21314f;border-radius:14px;padding:10px 12px;cursor:pointer}
+    .wbtn img{width:22px;height:22px}
+    .wbtn:hover{border-color:#415c8f}
+    .wm-row{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:10px}
+    .z-btn-danger{background:#2b1321;border:1px solid #7a244f}
+    .z-btn-danger:hover{background:#39172a}
+    @media(min-width:700px){.sheet{max-width:520px;margin:0 auto 10px;border-radius:18px}}
+  </style>
 </head>
 <body>
 
@@ -211,7 +225,7 @@
   </div>
 </section>
 
-<!-- TOKENOMICS — donut -->
+<!-- TOKENOMICS -->
 <section id="tokenomics" class="z-section">
   <div class="z-container">
     <div class="section-head">
@@ -271,37 +285,21 @@
   </div>
 </footer>
 
-<!-- Wallet Modal -->
-<div id="walletModal" class="wm-backdrop" hidden>
-  <div class="wm-modal" role="dialog" aria-modal="true" aria-labelledby="wmTitle">
-    <div class="wm-head">
-      <b id="wmTitle">Connect Wallet</b>
-      <button class="wm-x" id="wmClose" aria-label="Close">×</button>
+<!-- Wallet modal -->
+<div id="walletModal" class="modal" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="wmTitle">
+    <div class="wm-row">
+      <h3 id="wmTitle" style="margin:0">Connect Wallet</h3>
+      <button id="wmClose" class="z-btn z-btn-ghost small" aria-label="Close">✕</button>
     </div>
-
-    <button class="wm-item" data-wallet="phantom">
-      <span class="wm-ico" aria-hidden="true"></span>
-      <span>Phantom</span>
-    </button>
-
-    <button class="wm-item" data-wallet="solflare">
-      <span class="wm-ico" aria-hidden="true"></span>
-      <span>Solflare</span>
-    </button>
-
-    <button class="wm-item" data-wallet="backpack">
-      <span class="wm-ico" aria-hidden="true"></span>
-      <span>Backpack</span>
-    </button>
-
-    <p class="wm-note">
-      On mobile, the site opens inside the wallet. Approve <b>zuzucoin.xyz</b>, then you’ll return here automatically.
-    </p>
+    <div id="wlist" class="wlist" style="margin-top:10px"></div>
+    <div class="wm-row" style="margin-top:12px">
+      <small style="color:#8aa2c9">On mobile, tap your wallet. It will open this site inside the wallet.</small>
+      <button id="disconnectBtn" class="z-btn z-btn-danger small" style="display:none">Disconnect</button>
+    </div>
   </div>
 </div>
 
-<!-- Scripts -->
 <script src="script.js"></script>
-<script src="wallet-lite.js"></script>
 </body>
 </html>
