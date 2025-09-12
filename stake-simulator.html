@@ -21,7 +21,7 @@
       <a href="index.html#nft">NFT</a>
       <a href="index.html#tokenomics">Tokenomics</a>
       <a href="claim.html" class="z-chip">Claim</a>
-      <button id="connectBtn" class="z-btn z-btn-primary">Connect Wallet</button>
+      <button id="connectBtn" class="z-btn z-btn-primary" data-connect>Connect Wallet</button>
     </nav>
   </div>
 </header>
@@ -101,7 +101,6 @@
 </main>
 
 <script>
-  // basit simülatör
   const apy = {30:12,90:24,180:40,365:65,540:85};
   function calc(){
     const a = parseFloat((document.getElementById("simAmount").value||"0").replace(/[^\d.]/g,""))||0;
@@ -113,7 +112,7 @@
 
     let gross;
     if (comp){
-      const r = (base+boost)/100/12; // aylık oran
+      const r = (base+boost)/100/12;
       const n = d/30;
       gross = a * Math.pow(1+r, n) - a;
     }else{
@@ -126,7 +125,8 @@
   document.getElementById("simCalc").addEventListener("click", calc);
 </script>
 
-<script src="wallet-lite.js"></script>
-<script src="solana.v1.js"></script>
+<!-- Solana web3 (CDN) ve ortak script -->
+<script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
