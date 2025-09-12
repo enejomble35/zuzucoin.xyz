@@ -300,6 +300,162 @@
   </div>
 </div>
 
-<script src="script.js"></script>
+<script>
+// Cüzdan bağlantı durumu
+let walletConnected = false;
+let currentWallet = null;
+
+// DOM yüklendikten sonra çalışacak fonksiyonlar
+document.addEventListener('DOMContentLoaded', function() {
+  initWalletLogos();
+  setupEventListeners();
+  setupBuyButtons();
+  calculateCosts();
+  startCountdown();
+});
+
+// Wallet logosunu ekleme
+function initWalletLogos() {
+  const walletList = document.getElementById('wlist');
+  
+  const wallets = [
+    { name: 'Phantom', icon: 'https://phantom.app/img/phantom-logo.svg' },
+    { name: 'Solflare', icon: 'https://solflare.com/assets/logo-3c71bb6c.png' },
+    { name: 'Backpack', icon: 'https://backpack.app/images/logo.svg' }
+  ];
+  
+  walletList.innerHTML = wallets.map(wallet => `
+    <button class="wbtn" data-wallet="${wallet.name.toLowerCase()}">
+      <img src="${wallet.icon}" alt="${wallet.name}" onerror="this.src='assets/images/wallets/${wallet.name.toLowerCase()}.png'">
+      <span>${wallet.name}</span>
+    </button>
+  `).join('');
+}
+
+// Event listener'ları kurma
+function setupEventListeners() {
+  // Cüzdan bağlama butonu
+  document.getElementById('connectBtn').addEventListener('click', function() {
+    document.getElementById('walletModal').classList.add('show');
+  });
+  
+  // Modal kapatma butonu
+  document.getElementById('wmClose').addEventListener('click', function() {
+    document.getElementById('walletModal').classList.remove('show');
+  });
+  
+  // Cüzdan seçeneklerine tıklama
+  document.getElementById('wlist').addEventListener('click', function(e) {
+    if (e.target.classList.contains('wbtn') || e.target.closest('.wbtn')) {
+      const walletBtn = e.target.classList.contains('wbtn') ? e.target : e.target.closest('.wbtn');
+      const walletName = walletBtn.getAttribute('data-wallet');
+      connectWallet(walletName);
+    }
+  });
+  
+  // Bağlantıyı kes butonu
+  document.getElementById('disconnectBtn').addEventListener('click', function() {
+    walletConnected = false;
+    currentWallet = null;
+    document.getElementById('connectBtn').textContent = 'Connect Wallet';
+    this.style.display = 'none';
+    alert('Wallet disconnected successfully!');
+  });
+  
+  // Miktar değiştiğinde maliyeti yeniden hesapla
+  document.getElementById('buyAmount').addEventListener('input', calculateCosts);
+  
+  // Referans linkini kopyalama
+  document.getElementById('copyRef').addEventListener('click', function() {
+    const refLink = document.getElementById('refLink');
+    refLink.select();
+    document.execCommand('copy');
+    alert('Referral link copied to clipboard!');
+  });
+  
+  // Modal dışına tıklanırsa kapat
+  document.getElementById('walletModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.classList.remove('show');
+    }
+  });
+}
+
+// Cüzdan bağlama fonksiyonu
+function connectWallet(walletName) {
+  walletConnected = true;
+  currentWallet = walletName;
+  
+  // UI güncelleme
+  document.getElementById('connectBtn').textContent = `${walletName.charAt(0).toUpperCase() + walletName.slice(1)} Connected`;
+  document.getElementById('disconnectBtn').style.display = 'block';
+  document.getElementById('walletModal').classList.remove('show');
+  
+  console.log(`${walletName} wallet connected successfully`);
+  alert(`${walletName.charAt(0).toUpperCase() + walletName.slice(1)} wallet connected successfully!`);
+}
+
+// Satın alma butonlarını ayarlama
+function setupBuyButtons() {
+  const buyButtons = document.querySelectorAll('[id^="buyW"]');
+  
+  buyButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      if (!walletConnected) {
+        alert('Please connect your wallet first!');
+        document.getElementById('walletModal').classList.add('show');
+        return;
+      }
+      
+      const week = this.getAttribute('data-week');
+      const amount = document.getElementById('buyAmount').value;
+      const payWith = document.getElementById('payWith').value;
+      const pricePerToken = document.getElementById(`p${week}`).textContent;
+      const cost = document.getElementById(`c${week}`).textContent;
+      
+      console.log(`Purchasing ${amount} ZUZU tokens in week ${parseInt(week) + 1} with ${payWith} at ${pricePerToken} per token. Total cost: ${cost} ${payWith}`);
+      alert(`Purchase successful: ${amount} ZUZU tokens for week ${parseInt(week) + 1} with ${payWith}. Total: ${cost} ${payWith}`);
+    });
+  });
+}
+
+// Maliyet hesaplama
+function calculateCosts() {
+  const amount = parseFloat(document.getElementById('buyAmount').value) || 0;
+  
+  for (let i = 0; i < 4; i++) {
+    const price = parseFloat(document.getElementById(`p${i}`).textContent);
+    const costElement = document.getElementById(`c${i}`);
+    
+    if (costElement) {
+      costElement.textContent = (amount * price).toFixed(4);
+    }
+  }
+}
+
+// Geri sayım sayacı
+function startCountdown() {
+  const countdownDate = new Date();
+  countdownDate.setDate(countdownDate.getDate() + 7); // 7 gün sonrası
+  
+  function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = countdownDate - now;
+    
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+    document.getElementById("cdDays").textContent = days.toString().padStart(2, '0');
+    document.getElementById("cdHours").textContent = hours.toString().padStart(2, '0');
+    document.getElementById("cdMins").textContent = minutes.toString().padStart(2, '0');
+    document.getElementById("cdSecs").textContent = seconds.toString().padStart(2, '0');
+  }
+  
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+}
+</script>
 </body>
 </html>
