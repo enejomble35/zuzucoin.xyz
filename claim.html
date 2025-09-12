@@ -21,7 +21,7 @@
       <a href="index.html#nft">NFT</a>
       <a href="index.html#tokenomics">Tokenomics</a>
       <a href="stake-simulator.html" class="z-chip">Stake Simulator</a>
-      <button id="connectBtn" class="z-btn z-btn-primary">Connect Wallet</button>
+      <button id="connectBtn" class="z-btn z-btn-primary" data-connect>Connect Wallet</button>
     </nav>
   </div>
 </header>
@@ -79,16 +79,14 @@
   const $ = s => document.querySelector(s);
 
   function pkLabel(){
-    const pk = (window.__zuzu_pubkey && window.__zuzu_pubkey()) || "";
-    $("#claimPk").textContent = pk ? pk.slice(0,6)+"..."+pk.slice(-6) : "—";
+    try{
+      const pk = localStorage.getItem("zuzu_connected_addr") || "";
+      $("#claimPk").textContent = pk ? pk.slice(0,6)+"..."+pk.slice(-6) : "—";
+    }catch{ $("#claimPk").textContent = "—"; }
   }
 
-  function loadRcpts(){
-    try{ return JSON.parse(localStorage.getItem(TBL_KEY)||"[]"); }catch{ return []; }
-  }
-  function saveRcpts(arr){
-    try{ localStorage.setItem(TBL_KEY, JSON.stringify(arr||[])); }catch{}
-  }
+  function loadRcpts(){ try{ return JSON.parse(localStorage.getItem(TBL_KEY)||"[]"); }catch{ return []; } }
+  function saveRcpts(arr){ try{ localStorage.setItem(TBL_KEY, JSON.stringify(arr||[])); }catch{} }
 
   function renderTable(){
     const wrap = $("#claimTable");
@@ -107,7 +105,7 @@
   window.addEventListener("DOMContentLoaded", ()=>{
     pkLabel(); renderTable();
 
-    document.getElementById("addRcpt").addEventListener("click", ()=>{
+    $("#addRcpt").addEventListener("click", ()=>{
       const amount = parseFloat($("#rcptAmount").value||"0");
       const tx = ($("#rcptTx").value||"").trim();
       const note = ($("#rcptNote").value||"").trim();
@@ -117,7 +115,7 @@
       renderTable();
     });
 
-    document.getElementById("clearRcpt").addEventListener("click", ()=>{
+    $("#clearRcpt").addEventListener("click", ()=>{
       if (confirm("Clear all local receipts?")) { saveRcpts([]); renderTable(); }
     });
   });
@@ -127,7 +125,8 @@
   });
 </script>
 
-<script src="wallet-lite.js"></script>
-<script src="solana.v1.js"></script>
+<!-- Solana web3 (CDN) ve ortak script -->
+<script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
