@@ -12,7 +12,7 @@
     .modal{position:fixed;inset:0;display:none;align-items:flex-end;background:rgba(2,8,20,.6);backdrop-filter:saturate(120%) blur(4px);z-index:60}
     .modal.show{display:flex}
     .sheet{width:100%;background:#0f1828;border-top-left-radius:18px;border-top-right-radius:18px;padding:18px 16px 22px;box-shadow:0 -10px 30px rgba(0,0,0,.35)}
-    .wlist{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .wlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
     .wbtn{display:flex;align-items:center;gap:10px;background:#142136;border:1px solid #21314f;border-radius:14px;padding:10px 12px;cursor:pointer}
     .wbtn img{width:22px;height:22px}
     .wbtn:hover{border-color:#415c8f}
@@ -108,7 +108,7 @@
             <option value="USDT">USDT (Solana)</option>
           </select>
         </div>
-        <small class="muted">Payments via <b>Phantom / Solflare / Backpack</b></small>
+        <small class="muted">Payments via <b>Phantom / Solflare</b></small>
       </div>
 
       <div class="presale-grid">
@@ -270,11 +270,10 @@
     </div>
     <div id="wlist" class="wlist" style="margin-top:10px"></div>
 
-    <!-- Deeplink fallback butonları (mobil dış tarayıcıdaysa) -->
+    <!-- Deeplink fallback (mobile dış tarayıcı) -->
     <div class="wm-row" style="margin-top:10px;gap:6px;flex-wrap:wrap">
       <button class="z-btn z-btn-ghost small" data-open="phantom">Open in Phantom</button>
       <button class="z-btn z-btn-ghost small" data-open="solflare">Open in Solflare</button>
-      <button class="z-btn z-btn-ghost small" data-open="backpack">Open in Backpack</button>
     </div>
 
     <div class="wm-row" style="margin-top:12px">
