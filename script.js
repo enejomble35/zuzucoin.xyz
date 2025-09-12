@@ -20,7 +20,7 @@ const UA = navigator.userAgent||"";
 const IS_MOBILE=/Android|iPhone|iPad|iPod/i.test(UA);
 const sleep=(ms)=>new Promise(r=>setTimeout(r,ms));
 
-/* ========== I18N (kullanılan tüm anahtarlar) ========== */
+/* ========== I18N ========== */
 const I = {
   en:{nav_presale:"Pre-Sale",nav_stake:"Stake",nav_nft:"NFT Rewards",nav_roadmap:"Roadmap",nav_token:"Tokenomics",connect:"Connect Wallet",
       hero_badge:"Pre-Sale • Stake to Win NFT",hero_title:"ZUZU — Robotic Hedgehog 🦔⚡",
@@ -80,7 +80,6 @@ function applyLang(lang){
   const code=$("#langCode"); if(code) code.textContent=lang.toUpperCase();
   $$("[data-i]").forEach(el=>{ const k=el.getAttribute("data-i"); if(I[lang]?.[k]) el.innerHTML=I[lang][k]; });
 }
-
 (function initLang(){
   const saved = localStorage.getItem(CONFIG.LS_LANG) || "tr";
   applyLang(saved);
@@ -92,11 +91,11 @@ function applyLang(lang){
   document.addEventListener("click", (e)=>{ if(langMenu && !langMenu.contains(e.target) && e.target!==langBtn) langMenu.classList.remove("show"); });
 })();
 
-/* ========== COUNTDOWN: bozulduysa sıfırdan kur ========== */
+/* ========== COUNTDOWN (bozuksa 60 gün ileri sar) ========== */
 function safeLaunchTs(){
-  let raw = localStorage.getItem(CONFIG.launchKey);
+  const raw = localStorage.getItem(CONFIG.launchKey);
   let ts = parseInt(raw,10);
-  if(!raw || isNaN(ts) || ts < Date.now()+1000){ // geçmiş/bozuk ise 60 gün ileri sar
+  if(!raw || isNaN(ts) || ts <= Date.now()){ // geçmişse/bozuksa
     ts = Date.now() + CONFIG.defaultCountdownDays*24*3600*1000;
     localStorage.setItem(CONFIG.launchKey, String(ts));
   }
@@ -109,10 +108,10 @@ function tick(){
   const m=Math.floor((left%3600000)/60000);
   const s=Math.floor((left%60000)/1000);
   const pad=n=>String(n).padStart(2,"0");
-  $("#cdDays") && ($("#cdDays").textContent=pad(d));
-  $("#cdHours") && ($("#cdHours").textContent=pad(h));
-  $("#cdMins") && ($("#cdMins").textContent=pad(m));
-  $("#cdSecs") && ($("#cdSecs").textContent=pad(s));
+  $("#cdDays")?.textContent=pad(d);
+  $("#cdHours")?.textContent=pad(h);
+  $("#cdMins")?.textContent=pad(m);
+  $("#cdSecs")?.textContent=pad(s);
 }
 tick(); setInterval(tick,1000);
 
@@ -127,7 +126,7 @@ function updateCosts(){
 }
 $("#buyAmount")?.addEventListener("input", updateCosts); updateCosts();
 
-/* ========== NFT GRID (görsel fallback garantili) ========== */
+/* ========== NFT GRID (fallback garantisi) ========== */
 const NFT_FALLBACK = "data:image/svg+xml;utf8,"+encodeURIComponent(
   `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><rect width='400' height='400' fill='#0b1426'/><text x='200' y='210' fill='#9fb4dd' text-anchor='middle' font-size='24' font-family='Arial'>ZUZU NFT</text></svg>`
 );
@@ -151,7 +150,7 @@ const NFT_FALLBACK = "data:image/svg+xml;utf8,"+encodeURIComponent(
   copy?.addEventListener("click", ()=>{ navigator.clipboard.writeText(out.value); alert("Copied!"); });
 })();
 
-/* ========== WALLET CONNECT (PHANTOM + SOLFLARE) ========== */
+/* ========== WALLET CONNECT (Sadece Phantom + Solflare) ========== */
 const ICONS = {
   phantom:"data:image/svg+xml;utf8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect width="48" height="48" rx="12" fill="#7963f0"/><text x="24" y="30" text-anchor="middle" font-size="16" fill="#fff" font-family="Arial" font-weight="700">PH</text></svg>'),
   solflare:"data:image/svg+xml;utf8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect width="48" height="48" rx="12" fill="#ff6b00"/><text x="24" y="30" text-anchor="middle" font-size="16" fill="#fff" font-family="Arial" font-weight="700">SF</text></svg>')
@@ -203,7 +202,7 @@ function walletListHTML(){
   const list=$("#wlist");
   if(list) list.innerHTML = walletListHTML();
 
-  // tek tık giriş
+  // Nav + her yerdeki connect girişleri
   function bindConnectButtons(){
     const all=[$("#connectBtn"), ...$$("[data-connect]")].filter(Boolean);
     all.forEach(btn=>{
@@ -218,17 +217,21 @@ function walletListHTML(){
   }
   bindConnectButtons();
 
+  // Modal seçim
   list?.addEventListener("click", e=>{
     const btn=e.target.closest(".wbtn"); if(!btn) return;
     connectFlow(btn.dataset.key);
   });
 
+  // Deeplink kısayollar
   $("[data-open='phantom']")?.addEventListener("click", ()=>connectFlow("phantom"));
   $("[data-open='solflare']")?.addEventListener("click", ()=>connectFlow("solflare"));
 
+  // Modal kapat
   $("#wmClose")?.addEventListener("click", ()=>modal?.classList.remove("show"));
   modal?.addEventListener("click", (e)=>{ if(e.target===modal) modal.classList.remove("show"); });
 
+  // Önceki oturumu yükle
   const savedAddr=localStorage.getItem(CONFIG.LS_ADDR);
   const savedWallet=localStorage.getItem(CONFIG.LS_WALLET);
   if(savedAddr&&savedWallet){ onConnected(savedWallet, savedAddr, {silent:true}); }
@@ -236,7 +239,7 @@ function walletListHTML(){
 
   new MutationObserver(bindConnectButtons).observe(document.body, {subtree:true, childList:true});
 
-  // cüzdan injection/geri dönüş
+  // Wallet injection/geri dönüş
   window.addEventListener("solana#initialized", ()=>{ autoConnectIfReturned(); });
   window.addEventListener("load", ()=>{ setTimeout(autoConnectIfReturned, 500); });
   document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) autoConnectIfReturned(); });
@@ -247,7 +250,7 @@ async function connectFlow(key){
   const modal=$("#walletModal");
   const nowUrl=location.href;
 
-  // mobil dış tarayıcı → wallet içi aç
+  // Mobil dış tarayıcı → wallet in-app
   if(!impl.has() && IS_MOBILE){
     sessionStorage.setItem(CONFIG.SS_AWAIT,"1");
     sessionStorage.setItem(CONFIG.SS_TARGET,key);
@@ -256,7 +259,7 @@ async function connectFlow(key){
     return;
   }
 
-  // masaüstü ve eklenti yok
+  // Masaüstü ve eklenti yok
   if(!impl.has() && !IS_MOBILE){
     modal?.classList.add("show");
     alert("Wallet eklentisi yok. Phantom veya Solflare kurup tekrar deneyin.");
@@ -324,7 +327,7 @@ function onConnected(key, addr, opts={}){
   if(!opts.silent) console.log("Connected:", key, addr);
 }
 
-/* ========== BUY (Phantom transfer deeplink) ========== */
+/* ========== BUY (Phantom transfer deeplink örneği) ========== */
 function activeWeek(){ return 0; }
 ["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{$("#"+id)?.addEventListener("click", ()=>handleBuy(i));});
 function setBuyButtonsEnabled(ok){
@@ -341,7 +344,7 @@ function handleBuy(weekIdx){
 
   const price=CONFIG.weekPrices[weekIdx];
   const usdtCost=qty*price;
-  const solAmount=(usdtCost*0.01).toFixed(4); // ÖRNEK oran
+  const solAmount=(usdtCost*0.01).toFixed(4); // örnek oran
 
   const redirect=location.href;
   const deeplink=`https://phantom.app/ul/transfer`+
@@ -359,5 +362,5 @@ function handleBuy(weekIdx){
   alert(`Phantom transfer ekranı açılıyor (~${solAmount} SOL). İşlem sonrası bu sayfaya dönersin.`);
 }
 
-/* ========== small polish ========== */
+/* ========== küçük dokunuş ========== */
 (function ensureTickerVisible(){ const t=$("#exTrack"); if(!t) return; t.style.transform="translateX(0)"; setTimeout(()=>t.style.transform="",60); })();
