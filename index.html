@@ -269,6 +269,14 @@
       <button id="wmClose" class="z-btn z-btn-ghost small" aria-label="Close">✕</button>
     </div>
     <div id="wlist" class="wlist" style="margin-top:10px"></div>
+
+    <!-- Deeplink fallback butonları (mobil dış tarayıcıdaysa) -->
+    <div class="wm-row" style="margin-top:10px;gap:6px;flex-wrap:wrap">
+      <button class="z-btn z-btn-ghost small" data-open="phantom">Open in Phantom</button>
+      <button class="z-btn z-btn-ghost small" data-open="solflare">Open in Solflare</button>
+      <button class="z-btn z-btn-ghost small" data-open="backpack">Open in Backpack</button>
+    </div>
+
     <div class="wm-row" style="margin-top:12px">
       <small style="color:#8aa2c9">On mobile, tap your wallet. It will open this site inside the wallet.</small>
       <button id="disconnectBtn" class="z-btn z-btn-danger small" style="display:none">Disconnect</button>
