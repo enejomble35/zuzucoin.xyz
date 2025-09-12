@@ -1,8 +1,4 @@
-/* =========================
-   ZUZU — script.js (Phantom + Solflare)
-========================= */
-
-/* CONFIG */
+/* ========== CONFIG ========== */
 const CONFIG = {
   launchKey: "zuzu_launchAt",
   defaultCountdownDays: 60,
@@ -17,19 +13,20 @@ const CONFIG = {
   SS_TARGET: "zuzu_target_wallet"
 };
 
-/* helpers */
+/* ========== HELPERS ========== */
 const $  = (q, r=document)=>r.querySelector(q);
 const $$ = (q, r=document)=>[...r.querySelectorAll(q)];
 const UA = navigator.userAgent||"";
-const IS_MOBILE = /Android|iPhone|iPad|iPod/i.test(UA);
-const sleep = (ms)=>new Promise(r=>setTimeout(r,ms));
+const IS_MOBILE=/Android|iPhone|iPad|iPod/i.test(UA);
+const sleep=(ms)=>new Promise(r=>setTimeout(r,ms));
 
-/* i18n (tam) */
+/* ========== I18N (kullanılan tüm anahtarlar) ========== */
 const I = {
   en:{nav_presale:"Pre-Sale",nav_stake:"Stake",nav_nft:"NFT Rewards",nav_roadmap:"Roadmap",nav_token:"Tokenomics",connect:"Connect Wallet",
       hero_badge:"Pre-Sale • Stake to Win NFT",hero_title:"ZUZU — Robotic Hedgehog 🦔⚡",
       hero_lead:"Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high <b>utility</b>.",
-      cta_stake:"Start Staking",cta_nft:"NFT Rewards",days:"DAYS",hours:"HOURS",mins:"MINUTES",secs:"SECONDS",
+      cta_stake:"Start Staking",cta_nft:"NFT Rewards",
+      days:"DAYS",hours:"HOURS",mins:"MINUTES",secs:"SECONDS",
       presale_title:"Pre-Sale — Countdown",presale_lead:"Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.",
       amount:"Amount (ZUZU)",cost:"Cost:",buy:"Buy",exchanges:"Supported Exchanges",
       stake_title:"Stake Pro — Lock, Earn, Get NFT ✨",stake_lead:"Lock your ZUZU, earn <b>APY + NFT BOOST</b>.",
@@ -37,7 +34,8 @@ const I = {
   tr:{nav_presale:"Ön Satış",nav_stake:"Stake",nav_nft:"NFT Ödülleri",nav_roadmap:"Yol Haritası",nav_token:"Tokonomi",connect:"Cüzdan Bağla",
       hero_badge:"Ön Satış • Stake ile NFT Kazan",hero_title:"ZUZU — Geleceğin Robotic Kirpisi 🦔⚡",
       hero_lead:"Stake et ve <b>ZUZU Maskot NFT</b> kazan. Sınırlı arz, yüksek <b>utility</b>.",
-      cta_stake:"Stake Etmeye Başla",cta_nft:"NFT Ödülleri",days:"GÜN",hours:"SAAT",mins:"DAKİKA",secs:"SANİYE",
+      cta_stake:"Stake Etmeye Başla",cta_nft:"NFT Ödülleri",
+      days:"GÜN",hours:"SAAT",mins:"DAKİKA",secs:"SANİYE",
       presale_title:"Ön Satış — Geri Sayım",presale_lead:"ZUZU ön satışına hazır ol! <b>Sınırlı tahsis</b>, topluluğa özel fiyat.",
       amount:"Miktar (ZUZU)",cost:"Maliyet:",buy:"Satın Al",exchanges:"Desteklenen Borsalar",
       stake_title:"Stake Pro — Kilitle, Kazan, NFT Kap ✨",stake_lead:"ZUZU’larını kilitle, <b>APY + NFT BOOST</b> ile kazan.",
@@ -75,42 +73,50 @@ const I = {
       stake_title:"Stake Pro — Bloquea, Gana, Obtén NFT ✨",stake_lead:"Bloquea tu ZUZU y gana <b>APY + BOOST NFT</b>.",
       token_title:"Tokenomics (Visualizado)",road_title:"Hoja de ruta"}
 };
+
 function applyLang(lang){
   localStorage.setItem(CONFIG.LS_LANG, lang);
   $("#langFlag")?.setAttribute("src", `flags/${lang}.png`);
   const code=$("#langCode"); if(code) code.textContent=lang.toUpperCase();
   $$("[data-i]").forEach(el=>{ const k=el.getAttribute("data-i"); if(I[lang]?.[k]) el.innerHTML=I[lang][k]; });
 }
+
 (function initLang(){
-  const saved = localStorage.getItem(CONFIG.LS_LANG) || "en";
+  const saved = localStorage.getItem(CONFIG.LS_LANG) || "tr";
   applyLang(saved);
   const langBtn=$("#langBtn"), langMenu=$("#langMenu");
   langBtn?.addEventListener("click", (e)=>{ e.stopPropagation(); langMenu?.classList.toggle("show"); });
-  $$(".lang-opt").forEach(b=>b.addEventListener("click", (e)=>{ e.stopPropagation(); applyLang(b.dataset.lang); langMenu?.classList.remove("show"); }));
+  $$(".lang-opt").forEach(b=>b.addEventListener("click", (e)=>{
+    e.stopPropagation(); applyLang(b.dataset.lang); langMenu?.classList.remove("show");
+  }));
   document.addEventListener("click", (e)=>{ if(langMenu && !langMenu.contains(e.target) && e.target!==langBtn) langMenu.classList.remove("show"); });
 })();
 
-/* Countdown */
-function getLaunchAt(){
-  let ts = localStorage.getItem(CONFIG.launchKey);
-  if(!ts){ ts = (Date.now() + CONFIG.defaultCountdownDays*24*3600*1000).toString(); localStorage.setItem(CONFIG.launchKey, ts); }
-  return parseInt(ts,10);
+/* ========== COUNTDOWN: bozulduysa sıfırdan kur ========== */
+function safeLaunchTs(){
+  let raw = localStorage.getItem(CONFIG.launchKey);
+  let ts = parseInt(raw,10);
+  if(!raw || isNaN(ts) || ts < Date.now()+1000){ // geçmiş/bozuk ise 60 gün ileri sar
+    ts = Date.now() + CONFIG.defaultCountdownDays*24*3600*1000;
+    localStorage.setItem(CONFIG.launchKey, String(ts));
+  }
+  return ts;
 }
 function tick(){
-  const left = Math.max(0, getLaunchAt() - Date.now());
+  const left=Math.max(0, safeLaunchTs()-Date.now());
   const d=Math.floor(left/86400000);
   const h=Math.floor((left%86400000)/3600000);
   const m=Math.floor((left%3600000)/60000);
   const s=Math.floor((left%60000)/1000);
-  const pad=n=>n.toString().padStart(2,"0");
-  $("#cdDays")?.textContent=pad(d);
-  $("#cdHours")?.textContent=pad(h);
-  $("#cdMins")?.textContent=pad(m);
-  $("#cdSecs")?.textContent=pad(s);
+  const pad=n=>String(n).padStart(2,"0");
+  $("#cdDays") && ($("#cdDays").textContent=pad(d));
+  $("#cdHours") && ($("#cdHours").textContent=pad(h));
+  $("#cdMins") && ($("#cdMins").textContent=pad(m));
+  $("#cdSecs") && ($("#cdSecs").textContent=pad(s));
 }
 tick(); setInterval(tick,1000);
 
-/* Costs */
+/* ========== COSTS ========== */
 function updateCosts(){
   const inp=$("#buyAmount");
   const qty=parseFloat((inp?.value||"0").toString().replace(/[^\d.]/g,""))||0;
@@ -121,27 +127,31 @@ function updateCosts(){
 }
 $("#buyAmount")?.addEventListener("input", updateCosts); updateCosts();
 
-/* NFT grid */
+/* ========== NFT GRID (görsel fallback garantili) ========== */
+const NFT_FALLBACK = "data:image/svg+xml;utf8,"+encodeURIComponent(
+  `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'><rect width='400' height='400' fill='#0b1426'/><text x='200' y='210' fill='#9fb4dd' text-anchor='middle' font-size='24' font-family='Arial'>ZUZU NFT</text></svg>`
+);
 (function renderNFTs(){
   const g=$("#nftGrid"); if(!g) return;
-  g.innerHTML=CONFIG.nfts.map(n=>`
+  g.innerHTML = CONFIG.nfts.map(n=>`
     <div class="nft">
-      <img src="assets/images/mask/${n.id}.png?v=1" alt="${n.name}" loading="lazy" onerror="this.style.display='none'">
+      <img src="assets/images/mask/${n.id}.png?v=1" alt="${n.name}" loading="lazy"
+           onerror="this.onerror=null;this.src='${NFT_FALLBACK}'">
       <div class="meta"><b>${n.name}</b><span class="tag">${n.rarity}</span></div>
     </div>`).join("");
 })();
 
-/* Invite link */
+/* ========== REF LINK ========== */
 (function refLink(){
-  const url=new URL(location.href);
+  const url = new URL(location.href);
   if(url.searchParams.get("ref")) localStorage.setItem("zuzu_refAddr", url.searchParams.get("ref"));
-  const addr=localStorage.getItem("zuzu_refAddr")||"";
-  const out=$("#refLink"); const copy=$("#copyRef");
-  if(out) out.value=`${location.origin}${location.pathname}?ref=${addr||"YOURCODE"}`;
+  const addr = localStorage.getItem("zuzu_refAddr") || "";
+  const out = $("#refLink"); const copy = $("#copyRef");
+  if(out){ out.value = `${location.origin}${location.pathname}?ref=${addr||"YOURCODE"}`; }
   copy?.addEventListener("click", ()=>{ navigator.clipboard.writeText(out.value); alert("Copied!"); });
 })();
 
-/* Wallet Connect (Phantom + Solflare) */
+/* ========== WALLET CONNECT (PHANTOM + SOLFLARE) ========== */
 const ICONS = {
   phantom:"data:image/svg+xml;utf8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect width="48" height="48" rx="12" fill="#7963f0"/><text x="24" y="30" text-anchor="middle" font-size="16" fill="#fff" font-family="Arial" font-weight="700">PH</text></svg>'),
   solflare:"data:image/svg+xml;utf8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect width="48" height="48" rx="12" fill="#ff6b00"/><text x="24" y="30" text-anchor="middle" font-size="16" fill="#fff" font-family="Arial" font-weight="700">SF</text></svg>')
@@ -150,8 +160,8 @@ const ICONS = {
 const Wallets = {
   phantom:{
     key:'phantom', label:'Phantom', icon:'assets/images/wallets/phantom.png',
-    has:()=>!!(window.phantom?.solana?.isPhantom || window.solana?.isPhantom || window.solana?.isPhantomApp),
-    provider:()=>window.phantom?.solana || window.solana,
+    has:()=> !!(window.phantom?.solana?.isPhantom || window.solana?.isPhantom || window.solana?.isPhantomApp),
+    provider:()=> window.phantom?.solana || window.solana,
     deeplink:(url)=>`https://phantom.app/ul/browse/${encodeURIComponent(url)}?network=${encodeURIComponent(CONFIG.cluster)}`,
     async connect(){
       let p=this.provider(); if(!p){ await sleep(250); p=this.provider(); }
@@ -163,8 +173,8 @@ const Wallets = {
   },
   solflare:{
     key:'solflare', label:'Solflare', icon:'assets/images/wallets/solflare.png',
-    has:()=>!!(window.solflare?.isSolflare || typeof window.solflare?.connect==="function"),
-    provider:()=>window.solflare,
+    has:()=> !!(window.solflare?.isSolflare || typeof window.solflare?.connect==="function"),
+    provider:()=> window.solflare,
     deeplink:(url)=>`https://solflare.com/ul/v1/browse/${encodeURIComponent(url)}?network=${encodeURIComponent(CONFIG.cluster)}`,
     async connect(){
       let p=this.provider(); if(!p){ await sleep(250); p=this.provider(); }
@@ -191,8 +201,9 @@ function walletListHTML(){
 (function initWalletUI(){
   const modal=$("#walletModal");
   const list=$("#wlist");
-  if(list) list.innerHTML=walletListHTML();
+  if(list) list.innerHTML = walletListHTML();
 
+  // tek tık giriş
   function bindConnectButtons(){
     const all=[$("#connectBtn"), ...$$("[data-connect]")].filter(Boolean);
     all.forEach(btn=>{
@@ -225,6 +236,7 @@ function walletListHTML(){
 
   new MutationObserver(bindConnectButtons).observe(document.body, {subtree:true, childList:true});
 
+  // cüzdan injection/geri dönüş
   window.addEventListener("solana#initialized", ()=>{ autoConnectIfReturned(); });
   window.addEventListener("load", ()=>{ setTimeout(autoConnectIfReturned, 500); });
   document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) autoConnectIfReturned(); });
@@ -235,6 +247,7 @@ async function connectFlow(key){
   const modal=$("#walletModal");
   const nowUrl=location.href;
 
+  // mobil dış tarayıcı → wallet içi aç
   if(!impl.has() && IS_MOBILE){
     sessionStorage.setItem(CONFIG.SS_AWAIT,"1");
     sessionStorage.setItem(CONFIG.SS_TARGET,key);
@@ -243,6 +256,7 @@ async function connectFlow(key){
     return;
   }
 
+  // masaüstü ve eklenti yok
   if(!impl.has() && !IS_MOBILE){
     modal?.classList.add("show");
     alert("Wallet eklentisi yok. Phantom veya Solflare kurup tekrar deneyin.");
@@ -261,22 +275,18 @@ async function connectFlow(key){
 
 function withRetry(fn, tries=2, wait=250){
   return new Promise(async (resolve,reject)=>{
-    let lastErr;
+    let last;
     for(let i=0;i<tries;i++){
       try{ return resolve(await fn()); }
-      catch(e){ lastErr=e; await sleep(wait); }
+      catch(e){ last=e; await sleep(wait); }
     }
-    reject(lastErr||new Error("failed"));
+    reject(last||new Error("failed"));
   });
 }
 
 function addUrlFlag(url, flagKV){
-  try{
-    const u=new URL(url);
-    const [k,v]=flagKV.split("=");
-    u.searchParams.set(k,v);
-    return u.toString();
-  }catch{ return url; }
+  try{ const u=new URL(url); const [k,v]=flagKV.split("="); u.searchParams.set(k,v); return u.toString(); }
+  catch{ return url; }
 }
 
 async function autoConnectIfReturned(){
@@ -303,21 +313,20 @@ async function autoConnectIfReturned(){
 }
 
 function onConnected(key, addr, opts={}){
-  CURRENT_ADDRESS=addr;
-  CURRENT_WALLET=key;
+  CURRENT_ADDRESS=addr; CURRENT_WALLET=key;
   localStorage.setItem(CONFIG.LS_ADDR, addr);
   localStorage.setItem(CONFIG.LS_WALLET, key);
   [$("#connectBtn"), ...$$("[data-connect]")].forEach(btn=>{
-    if(btn) btn.textContent=`${addr.slice(0,6)}...${addr.slice(-4)}`;
+    if(btn) btn.textContent = `${addr.slice(0,6)}...${addr.slice(-4)}`;
   });
   const out=$("#refLink"); if(out) out.value=`${location.origin}${location.pathname}?ref=${addr}`;
   setBuyButtonsEnabled(true);
   if(!opts.silent) console.log("Connected:", key, addr);
 }
 
-/* Buy (Phantom transfer deeplink) */
+/* ========== BUY (Phantom transfer deeplink) ========== */
 function activeWeek(){ return 0; }
-["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{ $("#"+id)?.addEventListener("click", ()=>handleBuy(i)); });
+["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{$("#"+id)?.addEventListener("click", ()=>handleBuy(i));});
 function setBuyButtonsEnabled(ok){
   ["buyW0","buyW1","buyW2","buyW3"].forEach(id=>{
     const b=document.getElementById(id); if(!b) return;
@@ -332,7 +341,7 @@ function handleBuy(weekIdx){
 
   const price=CONFIG.weekPrices[weekIdx];
   const usdtCost=qty*price;
-  const solAmount=(usdtCost*0.01).toFixed(4); // örnek kur
+  const solAmount=(usdtCost*0.01).toFixed(4); // ÖRNEK oran
 
   const redirect=location.href;
   const deeplink=`https://phantom.app/ul/transfer`+
@@ -347,9 +356,8 @@ function handleBuy(weekIdx){
 
   const inPhantom=/Phantom/i.test(UA)||window.solana?.isPhantomApp;
   if(inPhantom){ location.href=deeplink; } else { window.open(deeplink, "_blank"); }
-
   alert(`Phantom transfer ekranı açılıyor (~${solAmount} SOL). İşlem sonrası bu sayfaya dönersin.`);
 }
 
-/* small polish */
+/* ========== small polish ========== */
 (function ensureTickerVisible(){ const t=$("#exTrack"); if(!t) return; t.style.transform="translateX(0)"; setTimeout(()=>t.style.transform="",60); })();
