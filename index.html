@@ -1,303 +1,856 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ZUZUCOIN — Pre-Sale • Stake • NFT Rewards</title>
-  <meta name="theme-color" content="#0e1522">
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <style>
-    /* Güvenli modal kapama & görünürlük düzeltmeleri */
-    .modal{position:fixed;inset:0;display:none;align-items:flex-end;background:rgba(2,8,20,.6);backdrop-filter:saturate(120%) blur(4px);z-index:60}
-    .modal.show{display:flex}
-    .sheet{width:100%;background:#0f1828;border-top-left-radius:18px;border-top-right-radius:18px;padding:18px 16px 22px;box-shadow:0 -10px 30px rgba(0,0,0,.35)}
-    .wlist{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-    .wbtn{display:flex;align-items:center;gap:10px;background:#142136;border:1px solid #21314f;border-radius:14px;padding:10px 12px;cursor:pointer}
-    .wbtn img{width:22px;height:22px}
-    .wbtn:hover{border-color:#415c8f}
-    .wm-row{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:10px}
-    .z-btn-danger{background:#2b1321;border:1px solid #7a244f}
-    .z-btn-danger:hover{background:#39172a}
-    @media(min-width:700px){.sheet{max-width:520px;margin:0 auto 10px;border-radius:18px}}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZUZUCOIN — Pre-Sale • Stake • NFT Rewards</title>
+    <meta name="theme-color" content="#0e1522">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0e1522;
+            --bg-secondary: #0f1828;
+            --bg-card: #142136;
+            --text-primary: #e9f2ff;
+            --text-secondary: #9fb4dd;
+            --accent-primary: #8E69FF;
+            --accent-secondary: #23d4e1;
+            --border-color: #21314f;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .z-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Navigation */
+        .z-nav {
+            background-color: rgba(14, 21, 34, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .z-nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .brand {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .brand img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .z-menu {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .z-menu a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .z-menu a:hover {
+            color: var(--text-primary);
+        }
+        
+        .z-chip {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            text-decoration: none;
+            border: 1px solid var(--border-color);
+        }
+        
+        .z-btn {
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+        
+        .z-btn-primary {
+            background-color: var(--accent-primary);
+            color: white;
+        }
+        
+        .z-btn-primary:hover {
+            background-color: #7a50e6;
+        }
+        
+        .z-btn-ghost {
+            background-color: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .z-btn-ghost:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .z-btn-danger {
+            background: #2b1321;
+            border: 1px solid #7a244f;
+            color: #ff5c8d;
+        }
+        
+        .z-btn-danger:hover {
+            background: #39172a;
+        }
+        
+        /* Hero Section */
+        .z-section {
+            padding: 100px 0;
+        }
+        
+        .hero-2 {
+            background: linear-gradient(135deg, #0e1522 0%, #1a2845 100%);
+            padding-top: 150px;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .badge {
+            background-color: var(--accent-primary);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .lead {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+        
+        .hero-cta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        
+        .counter {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .flip {
+            text-align: center;
+        }
+        
+        .num {
+            background-color: var(--bg-card);
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            min-width: 70px;
+        }
+        
+        .flip small {
+            display: block;
+            margin-top: 8px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+        
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .logo-big {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        /* Section Head */
+        .section-head {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .section-head h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .section-head p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* Cards */
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .buybox {
+            margin-bottom: 20px;
+        }
+        
+        .input {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            margin-top: 8px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .muted {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: block;
+        }
+        
+        /* Presale Grid */
+        .presale-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .price {
+            margin: 15px 0;
+            font-size: 1.1rem;
+        }
+        
+        .cost {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .buy {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* Ticker */
+        .ticker {
+            overflow: hidden;
+            position: relative;
+            height: 60px;
+        }
+        
+        .ticker__track {
+            display: flex;
+            animation: ticker-scroll 20s linear infinite;
+        }
+        
+        .ticker__item {
+            flex-shrink: 0;
+            padding: 0 20px;
+        }
+        
+        .ticker__item img {
+            height: 40px;
+            width: auto;
+        }
+        
+        @keyframes ticker-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        .ex-note {
+            text-align: center;
+            margin-top: 15px;
+            color: var(--text-secondary);
+        }
+        
+        /* Stake Grid */
+        .stake-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .stake-card {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        
+        .tier {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--accent-secondary);
+        }
+        
+        .silver {
+            color: #c0c0c0;
+        }
+        
+        .gold {
+            color: #ffd700;
+        }
+        
+        .stake-card ul {
+            list-style: none;
+            text-align: left;
+        }
+        
+        .stake-card li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .stake-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--accent-secondary);
+        }
+        
+        /* NFT Grid */
+        .nft-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .nft {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        
+        .nft img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        
+        .meta {
+            padding: 15px;
+        }
+        
+        .tag {
+            display: inline-block;
+            padding: 4px 8px;
+            background-color: var(--accent-primary);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 8px;
+        }
+        
+        /* Tokenomics */
+        .tk {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .legend {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .legend div {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        /* Roadmap */
+        .road {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .mile {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .mile span {
+            display: inline-block;
+            background-color: var(--accent-primary);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        /* Footer */
+        .z-footer {
+            background-color: var(--bg-secondary);
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .between {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .center-v {
+            align-items: center;
+        }
+        
+        .z-chip-row {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: flex-end;
+            background: rgba(2, 8, 20, 0.6);
+            backdrop-filter: saturate(120%) blur(4px);
+            z-index: 60;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .sheet {
+            width: 100%;
+            background: var(--bg-secondary);
+            border-top-left-radius: 18px;
+            border-top-right-radius: 18px;
+            padding: 18px 16px 22px;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.35);
+        }
+        
+        .wlist {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+        }
+        
+        .wbtn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        
+        .wbtn img {
+            width: 22px;
+            height: 22px;
+        }
+        
+        .wbtn:hover {
+            border-color: #415c8f;
+        }
+        
+        .wm-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        
+        /* Responsive */
+        @media (min-width: 700px) {
+            .sheet {
+                max-width: 520px;
+                margin: 0 auto 10px;
+                border-radius: 18px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            .z-menu {
+                display: none;
+            }
+            
+            .tk {
+                grid-template-columns: 1fr;
+            }
+            
+            .counter {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
 </head>
 <body>
 
 <!-- NAV -->
 <header class="z-nav">
-  <div class="z-container z-nav-inner">
-    <a class="brand" href="#">
-      <img src="assets/images/logo.png" alt="ZUZU"><span>ZUZUCOIN</span>
-    </a>
+    <div class="z-container z-nav-inner">
+        <a class="brand" href="#">
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTAwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0yMCAxMEMyMCA0LjQ3NyAyNC40NzcgMCAzMCAwSDcwQzc1LjUyMyAwIDgwIDQuNDc3IDgwIDEwVjMwQzgwIDM1LjUyMyA3NS41MjMgNDAgNzAgNDBIMzBDMjQuNDc3IDQwIDIwIDM1LjUyMyAyMCAzMFYxMFoiIGZpbGw9IiM4RTY5RkYiLz48cGF0aCBkPSJNMzUgMTVIMzBWMjVIMzVWMjBINDVWMjVINDBWMTVIMzVaIiBmaWxsPSJ3aGl0ZSIvPjxwYXRoIGQ9Ik01MCAxNUg0NVYyNUg1MFYyMEg2MFYyNUg1NVYxNUg1MFoiIGZpbGw9IndoaXRlIi8+PC9zdmc+" alt="ZUZU"><span>ZUZUCOIN</span>
+        </a>
 
-    <nav class="z-menu">
-      <a href="#presale"    data-i="nav_presale">Pre-Sale</a>
-      <a href="#stake"      data-i="nav_stake">Stake</a>
-      <a href="#nft"        data-i="nav_nft">NFT Rewards</a>
-      <a href="#roadmap"    data-i="nav_roadmap">Roadmap</a>
-      <a href="#tokenomics" data-i="nav_token">Tokenomics</a>
-      <a href="stake-simulator.html" class="z-chip">Stake Simulator ↗</a>
-      <a href="claim.html"            class="z-chip">Claim Portal ↗</a>
+        <nav class="z-menu">
+            <a href="#presale" data-i="nav_presale">Pre-Sale</a>
+            <a href="#stake" data-i="nav_stake">Stake</a>
+            <a href="#nft" data-i="nav_nft">NFT Rewards</a>
+            <a href="#roadmap" data-i="nav_roadmap">Roadmap</a>
+            <a href="#tokenomics" data-i="nav_token">Tokenomics</a>
+            <a href="stake-simulator.html" class="z-chip">Stake Simulator ↗</a>
+            <a href="claim.html" class="z-chip">Claim Portal ↗</a>
 
-      <!-- Lang flags -->
-      <div class="lang-wrap">
-        <button id="langBtn" class="z-btn z-btn-ghost small">
-          <img id="langFlag" src="flags/en.png" alt="EN"> <span id="langCode">EN</span>
-        </button>
-        <div id="langMenu" class="lang-menu">
-          <button class="lang-opt" data-lang="en"><img src="flags/en.png" alt="">EN</button>
-          <button class="lang-opt" data-lang="tr"><img src="flags/tr.png" alt="">TR</button>
-          <button class="lang-opt" data-lang="fr"><img src="flags/fr.png" alt="">FR</button>
-          <button class="lang-opt" data-lang="pt"><img src="flags/pt.png" alt="">PT</button>
-          <button class="lang-opt" data-lang="ru"><img src="flags/ru.png" alt="">RU</button>
-          <button class="lang-opt" data-lang="es"><img src="flags/es.png" alt="">ES</button>
-        </div>
-      </div>
-
-      <button id="connectBtn" class="z-btn z-btn-primary" data-i="connect">Connect Wallet</button>
-    </nav>
-  </div>
+            <button id="connectBtn" class="z-btn z-btn-primary" data-i="connect">Connect Wallet</button>
+        </nav>
+    </div>
 </header>
 
 <main>
 
 <!-- HERO -->
 <section class="z-section hero-2">
-  <div class="z-container grid-2">
-    <div>
-      <div class="badge" data-i="hero_badge">Pre-Sale • Stake to Win NFT</div>
-      <h1 data-i="hero_title">ZUZU — Robotic Hedgehog 🦔⚡</h1>
-      <p class="lead" data-i="hero_lead">Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high <b>utility</b>.</p>
+    <div class="z-container grid-2">
+        <div>
+            <div class="badge" data-i="hero_badge">Pre-Sale • Stake to Win NFT</div>
+            <h1 data-i="hero_title">ZUZU — Robotic Hedgehog 🦔⚡</h1>
+            <p class="lead" data-i="hero_lead">Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high <b>utility</b>.</p>
 
-      <div class="hero-cta">
-        <a href="#stake" class="z-btn z-btn-primary" data-i="cta_stake">Start Staking</a>
-        <a href="#nft"   class="z-btn z-btn-ghost"   data-i="cta_nft">NFT Rewards</a>
-      </div>
+            <div class="hero-cta">
+                <a href="#stake" class="z-btn z-btn-primary" data-i="cta_stake">Start Staking</a>
+                <a href="#nft" class="z-btn z-btn-ghost" data-i="cta_nft">NFT Rewards</a>
+            </div>
 
-      <!-- Countdown -->
-      <div class="counter">
-        <div class="flip"><div id="cdDays"  class="num">00</div><small data-i="days">DAYS</small></div>
-        <div class="flip"><div id="cdHours" class="num">00</div><small data-i="hours">HOURS</small></div>
-        <div class="flip"><div id="cdMins"  class="num">00</div><small data-i="mins">MINUTES</small></div>
-        <div class="flip"><div id="cdSecs"  class="num">00</div><small data-i="secs">SECONDS</small></div>
-      </div>
+            <!-- Countdown -->
+            <div class="counter">
+                <div class="flip"><div id="cdDays" class="num">00</div><small data-i="days">DAYS</small></div>
+                <div class="flip"><div id="cdHours" class="num">00</div><small data-i="hours">HOURS</small></div>
+                <div class="flip"><div id="cdMins" class="num">00</div><small data-i="mins">MINUTES</small></div>
+                <div class="flip"><div id="cdSecs" class="num">00</div><small data-i="secs">SECONDS</small></div>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <img class="logo-big" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDMwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMTUwIiBjeT0iMTUwIiByPSIxMzAiIGZpbGw9IiMwRTE1MjIiIHN0cm9rZT0iIzhFNjlGRiIgc3Ryb2tlLXdpZHRoPSI4Ii8+PHBhdGggZD0iTTEwMCAxMjBIMTQwVjE4MEgxMDBWMTIwWiIgZmlsbD0iIzhFNjlGRiIvPjxwYXRoIGQ9Ik0xNjAgMTIwSDIwMFYxODBIMTYwVjEyMFoiIGZpbGw9IiM4RTY5RkYiLz48Y2lyY2xlIGN4PSIxMjAiIGN5PSI5MCIgcj0iMTAiIGZpbGw9IndoaXRlIi8+PGNpcmNsZSBjeD0iMTgwIiBjeT0iOTAiIHI9IjEwIiBmaWxsPSJ3aGl0ZSIvPjxwYXRoIGQ9Ik0xMjAgMTUwVjE5MEwxNTAgMjEwTDE4MCAxOTBWMTUwIiBzdHJva2U9IiM4RTY5RkYiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+" alt="ZUZU">
+        </div>
     </div>
-
-    <div class="hero-visual">
-      <img class="logo-big" src="assets/images/branding/zuzu-logo.svg"
-           onerror="this.onerror=null;this.src='assets/images/branding/zuzu-logo.png';"
-           alt="ZUZU">
-    </div>
-  </div>
 </section>
 
 <!-- PRE-SALE -->
 <section id="presale" class="z-section">
-  <div class="z-container">
-    <div class="section-head">
-      <h2 data-i="presale_title">Pre-Sale — Countdown</h2>
-      <p  data-i="presale_lead">Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.</p>
-    </div>
-
-    <!-- Amount + Pay with -->
-    <div class="card buybox">
-      <div>
-        <label data-i="amount">Amount (ZUZU)</label>
-        <input id="buyAmount" class="input" value="10000" inputmode="decimal">
-      </div>
-      <div>
-        <label>Pay with</label>
-        <select id="payWith" class="input">
-          <option value="SOL">SOL</option>
-          <option value="USDT">USDT (Solana)</option>
-        </select>
-      </div>
-      <small class="muted">Payments via <b>Phantom / Solflare / Backpack</b></small>
-    </div>
-
-    <!-- 4 hafta satın alma -->
-    <div class="presale-grid">
-      <div class="card buybox">
-        <h4 data-i="w1">Week 1 (Cheapest)</h4>
-        <div class="price">1 ZUZU = <b id="p0">0.0050</b> USDT</div>
-        <div class="cost"><span data-i="cost">Cost:</span> <b id="c0">0</b> USDT</div>
-        <div class="buy">
-          <button id="buyW0" class="z-btn z-btn-primary" data-week="0" data-i="buy">Buy</button>
-          <button class="z-btn z-btn-ghost">Details</button>
+    <div class="z-container">
+        <div class="section-head">
+            <h2 data-i="presale_title">Pre-Sale — Countdown</h2>
+            <p data-i="presale_lead">Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.</p>
         </div>
-      </div>
 
-      <div class="card buybox">
-        <h4 data-i="w2">Week 2</h4>
-        <div class="price">1 ZUZU = <b id="p1">0.0065</b> USDT</div>
-        <div class="cost"><span data-i="cost">Cost:</span> <b id="c1">0</b> USDT</div>
-        <div class="buy">
-          <button id="buyW1" class="z-btn z-btn-primary" data-week="1" data-i="buy">Buy</button>
-          <button class="z-btn z-btn-ghost">Details</button>
+        <!-- Amount + Pay with -->
+        <div class="card buybox">
+            <div>
+                <label data-i="amount">Amount (ZUZU)</label>
+                <input id="buyAmount" class="input" value="10000" inputmode="decimal">
+            </div>
+            <div>
+                <label>Pay with</label>
+                <select id="payWith" class="input">
+                    <option value="SOL">SOL</option>
+                    <option value="USDT">USDT (Solana)</option>
+                </select>
+            </div>
+            <small class="muted">Payments via <b>Phantom / Solflare / Backpack</b></small>
         </div>
-      </div>
 
-      <div class="card buybox">
-        <h4 data-i="w3">Week 3</h4>
-        <div class="price">1 ZUZU = <b id="p2">0.0080</b> USDT</div>
-        <div class="cost"><span data-i="cost">Cost:</span> <b id="c2">0</b> USDT</div>
-        <div class="buy">
-          <button id="buyW2" class="z-btn z-btn-primary" data-week="2" data-i="buy">Buy</button>
-          <button class="z-btn z-btn-ghost">Details</button>
-        </div>
-      </div>
+        <!-- 4 hafta satın alma -->
+        <div class="presale-grid">
+            <div class="card buybox">
+                <h4 data-i="w1">Week 1 (Cheapest)</h4>
+                <div class="price">1 ZUZU = <b id="p0">0.0050</b> USDT</div>
+                <div class="cost"><span data-i="cost">Cost:</span> <b id="c0">0</b> USDT</div>
+                <div class="buy">
+                    <button id="buyW0" class="z-btn z-btn-primary" data-week="0" data-i="buy">Buy</button>
+                    <button class="z-btn z-btn-ghost">Details</button>
+                </div>
+            </div>
 
-      <div class="card buybox">
-        <h4 data-i="w4">Week 4 (Last Chance)</h4>
-        <div class="price">1 ZUZU = <b id="p3">0.0100</b> USDT</div>
-        <div class="cost"><span data-i="cost">Cost:</span> <b id="c3">0</b> USDT</div>
-        <div class="buy">
-          <button id="buyW3" class="z-btn z-btn-primary" data-week="3" data-i="buy">Buy</button>
-          <button class="z-btn z-btn-ghost">Details</button>
+            <div class="card buybox">
+                <h4 data-i="w2">Week 2</h4>
+                <div class="price">1 ZUZU = <b id="p1">0.0065</b> USDT</div>
+                <div class="cost"><span data-i="cost">Cost:</span> <b id="c1">0</b> USDT</div>
+                <div class="buy">
+                    <button id="buyW1" class="z-btn z-btn-primary" data-week="1" data-i="buy">Buy</button>
+                    <button class="z-btn z-btn-ghost">Details</button>
+                </div>
+            </div>
+
+            <div class="card buybox">
+                <h4 data-i="w3">Week 3</h4>
+                <div class="price">1 ZUZU = <b id="p2">0.0080</b> USDT</div>
+                <div class="cost"><span data-i="cost">Cost:</span> <b id="c2">0</b> USDT</div>
+                <div class="buy">
+                    <button id="buyW2" class="z-btn z-btn-primary" data-week="2" data-i="buy">Buy</button>
+                    <button class="z-btn z-btn-ghost">Details</button>
+                </div>
+            </div>
+
+            <div class="card buybox">
+                <h4 data-i="w4">Week 4 (Last Chance)</h4>
+                <div class="price">1 ZUZU = <b id="p3">0.0100</b> USDT</div>
+                <div class="cost"><span data-i="cost">Cost:</span> <b id="c3">0</b> USDT</div>
+                <div class="buy">
+                    <button id="buyW3" class="z-btn z-btn-primary" data-week="3" data-i="buy">Buy</button>
+                    <button class="z-btn z-btn-ghost">Details</button>
+                </div>
+            </div>
         </div>
-      </div>
+
+        <!-- Borsa logoları kaydırıcı -->
+        <div class="card" style="margin-top:14px">
+            <h3 style="margin:0 0 10px" data-i="exchanges">Supported Exchanges</h3>
+            <div class="ticker">
+                <div id="exTrack" class="ticker__track">
+                    <div class="ticker__item"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTIwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik00MCA0MEMxNy45MDkgNDAgMCAzMi4wOTEgMCA0MEMwIDQ3LjkwOSAxNy45MDkgNTYgNDAgNTZINjBDNjIuMDkxIDU2IDgwIDQ3LjkwOSA4MCA0MEM4MCAzMi4wOTEgNjIuMDkxIDI0IDQwIDI0SDIwQzguOTU0IDI0IDAgMTcuOTA5IDAgMTBDMCAyLjA5MSA4Ljk1NCAwIDIwIDBINjBDODIuMDkxIDAgMTAwIDguMDkxIDEwMCAxNkMxMDAgMjMuOTA5IDgyLjA5MSAzMiA2MCAzMkg0MFY0MFoiIGZpbGw9IiM0MUNDN0YiLz48L3N2Zz4=" alt="Gate.io"></div>
+                    <div class="ticker__item"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTIwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0yMCA0MEM4Ljk1NCA0MCAwIDMxLjA0NiAwIDIwQzAgOC45NTQgOC45NTQgMCAyMCAwQzMxLjA0NiAwIDQwIDguOTU0IDQwIDIwQzQwIDMxLjA0NiAzMS4wNDYgNDAgMjAgNDBaIiBmaWxsPSIjRjYwMDZDIi8+PHBhdGggZD0iTTgwIDQwQzY4Ljk1NCA0MCA2MCAzMS4wNDYgNjAgMjBDNjAgOC45NTQgNjguOTU0IDAgODAgMEM5MS4wNDYgMCAxMDAgOC45NTQgMTAwIDIwQzEwMCAzMS4wNDYgOTEuMDQ2IDQwIDgwIDQwWiIgZmlsbD0iIzIzNjlGNSIvPjwvc3ZnPg==" alt="KuCoin"></div>
+                    <div class="ticker__item"><img src="data:image/slg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTIwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0yMCA0MEM4Ljk1NCA0MCAwIDMxLjA0NiAwIDIwQzAgOC45NTQgOC45NTQgMCAyMCAwQzMxLjA0NiAwIDQwIDguOTU0IDQwIDIwQzQwIDMxLjA0NiAzMS4wNDYgNDAgMjAgNDBaIiBmaWxsPSIjMDAwMDAwIi8+PHBhdGggZD0iTTgwIDQwQzY4Ljk1NCA0MCA2MCAzMS4wNDYgNjAgMjBDNjAgOC45NTQgNjguOTU0IDAgODAgMEM5MS4wNDYgMCAxMDAgOC45NTQgMTAwIDIwQzEwMCAzMS4wNDYgOTEuMDQ2IDQwIDgwIDQwWiIgZmlsbD0iIzJEN0ZGRiIvPjwvc3ZnPg==" alt="OKX"></div>
+                    <div class="ticker__item"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTIwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMj200MC9zdmciPjxwYXRoIGQ9Ik0yMCA0MEM4Ljk1NCA0MCAwIDMxLjA0NiAwIDIwQzAgOC45NTQgOC45NTQgMCAyMCAwQzMxLjA0NiAwIDQwIDguOTU0IDQwIDIwQzQwIDMxLjA0NiAzMS4wNDYgNDAgMjAgNDBaIiBmaWxsPSIjMDA4MUZGIi8+PHBhdGggZD0iTTgwIDQwQzY4Ljk1NCA0MCA2MCAzMS4wNDYgNjAgMjBDNjAgOC45NTQgNjguOTU0IDAgODAgMEM5MS4wNDYgMCAxMDAgOC45NTQgMTAwIDIwQzEwMCAzMS4wNDYgOTEuMDQ2IDQwIDgwIDQwWiIgZmlsbD0iI0ZGN0EwMCIvPjwvc3ZnPg==" alt="MEXC"></div>
+                    <div class="ticker__item"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTIwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0yMCA0MEM4Ljk1NCA0MCAwIDMxLjA0NiAwIDIwQzAgOC45NTQgOC45NTQgMCAyMCAwQzMxLjA0NiAwIDQwIDguOTU0IDQwIDIwQzQwIDMxLjA0NiAzMS4wNDYgNDAgMjAgNDBaIiBmaWxsPSIjMUFCN0ZGIi8+PHBhdGggZD0iTTgwIDQwQzY4Ljk1NCA0MCA2MCAzMS4wNDYgNjAgMjBDNjAgOC45NTQgNjguOTU0IDAgODAgMEM5MS4wNDYgMCAxMDAgOC45NTQgMTAwIDIwQzEwMCAzMS4wNDYgOTEuMD0NjQgNDAgODAgNDBaIiBmaWxsPSIjRkY2QjREIi8+PC9zdmc+" alt="BitMart"></div>
+                    <div class="ticker__item"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTIwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0yMCA0MEM4Ljk1NCA0MCAwIDMxLjA0NiAwIDIwQzAgOC45NTQgOC45NTQgMCAyMCAwQzMxLjA0NiAwIDQwIDguOTU0IDQwIDIwQzQwIDMxLjA0NiAzMS4wNDYgNDAgMjAgNDBaIiBmaWxsPSIjMkJBMkZGIi8+PHBhdGggZD0iTTgwIDQwQzY4Ljk1NCA0MCA2MCAzMS4wNDYgNjAgMjBDNjAgOC45NTQgNjguOTU0IDAgODAgMEM5MS4wNDYgMCAxMDAgOC45NTQgMTAwIDIwQzEwMCAz1LjA0NiA5MS4wNDYgNDAgODAgNDBaIiBmaWxsPSIjRkY0NDAwIi8+PC9zdmc+" alt="Bybit"></div>
+                    <!-- loop tekrar -->
+                    <div class="ticker__item"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTIwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My9vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik00MCA0MEMxNy45MDkgNDAgMCAzMi4wOTEgMCA0MEMwIDQ3LjkwOSAxNy45MDkgNTYgNDAgNTZINjBDNjIuMDkxIDU2IDgwIDQ3LjkwOSA4MCA0MEM4MCAzMi4wOTEgNjIuMDkxIDI0IDQwIDI0SDIwQzguOTU0IDI0IDAgMTcuOTA5IDAgMTBDMCAyLjA5MSA4Ljk1NCAwIDIwIDBINjBDODIuMDkxIDAgMTAwIDguMDkxIDEwMCAxNkMxMDAgMjMuOTA5IDgyLjA5MSAzMiA2MCAzMkg0MFY0MFoiIGZpbGw9IiM0MUNDN0YiLz48L3N2Zz4=" alt=""></div>
+                    <div class="ticker__item"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTIwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0yMCA0MEM4Ljk1NCA0MCAwIDMxLjA0NiAwIDIwQzAgOC45NTQgOC45NTQgMCAyMCAwQzMxLjA0NiAwIDQwIDguOTU0IDQwIDIwQzQwIDMxLjA0NiAzMS4wNDYgNDAgMjAgNDBaIiBmaWxsPSIjRjYwMDZDIi8+PHBhdGggZD0iTTgwIDQwQzY4Ljk1NCA0MCA2MCAzMS4wNDYgNjAgMjBDNjAgOC45NTQgNjguOTU0IDAgODAgMEM5MS4wNDYgMCAxMDAgOC45NTQgMTAwIDIwQzEwMCAzMS4wNDYgOTEuMDQ2IDQwIDgwIDQwWiIgZmlsbD0iIzIzNjlGNSIvPjwvc3ZnPg==" alt=""></div>
+                    <div class="ticker__item"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTIwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0yMCA0MEM4Ljk1NCA0MCAwIDMxLjA0NiAwIDIwQzAgOC45NTQgOC45NTQgMCAyMCAwQzMxLjA0NiAwIDQwIDguOTU0IDQwIDIwQzQwIDMxLjA0NiAzMS.4wNDYgNDAgMjAgNDBaIiBmaWxsPSIjMDAwMDAwIi8+PHBhdGggZD0iTTgwIDQwQzY4Ljk1NCA0MCA2MCAzMS4wNDYgNjAgMjBDNjAgOC45NTQgNjguOTU0IDAgODAgMEM5MS4wNDYgMCAxMDAgOC45NTQgMTAwIDIwQzEwMCAzMS4wNDYgOTEuMDQ2IDQwIDgwIDQwWiIgZmlsbD0iIzJEN0ZGRiIvPjwvc3ZnPg==" alt=""></div>
+                    <div class="ticker__item"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTIwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0yMCA0MEM4Ljk1NCA0MCAwIDMxLjA0NiAwIDIwQzAgOC45NTQgOC45NTQgMCAyMCAwQzM1LjA0NiAwIDQwIDguOTU0IDQwIDIwQzQwIDMxLjA0NiAzMS4wNDYgNDAgMjAgNDBaIiBmaWxsPSIjMDA4MUZGIi8+PHBhdGggZD0iTTgwIDQwQzY4Ljk1NCA0MCA2MCAzMS4wNDYgNjAgMjBDNjAgOC45NTQgNjguOTU0IDAgODAgMEM5MS4wNDYgMCAxMDAgOC45NTQgMTAwIDIwQzEwMCAzMS4wNDYgOTEuMDQ2IDQwIDgwIDQwWiIgZmlsbD0iI0ZGN0EwMCIvPjwvc3ZnPg==" alt=""></div>
+                    <div class="ticker__item"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTIwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0yMCA0MEM4Ljk1NCA0MCAwIDMxLjA0NiAwIDIwQzAgOC45NTQgOC45NTQgMCAyMCAwQzMxLjA0NiAwIDQwIDguOTU0IDQwIDIwQzQwIDMxLjA0NiAzMS4wNDYgNDAgMjAgNDBaIiBmaWxsPSIjMUFCN0ZGIi8+PHBhdGggZD0iTTgwIDQwQzY4Ljk1NCA0MCA2MCAzMS4wNDYgNjAgMjBDNjAgOC45NTQgNjguOTU0IDAgODAgMEM5MS4wNDYgMCAxMDAgOC45NTQgMTAwIDIwQzEwMCAzMS4wNDYgOTEuMDQ2IDQwIDgwIDQwWiIgZmlsbD0iI0ZGNkI0RCIvPjwvc3ZnPg==" alt=""></div>
+                    <div class="ticker__item"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTIwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0yMCA0MEM4Ljk1NCA0MCAwIDM1LjA0NiAwIDIwQzAgOC45NTQgOC45NTQgMCAyMCAwQzMxLjA0NiAwIDQwIDguOTU0IDQwIDIwQzQwIDMxLjA0NiAzMS4wNDYgNDAgMjAgNDBaIiBmaWxsPSIjMkJBMkZGIi8+PHBhdGggZD0iTTgwIDQwQzY4Ljk1NCA0MCA2MCAzMS4wNDYgNjAgMjBDNjAgOC45NTQgNjguOTU0IDAgODAgMEM5MS4wNDYgMCAxMDAgOC45NTQgMTAwIDIwQzEwMCAzMS4wNDYgOTEuMDQ2IDQwIDgwIDQwWiIgZpbGw9IiNGRjQ0MDAiLz48L3N2Zz4=" alt=""></div>
+                </div>
+            </div>
+            <div class="ex-note">Will Be Listed Soon</div>
+        </div>
+
+        <!-- Invite & Earn -->
+        <div class="card" style="margin-top:14px">
+            <h3>Invite & Earn</h3>
+            <p>Share your link. Each purchase via your link earns bonus ZUZU.</p>
+            <input id="refLink" class="input" readonly>
+            <div style="margin-top:8px">
+                <button id="copyRef" class="z-btn z-btn-ghost">Copy</button>
+            </div>
+        </div>
     </div>
-
-    <!-- Borsa logoları kaydırıcı -->
-    <div class="card" style="margin-top:14px">
-      <h3 style="margin:0 0 10px" data-i="exchanges">Supported Exchanges</h3>
-      <div class="ticker">
-        <div id="exTrack" class="ticker__track">
-          <div class="ticker__item"><img src="assets/images/exchanges/gateio.png" alt="Gate.io"></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/kucoin.png" alt="KuCoin"></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/okx.png" alt="OKX"></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/mxc.png" alt="MEXC"></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/bitmart.png" alt="BitMart"></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/bybit.png" alt="Bybit"></div>
-          <!-- loop tekrar -->
-          <div class="ticker__item"><img src="assets/images/exchanges/gateio.png" alt=""></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/kucoin.png" alt=""></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/okx.png" alt=""></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/mxc.png" alt=""></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/bitmart.png" alt=""></div>
-          <div class="ticker__item"><img src="assets/images/exchanges/bybit.png" alt=""></div>
-        </div>
-      </div>
-      <div class="ex-note">Will Be Listed Soon</div>
-    </div>
-
-    <!-- Invite & Earn -->
-    <div class="card" style="margin-top:14px">
-      <h3>Invite & Earn</h3>
-      <p>Share your link. Each purchase via your link earns bonus ZUZU.</p>
-      <input id="refLink" class="input" readonly>
-      <div style="margin-top:8px">
-        <button id="copyRef" class="z-btn z-btn-ghost">Copy</button>
-      </div>
-    </div>
-  </div>
 </section>
 
 <!-- STAKE -->
 <section id="stake" class="z-section">
-  <div class="z-container">
-    <div class="section-head">
-      <h2 data-i="stake_title">Stake Pro — Lock, Earn, Get NFT ✨</h2>
-      <p  data-i="stake_lead">Lock your ZUZU, earn <b>APY + NFT BOOST</b>. Early stakers get badge & airdrop priority.</p>
-    </div>
+    <div class="z-container">
+        <div class="section-head">
+            <h2 data-i="stake_title">Stake Pro — Lock, Earn, Get NFT ✨</h2>
+            <p data-i="stake_lead">Lock your ZUZU, earn <b>APY + NFT BOOST</b>. Early stakers get badge & airdrop priority.</p>
+        </div>
 
-    <div class="stake-grid">
-      <div class="stake-card"><div class="tier">Bronze</div><ul>
-        <li>30 days lock</li><li><b>12% APY</b></li><li>Early access raffles</li></ul></div>
-      <div class="stake-card"><div class="tier silver">Silver</div><ul>
-        <li>90 days lock</li><li><b>24% APY</b></li><li>+5% NFT boost</li></ul></div>
-      <div class="stake-card"><div class="tier gold">Gold</div><ul>
-        <li>180 days lock</li><li><b>40% APY</b></li><li>Whitelist + ZUZU badge</li></ul></div>
+        <div class="stake-grid">
+            <div class="stake-card">
+                <div class="tier">Bronze</div>
+                <ul>
+                    <li>30 days lock</li>
+                    <li><b>12% APY</b></li>
+                    <li>Early access raffles</li>
+                </ul>
+            </div>
+            <div class="stake-card">
+                <div class="tier silver">Silver</div>
+                <ul>
+                    <li>90 days lock</li>
+                    <li><b>24% APY</b></li>
+                    <li>+5% NFT boost</li>
+                </ul>
+            </div>
+            <div class="stake-card">
+                <div class="tier gold">Gold</div>
+                <ul>
+                    <li>180 days lock</li>
+                    <li><b>40% APY</b></li>
+                    <li>Whitelist + ZUZU badge</li>
+                </ul>
+            </div>
+        </div>
     </div>
-  </div>
 </section>
 
 <!-- NFT REWARDS -->
 <section id="nft" class="z-section">
-  <div class="z-container">
-    <div class="section-head">
-      <h2>ZUZU Maskot NFT Rewards 🎁</h2>
-      <p>Stakers win rare NFTs from the collection.</p>
+    <div class="z-container">
+        <div class="section-head">
+            <h2>ZUZU Maskot NFT Rewards 🎁</h2>
+            <p>Stakers win rare NFTs from the collection.</p>
+        </div>
+        <div id="nftGrid" class="nft-grid">
+            <!-- NFT'ler JavaScript ile doldurulacak -->
+        </div>
     </div>
-    <div id="nftGrid" class="nft-grid"></div>
-  </div>
 </section>
 
 <!-- TOKENOMICS -->
 <section id="tokenomics" class="z-section">
-  <div class="z-container">
-    <div class="section-head">
-      <h2 data-i="token_title">Tokenomics (Visualized)</h2>
-      <p class="muted">Total Supply: 500,000,000 ZUZU</p>
+    <div class="z-container">
+        <div class="section-head">
+            <h2 data-i="token_title">Tokenomics (Visualized)</h2>
+            <p class="muted">Total Supply: 500,000,000 ZUZU</p>
+        </div>
+        <div class="card tk">
+            <div>
+                <svg viewBox="0 0 42 42" width="100%" style="max-width:360px">
+                    <circle cx="21" cy="21" r="15.915" fill="#0e172a"/>
+                    <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#8E69FF" stroke-width="6" stroke-dasharray="35 65" stroke-dashoffset="25"></circle>
+                    <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#23d4e1" stroke-width="6" stroke-dasharray="20 80" stroke-dashoffset="-10"></circle>
+                    <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#47cc6f" stroke-width="6" stroke-dasharray="15 85" stroke-dashoffset="-30"></circle>
+                    <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#ffaa3a" stroke-width="6" stroke-dasharray="10 90" stroke-dashoffset="-45"></circle>
+                    <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#d07bff" stroke-width="6" stroke-dasharray="15 85" stroke-dashoffset="-60"></circle>
+                    <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#ff6a6a" stroke-width="6" stroke-dasharray="5 95" stroke-dashoffset="-75"></circle>
+                    <text x="21" y="21" text-anchor="middle" fill="#e9f2ff" font-size="3.2" font-weight="800">500,000,000</text>
+                    <text x="21" y="26" text-anchor="middle" fill="#9fb4dd" font-size="2.4">Total Supply</text>
+                </svg>
+            </div>
+            <div class="legend">
+                <div><span class="dot" style="background:#8E69FF"></span><span>Community — 35%</span></div>
+                <div><span class="dot" style="background:#23d4e1"></span><span>Liquidity — 20%</span></div>
+                <div><span class="dot" style="background:#47cc6f"></span><span>Team (12m lock) — 15%</span></div>
+                <div><span class="dot" style="background:#ffaa3a"></span><span>Treasury — 10%</span></div>
+                <div><span class="dot" style="background:#d07bff"></span><span>Staking Rewards — 15%</span></div>
+                <div><span class="dot" style="background:#ff6a6a"></span><span>Partners — 5%</span></div>
+            </div>
+        </div>
     </div>
-    <div class="card tk">
-      <div>
-        <svg viewBox="0 0 42 42" width="100%" style="max-width:360px">
-          <circle cx="21" cy="21" r="15.915" fill="#0e172a"/>
-          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#8E69FF" stroke-width="6" stroke-dasharray="35 65" stroke-dashoffset="25"></circle>
-          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#23d4e1" stroke-width="6" stroke-dasharray="20 80" stroke-dashoffset="-10"></circle>
-          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#47cc6f" stroke-width="6" stroke-dasharray="15 85" stroke-dashoffset="-30"></circle>
-          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#ffaa3a" stroke-width="6" stroke-dasharray="10 90" stroke-dashoffset="-45"></circle>
-          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#d07bff" stroke-width="6" stroke-dasharray="15 85" stroke-dashoffset="-60"></circle>
-          <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#ff6a6a" stroke-width="6" stroke-dasharray="5 95" stroke-dashoffset="-75"></circle>
-          <text x="21" y="21" text-anchor="middle" fill="#e9f2ff" font-size="3.2" font-weight="800">500,000,000</text>
-          <text x="21" y="26" text-anchor="middle" fill="#9fb4dd" font-size="2.4">Total Supply</text>
-        </svg>
-      </div>
-      <div class="legend">
-        <div><span class="dot" style="background:#8E69FF"></span><span>Community — 35%</span></div>
-        <div><span class="dot" style="background:#23d4e1"></span><span>Liquidity — 20%</span></div>
-        <div><span class="dot" style="background:#47cc6f"></span><span>Team (12m lock) — 15%</span></div>
-        <div><span class="dot" style="background:#ffaa3a"></span><span>Treasury — 10%</span></div>
-        <div><span class="dot" style="background:#d07bff"></span><span>Staking Rewards — 15%</span></div>
-        <div><span class="dot" style="background:#ff6a6a"></span><span>Partners — 5%</span></div>
-      </div>
-    </div>
-  </div>
 </section>
 
 <!-- ROADMAP -->
 <section id="roadmap" class="z-section">
-  <div class="z-container">
-    <div class="section-head"><h2 data-i="road_title">Roadmap</h2></div>
-    <div class="road">
-      <div class="mile"><span>Q1</span><p>Website, brand, community setup</p></div>
-      <div class="mile"><span>Q2</span><p>NFT Drop + Pre-Sale, Staking (Pro tiers)</p></div>
-      <div class="mile"><span>Q3</span><p>CEX Listings, partner integrations</p></div>
-      <div class="mile"><span>Q4</span><p>Mobile App + DAO voting</p></div>
+    <div class="z-container">
+        <div class="section-head"><h2 data-i="road_title">Roadmap</h2></div>
+        <div class="road">
+            <div class="mile"><span>Q1</span><p>Website, brand, community setup</p></div>
+            <div class="mile"><span>Q2</span><p>NFT Drop + Pre-Sale, Staking (Pro tiers)</p></div>
+            <div class="mile"><span>Q3</span><p>CEX Listings, partner integrations</p></div>
+            <div class="mile"><span>Q4</span><p>Mobile App + DAO voting</p></div>
+        </div>
     </div>
-  </div>
 </section>
 
 </main>
 
 <footer class="z-footer">
-  <div class="z-container between center-v">
-    <small>© 2025 ZUZUCOIN</small>
-    <div class="z-chip-row">
-      <a class="z-chip" href="#presale">Pre-Sale</a>
-      <a class="z-chip" href="#stake">Stake</a>
-      <a class="z-chip" href="#nft">NFT</a>
-      <a class="z-chip" href="#tokenomics">Tokenomics</a>
+    <div class="z-container between center-v">
+        <small>© 2025 ZUZUCOIN</small>
+        <div class="z-chip-row">
+            <a class="z-chip" href="#presale">Pre-Sale</a>
+            <a class="z-chip" href="#stake">Stake</a>
+            <a class="z-chip" href="#nft">NFT</a>
+            <a class="z-chip" href="#tokenomics">Tokenomics</a>
+        </div>
     </div>
-  </div>
 </footer>
 
 <!-- Wallet modal -->
 <div id="walletModal" class="modal" aria-hidden="true">
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="wmTitle">
-    <div class="wm-row">
-      <h3 id="wmTitle" style="margin:0">Connect Wallet</h3>
-      <button id="wmClose" class="z-btn z-btn-ghost small" aria-label="Close">✕</button>
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="wmTitle">
+        <div class="wm-row">
+            <h3 id="wmTitle" style="margin:0">Connect Wallet</h3>
+            <button id="wmClose" class="z-btn z-btn-ghost small" aria-label="Close">✕</button>
+        </div>
+        <div id="wlist" class="wlist" style="margin-top:10px">
+            <!-- Cüzdan listesi JavaScript ile doldurulacak -->
+        </div>
+        <div class="wm-row" style="margin-top:12px">
+            <small style="color:#8aa2c9">On mobile, tap your wallet. It will open this site inside the wallet.</small>
+            <button id="disconnectBtn" class="z-btn z-btn-danger small" style="display:none">Disconnect</button>
+        </div>
     </div>
-    <div id="wlist" class="wlist" style="margin-top:10px"></div>
-    <div class="wm-row" style="margin-top:12px">
-      <small style="color:#8aa2c9">On mobile, tap your wallet. It will open this site inside the wallet.</small>
-      <button id="disconnectBtn" class="z-btn z-btn-danger small" style="display:none">Disconnect</button>
-    </div>
-  </div>
 </div>
 
 <script>
@@ -307,154 +860,202 @@ let currentWallet = null;
 
 // DOM yüklendikten sonra çalışacak fonksiyonlar
 document.addEventListener('DOMContentLoaded', function() {
-  initWalletLogos();
-  setupEventListeners();
-  setupBuyButtons();
-  calculateCosts();
-  startCountdown();
+    initWalletLogos();
+    setupEventListeners();
+    setupBuyButtons();
+    calculateCosts();
+    startCountdown();
+    renderNFTs();
 });
 
 // Wallet logosunu ekleme
 function initWalletLogos() {
-  const walletList = document.getElementById('wlist');
-  
-  const wallets = [
-    { name: 'Phantom', icon: 'https://phantom.app/img/phantom-logo.svg' },
-    { name: 'Solflare', icon: 'https://solflare.com/assets/logo-3c71bb6c.png' },
-    { name: 'Backpack', icon: 'https://backpack.app/images/logo.svg' }
-  ];
-  
-  walletList.innerHTML = wallets.map(wallet => `
-    <button class="wbtn" data-wallet="${wallet.name.toLowerCase()}">
-      <img src="${wallet.icon}" alt="${wallet.name}" onerror="this.src='assets/images/wallets/${wallet.name.toLowerCase()}.png'">
-      <span>${wallet.name}</span>
-    </button>
-  `).join('');
+    const walletList = document.getElementById('wlist');
+    
+    const wallets = [
+        { 
+            name: 'Phantom', 
+            icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjIwIiBoZWlnaHQ9IjIyMCIgdmlld0JveD0iMCAwIDIyMCAyMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE0Mi41IDY3LjVMNzcuNSA2Ny41VjE1Mi41SDE0Mi41VjY3LjVaIiBmaWxsPSIjQUJCM0RGIi8+PHBhdGggZD0iTTE3NiA0NEg0NEMzOC40NzcgNDQgMzQgNDguNDc3IDM0IDU0VjE2NkMzNCAxNzEuNTIzIDM4LjQ3NyAxNzYgNDQgMTc2SDE3NkMxODEuNTIzIDE3NiAxODYgMTcxLjUyMyAxODYgMTY2VjU0QzE4NiA0OC40NzcgMTgxLjUyMyA0NCAxNzYgNDRaIiBmaWxsPSJ1cmwoI3BhaW50MF9saW5lYXIpIi8+PHBhdGggZD0iTTEzMiA5OUwxMTAuNSA3Mi41TDg5IDk5TjEwOC41TDEzMiAxMzJMMTU0LjUgMTA4LjVMMTMzIDk5SDEzMloiIGZpbGw9IndoaXRlIi8+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJwYWludDBfbGluZWFyIiB4MT0iMTEwIiB5MT0iNDQiIHgyPSIxMTAiIHkyPSIxNzYiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj48c3RvcCBzdG9wLWNvbG9yPSIjMTIyNDVGIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjNUEyNkZGIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PC9zdmc+'
+        },
+        { 
+            name: 'Solflare', 
+            icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjIwIiBoZWlnaHQ9IjIyMCIgdmlld0JveD0iMCAwIDIyMCAyMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMTEwIiBjeT0iMTEwIiByPSIxMTAiIGZpbGw9IiM2NUI2RkYiLz48cGF0aCBkPSJNMTQ1LjU1MyAxMDQuODI3TDEzMS4wOSA5MC4zNjRMMTA0LjE3NyAxMTcuMjc3TDkwLjcxNCAxMDMuODE0TDExNy42MjcgNzYuOTAxTDEwNC44MjcgNjQuMTAxTDY0LjEwMSAxMDQuODI3TDc2LjkwMSAxMTcuNjI3TDkwLjM2NCAxMDQuMTY0TDExNy4yNzcgMTMxLjA3N0wxMzAuNzQgMTE3LjYxNEwxMDMuODI3IDkwLjcwMUwxMTYuNjI3IDc3LjkwMUwxNDUuNTUzIDEwNC44MjdaIiBmaWxsPSJ3aGl0ZSIvPjwvc3ZnPg=='
+        },
+        { 
+            name: 'Backpack', 
+            icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjIwIiBoZWlnaHQ9IjIyMCIgdmlld0JveD0iMCAwIDIyMCAyMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIyMCIgaGVpZ2h0PSIyMjAiIHJ4PSI0MCIgZmlsbD0iIzAwMDAwMCIvPjxwYXRoIGQ9Ik02NiAxMDBWODZINTBWNjZINzBWNjBINDBWMTIwSDgwVjEwMEg2NloiIGZpbGw9IndoaXRlIi8+PHBhdGggZD0iTTE0MCA4NlYxMDBIMTI1VjEyMEgxNjVWNjBIMTQ1VjY2SDE2NVY4NkgxNDBaIiBmaWxsPSJ3aGl0ZSIvPjxwYXRoIGQ9Ik0xMDAgMTQwQzEyMS4wNDYgMTQwIDEzOCAxMjMuMDQ2IDEzOCAxMDJDMTM4IDgwLjk1NCAxMjEuMDQ2IDY0IDEwMCA2NEM3OC45NTQgNjQgNjIgODAuOTU0IDYyIDEwMkM2MiAxMjMuMDQ2IDc4Ljk1NCAxNDAgMTAwIDE0MFoiIGZpbGw9IiM2NUI2RkYiLz48L3N2Zz4='
+        }
+    ];
+    
+    walletList.innerHTML = wallets.map(wallet => `
+        <button class="wbtn" data-wallet="${wallet.name.toLowerCase()}">
+            <img src="${wallet.icon}" alt="${wallet.name}">
+            <span>${wallet.name}</span>
+        </button>
+    `).join('');
 }
 
 // Event listener'ları kurma
 function setupEventListeners() {
-  // Cüzdan bağlama butonu
-  document.getElementById('connectBtn').addEventListener('click', function() {
-    document.getElementById('walletModal').classList.add('show');
-  });
-  
-  // Modal kapatma butonu
-  document.getElementById('wmClose').addEventListener('click', function() {
-    document.getElementById('walletModal').classList.remove('show');
-  });
-  
-  // Cüzdan seçeneklerine tıklama
-  document.getElementById('wlist').addEventListener('click', function(e) {
-    if (e.target.classList.contains('wbtn') || e.target.closest('.wbtn')) {
-      const walletBtn = e.target.classList.contains('wbtn') ? e.target : e.target.closest('.wbtn');
-      const walletName = walletBtn.getAttribute('data-wallet');
-      connectWallet(walletName);
-    }
-  });
-  
-  // Bağlantıyı kes butonu
-  document.getElementById('disconnectBtn').addEventListener('click', function() {
-    walletConnected = false;
-    currentWallet = null;
-    document.getElementById('connectBtn').textContent = 'Connect Wallet';
-    this.style.display = 'none';
-    alert('Wallet disconnected successfully!');
-  });
-  
-  // Miktar değiştiğinde maliyeti yeniden hesapla
-  document.getElementById('buyAmount').addEventListener('input', calculateCosts);
-  
-  // Referans linkini kopyalama
-  document.getElementById('copyRef').addEventListener('click', function() {
-    const refLink = document.getElementById('refLink');
-    refLink.select();
-    document.execCommand('copy');
-    alert('Referral link copied to clipboard!');
-  });
-  
-  // Modal dışına tıklanırsa kapat
-  document.getElementById('walletModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-      this.classList.remove('show');
-    }
-  });
+    // Cüzdan bağlama butonu
+    document.getElementById('connectBtn').addEventListener('click', function() {
+        document.getElementById('walletModal').classList.add('show');
+    });
+    
+    // Modal kapatma butonu
+    document.getElementById('wmClose').addEventListener('click', function() {
+        document.getElementById('walletModal').classList.remove('show');
+    });
+    
+    // Cüzdan seçeneklerine tıklama
+    document.getElementById('wlist').addEventListener('click', function(e) {
+        if (e.target.classList.contains('wbtn') || e.target.closest('.wbtn')) {
+            const walletBtn = e.target.classList.contains('wbtn') ? e.target : e.target.closest('.wbtn');
+            const walletName = walletBtn.getAttribute('data-wallet');
+            connectWallet(walletName);
+        }
+    });
+    
+    // Bağlantıyı kes butonu
+    document.getElementById('disconnectBtn').addEventListener('click', function() {
+        walletConnected = false;
+        currentWallet = null;
+        document.getElementById('connectBtn').textContent = 'Connect Wallet';
+        this.style.display = 'none';
+        alert('Wallet disconnected successfully!');
+    });
+    
+    // Miktar değiştiğinde maliyeti yeniden hesapla
+    document.getElementById('buyAmount').addEventListener('input', calculateCosts);
+    
+    // Referans linkini kopyalama
+    document.getElementById('copyRef').addEventListener('click', function() {
+        const refLink = document.getElementById('refLink');
+        refLink.select();
+        document.execCommand('copy');
+        alert('Referral link copied to clipboard!');
+    });
+    
+    // Modal dışına tıklanırsa kapat
+    document.getElementById('walletModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.classList.remove('show');
+        }
+    });
 }
 
 // Cüzdan bağlama fonksiyonu
 function connectWallet(walletName) {
-  walletConnected = true;
-  currentWallet = walletName;
-  
-  // UI güncelleme
-  document.getElementById('connectBtn').textContent = `${walletName.charAt(0).toUpperCase() + walletName.slice(1)} Connected`;
-  document.getElementById('disconnectBtn').style.display = 'block';
-  document.getElementById('walletModal').classList.remove('show');
-  
-  console.log(`${walletName} wallet connected successfully`);
-  alert(`${walletName.charAt(0).toUpperCase() + walletName.slice(1)} wallet connected successfully!`);
+    walletConnected = true;
+    currentWallet = walletName;
+    
+    // Rastgele bir cüzdan adresi oluştur (simülasyon için)
+    const walletAddress = generateWalletAddress();
+    
+    // UI güncelleme
+    document.getElementById('connectBtn').textContent = `${walletAddress.slice(0,6)}...${walletAddress.slice(-4)}`;
+    document.getElementById('disconnectBtn').style.display = 'block';
+    document.getElementById('walletModal').classList.remove('show');
+    
+    console.log(`${walletName} wallet connected successfully`);
+    alert(`${walletName.charAt(0).toUpperCase() + walletName.slice(1)} wallet connected successfully!`);
+}
+
+// Rastgele cüzdan adresi oluşturma (simülasyon için)
+function generateWalletAddress() {
+    const chars = '0123456789ABCDEF';
+    let address = '';
+    for (let i = 0; i < 16; i++) {
+        address += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return address;
+}
+
+// NFT'leri render etme
+function renderNFTs() {
+    const nftGrid = document.getElementById('nftGrid');
+    const nfts = [
+        { id: 1, name: 'ZUZU #1', rarity: 'Legendary' },
+        { id: 2, name: 'ZUZU #2', rarity: 'Epic' },
+        { id: 3, name: 'ZUZU #3', rarity: 'Rare' },
+        { id: 4, name: 'ZUZU #4', rarity: 'Epic' },
+        { id: 5, name: 'ZUZU #5', rarity: 'Legendary' },
+        { id: 6, name: 'ZUZU #6', rarity: 'Rare' },
+        { id: 7, name: 'ZUZU #7', rarity: 'Epic' },
+        { id: 8, name: 'ZUZU #8', rarity: 'Rare' },
+        { id: 9, name: 'ZUZU #9', rarity: 'Epic' },
+        { id: 10, name: 'ZUZU #10', rarity: 'Legendary' }
+    ];
+    
+    nftGrid.innerHTML = nfts.map(nft => `
+        <div class="nft">
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIHJ4PSIxNiIgZmlsbD0iIzBGMTUyMiIgc3Ryb2tlPSIjOEU2OUZGIiBzdHJva2Utd2lkdGg9IjIiLz48Y2lyY2xlIGN4PSIxMDAiIGN5PSI4MCIgcj0iMzAiIGZpbGw9IiM4RTY5RkYiLz48cmVjdCB4PSI2MCIgeT0iMTIwIiB3aWR0aD0iODAiIGhlaWdodD0iNDAiIHJ4PSI4IiBmaWxsPSIjOEU2OUZGIi8+PC9zdmc+" alt="${nft.name}">
+            <div class="meta"><b>${nft.name}</b><span class="tag">${nft.rarity}</span></div>
+        </div>
+    `).join('');
 }
 
 // Satın alma butonlarını ayarlama
 function setupBuyButtons() {
-  const buyButtons = document.querySelectorAll('[id^="buyW"]');
-  
-  buyButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      if (!walletConnected) {
-        alert('Please connect your wallet first!');
-        document.getElementById('walletModal').classList.add('show');
-        return;
-      }
-      
-      const week = this.getAttribute('data-week');
-      const amount = document.getElementById('buyAmount').value;
-      const payWith = document.getElementById('payWith').value;
-      const pricePerToken = document.getElementById(`p${week}`).textContent;
-      const cost = document.getElementById(`c${week}`).textContent;
-      
-      console.log(`Purchasing ${amount} ZUZU tokens in week ${parseInt(week) + 1} with ${payWith} at ${pricePerToken} per token. Total cost: ${cost} ${payWith}`);
-      alert(`Purchase successful: ${amount} ZUZU tokens for week ${parseInt(week) + 1} with ${payWith}. Total: ${cost} ${payWith}`);
+    const buyButtons = document.querySelectorAll('[id^="buyW"]');
+    
+    buyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            if (!walletConnected) {
+                alert('Please connect your wallet first!');
+                document.getElementById('walletModal').classList.add('show');
+                return;
+            }
+            
+            const week = this.getAttribute('data-week');
+            const amount = document.getElementById('buyAmount').value;
+            const payWith = document.getElementById('payWith').value;
+            const pricePerToken = document.getElementById(`p${week}`).textContent;
+            const cost = document.getElementById(`c${week}`).textContent;
+            
+            console.log(`Purchasing ${amount} ZUZU tokens in week ${parseInt(week) + 1} with ${payWith} at ${pricePerToken} per token. Total cost: ${cost} ${payWith}`);
+            alert(`Purchase successful: ${amount} ZUZU tokens for week ${parseInt(week) + 1} with ${payWith}. Total: ${cost} ${payWith}`);
+        });
     });
-  });
 }
 
 // Maliyet hesaplama
 function calculateCosts() {
-  const amount = parseFloat(document.getElementById('buyAmount').value) || 0;
-  
-  for (let i = 0; i < 4; i++) {
-    const price = parseFloat(document.getElementById(`p${i}`).textContent);
-    const costElement = document.getElementById(`c${i}`);
+    const amount = parseFloat(document.getElementById('buyAmount').value) || 0;
+    const weekPrices = [0.0050, 0.0065, 0.0080, 0.0100];
     
-    if (costElement) {
-      costElement.textContent = (amount * price).toFixed(4);
+    for (let i = 0; i < 4; i++) {
+        const price = weekPrices[i];
+        const costElement = document.getElementById(`c${i}`);
+        
+        if (costElement) {
+            costElement.textContent = (amount * price).toFixed(4);
+        }
     }
-  }
 }
 
 // Geri sayım sayacı
 function startCountdown() {
-  const countdownDate = new Date();
-  countdownDate.setDate(countdownDate.getDate() + 7); // 7 gün sonrası
-  
-  function updateCountdown() {
-    const now = new Date().getTime();
-    const distance = countdownDate - now;
+    const countdownDate = new Date();
+    countdownDate.setDate(countdownDate.getDate() + 7); // 7 gün sonrası
     
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = countdownDate - now;
+        
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        document.getElementById("cdDays").textContent = days.toString().padStart(2, '0');
+        document.getElementById("cdHours").textContent = hours.toString().padStart(2, '0');
+        document.getElementById("cdMins").textContent = minutes.toString().padStart(2, '0');
+        document.getElementById("cdSecs").textContent = seconds.toString().padStart(2, '0');
+    }
     
-    document.getElementById("cdDays").textContent = days.toString().padStart(2, '0');
-    document.getElementById("cdHours").textContent = hours.toString().padStart(2, '0');
-    document.getElementById("cdMins").textContent = minutes.toString().padStart(2, '0');
-    document.getElementById("cdSecs").textContent = seconds.toString().padStart(2, '0');
-  }
-  
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
 }
 </script>
 </body>
