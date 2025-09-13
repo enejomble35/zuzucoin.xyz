@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ZUZU — Stake Simulator</title>
 <meta name="theme-color" content="#0e1522">
+<link rel="icon" href="assets/images/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
@@ -12,9 +13,7 @@
 <body>
 <header class="z-nav">
   <div class="z-container z-nav-inner">
-    <a class="brand" href="index.html">
-      <img src="assets/images/logo.png" alt="ZUZU"><span>ZUZUCOIN</span>
-    </a>
+    <a class="brand" href="index.html"><img src="assets/images/logo.png" alt="ZUZU"><span>ZUZUCOIN</span></a>
     <nav class="z-menu">
       <a href="index.html#presale">Pre-Sale</a>
       <a href="index.html#stake">Stake</a>
@@ -35,16 +34,14 @@
       <div class="z-chip-row">
         <span class="z-chip">Supported lock tiers: 30 / 90 / 180 / 365 / 540 days</span>
         <span class="z-chip">Base APY: 12% ~ 85% (tier’a göre)</span>
+        <span class="z-chip">Wallet: <code id="simPk">—</code></span>
       </div>
     </div>
 
     <div class="card">
       <h3>Parameters</h3>
       <div class="calc-grid">
-        <div>
-          <label>Amount (ZUZU)</label>
-          <input class="input" id="simAmount" placeholder="e.g., 10,000">
-        </div>
+        <div><label>Amount (ZUZU)</label><input class="input" id="simAmount" placeholder="e.g., 10,000"></div>
         <div>
           <label>Lock Period</label>
           <select id="simDuration" class="input">
@@ -100,6 +97,8 @@
   </div>
 </main>
 
+<script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
+<script src="lang.js"></script>
 <script>
   const apy = {30:12,90:24,180:40,365:65,540:85};
   function calc(){
@@ -109,24 +108,20 @@
     const bE = parseFloat(document.getElementById("simEarly").value)||0;
     const comp = document.getElementById("simCompound").checked;
     const base = apy[d]||0, boost = bN+bE;
-
     let gross;
-    if (comp){
-      const r = (base+boost)/100/12;
-      const n = d/30;
-      gross = a * Math.pow(1+r, n) - a;
-    }else{
-      gross = a * ((base+boost)/100) * (d/365);
-    }
+    if (comp){ const r = (base+boost)/100/12; const n = d/30; gross = a * Math.pow(1+r, n) - a; }
+    else{ gross = a * ((base+boost)/100) * (d/365); }
     document.getElementById("simTotal").textContent   = gross.toFixed(2)+" ZUZU";
     document.getElementById("simMonthly").textContent = (gross/(d/30)).toFixed(2)+" ZUZU";
     document.getElementById("simBoost").textContent   = "+"+boost+"%";
   }
   document.getElementById("simCalc").addEventListener("click", calc);
-</script>
 
-<!-- Solana web3 (CDN) ve ortak script -->
-<script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
+  function paintPk(){ const pk=(window.__zuzu_pubkey&&window.__zuzu_pubkey())||""; 
+    document.getElementById("simPk").textContent = pk? pk.slice(0,6)+"..."+pk.slice(-6):"—"; }
+  document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) paintPk(); });
+  window.addEventListener("pageshow", paintPk);
+</script>
 <script src="script.js"></script>
 </body>
 </html>
