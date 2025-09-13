@@ -65,13 +65,10 @@ a{color:#b8c7ff;text-decoration:none}
 .buy{display:flex;gap:.5rem;margin-top:.6rem}
 .buy .z-btn{flex:1;justify-content:center}
 
-/* Exchanges ticker */
-.ticker{overflow:hidden;border:1px solid #1a2b4c;border-radius:16px;background:#0f1a30;padding:10px;min-height:72px}
-.ticker__track{display:flex;gap:28px;align-items:center;animation:z-scroll 30s linear infinite;will-change:transform;min-width:max-content}
-.ticker__item img{height:64px;width:auto;opacity:.95;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
-@keyframes z-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* Exchanges strip */
+.exstrip{display:flex;gap:16px;align-items:center;opacity:.85;flex-wrap:wrap;margin-top:10px}
+.exstrip img{height:24px;filter:grayscale(1) contrast(1.1);opacity:.8}
 .ex-note{color:#8ea7d3;font-style:italic;text-align:center;margin-top:8px}
-@media(max-width:720px){.ticker{padding:8px}.ticker__item img{height:46px}}
 
 /* Stake */
 .stake-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
@@ -98,40 +95,9 @@ a{color:#b8c7ff;text-decoration:none}
 .legend div{display:flex;align-items:center;gap:.55rem}
 .dot{width:12px;height:12px;border-radius:3px}
 
-/* Roadmap */
-.road{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-@media(max-width:900px){.road{grid-template-columns:1fr 1fr}}
-@media(max-width:600px){.road{grid-template-columns:1fr}}
-.mile{background:var(--panel);border:1px solid #1b2a49;border-radius:14px;padding:14px}
-.mile span{display:inline-block;background:#192a4a;border:1px solid #2a4170;border-radius:999px;padding:.2rem .6rem;margin-bottom:.5rem}
-
 /* Footer */
 .z-footer{border-top:1px solid #15243f;padding:16px 0;color:#9cb6e6}
 .between{display:flex;justify-content:space-between}
 .center-v{align-items:center}
 
-/* Wallet modal */
-.z-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(2px);
-  display:none;align-items:center;justify-content:center;z-index:9999}
-.z-modal.show{display:flex}
-.z-dialog{width:min(520px,92%);background:#121b2d;border:1px solid #203251;border-radius:16px;padding:14px}
-.z-dialog-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.z-dialog h3{margin:0}
-.z-close{border:0;background:#1b2a49;color:#cfe2ff;border-radius:8px;padding:4px 10px;cursor:pointer}
-.wlist{display:grid;gap:10px}
-.wbtn{display:flex;gap:10px;align-items:center;background:#0f1b31;border:1px solid #253a62;
-  color:#e8f1ff;border-radius:12px;padding:12px;cursor:pointer}
-.wbtn:hover{background:#13223c}
-.wicon{width:28px;height:28px;object-fit:contain}
-.note{color:#8aa2c9;margin:10px 2px 4px}
-
-/* Wallet modal */
-.wm-backdrop{position:fixed;inset:0;background:rgba(6,10,18,.65);backdrop-filter:saturate(1.2) blur(4px);display:grid;place-items:center;z-index:999}
-.wm-modal{width:min(520px,92%);background:#101a2c;border:1px solid #1c2c4e;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.4);padding:14px}
-.wm-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;color:#dce6ff}
-.wm-x{background:#17223a;border:1px solid #28385e;color:#cfe0ff;border-radius:10px;cursor:pointer;width:34px;height:34px;font-size:18px;line-height:1}
-.wm-item{width:100%;display:flex;gap:12px;align-items:center;background:#111f36;border:1px solid #22365f;color:#e8f1ff;border-radius:12px;padding:12px;margin-top:10px;cursor:pointer}
-.wm-item:hover{background:#132442}
-.wm-ico{width:24px;height:24px;display:inline-grid;place-items:center}
-.wm-ico svg{width:22px;height:22px}
-.wm-note{color:#8ea7d3;font-size:.9rem;margin:12px 4px 2px}
+/* Wallet modal (index içinde inline CSS ile buton stilleri var) */
