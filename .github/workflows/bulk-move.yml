@@ -1,0 +1,32 @@
+name: Bulk move to /frontend
+
+on:
+  workflow_dispatch: {}   # Elle tetiklenecek
+
+jobs:
+  move:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Make folders
+        run: |
+          mkdir -p frontend backend
+
+      - name: Move folders
+        shell: bash
+        run: |
+          set -e
+          # Klasörler
+          [ -d assets ] && git mv assets frontend/ || true
+          [ -d flags ]  && git mv flags  frontend/ || true
+          # Dosyalar
+          for f in index.html script.js style.css claim.html stake-simulator.html about.html contact.html lang.js CNAME; do
+            [ -f "$f" ] && git mv "$f" frontend/ || true
+          done
+          # Son durum
+          git status
+          git commit -m "Move site files into /frontend (one-off)" || echo "No changes to commit"
+          git push
