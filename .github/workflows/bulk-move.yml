@@ -1,7 +1,11 @@
 name: Bulk move to /frontend
 
 on:
-  workflow_dispatch: {}   # Elle tetiklenecek
+  workflow_dispatch: {}
+
+# ==> PUSH izni ver
+permissions:
+  contents: write
 
 jobs:
   move:
@@ -11,22 +15,35 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Make folders
+      - name: Setup git identity
+        run: |
+          git config user.name  "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Create target folders
         run: |
           mkdir -p frontend backend
 
-      - name: Move folders
+      - name: Move files & folders into /frontend
         shell: bash
         run: |
           set -e
-          # Klasörler
-          [ -d assets ] && git mv assets frontend/ || true
-          [ -d flags ]  && git mv flags  frontend/ || true
-          # Dosyalar
+          # Klasörleri taşı (varsa)
+          [ -d assets ] && git mv -k assets frontend/ || true
+          [ -d flags ]  && git mv -k flags  frontend/ || true
+
+          # Dosyaları taşı (varsa)
           for f in index.html script.js style.css claim.html stake-simulator.html about.html contact.html lang.js CNAME; do
-            [ -f "$f" ] && git mv "$f" frontend/ || true
+            [ -e "$f" ] && git mv -k "$f" frontend/ || true
           done
-          # Son durum
+
           git status
-          git commit -m "Move site files into /frontend (one-off)" || echo "No changes to commit"
-          git push
+
+      - name: Commit & push if changed
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "Move site files into /frontend (automated)"
+            git push
+          else
+            echo "No changes to commit."
+          fi
