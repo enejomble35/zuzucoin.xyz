@@ -150,20 +150,20 @@ function walletListHTML(){
     all.forEach(btn=>{
       if(btn.dataset._bind) return;
       btn.dataset._bind = "1";
-      btn.addEventListener("click", ()=>{
-        const direct = Wallets.phantom.has() ? Wallets.phantom :
-                       (Wallets.solflare.has() ? Wallets.solflare : null);
-        if(direct){ connectFlow(direct.key); }
-        else{
-          if(IS_MOBILE){
-            const target = "phantom";
-            const dl = Wallets[target].deeplink(location.href);
-            location.assign(dl);
-          }else{
-            modal?.classList.add("show");
-            alert("Wallet eklentisi bulunamadı. Phantom ya da Solflare kurun veya mobil cüzdan içinden açın.");
-          }
-        }
+      // eski click handler'ı komple değiştir
+btn.addEventListener("click", ()=>{
+  const direct = Wallets.phantom.has() ? Wallets.phantom :
+                 (Wallets.solflare.has() ? Wallets.solflare : null);
+
+  if(direct && !IS_MOBILE){
+    // Masaüstü eklenti: direkt bağlan
+    connectFlow(direct.key);
+  }else{
+    // Mobil veya eklenti yok: modal aç, kullanıcı seçsin
+    const modal = document.getElementById("walletModal");
+    modal?.classList.add("show");
+  }
+});
       });
     });
   }
