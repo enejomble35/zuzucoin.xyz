@@ -65,9 +65,13 @@ a{color:#b8c7ff;text-decoration:none}
 .buy{display:flex;gap:.5rem;margin-top:.6rem}
 .buy .z-btn{flex:1;justify-content:center}
 
-/* Exchanges strip */
-.exstrip{display:flex;gap:16px;align-items:center;opacity:.85;flex-wrap:wrap;margin-top:10px}
-.exstrip img{height:24px;filter:grayscale(1) contrast(1.1);opacity:.8}
+/* Exchanges strip (küçük) */
+.exstrip{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.exstrip img{
+  max-height:28px !important;
+  width:auto !important; height:auto !important;
+  object-fit:contain; filter:grayscale(1) contrast(1.05); opacity:.9;
+}
 .ex-note{color:#8ea7d3;font-style:italic;text-align:center;margin-top:8px}
 
 /* Stake */
@@ -99,5 +103,3 @@ a{color:#b8c7ff;text-decoration:none}
 .z-footer{border-top:1px solid #15243f;padding:16px 0;color:#9cb6e6}
 .between{display:flex;justify-content:space-between}
 .center-v{align-items:center}
-
-/* Wallet modal (index içinde inline CSS ile buton stilleri var) */
