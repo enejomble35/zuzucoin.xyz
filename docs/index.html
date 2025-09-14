@@ -1,45 +1,138 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>ZUZUCOIN — Pre-Sale • Stake • NFT Rewards</title>
   <meta name="theme-color" content="#0e1522">
-
-  <!-- Favicon / Site link logosu -->
-  <link rel="icon" type="image/png" href="assets/images/favicon-32.png" sizes="32x32">
-  <link rel="icon" type="image/png" href="assets/images/favicon-192.png" sizes="192x192">
-  <link rel="apple-touch-icon" href="assets/images/favicon-192.png">
-  <link rel="shortcut icon" href="assets/images/favicon-32.png">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-
+  <!-- Favicon (gömülü SVG) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect rx='14' width='64' height='64' fill='%230f1828'/%3E%3Ctext x='50%25' y='53%25' text-anchor='middle' font-size='34' font-weight='700' fill='%23a5bfff' font-family='Arial'%3EZU%3C/text%3E%3C/svg%3E">
   <style>
-    /* Modal */
+    :root{--bg:#0C1320;--panel:#0f1828;--muted:#8aa2c9;--txt:#e8f1ff;--chip:#1c2840;--pri:#6a8cff;--pri2:#9aaeff}
+    *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+    a{color:#b8c7ff;text-decoration:none} img{max-width:100%;display:block}
+    .z-container{width:min(1200px,92%);margin:0 auto} .muted{color:#9ab0d6}
+
+    /* NAV */
+    .z-nav{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(10,15,25,.9),rgba(10,15,25,.75));backdrop-filter:saturate(1.2) blur(8px);border-bottom:1px solid #16223a}
+    .z-nav-inner{display:flex;align-items:center;justify-content:space-between;padding:.7rem 0;gap:10px}
+    .brand{display:flex;gap:.6rem;align-items:center;font-weight:800;letter-spacing:.3px}
+    .brand svg{width:40px;height:40px}
+    .z-menu{display:flex;gap:10px;align-items:center;flex-wrap:wrap;row-gap:6px}
+    .z-menu a{padding:.45rem .65rem;border-radius:10px;background:transparent;white-space:nowrap}
+    .z-menu a:hover{background:#12203a}
+    .z-btn{display:inline-flex;gap:.5rem;align-items:center;border:0;border-radius:12px;padding:.7rem 1rem;font-weight:700;cursor:pointer;white-space:nowrap}
+    .z-btn.small{padding:.45rem .7rem}
+    .z-btn-primary{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#08101d}
+    .z-btn-ghost{background:#12203a;color:#cfe2ff}
+    .z-chip{display:inline-flex;align-items:center;gap:.35rem;background:var(--chip);color:#cfe2ff;border:1px solid #1f2f50;border-radius:999px;padding:.4rem .7rem;font-size:.9rem}
+    .z-chip-row{display:flex;gap:.5rem;flex-wrap:wrap}
+
+    /* Lang menu (yalnız FR/PT/ES/RU) */
+    .lang-wrap{position:relative}
+    .lang-wrap img{width:20px;height:20px;border-radius:50%}
+    .lang-menu{position:absolute;right:0;top:calc(100% + 6px);background:#0f1828;border:1px solid #1b2a49;border-radius:12px;padding:8px;display:none;z-index:20}
+    .lang-menu.show{display:grid}
+    .lang-opt{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:#12203a;border:1px solid #22365a;color:#d6e6ff;cursor:pointer}
+    .lang-opt:hover{background:#1a2a44}
+
+    /* Sections */
+    .z-section{padding:38px 0;border-top:1px solid #15243f}
+    .section-head h2{margin:.2rem 0 .4rem;font-size:clamp(1.4rem,3.2vw,2rem)}
+    .section-head p{color:#bfd2ff}
+    .badge{background:#172748;border:1px solid #263a63;color:#9eb9ff;padding:.3rem .55rem;border-radius:999px;font-size:.8rem}
+
+    /* Grid */
+    .grid-2{display:grid;grid-template-columns:1.1fr .9fr;gap:22px}
+    @media(max-width:920px){.grid-2{grid-template-columns:1fr}}
+
+    /* Hero */
+    .hero-2{padding:34px 0 18px;background:
+      radial-gradient(1200px 400px at 0% -10%,rgba(74,100,255,.18),transparent 45%),
+      radial-gradient(800px 300px at 90% -20%,rgba(148,198,255,.16),transparent 40%)}
+    .hero-visual{display:flex;justify-content:center;align-items:center}
+    .logo-big{max-width:420px;width:100%;filter:drop-shadow(0 16px 36px rgba(0,0,0,.4))}
+
+    /* Countdown */
+    .counter{display:flex;gap:14px;flex-wrap:wrap}
+    .flip{width:86px;background:#13213a;border:1px solid #24385f;border-radius:14px;box-shadow:inset 0 -50px 60px rgba(0,0,0,.18);text-align:center}
+    .flip .num{font-size:1.9rem;font-weight:800;padding:.6rem 0;color:#e9f2ff}
+    .flip small{display:block;color:#9db3db;border-top:1px solid #203458;padding:.35rem 0 .5rem;font-weight:700;letter-spacing:1px}
+    @media(max-width:520px){.flip{width:74px}.flip .num{font-size:1.6rem}}
+
+    /* Cards / inputs */
+    .card{background:var(--panel);border:1px solid #1b2a49;border-radius:16px;padding:16px}
+    .input{width:100%;padding:.7rem;border-radius:12px;background:#0f1c33;border:1px solid #23395d;color:var(--txt)}
+    .buybox{display:grid;gap:10px}
+    .presale-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    @media(max-width:900px){.presale-grid{grid-template-columns:1fr}}
+    .buy{display:flex;gap:.5rem;margin-top:.6rem}
+    .buy .z-btn{flex:1;justify-content:center}
+
+    /* Exchanges ticker (küçük, akışkan) */
+    .ticker{overflow:hidden;border:1px solid #1a2b4c;border-radius:16px;background:#0f1a30;padding:10px}
+    .ticker__track{display:flex;gap:22px;align-items:center;animation:z-scroll 32s linear infinite;min-width:max-content}
+    .logo-pill{display:inline-flex;align-items:center;gap:8px;background:#122144;border:1px solid #20345f;border-radius:999px;padding:6px 10px}
+    .logo-pill svg{width:22px;height:22px}
+    .logo-pill span{font-size:.9rem;color:#d2e2ff;opacity:.9}
+    @keyframes z-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    .ex-note{color:#8ea7d3;font-style:italic;text-align:center;margin-top:8px}
+
+    /* Stake */
+    .stake-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    @media(max-width:980px){.stake-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:640px){.stake-grid{grid-template-columns:1fr}}
+    .stake-card{background:var(--panel);border:1px solid #1b2a49;border-radius:16px;padding:16px}
+    .stake-card .tier{font-weight:800;margin-bottom:.6rem}
+    .stake-card .tier.silver{color:#cfe6ff}
+    .stake-card .tier.gold{color:#ffd77c}
+
+    /* NFT grid (placeholder) */
+    .nft-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+    @media(max-width:1024px){.nft-grid{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:700px){.nft-grid{grid-template-columns:repeat(2,1fr)}}
+    .nft{background:#0f1a30;border:1px solid #1d2d50;border-radius:14px;overflow:hidden}
+    .nft .ph{width:100%;aspect-ratio:1/1;display:grid;place-items:center;background:#0b1426;border-bottom:1px solid #1d2d50;color:#9fb7ff;font-weight:800}
+    .nft .meta{display:flex;justify-content:space-between;padding:10px}
+    .nft .tag{font-size:.75rem;background:#152748;color:#a8c2ff;border:1px solid #274075;border-radius:999px;padding:.25rem .5rem}
+
+    /* Tokenomics */
+    .tk{display:grid;grid-template-columns:1.1fr .9fr;gap:20px}
+    @media(max-width:900px){.tk{grid-template-columns:1fr}}
+    .legend{display:grid;gap:.45rem}
+    .legend div{display:flex;align-items:center;gap:.55rem}
+    .dot{width:12px;height:12px;border-radius:3px}
+
+    /* Roadmap */
+    .road{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    @media(max-width:900px){.road{grid-template-columns:1fr 1fr}}
+    @media(max-width:600px){.road{grid-template-columns:1fr}}
+    .mile{background:var(--panel);border:1px solid #1b2a49;border-radius:14px;padding:14px}
+    .mile span{display:inline-block;background:#192a4a;border:1px solid #2a4170;border-radius:999px;padding:.2rem .6rem;margin-bottom:.5rem}
+
+    /* Footer */
+    .z-footer{border-top:1px solid #15243f;padding:16px 0;color:#9cb6e6}
+    .between{display:flex;justify-content:space-between}
+    .center-v{align-items:center}
+
+    /* Wallet modal */
     .modal{position:fixed;inset:0;display:none;align-items:flex-end;background:rgba(2,8,20,.6);backdrop-filter:saturate(120%) blur(4px);z-index:60}
     .modal.show{display:flex}
     .sheet{width:100%;background:#0f1828;border-top-left-radius:18px;border-top-right-radius:18px;padding:18px 16px 22px;box-shadow:0 -10px 30px rgba(0,0,0,.35)}
     .wlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
     .wbtn{display:flex;align-items:center;gap:10px;background:#142136;border:1px solid #21314f;border-radius:14px;padding:10px 12px;cursor:pointer}
-    .wbtn img{width:22px;height:22px}
-    .wbtn:hover{border-color:#415c8f}
-    .wm-row{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:10px}
-    .z-btn-danger{background:#2b1321;border:1px solid #7a244f}
-    .z-btn-danger:hover{background:#39172a}
+    .wbtn:hover{border-color:#415c8f} .wm-row{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:10px}
     @media(min-width:700px){.sheet{max-width:520px;margin:0 auto 10px;border-radius:18px}}
   </style>
-
-  <!-- Solana web3 (global: solanaWeb3) -->
-  <script src="https://unpkg.com/@solana/web3.js@1.89.1/lib/index.iife.min.js"></script>
 </head>
 <body>
 
 <header class="z-nav">
   <div class="z-container z-nav-inner">
     <a class="brand" href="#">
-      <img src="assets/images/logo.png" alt="ZUZU"><span>ZUZUCOIN</span>
+      <!-- marka svg -->
+      <svg viewBox="0 0 64 64" aria-hidden="true"><rect rx="14" width="64" height="64" fill="#0f1828"/><text x="50%" y="56%" text-anchor="middle" font-size="28" font-weight="800" fill="#9fb7ff" font-family="Arial">ZU</text></svg>
+      <span>ZUZUCOIN</span>
     </a>
 
     <nav class="z-menu">
@@ -48,25 +141,20 @@
       <a href="#nft"        data-i="nav_nft">NFT Rewards</a>
       <a href="#roadmap"    data-i="nav_roadmap">Roadmap</a>
       <a href="#tokenomics" data-i="nav_token">Tokenomics</a>
-      <a href="stake-simulator.html" class="z-chip">Stake Simulator ↗</a>
-      <a href="claim.html"            class="z-chip">Claim Portal ↗</a>
 
-      <!-- Dil menüsü -->
       <div class="lang-wrap">
         <button id="langBtn" class="z-btn z-btn-ghost small">
-          <img id="langFlag" src="flags/en.png" alt="EN"> <span id="langCode">EN</span>
+          <img id="langFlag" alt="FR" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect width='20' height='20' fill='%23fff'/%3E%3Crect width='6.66' height='20' fill='%23003f87'/%3E%3Crect x='13.33' width='6.66' height='20' fill='%23ed2939'/%3E%3C/svg%3E"> <span id="langCode">FR</span>
         </button>
         <div id="langMenu" class="lang-menu">
-          <button class="lang-opt" data-lang="en"><img src="flags/en.png" alt="">EN</button>
-          <button class="lang-opt" data-lang="tr"><img src="flags/tr.png" alt="">TR</button>
-          <button class="lang-opt" data-lang="fr"><img src="flags/fr.png" alt="">FR</button>
-          <button class="lang-opt" data-lang="pt"><img src="flags/pt.png" alt="">PT</button>
-          <button class="lang-opt" data-lang="ru"><img src="flags/ru.png" alt="">RU</button>
-          <button class="lang-opt" data-lang="es"><img src="flags/es.png" alt="">ES</button>
+          <button class="lang-opt" data-lang="fr">🇫🇷 FR</button>
+          <button class="lang-opt" data-lang="pt">🇵🇹 PT</button>
+          <button class="lang-opt" data-lang="es">🇪🇸 ES</button>
+          <button class="lang-opt" data-lang="ru">🇷🇺 RU</button>
         </div>
       </div>
 
-      <button id="connectBtn" class="z-btn z-btn-primary" data-i="connect" data-connect>Connect Wallet</button>
+      <button id="connectBtn" class="z-btn z-btn-primary" data-i="connect">Connect Wallet</button>
     </nav>
   </div>
 </header>
@@ -85,7 +173,7 @@
           <a href="#nft"   class="z-btn z-btn-ghost"   data-i="cta_nft">NFT Rewards</a>
         </div>
 
-        <!-- Countdown (60 gün) -->
+        <!-- Countdown (60 gün persist) -->
         <div class="counter">
           <div class="flip"><div id="cdDays"  class="num">00</div><small data-i="days">DAYS</small></div>
           <div class="flip"><div id="cdHours" class="num">00</div><small data-i="hours">HOURS</small></div>
@@ -95,9 +183,12 @@
       </div>
 
       <div class="hero-visual">
-        <img class="logo-big" src="assets/images/branding/zuzu-logo.svg"
-             onerror="this.onerror=null;this.src='assets/images/branding/zuzu-logo.png';"
-             alt="ZUZU">
+        <!-- marka görseli placeholder -->
+        <svg class="logo-big" viewBox="0 0 320 180" aria-hidden="true">
+          <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#6a8cff"/><stop offset="1" stop-color="#9aaeff"/></linearGradient></defs>
+          <rect x="0" y="0" width="320" height="180" rx="18" fill="#0e172a"/>
+          <text x="50%" y="56%" text-anchor="middle" font-size="48" font-weight="800" fill="url(#g)" font-family="Arial">ZUZU</text>
+        </svg>
       </div>
     </div>
   </section>
@@ -129,61 +220,60 @@
           <h4 data-i="w1">Week 1 (Cheapest)</h4>
           <div class="price">1 ZUZU = <b id="p0">0.0050</b> USDT</div>
           <div class="cost"><span data-i="cost">Cost:</span> <b id="c0">0</b> USDT</div>
-          <div class="buy">
-            <button id="buyW0" class="z-btn z-btn-primary" data-week="0" data-i="buy">Buy</button>
-            <button class="z-btn z-btn-ghost">Details</button>
-          </div>
+          <div class="buy"><button id="buyW0" class="z-btn z-btn-primary" data-week="0" data-i="buy">Buy</button></div>
         </div>
-
         <div class="card buybox">
           <h4 data-i="w2">Week 2</h4>
           <div class="price">1 ZUZU = <b id="p1">0.0065</b> USDT</div>
           <div class="cost"><span data-i="cost">Cost:</span> <b id="c1">0</b> USDT</div>
-          <div class="buy">
-            <button id="buyW1" class="z-btn z-btn-primary" data-week="1" data-i="buy">Buy</button>
-            <button class="z-btn z-btn-ghost">Details</button>
-          </div>
+          <div class="buy"><button id="buyW1" class="z-btn z-btn-primary" data-week="1" data-i="buy">Buy</button></div>
         </div>
-
         <div class="card buybox">
           <h4 data-i="w3">Week 3</h4>
           <div class="price">1 ZUZU = <b id="p2">0.0080</b> USDT</div>
           <div class="cost"><span data-i="cost">Cost:</span> <b id="c2">0</b> USDT</div>
-          <div class="buy">
-            <button id="buyW2" class="z-btn z-btn-primary" data-week="2" data-i="buy">Buy</button>
-            <button class="z-btn z-btn-ghost">Details</button>
-          </div>
+          <div class="buy"><button id="buyW2" class="z-btn z-btn-primary" data-week="2" data-i="buy">Buy</button></div>
         </div>
-
         <div class="card buybox">
           <h4 data-i="w4">Week 4 (Last Chance)</h4>
           <div class="price">1 ZUZU = <b id="p3">0.0100</b> USDT</div>
           <div class="cost"><span data-i="cost">Cost:</span> <b id="c3">0</b> USDT</div>
-          <div class="buy">
-            <button id="buyW3" class="z-btn z-btn-primary" data-week="3" data-i="buy">Buy</button>
-            <button class="z-btn z-btn-ghost">Details</button>
-          </div>
+          <div class="buy"><button id="buyW3" class="z-btn z-btn-primary" data-week="3" data-i="buy">Buy</button></div>
         </div>
       </div>
 
-      <!-- Borsa logoları — küçük ve akışkan -->
+      <!-- Ticker (ikonlar gömülü, küçük ve akışkan) -->
       <div class="card" style="margin-top:14px">
         <h3 style="margin:0 0 10px" data-i="exchanges">Supported Exchanges</h3>
         <div class="ticker">
-          <div id="exTrack" class="ticker__track">
-            <div class="ticker__item"><img src="assets/images/exchanges/gateio.png" alt="Gate.io"></div>
-            <div class="ticker__item"><img src="assets/images/exchanges/kucoin.png" alt="KuCoin"></div>
-            <div class="ticker__item"><img src="assets/images/exchanges/okx.png" alt="OKX"></div>
-            <div class="ticker__item"><img src="assets/images/exchanges/mxc.png" alt="MEXC"></div>
-            <div class="ticker__item"><img src="assets/images/exchanges/bitmart.png" alt="BitMart"></div>
-            <div class="ticker__item"><img src="assets/images/exchanges/bybit.png" alt="Bybit"></div>
-            <!-- loop -->
-            <div class="ticker__item"><img src="assets/images/exchanges/gateio.png" alt=""></div>
-            <div class="ticker__item"><img src="assets/images/exchanges/kucoin.png" alt=""></div>
-            <div class="ticker__item"><img src="assets/images/exchanges/okx.png" alt=""></div>
-            <div class="ticker__item"><img src="assets/images/exchanges/mxc.png" alt=""></div>
-            <div class="ticker__item"><img src="assets/images/exchanges/bitmart.png" alt=""></div>
-            <div class="ticker__item"><img src="assets/images/exchanges/bybit.png" alt=""></div>
+          <div class="ticker__track" id="exTrack">
+            <!-- 12 öğe: 6 + tekrar -->
+            <span class="logo-pill"> <!-- Gate -->
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#e64545"/></svg><span>Gate.io</span>
+            </span>
+            <span class="logo-pill"> <!-- KuCoin -->
+              <svg viewBox="0 0 24 24"><rect width="20" height="20" x="2" y="2" rx="6" fill="#17c497"/></svg><span>KuCoin</span>
+            </span>
+            <span class="logo-pill"> <!-- OKX -->
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6" fill="#fff"/><rect x="15" y="3" width="6" height="6" fill="#fff"/><rect x="3" y="15" width="6" height="6" fill="#fff"/><rect x="15" y="15" width="6" height="6" fill="#fff"/></svg><span>OKX</span>
+            </span>
+            <span class="logo-pill"> <!-- MEXC -->
+              <svg viewBox="0 0 24 24"><path d="M3 17l6-10 6 10H3z" fill="#38d39f"/></svg><span>MEXC</span>
+            </span>
+            <span class="logo-pill"> <!-- BitMart -->
+              <svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5" fill="#62e4ff"/><circle cx="16" cy="12" r="2" fill="#62e4ff"/></svg><span>BitMart</span>
+            </span>
+            <span class="logo-pill"> <!-- Bybit -->
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="6" height="16" fill="#ffb347"/><rect x="15" y="4" width="6" height="16" fill="#ffb347"/></svg><span>Bybit</span>
+            </span>
+
+            <!-- tekrar -->
+            <span class="logo-pill"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#e64545"/></svg><span>Gate.io</span></span>
+            <span class="logo-pill"><svg viewBox="0 0 24 24"><rect width="20" height="20" x="2" y="2" rx="6" fill="#17c497"/></svg><span>KuCoin</span></span>
+            <span class="logo-pill"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6" fill="#fff"/><rect x="15" y="3" width="6" height="6" fill="#fff"/><rect x="3" y="15" width="6" height="6" fill="#fff"/><rect x="15" y="15" width="6" height="6" fill="#fff"/></svg><span>OKX</span></span>
+            <span class="logo-pill"><svg viewBox="0 0 24 24"><path d="M3 17l6-10 6 10H3z" fill="#38d39f"/></svg><span>MEXC</span></span>
+            <span class="logo-pill"><svg viewBox="0 0 24 24"><circle cx="9" cy="12" r="5" fill="#62e4ff"/><circle cx="16" cy="12" r="2" fill="#62e4ff"/></svg><span>BitMart</span></span>
+            <span class="logo-pill"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="6" height="16" fill="#ffb347"/><rect x="15" y="4" width="6" height="16" fill="#ffb347"/></svg><span>Bybit</span></span>
           </div>
         </div>
         <div class="ex-note">Will Be Listed Soon</div>
@@ -220,7 +310,7 @@
     </div>
   </section>
 
-  <!-- NFT REWARDS -->
+  <!-- NFT REWARDS (placeholder kutular) -->
   <section id="nft" class="z-section">
     <div class="z-container">
       <div class="section-head">
@@ -299,12 +389,313 @@
     </div>
     <div id="wlist" class="wlist" style="margin-top:10px"></div>
     <div class="wm-row" style="margin-top:12px">
-      <small style="color:#8aa2c9">On mobile, tap your wallet. It will open this site inside the wallet.</small>
-      <button id="disconnectBtn" class="z-btn z-btn-danger small" style="display:none">Disconnect</button>
+      <small style="color:#8aa2c9">Mobile: choose Phantom or Solflare. It will open this site inside the wallet.</small>
+      <button id="disconnectBtn" class="z-btn z-btn-ghost small" style="display:none">Disconnect</button>
     </div>
   </div>
 </div>
 
-<script src="script.js"></script>
+<script>
+/* =========================
+   CONFIG
+========================= */
+const CONFIG = {
+  launchKey: "zuzu_launchAt",
+  defaultCountdownDays: 60, // ← 60 güne çekildi
+
+  weekPrices: [0.0050, 0.0065, 0.0080, 0.0100], // USDT
+  nfts: Array.from({ length: 10 }).map((_, i) => ({
+    id: i, name: `ZUZU #${i + 1}`, rarity: i % 5 === 0 ? 'Legendary' : (i % 2 ? 'Rare' : 'Epic')
+  })),
+
+  cluster: "mainnet-beta",
+  treasury: "FniLJmY5L6zQyQfot6xsiYojHeEzoGs2xZXYZh1U9QwF", // sizin adres
+
+  LS_ADDR: "zuzu_connected_addr",
+  LS_WALLET: "zuzu_connected_wallet",
+  LS_LANG: "zuzu_lang"
+};
+
+/* =========================
+   I18N (FR/PT/ES/RU)
+========================= */
+const I = {
+  fr:{nav_presale:"Pré-vente",nav_stake:"Stake",nav_nft:"Récompenses NFT",nav_roadmap:"Feuille de route",nav_token:"Tokenomics",connect:"Connecter le Wallet",
+      hero_badge:"Pré-vente • Stake pour gagner un NFT",hero_title:"ZUZU — Hérisson Robotique 🦔⚡",
+      hero_lead:"Stake et gagne un <b>NFT Mascotte ZUZU</b>. Offre limitée, grande <b>utilité</b>.",
+      cta_stake:"Commencer le Stake",cta_nft:"Récompenses NFT",days:"JOURS",hours:"HEURES",mins:"MINUTES",secs:"SECONDES",
+      presale_title:"Pré-vente — Compte à rebours",presale_lead:"Prépare-toi pour la pré-vente ZUZU ! <b>Allocation limitée</b>, prix communauté.",
+      amount:"Montant (ZUZU)",cost:"Coût :",buy:"Acheter",exchanges:"Bourses prises en charge",
+      stake_title:"Stake Pro — Verrouille, Gagne, Reçois un NFT ✨",stake_lead:"Verrouille ton ZUZU et gagne <b>APY + BOOST NFT</b>.",
+      token_title:"Tokenomics (Visualisé)",road_title:"Feuille de route"},
+  pt:{nav_presale:"Pré-venda",nav_stake:"Stake",nav_nft:"Recompensas NFT",nav_roadmap:"Roteiro",nav_token:"Tokenomics",connect:"Conectar Carteira",
+      hero_badge:"Pré-venda • Stake para ganhar NFT",hero_title:"ZUZU — Ouriço Robótico 🦔⚡",
+      hero_lead:"Faça stake e ganhe <b>NFT Mascote ZUZU</b>. Oferta limitada, alta <b>utilidade</b>.",
+      cta_stake:"Começar Stake",cta_nft:"Recompensas NFT",days:"DIAS",hours:"HORAS",mins:"MINUTOS",secs:"SEGUNDOS",
+      presale_title:"Pré-venda — Contagem regressiva",presale_lead:"Prepare-se! <b>Alocação limitada</b>, preço da comunidade.",
+      amount:"Quantidade (ZUZU)",cost:"Custo:",buy:"Comprar",exchanges:"Exchanges suportadas",
+      stake_title:"Stake Pro — Trave, Ganhe, Receba NFT ✨",stake_lead:"Trave ZUZU, ganhe <b>APY + BOOST NFT</b>.",
+      token_title:"Tokenomics (Visualizado)",road_title:"Roteiro"},
+  es:{nav_presale:"Pre-venta",nav_stake:"Stake",nav_nft:"Recompensas NFT",nav_roadmap:"Hoja de ruta",nav_token:"Tokenomics",connect:"Conectar Billetera",
+      hero_badge:"Pre-venta • Stake para ganar NFT",hero_title:"ZUZU — Erizo Robótico 🦔⚡",
+      hero_lead:"Haz stake y gana <b>NFT Mascota ZUZU</b>. Oferta limitada, gran <b>utilidad</b>.",
+      cta_stake:"Empezar Stake",cta_nft:"Recompensas NFT",days:"DÍAS",hours:"HORAS",mins:"MINUTOS",secs:"SEGUNDOS",
+      presale_title:"Pre-venta — Cuenta regresiva",presale_lead:"¡Prepárate! <b>Asignación limitada</b>, precio comunidad.",
+      amount:"Cantidad (ZUZU)",cost:"Costo:",buy:"Comprar",exchanges:"Exchanges compatibles",
+      stake_title:"Stake Pro — Bloquea, Gana, Obtén NFT ✨",stake_lead:"Bloquea tu ZUZU y gana <b>APY + BOOST NFT</b>.",
+      token_title:"Tokenomics (Visualizado)",road_title:"Hoja de ruta"},
+  ru:{nav_presale:"Предпродажа",nav_stake:"Стейкинг",nav_nft:"NFT награды",nav_roadmap:"Дорожная карта",nav_token:"Токеномика",connect:"Подключить кошелёк",
+      hero_badge:"Предпродажа • Стейкинг для NFT",hero_title:"ZUZU — Робо-Ёж 🦔⚡",
+      hero_lead:"Стейкай и получай <b>маскот NFT ZUZU</b>. Ограничено, высокая <b>польза</b>.",
+      cta_stake:"Начать стейкинг",cta_nft:"NFT награды",days:"ДНИ",hours:"ЧАСЫ",mins:"МИНУТЫ",secs:"СЕКУНДЫ",
+      presale_title:"Предпродажа — Обратный отсчёт",presale_lead:"Готовься! <b>Ограниченная аллокация</b>, цена для сообщества.",
+      amount:"Количество (ZUZU)",cost:"Стоимость:",buy:"Купить",exchanges:"Поддерживаемые биржи",
+      stake_title:"Stake Pro — Заморозь, Заработай, Получи NFT ✨",stake_lead:"Заморозь ZUZU и получай <b>APY + NFT BOOST</b>.",
+      token_title:"Токеномика (визуально)",road_title:"Дорожная карта"}
+};
+
+/* helpers */
+const $  = (q, root=document) => root.querySelector(q);
+const $$ = (q, root=document) => [...root.querySelectorAll(q)];
+
+/* Lang */
+function applyLang(lang){
+  localStorage.setItem(CONFIG.LS_LANG, lang);
+  $("#langCode").textContent = lang.toUpperCase();
+  // bayrak sadece FR varsayılanı gömülü; metinler değişiyor
+  $$("[data-i]").forEach(el=>{
+    const k=el.getAttribute("data-i");
+    if(I[lang] && I[lang][k]) el.innerHTML = I[lang][k];
+  });
+}
+(function initLang(){
+  const saved = localStorage.getItem(CONFIG.LS_LANG) || "fr";
+  applyLang(saved);
+  const btn = $("#langBtn"), menu = $("#langMenu");
+  btn.addEventListener("click", (e)=>{ e.stopPropagation(); menu.classList.toggle("show"); });
+  $$(".lang-opt").forEach(b=>b.addEventListener("click", (e)=>{
+    e.stopPropagation(); applyLang(b.dataset.lang); menu.classList.remove("show");
+  }));
+  document.addEventListener("click", ()=>menu.classList.remove("show"));
+})();
+
+/* Countdown (persist 60 gün) */
+function getLaunchAt(){
+  let ts = localStorage.getItem(CONFIG.launchKey);
+  if(!ts){ ts = (Date.now() + CONFIG.defaultCountdownDays*24*3600*1000).toString(); localStorage.setItem(CONFIG.launchKey, ts); }
+  return parseInt(ts,10);
+}
+function tick(){
+  const left = Math.max(0, getLaunchAt() - Date.now());
+  const d=Math.floor(left/86400000);
+  const h=Math.floor((left%86400000)/3600000);
+  const m=Math.floor((left%3600000)/60000);
+  const s=Math.floor((left%60000)/1000);
+  const pad=n=>n.toString().padStart(2,"0");
+  $("#cdDays").textContent  = pad(d);
+  $("#cdHours").textContent = pad(h);
+  $("#cdMins").textContent  = pad(m);
+  $("#cdSecs").textContent  = pad(s);
+}
+tick(); setInterval(tick,1000);
+
+/* Fiyat/maliyet */
+function updateCosts(){
+  const qty = parseFloat(($("#buyAmount").value||"0").toString().replace(/[^\d.]/g,""))||0;
+  CONFIG.weekPrices.forEach((p,i)=>{
+    const P=$("#p"+i), C=$("#c"+i); if(P) P.textContent = p.toFixed(4);
+    if(C) C.textContent = (qty*p).toLocaleString(undefined,{maximumFractionDigits:2});
+  });
+}
+$("#buyAmount").addEventListener("input", updateCosts);
+updateCosts();
+
+/* NFT grid (placeholder kutu) */
+(function renderNFTs(){
+  const g=$("#nftGrid"); if(!g) return;
+  g.innerHTML = CONFIG.nfts.map(n=>`
+    <div class="nft">
+      <div class="ph">ZUZU ${n.id+1}</div>
+      <div class="meta"><b>${n.name}</b><span class="tag">${n.rarity}</span></div>
+    </div>`).join("");
+})();
+
+/* Invite link */
+(function refLink(){
+  const url = new URL(location.href);
+  if(url.searchParams.get("ref")) localStorage.setItem("zuzu_refAddr", url.searchParams.get("ref"));
+  const addr = localStorage.getItem("zuzu_refAddr") || "";
+  const out = $("#refLink"); const copyBtn = $("#copyRef");
+  if(out){ out.value = `${location.origin}${location.pathname}?ref=${addr||"YOURCODE"}`; }
+  copyBtn?.addEventListener("click", ()=>{ navigator.clipboard.writeText(out.value); alert("Copied!"); });
+})();
+
+/* =========================
+   Wallets (Phantom + Solflare)
+   – Masaüstü: extension yakala
+   – Mobil: cüzdan içinde siteyi açmak yerine, Solana Pay URI kullan (wallet intercept eder)
+========================= */
+const IS_MOBILE = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent||"");
+
+const Wallets = {
+  phantom:{
+    key:'phantom', label:'Phantom',
+    icon:`<svg viewBox="0 0 48 48"><rect width="48" height="48" rx="12" fill="#7963f0"/><text x="24" y="30" text-anchor="middle" font-size="16" fill="#fff" font-weight="700" font-family="Arial">PH</text></svg>`,
+    has:()=> !!(window.phantom?.solana?.isPhantom || window.solana?.isPhantom || window.solana?.isPhantomApp),
+    provider:()=> window.phantom?.solana || window.solana,
+    async connect(){
+      const p=this.provider(); if(!p) throw new Error("no provider");
+      try{ const r=await p.connect({ onlyIfTrusted:true }); if(r?.publicKey) return r.publicKey.toString(); }catch(_){}
+      const r2=await p.connect(); return (r2?.publicKey||p.publicKey).toString();
+    }
+  },
+  solflare:{
+    key:'solflare', label:'Solflare',
+    icon:`<svg viewBox="0 0 48 48"><rect width="48" height="48" rx="12" fill="#ff6b00"/><text x="24" y="30" text-anchor="middle" font-size="16" fill="#fff" font-weight="700" font-family="Arial">SF</text></svg>`,
+    has:()=> !!(window.solflare?.isSolflare || typeof window.solflare?.connect==="function"),
+    provider:()=> window.solflare,
+    async connect(){
+      const p=this.provider(); if(!p) throw new Error("no provider");
+      try{ const r=await p.connect({ onlyIfTrusted:true }); if(r?.publicKey) return r.publicKey.toString(); }catch(_){}
+      const r2=await p.connect(); return (r2?.publicKey||p.publicKey).toString();
+    }
+  }
+};
+
+let CURRENT_ADDRESS = null;
+let CURRENT_WALLET  = null;
+
+function walletListHTML(){
+  return Object.values(Wallets).map(w=>`
+    <button class="wbtn" data-key="${w.key}">
+      <span style="width:22px;height:22px;display:inline-grid;place-items:center">${w.icon}</span>
+      <span>${w.label}</span>
+    </button>`).join("");
+}
+
+(function initWalletUI(){
+  const modal = $("#walletModal");
+  const list  = $("#wlist");
+  const btnConnect = $("#connectBtn");
+  const btnClose = $("#wmClose");
+  const btnDisconnect = $("#disconnectBtn");
+
+  list.innerHTML = walletListHTML();
+
+  // önceki oturum
+  const savedAddr   = localStorage.getItem(CONFIG.LS_ADDR);
+  const savedWallet = localStorage.getItem(CONFIG.LS_WALLET);
+  if(savedAddr && savedWallet){ onConnected(savedWallet, savedAddr, {silent:true}); }
+  else { setBuyButtonsEnabled(false); }
+
+  // connect entry
+  btnConnect.addEventListener("click", ()=>{
+    const direct = Wallets.phantom.has() ? Wallets.phantom :
+                   (Wallets.solflare.has() ? Wallets.solflare : null);
+    if(direct){ connectFlow(direct.key); }
+    else{ modal.classList.add("show"); }
+  });
+
+  // modal seçimi
+  list.addEventListener("click", (e)=>{
+    const btn = e.target.closest(".wbtn"); if(!btn) return;
+    connectFlow(btn.dataset.key);
+  });
+
+  // modal kapat
+  btnClose?.addEventListener("click", ()=>modal.classList.remove("show"));
+  modal?.addEventListener("click", (e)=>{ if(e.target===modal) modal.classList.remove("show"); });
+
+  // disconnect
+  btnDisconnect?.addEventListener("click", async ()=>{
+    CURRENT_ADDRESS=null; CURRENT_WALLET=null;
+    localStorage.removeItem(CONFIG.LS_ADDR); localStorage.removeItem(CONFIG.LS_WALLET);
+    $("#connectBtn").textContent = I[(localStorage.getItem(CONFIG.LS_LANG)||"fr")].connect || "Connect Wallet";
+    setBuyButtonsEnabled(false);
+    alert("Disconnected.");
+  });
+})();
+
+async function connectFlow(key){
+  const impl = Wallets[key]; if(!impl) return;
+  const modal = $("#walletModal");
+
+  // Masaüstü → provider varsa bağlan
+  if(!IS_MOBILE && impl.has()){
+    try{
+      const addr = await impl.connect();
+      onConnected(key, addr);
+      modal?.classList.remove("show");
+      return;
+    }catch(e){ alert("Wallet connection rejected or failed."); return; }
+  }
+
+  // Mobil veya provider yok → Solana Pay ile yetkilendirme akışı göstermeden sadece adres bağlamak mümkün değil.
+  // Çözüm: kullanıcı "BUY" derken Solana Pay URI'ı açıyoruz; cüzdan uygulaması açılır ve onaylar.
+  // Yine de mobilde kullanıcıya rehber:
+  modal?.classList.remove("show");
+  alert("If extension is not detected, wallet will open when you press BUY (Solana Pay).");
+}
+
+function onConnected(key, addr, opts={}){
+  CURRENT_ADDRESS = addr; CURRENT_WALLET = key;
+  localStorage.setItem(CONFIG.LS_ADDR, addr);
+  localStorage.setItem(CONFIG.LS_WALLET, key);
+  $("#connectBtn").textContent = `${addr.slice(0,6)}...${addr.slice(-4)}`;
+  $("#disconnectBtn").style.display = "inline-flex";
+  const out = $("#refLink"); if(out) out.value = `${location.origin}${location.pathname}?ref=${addr}`;
+  setBuyButtonsEnabled(true);
+  if(!opts.silent) console.log("Connected:", key, addr);
+}
+
+/* Satın alma (Solana Pay transfer) */
+function activeWeek(){ return 0; }
+["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{
+  const b = $("#"+id); if(!b) return; b.addEventListener("click", ()=>handleBuy(i));
+});
+function setBuyButtonsEnabled(ok){
+  ["buyW0","buyW1","buyW2","buyW3"].forEach(id=>{
+    const b = document.getElementById(id); if(!b) return;
+    b.disabled = !ok; b.style.opacity = ok ? "1" : ".5"; b.style.pointerEvents = ok ? "auto" : "none";
+  });
+}
+
+function handleBuy(weekIdx){
+  const qty = parseFloat(($("#buyAmount").value||"0").toString().replace(/[^\d.]/g,""))||0;
+  if(qty<=0){ alert("Enter a valid amount."); return; }
+  if(weekIdx!==activeWeek()){ alert("This week is not active."); return; }
+
+  // adres bağlanmadıysa masaüstü provider deneyelim
+  if(!CURRENT_ADDRESS && (Wallets.phantom.has()||Wallets.solflare.has())){
+    const w = Wallets.phantom.has()? "phantom":"solflare";
+    connectFlow(w); return;
+  }
+  if(!CURRENT_ADDRESS){ alert("Connect wallet first (Phantom or Solflare)."); return; }
+
+  const price = CONFIG.weekPrices[weekIdx];
+  const usdtCost = qty * price;
+
+  // ÖRNEK oran: 1 USDT ≈ 0.01 SOL (yerine gerçek kur entegresi eklenebilir)
+  const solAmount = (usdtCost * 0.01).toFixed(6);
+
+  // Solana Pay URI — hem Phantom hem Solflare destekler
+  // şema: solana:<recipient>?amount=&reference=&label=&message=&memo=&spl-token=&...
+  const params = new URLSearchParams({
+    amount: solAmount,
+    reference: CURRENT_ADDRESS,
+    label: "ZUZUCOIN Presale",
+    message: "ZUZU presale payment",
+  });
+  const solanaPayUrl = `solana:${encodeURIComponent(CONFIG.treasury)}?${params.toString()}&network=${encodeURIComponent(CONFIG.cluster)}`;
+
+  // mobil cüzdanlar bu URI’ı yakalar (app chooser) / masaüstü extensionlar da intercept eder
+  // bazı tarayıcılarda window.open engellenebilir → location.href fallback
+  try{ window.open(solanaPayUrl, "_blank"); }catch{ location.href = solanaPayUrl; }
+  alert(`Wallet will open with a transfer of ~${solAmount} SOL.\nAfter approval you'll return here.`);
+}
+
+/* ufak animasyon nudge */
+(function ensureTickerVisible(){ const t=$("#exTrack"); if(!t) return; t.style.transform="translateX(0)"; setTimeout(()=>t.style.transform="", 60);})();
+</script>
 </body>
 </html>
