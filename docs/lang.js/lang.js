@@ -1,37 +1,56 @@
 const I = {
-  tr:{nav_presale:"Ön Satış",nav_stake:"Stake",nav_nft:"NFT Ödülleri",nav_roadmap:"Yol Haritası",nav_token:"Tokonomi",connect:"Cüzdan Bağla",
-      hero_badge:"Ön Satış • Stake ile NFT Kazan",hero_title:"ZUZU — Geleceğin Robotic Kirpisi 🦔⚡",
-      hero_lead:"Stake et ve <b>ZUZU Maskot NFT</b> kazan. Sınırlı arz, yüksek <b>utility</b>.",
-      cta_stake:"Stake Etmeye Başla",cta_nft:"NFT Ödülleri",days:"GÜN",hours:"SAAT",mins:"DAKİKA",secs:"SANİYE",
-      presale_title:"Ön Satış — Geri Sayım",presale_lead:"ZUZU ön satışına hazır ol! <b>Sınırlı tahsis</b>, topluluğa özel fiyat.",
-      amount:"Miktar (ZUZU)",cost:"Maliyet:",buy:"Satın Al",exchanges:"Desteklenen Borsalar",
-      stake_title:"Stake Pro — Kilitle, Kazan, NFT Kap ✨",stake_lead:"ZUZU’larını kilitle, <b>APY + NFT BOOST</b> ile kazan.",
-      token_title:"Tokonomi (Görsel)"},
-  en:{nav_presale:"Pre-Sale",nav_stake:"Stake",nav_nft:"NFT Rewards",nav_roadmap:"Roadmap",nav_token:"Tokenomics",connect:"Connect Wallet",
-      hero_badge:"Pre-Sale • Stake to Win NFT",hero_title:"ZUZU — Robotic Hedgehog 🦔⚡",
-      hero_lead:"Stake and win <b>ZUZU Mascot NFT</b>. Limited supply, high <b>utility</b>.",
-      cta_stake:"Start Staking",cta_nft:"NFT Rewards",days:"DAYS",hours:"HOURS",mins:"MINUTES",secs:"SECONDS",
-      presale_title:"Pre-Sale — Countdown",presale_lead:"Get ready for ZUZU pre-sale! <b>Limited allocation</b>.",
-      amount:"Amount (ZUZU)",cost:"Cost:",buy:"Buy",exchanges:"Supported Exchanges",
-      stake_title:"Stake Pro — Lock, Earn, Get NFT ✨",stake_lead:"Lock your ZUZU, earn <b>APY + NFT BOOST</b>.",
-      token_title:"Tokenomics (Visualized)"}
+  fr:{nav_presale:"Pré-vente",nav_stake:"Stake",nav_nft:"Récompenses NFT",nav_roadmap:"Feuille de route",nav_token:"Tokenomics",connect:"Connecter le Wallet",
+      hero_badge:"Pré-vente • Stake pour gagner un NFT",hero_title:"ZUZU — Hérisson Robotique 🦔⚡",
+      hero_lead:"Stake et gagne un <b>NFT Mascotte ZUZU</b>. Offre limitée, forte <b>utilité</b>.",
+      cta_stake:"Commencer le Stake",cta_nft:"Récompenses NFT",
+      days:"JOURS",hours:"HEURES",mins:"MINUTES",secs:"SECONDES",
+      presale_title:"Pré-vente — Compte à rebours",presale_lead:"Prépare-toi ! <b>Allocation limitée</b> à prix communauté.",
+      amount:"Montant (ZUZU)",cost:"Coût :",buy:"Acheter",exchanges:"Bourses prises en charge",
+      stake_title:"Stake Pro — Verrouille, Gagne, Reçois un NFT ✨",stake_lead:"Verrouille ton ZUZU, gagne <b>APY + BOOST NFT</b>.",
+      token_title:"Tokenomics (Visualisé)"},
+  pt:{nav_presale:"Pré-venda",nav_stake:"Stake",nav_nft:"Recompensas NFT",nav_roadmap:"Roteiro",nav_token:"Tokenomics",connect:"Conectar Carteira",
+      hero_badge:"Pré-venda • Stake para ganhar NFT",hero_title:"ZUZU — Ouriço Robótico 🦔⚡",
+      hero_lead:"Faça stake e ganhe um <b>NFT Mascote ZUZU</b>. Oferta limitada, alta <b>utilidade</b>.",
+      cta_stake:"Começar Stake",cta_nft:"Recompensas NFT",
+      days:"DIAS",hours:"HORAS",mins:"MINUTOS",secs:"SEGUNDOS",
+      presale_title:"Pré-venda — Contagem regressiva",presale_lead:"Prepare-se! <b>Alocação limitada</b> com preço da comunidade.",
+      amount:"Quantidade (ZUZU)",cost:"Custo:",buy:"Comprar",exchanges:"Exchanges suportadas",
+      stake_title:"Stake Pro — Trave, Ganhe, Receba NFT ✨",stake_lead:"Trave seu ZUZU e ganhe <b>APY + BOOST NFT</b>.",
+      token_title:"Tokenomics (Visualizado)"},
+  es:{nav_presale:"Pre-venta",nav_stake:"Stake",nav_nft:"Recompensas NFT",nav_roadmap:"Hoja de ruta",nav_token:"Tokenomics",connect:"Conectar Billetera",
+      hero_badge:"Pre-venta • Stake para ganar un NFT",hero_title:"ZUZU — Erizo Robótico 🦔⚡",
+      hero_lead:"Haz stake y gana un <b>NFT Mascota ZUZU</b>. Oferta limitada, alta <b>utilidad</b>.",
+      cta_stake:"Empezar Stake",cta_nft:"Recompensas NFT",
+      days:"DÍAS",hours:"HORAS",mins:"MINUTOS",secs:"SEGUNDOS",
+      presale_title:"Pre-venta — Cuenta regresiva",presale_lead:"¡Prepárate! <b>Asignación limitada</b> a precio comunidad.",
+      amount:"Cantidad (ZUZU)",cost:"Costo:",buy:"Comprar",exchanges:"Exchanges compatibles",
+      stake_title:"Stake Pro — Bloquea, Gana, Obtén NFT ✨",stake_lead:"Bloquea tu ZUZU y gana <b>APY + BOOST NFT</b>.",
+      token_title:"Tokenomics (Visualizado)"},
+  ru:{nav_presale:"Предпродажа",nav_stake:"Стейкинг",nav_nft:"NFT награды",nav_roadmap:"Дорожная карта",nav_token:"Токеномика",connect:"Подключить кошелёк",
+      hero_badge:"Предпродажа • Стейкинг для NFT",hero_title:"ZUZU — Робо-Ёж 🦔⚡",
+      hero_lead:"Стейкай и получай <b>маскот NFT ZUZU</b>. Ограниченное предложение, высокая <b>полезность</b>.",
+      cta_stake:"Начать стейкинг",cta_nft:"NFT награды",
+      days:"ДНИ",hours:"ЧАСЫ",mins:"МИНУТЫ",secs:"СЕКУНДЫ",
+      presale_title:"Предпродажа — Обратный отсчёт",presale_lead:"Готовься! <b>Ограниченная аллокация</b> по цене сообщества.",
+      amount:"Количество (ZUZU)",cost:"Стоимость:",buy:"Купить",exchanges:"Поддерживаемые биржи",
+      stake_title:"Stake Pro — Заморозь, Заработай, Получи NFT ✨",stake_lead:"Заморозь ZUZU и получай <b>APY + NFT BOOST</b>.",
+      token_title:"Токеномика (визуально)"}
 };
 
 (function initLang(){
-  const LS_KEY="zuzu_lang";
-  const saved = localStorage.getItem(LS_KEY) || "tr";
-  applyLang(saved);
+  const LS="zuzu_lang";
+  const saved=localStorage.getItem(LS)||"fr"; // varsayılan FR
+  apply(saved);
 
   const langBtn=document.getElementById("langBtn");
   const langMenu=document.getElementById("langMenu");
-
-  langBtn?.addEventListener("click",(e)=>{e.stopPropagation();langMenu?.classList.toggle("show");});
-  document.querySelectorAll(".lang-opt").forEach(b=>b.addEventListener("click",(e)=>{
-    e.stopPropagation(); const l=b.dataset.lang; applyLang(l); localStorage.setItem(LS_KEY,l); langMenu?.classList.remove("show");
+  langBtn?.addEventListener("click",e=>{e.stopPropagation();langMenu?.classList.toggle("show");});
+  document.addEventListener("click",e=>{if(!langMenu?.contains(e.target))langMenu?.classList.remove("show");});
+  document.querySelectorAll(".lang-opt").forEach(b=>b.addEventListener("click",()=>{
+    const l=b.dataset.lang; apply(l); localStorage.setItem(LS,l); langMenu?.classList.remove("show");
   }));
-  document.addEventListener("click",(e)=>{ if(langMenu && !langMenu.contains(e.target) && e.target!==langBtn) langMenu.classList.remove("show"); });
 
-  function applyLang(lang){
+  function apply(lang){
     const flag=document.getElementById("langFlag");
     const code=document.getElementById("langCode");
     if(flag) flag.src=`flags/${lang}.png`;
