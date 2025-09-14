@@ -1,26 +1,22 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ZUZU — Stake Simulator</title>
-<meta name="theme-color" content="#0e1522">
-<link rel="icon" href="assets/images/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ZUZUCOIN — Stake Simulator</title>
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="z-nav">
   <div class="z-container z-nav-inner">
-    <a class="brand" href="index.html"><img src="assets/images/logo.png" alt="ZUZU"><span>ZUZUCOIN</span></a>
+    <a class="brand" href="/"><img src="assets/images/logo.png" alt="ZUZU"><span>ZUZUCOIN</span></a>
     <nav class="z-menu">
       <a href="index.html#presale">Pre-Sale</a>
       <a href="index.html#stake">Stake</a>
       <a href="index.html#nft">NFT</a>
       <a href="index.html#tokenomics">Tokenomics</a>
-      <a href="claim.html" class="z-chip">Claim</a>
-      <button id="connectBtn" class="z-btn z-btn-primary" data-connect>Connect Wallet</button>
+      <button id="connectBtn" class="z-btn z-btn-primary">Connect Wallet</button>
     </nav>
   </div>
 </header>
@@ -28,100 +24,51 @@
 <main class="z-section">
   <div class="z-container">
     <div class="section-head">
-      <div class="badge">Analyzer</div>
-      <h1>Stake Simulator</h1>
-      <p>ZUZU stake getirisini <b>kilit süresi</b>, <b>baz APY</b>, <b>NFT BOOST</b> ve <b>Early Badge</b> ile simüle et.</p>
-      <div class="z-chip-row">
-        <span class="z-chip">Supported lock tiers: 30 / 90 / 180 / 365 / 540 days</span>
-        <span class="z-chip">Base APY: 12% ~ 85% (tier’a göre)</span>
-        <span class="z-chip">Wallet: <code id="simPk">—</code></span>
-      </div>
+      <h2>Stake Simulator</h2>
+      <p class="muted">Estimate APY & rewards. (Demo only)</p>
     </div>
 
     <div class="card">
-      <h3>Parameters</h3>
-      <div class="calc-grid">
-        <div><label>Amount (ZUZU)</label><input class="input" id="simAmount" placeholder="e.g., 10,000"></div>
-        <div>
-          <label>Lock Period</label>
-          <select id="simDuration" class="input">
-            <option value="30">30 days (12% APY)</option>
-            <option value="90">90 days (24% APY)</option>
-            <option value="180">180 days (40% APY)</option>
-            <option value="365">365 days (65% APY)</option>
-            <option value="540">540 days (85% APY)</option>
-          </select>
-        </div>
-        <div>
-          <label>Have NFT? <small>adds bonus</small></label>
-          <select id="simNft" class="input">
-            <option value="0">No</option>
-            <option value="5">ZUZU Hero (+5%)</option>
-            <option value="8">ZUZU Rogue (+8%)</option>
-            <option value="10">ZUZU Berserker (+10%)</option>
-            <option value="6">ZUZU Hacker (+6%)</option>
-            <option value="9">ZUZU Sorceress (+9%)</option>
-            <option value="7">ZUZU Warrior (+7%)</option>
-            <option value="5">ZUZU Maiden (+5%)</option>
-            <option value="9">ZUZU Scientist (+9%)</option>
-            <option value="12">ZUZU Titan (+12%)</option>
-          </select>
-        </div>
-        <div>
-          <label>Early Badge</label>
-          <select id="simEarly" class="input">
-            <option value="0">None</option>
-            <option value="3">Badge +3%</option>
-            <option value="5">Badge+ +5%</option>
-          </select>
-        </div>
+      <label>Amount (ZUZU)</label>
+      <input id="simAmt" class="input" value="100000" inputmode="decimal">
+      <label style="margin-top:10px">Lock (days)</label>
+      <select id="simDays" class="input">
+        <option value="30">30</option>
+        <option value="90">90</option>
+        <option value="180">180</option>
+      </select>
+      <div style="margin-top:12px">
+        <button id="calc" class="z-btn z-btn-primary">Calculate</button>
       </div>
-
-      <div style="margin-top:8px">
-        <label style="display:flex;gap:.5rem;align-items:center">
-          <input type="checkbox" id="simCompound">
-          <span>Monthly compounding</span>
-        </label>
-      </div>
-
-      <div style="margin-top:10px">
-        <button id="simCalc" class="z-btn z-btn-primary">Calculate</button>
-      </div>
-
-      <div class="statwrap">
-        <div class="stat"><div class="label">Total Return</div><div class="value" id="simTotal">0.00 ZUZU</div></div>
-        <div class="stat"><div class="label">Monthly Avg</div><div class="value" id="simMonthly">0.00 ZUZU</div></div>
-        <div class="stat"><div class="label">Total Boost</div><div class="value" id="simBoost">+0%</div></div>
-      </div>
+      <div id="simOut" class="muted" style="margin-top:10px">—</div>
     </div>
   </div>
 </main>
 
-<script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
-<script src="lang.js"></script>
-<script>
-  const apy = {30:12,90:24,180:40,365:65,540:85};
-  function calc(){
-    const a = parseFloat((document.getElementById("simAmount").value||"0").replace(/[^\d.]/g,""))||0;
-    const d = parseInt(document.getElementById("simDuration").value,10);
-    const bN = parseFloat(document.getElementById("simNft").value)||0;
-    const bE = parseFloat(document.getElementById("simEarly").value)||0;
-    const comp = document.getElementById("simCompound").checked;
-    const base = apy[d]||0, boost = bN+bE;
-    let gross;
-    if (comp){ const r = (base+boost)/100/12; const n = d/30; gross = a * Math.pow(1+r, n) - a; }
-    else{ gross = a * ((base+boost)/100) * (d/365); }
-    document.getElementById("simTotal").textContent   = gross.toFixed(2)+" ZUZU";
-    document.getElementById("simMonthly").textContent = (gross/(d/30)).toFixed(2)+" ZUZU";
-    document.getElementById("simBoost").textContent   = "+"+boost+"%";
-  }
-  document.getElementById("simCalc").addEventListener("click", calc);
+<!-- same modal -->
+<div id="walletModal" class="modal" aria-hidden="true">
+  <div class="sheet">
+    <div class="wm-row">
+      <h3 style="margin:0">Connect Wallet</h3>
+      <button id="wmClose" class="z-btn z-btn-ghost small">✕</button>
+    </div>
+    <div id="wlist" class="wlist" style="margin-top:10px"></div>
+    <div class="wm-row" style="margin-top:12px">
+      <small style="color:#8aa2c9">Mobile: tap Phantom or Solflare.</small>
+      <button id="disconnectBtn" class="z-btn z-btn-ghost small" style="display:none">Disconnect</button>
+    </div>
+  </div>
+</div>
 
-  function paintPk(){ const pk=(window.__zuzu_pubkey&&window.__zuzu_pubkey())||""; 
-    document.getElementById("simPk").textContent = pk? pk.slice(0,6)+"..."+pk.slice(-6):"—"; }
-  document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) paintPk(); });
-  window.addEventListener("pageshow", paintPk);
-</script>
 <script src="script.js"></script>
+<script>
+  document.getElementById('calc').onclick = ()=>{
+    const a = parseFloat((simAmt.value||'0').replace(/[^\d.]/g,''))||0;
+    const d = parseInt(simDays.value,10);
+    const apy = d===30?0.12:(d===90?0.24:0.40);
+    const est = a * apy * (d/365);
+    simOut.textContent = `Estimated reward ≈ ${est.toLocaleString(undefined,{maximumFractionDigits:2})} ZUZU`;
+  };
+</script>
 </body>
 </html>
