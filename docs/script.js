@@ -1,14 +1,16 @@
 /* =========================
-   CONFIG (QuikNode + mainnet)
+   CONFIG (QuikNode + Backend)
 ========================= */
 const CONFIG = {
-  rpc: "https://silent-frequent-bird.solana-mainnet.quiknode.pro/xxxxxxxxxxxx/", // ← QuikNode RPC (senin anahtarını koy)
+  rpc: "https://silent-frequent-bird.solana-mainnet.quiknode.pro/xxxxxxxxxxxx/",
   cluster: "mainnet-beta",
   treasury: "FniLJmY5L6zQyQfot6xsiYojHeEzoGs2xZXYZh1U9QwF",
 
+  // <-- BURAYA kendi backend adresini yaz (Render/Railway vs)
+  backendUrl: "https://SENIN-BACKEND-URLIN", // örn: https://zuzu-backend.onrender.com
+
   launchKey: "zuzu_launchAt",
   defaultCountdownDays: 60, // 60 gün
-
   weekPrices: [0.0050, 0.0065, 0.0080, 0.0100], // USDT
 
   // LS keys
@@ -154,9 +156,7 @@ updateCosts();
 })();
 
 /* =========================
-   Wallets (Sadece Phantom + Solflare)
-   Masaüstü: extension → connect
-   Mobil: provider yoksa deeplink ile zuzucoin.xyz'yi cüzdan içinde aç
+   Wallets (Phantom + Solflare)
 ========================= */
 const IS_MOBILE = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent||"");
 
@@ -212,21 +212,21 @@ function walletListHTML(){
   if(savedAddr && savedWallet){ onConnected(savedWallet, savedAddr, {silent:true}); }
   else { setBuyButtonsEnabled(false); }
 
-  // connect tuşu
+  // connect
   btnConnect?.addEventListener("click", ()=>{
     const direct = Wallets.phantom.has() ? Wallets.phantom :
                    (Wallets.solflare.has() ? Wallets.solflare : null);
     if(direct){ connectFlow(direct.key); }
-    else{ modal?.classList.add("show"); } // mobil/sağlayıcı yok → seçim göster
+    else{ modal?.classList.add("show"); }
   });
 
-  // modal seçimi
+  // list
   list?.addEventListener("click", (e)=>{
     const btn = e.target.closest(".wbtn"); if(!btn) return;
     connectFlow(btn.dataset.key);
   });
 
-  // kapat / backdrop
+  // close / backdrop
   btnClose?.addEventListener("click", ()=>modal?.classList.remove("show"));
   modal?.addEventListener("click", (e)=>{ if(e.target===modal) modal.classList.remove("show"); });
 
@@ -246,7 +246,6 @@ async function connectFlow(key){
   const modal = $("#walletModal");
   const nowUrl = location.origin + location.pathname;
 
-  // Masaüstü → provider varsa bağlan
   if(!IS_MOBILE && impl.has()){
     try{
       const addr = await impl.connect();
@@ -256,7 +255,7 @@ async function connectFlow(key){
     }catch(e){ alert("Wallet connection rejected or failed."); return; }
   }
 
-  // Mobil veya provider yoksa → cüzdan içi tarayıcıya yönlendir
+  // Mobil veya provider yok → cüzdan içi tarayıcı
   modal?.classList.remove("show");
   sessionStorage.setItem("zuzu_await_wallet","1");
   window.open(impl.deeplink(nowUrl), "_blank");
@@ -272,7 +271,9 @@ function onConnected(key, addr, opts={}){
   if(!opts.silent) console.log("Connected:", key, addr);
 }
 
-/* Satın alma (Solana Pay transfer) */
+/* =========================
+   Satın alma (Backend oranı + Solana Pay)
+========================= */
 function activeWeek(){ return 0; }
 ["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{
   const b = $("#"+id); if(!b) return; b.addEventListener("click", ()=>handleBuy(i));
@@ -284,7 +285,7 @@ function setBuyButtonsEnabled(ok){
   });
 }
 
-function handleBuy(weekIdx){
+async function handleBuy(weekIdx){
   const qty = parseFloat(($("#buyAmount")?.value||"0").toString().replace(/[^\d.]/g,""))||0;
   if(qty<=0){ alert("Enter a valid amount."); return; }
   if(weekIdx!==activeWeek()){ alert("This week is not active."); return; }
@@ -293,20 +294,25 @@ function handleBuy(weekIdx){
   const price = CONFIG.weekPrices[weekIdx];
   const usdtCost = qty * price;
 
-  // ÖRNEK oran: 1 USDT ≈ 0.01 SOL (burayı gerçek kura göre güncelleyebilirsin)
-  const solAmount = (usdtCost * 0.01).toFixed(6);
+  try{
+    // backend'den SOL miktarını al
+    const q = await fetch(`${CONFIG.backendUrl}/api/quote?usdt=${usdtCost}`).then(r=>r.json());
+    const solAmount = Number(q.sol).toFixed(6);
 
-  // Solana Pay URI — Phantom & Solflare yakalar
-  const params = new URLSearchParams({
-    amount: solAmount,
-    reference: CURRENT_ADDRESS,
-    label: "ZUZUCOIN Presale",
-    message: "ZUZU presale payment"
-  });
-  const solanaPayUrl = `solana:${encodeURIComponent(CONFIG.treasury)}?${params.toString()}&network=${encodeURIComponent(CONFIG.cluster)}`;
+    // Solana Pay URI — cüzdanlar otomatik yakalar
+    const params = new URLSearchParams({
+      amount: solAmount,
+      reference: CURRENT_ADDRESS,
+      label: "ZUZUCOIN Presale",
+      message: "ZUZU presale payment"
+    });
+    const solanaPayUrl = `solana:${encodeURIComponent(CONFIG.treasury)}?${params.toString()}&network=${encodeURIComponent(CONFIG.cluster)}`;
 
-  try{ window.open(solanaPayUrl, "_blank"); }catch{ location.href = solanaPayUrl; }
-  alert(`Wallet will open with a transfer of ~${solAmount} SOL.`);
+    try{ window.open(solanaPayUrl, "_blank"); }catch{ location.href = solanaPayUrl; }
+  }catch(e){
+    console.error(e);
+    alert("Quote failed. Backend URL doğru mu çalışıyor mu kontrol et.");
+  }
 }
 
 /* Ticker görünür nudge */
