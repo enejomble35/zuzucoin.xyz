@@ -1,0 +1,53 @@
+<!doctype html><meta charset="utf-8">
+<title>Wallet Connect — Minimal Test</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<div style="font-family:system-ui;padding:16px;color:#e8f1ff;background:#0c1320">
+  <h2>Wallet Connect — Minimal</h2>
+  <p>Phantom veya Solflare ile <b>tek tık</b> test.</p>
+  <button id="ph" style="padding:10px 14px;border-radius:10px">Connect Phantom</button>
+  <button id="sf" style="padding:10px 14px;border-radius:10px;margin-left:8px">Connect Solflare</button>
+  <pre id="out" style="margin-top:14px;background:#101a2c;padding:12px;border-radius:10px;white-space:pre-wrap"></pre>
+  <p style="margin-top:10px;font-size:14px;opacity:.8">Mobilde uzantı yoksa, aşağıdan cüzdan içi tarayıcıda aç:</p>
+  <a id="openPh" href="#" style="display:inline-block;margin-right:10px">Open in Phantom</a>
+  <a id="openSf" href="#">Open in Solflare</a>
+</div>
+<script>
+const IS_MOBILE=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent||"");
+const CLUSTER="mainnet-beta";
+const here=location.href.split('#')[0];
+const out=document.getElementById('out');
+document.getElementById('openPh').href =
+  `https://phantom.app/ul/browse/${encodeURIComponent(here)}?network=${encodeURIComponent(CLUSTER)}`;
+document.getElementById('openSf').href =
+  `https://solflare.com/ul/v1/browse/${encodeURIComponent(here)}?network=${encodeURIComponent(CLUSTER)}`;
+
+function log(x){ out.textContent = (out.textContent? out.textContent+"\n":"")+x; }
+
+async function phConnect(){
+  const p = window.phantom?.solana || window.solana;
+  if(!p){ 
+    if(IS_MOBILE){ location.href=document.getElementById('openPh').href; return; }
+    log("Phantom provider yok (uzantı/yüklü değil)."); return;
+  }
+  try{
+    const r = await p.connect({ onlyIfTrusted:true }).catch(()=>null);
+    const r2 = r?.publicKey? r : await p.connect();
+    log("Phantom OK: "+(r2.publicKey||p.publicKey).toString());
+  }catch(e){ log("Phantom hata: "+e.message); }
+}
+async function sfConnect(){
+  const p = window.solflare;
+  if(!p){
+    if(IS_MOBILE){ location.href=document.getElementById('openSf').href; return; }
+    log("Solflare provider yok."); return;
+  }
+  try{
+    const r = await p.connect({ onlyIfTrusted:true }).catch(()=>null);
+    const pub = r?.publicKey || p.publicKey;
+    if(!pub){ await p.connect(); }
+    log("Solflare OK: "+(p.publicKey||pub).toString());
+  }catch(e){ log("Solflare hata: "+e.message); }
+}
+document.getElementById('ph').onclick=phConnect;
+document.getElementById('sf').onclick=sfConnect;
+</script>
