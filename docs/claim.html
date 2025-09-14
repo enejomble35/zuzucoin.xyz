@@ -1,26 +1,22 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ZUZU — Claim Portal (Solana)</title>
-<meta name="theme-color" content="#0e1522">
-<link rel="icon" href="assets/images/favicon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ZUZUCOIN — Claim Portal</title>
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="z-nav">
   <div class="z-container z-nav-inner">
-    <a class="brand" href="index.html"><img src="assets/images/logo.png" alt="ZUZU"><span>ZUZUCOIN</span></a>
+    <a class="brand" href="/"><img src="assets/images/logo.png" alt="ZUZU"><span>ZUZUCOIN</span></a>
     <nav class="z-menu">
       <a href="index.html#presale">Pre-Sale</a>
       <a href="index.html#stake">Stake</a>
       <a href="index.html#nft">NFT</a>
       <a href="index.html#tokenomics">Tokenomics</a>
-      <a href="stake-simulator.html" class="z-chip">Stake Simulator</a>
-      <button id="connectBtn" class="z-btn z-btn-primary" data-connect>Connect Wallet</button>
+      <button id="connectBtn" class="z-btn z-btn-primary">Connect Wallet</button>
     </nav>
   </div>
 </header>
@@ -28,78 +24,45 @@
 <main class="z-section">
   <div class="z-container">
     <div class="section-head">
-      <h1>Claim Portal</h1>
-      <p>Pre-sale sırasında yaptığınız alımlar, <b>bu Solana cüzdan adresi</b> ile eşleştirilir. TGE’de hak edişinizi buradan alırsınız.</p>
-      <div class="z-chip-row">
-        <span class="z-chip">Network: <b>Solana (devnet)</b></span>
-        <span class="z-chip">Payment token: <b>SOL</b></span>
-        <span class="z-chip">Your Wallet: <code id="claimPk">—</code></span>
-      </div>
+      <h2>Claim Portal</h2>
+      <p class="muted">Connect wallet to see claimable ZUZU/NFT. (Demo)</p>
     </div>
 
     <div class="card">
-      <h3>Purchases Linked To Your Wallet</h3>
-      <div id="claimTable" class="statwrap" style="grid-template-columns:1fr;">
-        <div class="stat"><div class="label">No local records yet.</div><div class="value">—</div></div>
+      <div id="claimState" class="muted">Not connected</div>
+      <div style="margin-top:10px">
+        <button id="claimBtn" class="z-btn z-btn-primary" disabled>Claim</button>
       </div>
-    </div>
-
-    <div class="card">
-      <h3>Add a Receipt (manual)</h3>
-      <div class="calc-grid" style="grid-template-columns:1fr 1fr;">
-        <div><label>USDT Amount (SPL)</label><input class="input" id="rcptAmount" placeholder="e.g., 250.50"></div>
-        <div><label>Week / Unit Price (optional)</label><input class="input" id="rcptNote" placeholder="Week 1 @0.0050"></div>
-        <div style="grid-column:1 / -1"><label>TX Hash (Solana)</label><input class="input" id="rcptTx" placeholder="5Yd... (signature)"></div>
-      </div>
-      <div style="margin-top:10px;display:flex;gap:10px">
-        <button id="addRcpt" class="z-btn z-btn-primary">Add Receipt</button>
-        <button id="clearRcpt" class="z-btn z-btn-ghost">Clear My Local Records</button>
-      </div>
-      <p class="muted" style="margin-top:8px">Not: Bu kayıtlar yalnızca yerel cihazınızda tutulur.</p>
     </div>
   </div>
 </main>
 
-<script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
-<script src="lang.js"></script>
-<script>
-  const TBL_KEY = "zuzu_claim_rcpts";
-  const $ = s => document.querySelector(s);
+<!-- same modal -->
+<div id="walletModal" class="modal" aria-hidden="true">
+  <div class="sheet">
+    <div class="wm-row">
+      <h3 style="margin:0">Connect Wallet</h3>
+      <button id="wmClose" class="z-btn z-btn-ghost small">✕</button>
+    </div>
+    <div id="wlist" class="wlist" style="margin-top:10px"></div>
+    <div class="wm-row" style="margin-top:12px">
+      <small style="color:#8aa2c9">Mobile: tap Phantom or Solflare.</small>
+      <button id="disconnectBtn" class="z-btn z-btn-ghost small" style="display:none">Disconnect</button>
+    </div>
+  </div>
+</div>
 
-  function pkLabel(){
-    const pk = (window.__zuzu_pubkey && window.__zuzu_pubkey()) || "";
-    $("#claimPk").textContent = pk ? pk.slice(0,6)+"..."+pk.slice(-6) : "—";
-  }
-  function loadRcpts(){ try{ return JSON.parse(localStorage.getItem(TBL_KEY)||"[]"); }catch{ return []; } }
-  function saveRcpts(arr){ try{ localStorage.setItem(TBL_KEY, JSON.stringify(arr||[])); }catch{} }
-  function renderTable(){
-    const wrap = $("#claimTable");
-    const rows = loadRcpts();
-    if (!rows.length){
-      wrap.innerHTML = `<div class="stat"><div class="label">No local records yet.</div><div class="value">—</div></div>`;
-      return;
-    }
-    wrap.innerHTML = rows.map(r=>`
-      <div class="stat"><div class="label">USDT: <b>${r.amount}</b> • Note: ${r.note||"-"}</div>
-      <div class="value"><a href="https://solscan.io/tx/${r.tx}" target="_blank" rel="noopener">${r.tx.slice(0,8)}...${r.tx.slice(-8)}</a></div></div>`).join("");
-  }
-  document.addEventListener("DOMContentLoaded", ()=>{
-    pkLabel(); renderTable();
-    $("#addRcpt").addEventListener("click", ()=>{
-      const amount = parseFloat($("#rcptAmount").value||"0");
-      const tx = ($("#rcptTx").value||"").trim();
-      const note = ($("#rcptNote").value||"").trim();
-      if (!amount || !tx) { alert("Please fill USDT amount and TX hash."); return; }
-      const list = loadRcpts(); list.push({amount, tx, note, t: Date.now()}); saveRcpts(list);
-      $("#rcptAmount").value = ""; $("#rcptTx").value = ""; $("#rcptNote").value = "";
-      renderTable();
-    });
-    $("#clearRcpt").addEventListener("click", ()=>{ if (confirm("Clear all local receipts?")) { saveRcpts([]); renderTable(); }});
-  });
-  ["visibilitychange","pageshow"].forEach(ev=>{
-    document.addEventListener(ev, ()=>{ if(ev!=="visibilitychange"||!document.hidden) pkLabel(); });
-  });
-</script>
 <script src="script.js"></script>
+<script>
+  // ufak demo: bağlanınca buton aktif, adresi göster
+  const el = document.getElementById('claimState');
+  function syncClaimUI(){
+    const a = localStorage.getItem('zuzu_connected_addr');
+    if(a){ el.textContent = `Connected: ${a.slice(0,6)}...${a.slice(-4)}`; claimBtn.disabled=false; }
+    else { el.textContent = 'Not connected'; claimBtn.disabled=true; }
+  }
+  syncClaimUI(); window.addEventListener('focus', syncClaimUI);
+  document.getElementById('claimBtn').onclick = ()=>alert('Claim demo: backend mint/airdrop entegrasyonu eklenecek.');
+</script>
 </body>
 </html>
