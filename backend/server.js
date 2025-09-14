@@ -1,122 +1,56 @@
-import 'dotenv/config';
-import express from 'express';
-import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import {
-  Connection, PublicKey, SystemProgram, Transaction
-} from '@solana/web3.js';
-import {
-  getAssociatedTokenAddress, createTransferCheckedInstruction, TOKEN_PROGRAM_ID
-} from '@solana/spl-token';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const {
-  PORT = 8080,
-  CLUSTER = 'mainnet-beta',
-  RPC_URL,
-  TREASURY,
-  USDT_MINT = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
-} = process.env;
-
-if (!RPC_URL || !TREASURY) {
-  console.error('RPC_URL ve TREASURY .env içinde zorunlu!');
-  process.exit(1);
-}
+import express from "express";
+import cors from "cors";
+import fetch from "node-fetch";
 
 const app = express();
-app.use(cors());
-app.use(express.json({ limit: '1mb' }));
+const PORT = process.env.PORT || 8080;
 
-const connection = new Connection(RPC_URL, 'confirmed');
-const treasuryPk = new PublicKey(TREASURY);
-const usdtMintPk = new PublicKey(USDT_MINT);
+const RPC_URL = process.env.RPC_URL;
+const CLUSTER = process.env.CLUSTER || "mainnet-beta";
+const TREASURY = process.env.TREASURY;
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "*";
+const FALLBACK_SOL_PER_USDT = Number(process.env.FALLBACK_SOL_PER_USDT || "0.01");
 
-/* -------- health -------- */
-app.get('/api/health', (_req, res) => res.json({ ok: true, cluster: CLUSTER }));
+app.use(cors({ origin: ALLOWED_ORIGIN, credentials: true }));
+app.get("/api/health", (_, res) => res.json({ ok: true, cluster: CLUSTER }));
 
-/* -------- SOL transfer tx oluştur --------
-   Body: { from: string, amountSol: string }  amountSol: "0.1234"
------------------------------------------- */
-app.post('/api/tx/sol-transfer', async (req, res) => {
+// USDT -> SOL oranı (Jupiter > CoinGecko > fallback)
+async function fetchSolPerUsdt() {
   try {
-    const from = new PublicKey(String(req.body.from || ''));
-    const lamports = BigInt(Math.round(parseFloat(req.body.amountSol) * 1e9));
-    if (!Number.isFinite(Number(req.body.amountSol))) throw new Error('invalid amount');
+    const j = await fetch("https://price.jup.ag/v6/price?ids=SOL").then(r => r.json());
+    const priceUsd = j?.data?.SOL?.price;
+    if (priceUsd) return 1 / Number(priceUsd); // 1 USDT ~ 1 USD varsayımıyla
+  } catch {}
+  try {
+    const c = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd").then(r => r.json());
+    const priceUsd = c?.solana?.usd;
+    if (priceUsd) return 1 / Number(priceUsd);
+  } catch {}
+  return FALLBACK_SOL_PER_USDT;
+}
 
-    const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash('finalized');
-
-    const tx = new Transaction({
-      feePayer: from,
-      recentBlockhash: blockhash
-    }).add(
-      SystemProgram.transfer({
-        fromPubkey: from,
-        toPubkey: treasuryPk,
-        lamports: Number(lamports)
-      })
-    );
-
-    const bs64 = tx.serialize({ requireAllSignatures: false }).toString('base64');
-    res.json({ tx: bs64, lastValidBlockHeight });
-  } catch (e) {
-    console.error(e);
-    res.status(400).json({ error: e.message || 'build-failed' });
-  }
+// USDT tutarı ver, SOL tutarını döndür
+app.get("/api/quote", async (req, res) => {
+  const usdt = Number(req.query.usdt || "0");
+  if (!usdt || usdt <= 0) return res.status(400).json({ error: "usdt required" });
+  const solPerUsdt = await fetchSolPerUsdt();
+  const sol = usdt * solPerUsdt;
+  res.json({ usdt, solPerUsdt, sol });
 });
 
-/* -------- USDT (SPL) transfer tx oluştur --------
-   Body: { from: string, amountUsdt: string }  (6 decimals)
------------------------------------------------ */
-app.post('/api/tx/usdt-transfer', async (req, res) => {
-  try {
-    const from = new PublicKey(String(req.body.from || ''));
-    const amount = BigInt(Math.round(parseFloat(req.body.amountUsdt) * 1e6));
-    if (!Number.isFinite(Number(req.body.amountUsdt))) throw new Error('invalid amount');
-
-    const fromAta = await getAssociatedTokenAddress(usdtMintPk, from);
-    const toAta   = await getAssociatedTokenAddress(usdtMintPk, treasuryPk);
-
-    const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash('finalized');
-
-    const ixs = [];
-    // alıcının ATA'sı yoksa oluştur (payer: from)
-    const toAtaInfo = await connection.getAccountInfo(toAta);
-    if (!toAtaInfo) {
-      const { createAssociatedTokenAccountInstruction } = await import('@solana/spl-token');
-      ixs.push(createAssociatedTokenAccountInstruction(
-        from, toAta, treasuryPk, usdtMintPk
-      ));
-    }
-
-    ixs.push(createTransferCheckedInstruction(
-      fromAta,        // source
-      usdtMintPk,     // mint
-      toAta,          // destination
-      from,           // owner
-      Number(amount), // amount in base units
-      6               // decimals
-    ));
-
-    const tx = new Transaction({
-      feePayer: from,
-      recentBlockhash: blockhash
-    }).add(...ixs);
-
-    const bs64 = tx.serialize({ requireAllSignatures: false }).toString('base64');
-    res.json({ tx: bs64, lastValidBlockHeight, tokenProgram: TOKEN_PROGRAM_ID.toBase58() });
-  } catch (e) {
-    console.error(e);
-    res.status(400).json({ error: e.message || 'build-failed' });
-  }
+// Solana Pay deeplink üret (frontend de üretebilir; isteyen burada da alabilir)
+app.get("/api/solana-pay", async (req, res) => {
+  const usdt = Number(req.query.usdt || "0");
+  const label = encodeURIComponent("ZUZUCOIN Presale");
+  const message = encodeURIComponent("ZUZU presale payment");
+  const reference = encodeURIComponent(req.query.reference || "zuzu");
+  const solPerUsdt = await fetchSolPerUsdt();
+  const sol = (usdt * solPerUsdt).toFixed(6);
+  const url = `solana:${encodeURIComponent(TREASURY)}?amount=${sol}&reference=${reference}&label=${label}&message=${message}&network=${encodeURIComponent(CLUSTER)}`;
+  res.json({ usdt, solPerUsdt, sol, url });
 });
-
-/* -------- docs/ klasörünü statik servis et (opsiyonel) -------- */
-const docsDir = path.resolve(__dirname, '..', 'docs');
-app.use('/', express.static(docsDir));
 
 app.listen(PORT, () => {
-  console.log(`ZUZU backend up on http://localhost:${PORT} (${CLUSTER})`);
+  console.log(`ZUZU backend running on :${PORT}`);
+  console.log({ RPC_URL, CLUSTER, TREASURY, ALLOWED_ORIGIN });
 });
