@@ -1,0 +1,24 @@
+<!doctype html><meta charset="utf-8">
+<title>Buy Test — Solana Pay</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<div style="font-family:system-ui;padding:16px;color:#e8f1ff;background:#0c1320">
+  <h2>Buy — Solana Pay Minimal</h2>
+  <label>Treasure (alıcı): <input id="to" style="width:100%" value="FniLJmY5L6zQyQfot6xsiYojHeEzoGs2xZXYZh1U9QwF"></label>
+  <label style="display:block;margin-top:10px">Amount (SOL): <input id="amt" value="0.001"></label>
+  <button id="pay" style="margin-top:12px;padding:10px 14px;border-radius:10px">Open Wallet</button>
+  <pre id="out" style="margin-top:14px;background:#101a2c;padding:12px;border-radius:10px"></pre>
+</div>
+<script>
+const CLUSTER="mainnet-beta";
+function openPay(){
+  const to=document.getElementById('to').value.trim();
+  const amt=Number(document.getElementById('amt').value||"0").toFixed(6);
+  const params=new URLSearchParams({
+    amount:amt, label:"ZUZU Presale", message:"test payment"
+  });
+  const url=`solana:${encodeURIComponent(to)}?${params.toString()}&network=${encodeURIComponent(CLUSTER)}`;
+  try{ window.open(url,"_blank"); }catch{ location.href=url; }
+  document.getElementById('out').textContent=url;
+}
+document.getElementById('pay').onclick=openPay;
+</script>
