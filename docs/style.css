@@ -67,7 +67,7 @@ img{max-width:100%;display:block}
 .hero-visual{display:flex;justify-content:center;align-items:center}
 .logo-big{max-width:420px;width:100%;filter:drop-shadow(0 16px 36px rgba(0,0,0,.4))}
 
-/* Countdown tek satır */
+/* Countdown tek satır – şık */
 .countdown{display:flex;gap:10px;align-items:stretch;overflow-x:auto;padding:6px 2px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .countdown::-webkit-scrollbar{display:none}
 .flip{flex:0 0 92px;background:linear-gradient(180deg,#15253f,#0f1b33);border:1px solid #24385f;border-radius:14px;box-shadow:inset 0 -36px 60px rgba(0,0,0,.18), 0 6px 18px rgba(0,0,0,.18);text-align:center;position:relative}
