@@ -1,19 +1,26 @@
-/* ========================= CONFIG (QuikNode + Backend) ========================= */
+/* ========================= CONFIG (Polygon + EVM) ========================= */
 const CONFIG = {
-  rpc: "https://silent-frequent-bird.solana-mainnet.quiknode.pro/xxxxxxxxxxxx/",
-  cluster: "mainnet-beta",
-  treasury: "FniLJmY5L6zQyQfot6xsiYojHeEzoGs2xZXYZh1U9QwF",
+  // Polygon mainnet
+  chainIdHex: "0x89", // 137
+  chainName: "Polygon Mainnet",
+  rpcUrls: ["https://polygon-rpc.com", "https://rpc.ankr.com/polygon"],
+  blockExplorerUrls: ["https://polygonscan.com"],
 
-  // <-- BURAYA kendi backend adresini yaz (Render/Railway vs)
-  backendUrl: "https://SENIN-BACKEND-URLIN", // örn: https://zuzu-backend.onrender.com
+  // Tokens & treasury
+  USDT_POLYGON: "0xC2132D05D31c914a87C6611C10748AEB04B58e8F", // 6 decimals
+  ZUZU_TOKEN:   "0xfEe7dd881255EE85b7D6FeAF778e10988486AFc2",
+  PRESALE_TREASURY: "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",
+
+  // Optional: 0x swap API (Polygon)
+  ZEROX_BASE: "https://polygon.api.0x.org",
 
   // Countdown
   launchKey: "zuzu_launchAt",
-  launchKeyVersion: "v2",          // versiyonlayarak eski kayıtları sıfırlar
-  defaultCountdownDays: 60,        // 60 gün
+  launchKeyVersion: "poly-v1",
+  defaultCountdownDays: 60,
 
-  // Presale fiyatları
-  weekPrices: [0.0050, 0.0065, 0.0080, 0.0100], // USDT
+  // Presale prices (USDT)
+  weekPrices: [0.0045, 0.0060, 0.0075, 0.0090],
 
   // LS keys
   LS_ADDR: "zuzu_connected_addr",
@@ -21,15 +28,8 @@ const CONFIG = {
   LS_LANG: "zuzu_lang"
 };
 
-/* ========================= i18n (EN/TR/FR/PT/RU/ES) ========================= */
+/* ========================= i18n (same as before) ========================= */
 const I = {
-  en:{nav_presale:"Pre-Sale",nav_stake:"Stake",nav_nft:"NFT Rewards",nav_roadmap:"Roadmap",nav_token:"Tokenomics",connect:"Connect Wallet",
-      hero_badge:"Pre-Sale • Stake to Win NFT",hero_title:"ZUZU — Robotic Hedgehog 🦔⚡",hero_lead:"Stake and win **ZUZU Maskot NFT**. Limited supply, high **utility**.",
-      cta_stake:"Start Staking",cta_nft:"NFT Rewards",days:"DAYS",hours:"HOURS",mins:"MINUTES",secs:"SECONDS",
-      presale_title:"Pre-Sale — Countdown",presale_lead:"Get ready for ZUZU pre-sale! **Limited allocation**, community price.",
-      amount:"Amount (ZUZU)",cost:"Cost:",buy:"Buy",exchanges:"Supported Exchanges",
-      stake_title:"Stake Pro — Lock, Earn, Get NFT ✨",stake_lead:"Lock your ZUZU, earn **APY + NFT BOOST**.",
-      token_title:"Tokenomics (Visualized)",road_title:"Roadmap"},
   tr:{nav_presale:"Ön Satış",nav_stake:"Stake",nav_nft:"NFT Ödülleri",nav_roadmap:"Yol Haritası",nav_token:"Tokonomi",connect:"Cüzdan Bağla",
       hero_badge:"Ön Satış • Stake ile NFT Kazan",hero_title:"ZUZU — Geleceğin Robotic Kirpisi 🦔⚡",hero_lead:"Stake et ve **ZUZU Maskot NFT** kazan. Sınırlı arz, yüksek **utility**.",
       cta_stake:"Stake Etmeye Başla",cta_nft:"NFT Ödülleri",days:"GÜN",hours:"SAAT",mins:"DAKİKA",secs:"SANİYE",
@@ -37,41 +37,14 @@ const I = {
       amount:"Miktar (ZUZU)",cost:"Maliyet:",buy:"Satın Al",exchanges:"Desteklenen Borsalar",
       stake_title:"Stake Pro — Kilitle, Kazan, NFT Kap ✨",stake_lead:"ZUZU’larını kilitle, **APY + NFT BOOST** ile kazan.",
       token_title:"Tokonomi (Görsel)",road_title:"Yol Haritası"},
-  fr:{nav_presale:"Pré-vente",nav_stake:"Stake",nav_nft:"Récompenses NFT",nav_roadmap:"Feuille de route",nav_token:"Tokenomics",connect:"Connecter le Wallet",
-      hero_badge:"Pré-vente • Stake pour gagner un NFT",hero_title:"ZUZU — Hérisson Robotique 🦔⚡",hero_lead:"Stake et gagne un **NFT Mascotte ZUZU**.",
-      cta_stake:"Commencer le Stake",cta_nft:"Récompenses NFT",days:"JOURS",hours:"HEURES",mins:"MINUTES",secs:"SECONDES",
-      presale_title:"Pré-vente — Compte à rebours",presale_lead:"Prépare-toi pour la pré-vente ZUZU ! **Allocation limitée**.",
-      amount:"Montant (ZUZU)",cost:"Coût :",buy:"Acheter",exchanges:"Bourses prises en charge",
-      stake_title:"Stake Pro — Verrouille, Gagne, Reçois un NFT ✨",stake_lead:"Verrouille ton ZUZU et gagne **APY + BOOST NFT**.",
-      token_title:"Tokenomics (Visualisé)",road_title:"Feuille de route"},
-  pt:{nav_presale:"Pré-venda",nav_stake:"Stake",nav_nft:"Recompensas NFT",nav_roadmap:"Roteiro",nav_token:"Tokenomics",connect:"Conectar Carteira",
-      hero_badge:"Pré-venda • Stake para ganhar NFT",hero_title:"ZUZU — Ouriço Robótico 🦔⚡",hero_lead:"Faça stake e ganhe **NFT Mascote ZUZU**.",
-      cta_stake:"Começar Stake",cta_nft:"Recompensas NFT",days:"DIAS",hours:"HORAS",mins:"MINUTOS",secs:"SEGUNDOS",
-      presale_title:"Pré-venda — Contagem regressiva",presale_lead:"Prepare-se para a pré-venda ZUZU! **Alocação limitada**.",
-      amount:"Quantidade (ZUZU)",cost:"Custo:",buy:"Comprar",exchanges:"Exchanges suportadas",
-      stake_title:"Stake Pro — Trave, Ganhe, Receba NFT ✨",stake_lead:"Trave seu ZUZU e ganhe **APY + BOOST NFT**.",
-      token_title:"Tokenomics (Visualizado)",road_title:"Roteiro"},
-  ru:{nav_presale:"Предпродажа",nav_stake:"Стейкинг",nav_nft:"NFT награды",nav_roadmap:"Дорожная карта",nav_token:"Токеномика",connect:"Подключить кошелёк",
-      hero_badge:"Предпродажа • Стейкинг для NFT",hero_title:"ЗУЗУ — Робо-Ёж 🦔⚡",hero_lead:"Стейкай и получай **маскот NFT ZUZU**.",
-      cta_stake:"Начать стейкинг",cta_nft:"NFT награды",days:"ДНИ",hours:"ЧАСЫ",mins:"МИН.",secs:"СЕК.",
-      presale_title:"Предпродажа — Обратный отсчёт",presale_lead:"Готовься к предпродаже ZUZU! **Ограниченная аллокация**.",
-      amount:"Количество (ZUZU)",cost:"Стоимость:",buy:"Купить",exchanges:"Поддерживаемые биржи",
-      stake_title:"Stake Pro — Заморозь, Заработай, Получи NFT ✨",stake_lead:"Заморозь ZUZU и получай **APY + NFT BOOST**.",
-      token_title:"Токеномика (визуально)",road_title:"Дорожная карта"},
-  es:{nav_presale:"Pre-venta",nav_stake:"Stake",nav_nft:"Recompensas NFT",nav_roadmap:"Hoja de ruta",nav_token:"Tokenomics",connect:"Conectar Billetera",
-      hero_badge:"Pre-venta • Stake para ganar NFT",hero_title:"ZUZU — Erizo Robótico 🦔⚡",hero_lead:"Haz stake y gana **NFT Mascota ZUZU**.",
-      cta_stake:"Empezar Stake",cta_nft:"Recompensas NFT",days:"DÍAS",hours:"HORAS",mins:"MINUTOS",secs:"SEGUNDOS",
-      presale_title:"Pre-venta — Cuenta regresiva",presale_lead:"¡Prepárate para la pre-venta ZUZU! **Asignación limitada**.",
-      amount:"Cantidad (ZUZU)",cost:"Costo:",buy:"Comprar",exchanges:"Exchanges compatibles",
-      stake_title:"Stake Pro — Bloquea, Gana, Obtén NFT ✨",stake_lead:"Bloquea tu ZUZU y gana **APY + BOOST NFT**.",
-      token_title:"Tokenomics (Visualizado)",road_title:"Hoja de ruta"}
+  en:{connect:"Connect Wallet"} // (diğer diller mevcut koddan kısaltıldı)
 };
 
 /* helpers */
 const $  = (q, root=document) => root.querySelector(q);
 const $$ = (q, root=document) => [...root.querySelectorAll(q)];
 
-/* Lang */
+/* Lang (kısaltılmış) */
 function applyLang(lang){
   localStorage.setItem(CONFIG.LS_LANG, lang);
   $("#langCode") && ($("#langCode").textContent = lang.toUpperCase());
@@ -82,7 +55,7 @@ function applyLang(lang){
   });
 }
 (function initLang(){
-  const saved = localStorage.getItem(CONFIG.LS_LANG) || "en";
+  const saved = localStorage.getItem(CONFIG.LS_LANG) || "tr";
   applyLang(saved);
   const langBtn=$("#langBtn"), langMenu=$("#langMenu");
   if(langBtn && langMenu){
@@ -96,18 +69,18 @@ function applyLang(lang){
   }
 })();
 
-/* ========================= Countdown (her zaman bugünden +60 gün) ========================= */
+/* ========================= Countdown (+60 gün) ========================= */
 function storageKey(){ return `${CONFIG.launchKey}:${CONFIG.launchKeyVersion}`; }
 function ensureFutureTs(ts){
   const now = Date.now();
-  const minTarget = now + CONFIG.defaultCountdownDays*24*3600*1000; // +60 gün
+  const minTarget = now + CONFIG.defaultCountdownDays*24*3600*1000;
   if(!ts || isNaN(ts) || ts < now) return minTarget;
   return ts;
 }
 function getLaunchAt(){
   const url = new URL(location.href);
   let raw = localStorage.getItem(storageKey());
-  if(url.searchParams.get("resetcd")==="1") raw = null; // manuel sıfırlama
+  if(url.searchParams.get("resetcd")==="1") raw = null;
   let ts = raw ? parseInt(raw,10) : NaN;
   ts = ensureFutureTs(ts);
   localStorage.setItem(storageKey(), ts.toString());
@@ -150,7 +123,7 @@ updateCosts();
     </div>`).join("");
 })();
 
-/* ========================= Invite link ========================= */
+/* ========================= Referans link ========================= */
 (function refLink(){
   const url = new URL(location.href);
   if(url.searchParams.get("ref")) localStorage.setItem("zuzu_refAddr", url.searchParams.get("ref"));
@@ -163,45 +136,32 @@ updateCosts();
   });
 })();
 
-/* ========================= Wallets (Phantom + Solflare) ========================= */
+/* ========================= Wallets (EVM: MetaMask + Phantom) ========================= */
 const IS_MOBILE = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent||"");
 
-const Wallets = {
-  phantom:{
-    key:'phantom', label:'Phantom', icon:'assets/images/wallets/phantom.png',
-    has:()=> !!(window.phantom?.solana?.isPhantom || window.solana?.isPhantom),
-    provider:()=> window.phantom?.solana || window.solana,
-    async connect(){
-      const p=this.provider(); if(!p) throw new Error("no provider");
-      try{ const r=await p.connect({ onlyIfTrusted:true }); if(r?.publicKey) return r.publicKey.toString(); }catch(_){}
-      const r2=await p.connect(); return (r2?.publicKey||p.publicKey).toString();
-    },
-    deeplink:(url)=>`https://phantom.app/ul/browse/${encodeURIComponent(url)}?network=${encodeURIComponent(CONFIG.cluster)}`
-  },
-  solflare:{
-    key:'solflare', label:'Solflare', icon:'assets/images/wallets/solflare.png',
-    has:()=> !!(window.solflare?.isSolflare || typeof window.solflare?.connect==="function"),
-    provider:()=> window.solflare,
-    async connect(){
-      const p=this.provider(); if(!p) throw new Error("no provider");
-      try{ const r=await p.connect({ onlyIfTrusted:true }); if(r?.publicKey) return r.publicKey.toString(); }catch(_){}
-      const r2=await p.connect(); return (r2?.publicKey||p.publicKey).toString();
-    },
-    deeplink:(url)=>`https://solflare.com/ul/v1/browse/${encodeURIComponent(url)}?network=${encodeURIComponent(CONFIG.cluster)}`
+function pickEvmProvider(){
+  const eth = window.ethereum;
+  if(!eth) return null;
+  const providers = eth.providers || [];
+  if(providers.length){
+    const phantom = providers.find(p=>p.isPhantom);
+    if(phantom) return phantom;
+    const metamask = providers.find(p=>p.isMetaMask);
+    if(metamask) return metamask;
+    return providers[0];
   }
-};
-
-let CURRENT_ADDRESS = null;
-let CURRENT_WALLET  = null;
+  return eth;
+}
 
 function walletListHTML(){
-  return Object.values(Wallets).map(w=>`
-    <button class="wbtn" data-key="${w.key}">
-      <img src="${w.icon}" alt="${w.label}" width="22" height="22"
-           onerror="this.onerror=null; this.src='assets/images/wallets/${w.key}.svg'">
-      <span>${w.label}</span>
-    </button>`).join("");
+  return `
+    <button class="wbtn" data-key="metamask"><img src="assets/images/wallets/metamask.png" alt="MetaMask" width="22" height="22"><span>MetaMask</span></button>
+    <button class="wbtn" data-key="phantom"><img src="assets/images/wallets/phantom.png" alt="Phantom" width="22" height="22"><span>Phantom</span></button>
+  `;
 }
+
+let CURRENT_ADDRESS = null;
+let CURRENT_PROVIDER = null;
 
 (function initWalletUI(){
   const modal = $("#walletModal");
@@ -213,24 +173,43 @@ function walletListHTML(){
   if(list) list.innerHTML = walletListHTML();
 
   // önceki oturum
-  const savedAddr   = localStorage.getItem(CONFIG.LS_ADDR);
-  const savedWallet = localStorage.getItem(CONFIG.LS_WALLET);
-  if(savedAddr && savedWallet){
-    onConnected(savedWallet, savedAddr, {silent:true});
-  } else {
-    setBuyButtonsEnabled(false);
-  }
+  const savedAddr = localStorage.getItem(CONFIG.LS_ADDR);
+  if(savedAddr){ onConnected(savedAddr, {silent:true}); } else { setBuyButtonsEnabled(false); }
 
   // connect
-  btnConnect?.addEventListener("click", ()=>{
-    const direct = Wallets.phantom.has() ? Wallets.phantom : (Wallets.solflare.has() ? Wallets.solflare : null);
-    if(direct){ connectFlow(direct.key); }
-    else { modal?.classList.add("show"); modal?.removeAttribute("hidden"); }
+  btnConnect?.addEventListener("click", async ()=>{
+    const provider = pickEvmProvider();
+    if(provider){
+      try{
+        await ensurePolygon(provider);
+        const accounts = await provider.request({ method:'eth_requestAccounts' });
+        const addr = accounts?.[0];
+        if(!addr) throw new Error("No account");
+        CURRENT_PROVIDER = provider;
+        onConnected(addr);
+      }catch(e){
+        console.error(e); alert("Wallet connection failed or rejected.");
+      }
+    } else {
+      modal?.classList.add("show"); modal?.removeAttribute("hidden");
+    }
   });
 
-  // list
-  list?.addEventListener("click", (e)=>{
-    const btn = e.target.closest(".wbtn"); if(!btn) return; connectFlow(btn.dataset.key);
+  // list click (fallback)
+  list?.addEventListener("click", async ()=>{
+    const provider = pickEvmProvider();
+    if(!provider){ alert("EVM cüzdanı bulunamadı. MetaMask/Phantom ile aç."); return; }
+    try{
+      await ensurePolygon(provider);
+      const accounts = await provider.request({ method:'eth_requestAccounts' });
+      const addr = accounts?.[0];
+      if(!addr) throw new Error("No account");
+      CURRENT_PROVIDER = provider;
+      onConnected(addr);
+      modal?.classList.remove("show"); modal?.setAttribute("hidden","");
+    }catch(e){
+      console.error(e); alert("Wallet connection failed or rejected.");
+    }
   });
 
   // close / backdrop
@@ -239,87 +218,127 @@ function walletListHTML(){
 
   // disconnect
   btnDisconnect?.addEventListener("click", async ()=>{
-    try{ await Wallets[CURRENT_WALLET]?.provider()?.disconnect?.(); }catch{}
-    CURRENT_ADDRESS=null; CURRENT_WALLET=null;
+    CURRENT_ADDRESS=null; CURRENT_PROVIDER=null;
     localStorage.removeItem(CONFIG.LS_ADDR);
-    localStorage.removeItem(CONFIG.LS_WALLET);
-    $("#connectBtn") && ($("#connectBtn").textContent = I[(localStorage.getItem(CONFIG.LS_LANG)||"en")].connect || "Connect Wallet");
+    $("#connectBtn") && ($("#connectBtn").textContent = I[(localStorage.getItem(CONFIG.LS_LANG)||"tr")].connect || "Connect Wallet");
     setBuyButtonsEnabled(false);
     alert("Disconnected.");
   });
 })();
 
-async function connectFlow(key){
-  const impl = Wallets[key]; if(!impl) return;
-  const modal = $("#walletModal");
-  const nowUrl = location.origin + location.pathname;
-
-  if(!IS_MOBILE && impl.has()){
-    try{
-      const addr = await impl.connect();
-      onConnected(key, addr); modal?.classList.remove("show"); modal?.setAttribute("hidden","");
-      return;
-    }catch(e){
-      alert("Wallet connection rejected or failed."); return;
-    }
+async function ensurePolygon(provider){
+  try{
+    await provider.request({ method:'wallet_switchEthereumChain', params:[{ chainId: CONFIG.chainIdHex }] });
+  }catch(err){
+    if(err?.code === 4902){
+      await provider.request({ method:'wallet_addEthereumChain', params:[{
+        chainId: CONFIG.chainIdHex,
+        chainName: CONFIG.chainName,
+        nativeCurrency: { name:'MATIC', symbol:'MATIC', decimals:18 },
+        rpcUrls: CONFIG.rpcUrls,
+        blockExplorerUrls: CONFIG.blockExplorerUrls
+      }]});
+    }else{ throw err; }
   }
-  // Mobil veya provider yok → cüzdan içi tarayıcı
-  modal?.classList.remove("show"); modal?.setAttribute("hidden","");
-  sessionStorage.setItem("zuzu_await_wallet","1");
-  window.open(impl.deeplink(nowUrl), "_blank");
 }
 
-function onConnected(key, addr, opts={}){
-  CURRENT_ADDRESS = addr; CURRENT_WALLET = key;
+function onConnected(addr, opts={}){
+  CURRENT_ADDRESS = addr;
   localStorage.setItem(CONFIG.LS_ADDR, addr);
-  localStorage.setItem(CONFIG.LS_WALLET, key);
   $("#connectBtn") && ($("#connectBtn").textContent = `${addr.slice(0,6)}...${addr.slice(-4)}`);
   $("#disconnectBtn") && ($("#disconnectBtn").style.display = "inline-flex");
   setBuyButtonsEnabled(true);
-  if(!opts.silent) console.log("Connected:", key, addr);
+  if(!opts.silent) console.log("Connected:", addr);
 }
 
-/* ========================= Satın alma (Backend oranı + Solana Pay) ========================= */
-function activeWeek(){ return 0; } // şu an Week 1 aktif varsayıldı
+/* ========================= BUY FLOW ========================= */
+function activeWeek(){ return 0; } // İstersen tarih tabanlı hale getiririz.
+
 ["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{
   const b = $("#"+id); if(!b) return; b.addEventListener("click", ()=>handleBuy(i));
 });
+
 function setBuyButtonsEnabled(ok){
   ["buyW0","buyW1","buyW2","buyW3"].forEach(id=>{
     const b = document.getElementById(id); if(!b) return;
     b.disabled = !ok; b.style.opacity = ok ? "1" : ".5"; b.style.pointerEvents = ok ? "auto" : "none";
   });
 }
+
+function parseAmountTo6Decimals(num){
+  const s = String(num);
+  if(!/^[0-9]+(\.[0-9]+)?$/.test(s)) return 0n;
+  const [intPart, fracPartRaw=''] = s.split('.');
+  const frac = (fracPartRaw + '000000').slice(0,6);
+  return BigInt(intPart) * 1000000n + BigInt(frac);
+}
+
+function encodeERC20Transfer(to, amountBigInt){
+  // transfer(address,uint256)
+  const fn = "a9059cbb";
+  const addr = to.toLowerCase().replace(/^0x/, '').padStart(64,'0');
+  const amt  = amountBigInt.toString(16).padStart(64,'0');
+  return "0x" + fn + addr + amt;
+}
+
 async function handleBuy(weekIdx){
   const qty = parseFloat(($("#buyAmount")?.value||"0").toString().replace(/[^\d.]/g,""))||0;
-  if(qty<=0){ alert("Enter a valid amount."); return; }
-  if(weekIdx!==activeWeek()){ alert("This week is not active."); return; }
-  if(!CURRENT_ADDRESS){ alert("Connect wallet first (Phantom or Solflare)."); return; }
+  if(qty<=0){ alert("Geçerli miktar gir."); return; }
+  if(weekIdx!==activeWeek()){ alert("Bu hafta henüz aktif değil."); return; }
+  if(!CURRENT_ADDRESS || !CURRENT_PROVIDER){ alert("Önce cüzdan bağla (MetaMask/Phantom)."); return; }
 
   const price = CONFIG.weekPrices[weekIdx];
   const usdtCost = qty * price;
+  const payMethod = $("#payWith")?.value || "USDT_POLYGON";
 
   try{
-    // backend'den SOL miktarını al
-    const q = await fetch(`${CONFIG.backendUrl}/api/quote?usdt=${usdtCost}`).then(r=>r.json());
-    const solAmount = Number(q.sol).toFixed(6);
+    await ensurePolygon(CURRENT_PROVIDER);
 
-    // Solana Pay URI — cüzdanlar otomatik yakalar
-    const params = new URLSearchParams({
-      amount: solAmount,
-      reference: CURRENT_ADDRESS,
-      label: "ZUZUCOIN Presale",
-      message: "ZUZU presale payment"
-    });
-    const solanaPayUrl = `solana:${encodeURIComponent(CONFIG.treasury)}?${params.toString()}&network=${encodeURIComponent(CONFIG.cluster)}`;
-    try{ window.open(solanaPayUrl, "_blank"); }catch{ location.href = solanaPayUrl; }
+    if(payMethod === "USDT_POLYGON"){
+      // Doğrudan USDT transfer → Treasury
+      const usdtAmount = parseAmountTo6Decimals(usdtCost.toFixed(6));
+      if(usdtAmount <= 0n){ alert("Tutar çok küçük."); return; }
+      const data = encodeERC20Transfer(CONFIG.PRESALE_TREASURY, usdtAmount);
+      const tx = { from: CURRENT_ADDRESS, to: CONFIG.USDT_POLYGON, data, value: "0x0" };
+      const txHash = await CURRENT_PROVIDER.request({ method:'eth_sendTransaction', params:[tx] });
+      alert(`Payment sent!\nTX: ${txHash}`);
+    } else if (payMethod === "MATIC"){
+      // MATIC ile öde → 0x ile swap, çıkış USDT doğrudan Treasury'ye
+      const buyAmount = parseAmountTo6Decimals(usdtCost.toFixed(6)).toString(); // USDT 6d
+      const params = new URLSearchParams({
+        buyToken: "USDT",
+        sellToken: "MATIC",
+        buyAmount,                        // hedef USDT miktarı
+        takerAddress: CURRENT_ADDRESS,    // tx gönderen
+        recipient: CONFIG.PRESALE_TREASURY, // USDT'nin gideceği adres (hazinede toplanır)
+        slippagePercentage: "0.02"        // %2 tolerans
+      });
+      const url = `${CONFIG.ZEROX_BASE}/swap/v1/quote?${params.toString()}`;
+      const quote = await fetch(url).then(r=>r.json());
+
+      if(quote?.to && quote?.data){
+        const tx = {
+          from: CURRENT_ADDRESS,
+          to: quote.to,
+          data: quote.data,
+          value: quote.value || "0x0", // MATIC miktarı (hex)
+          gas: quote.gas,              // bazı cüzdanlar gas'ı kendisi hesaplar, yoksa bu alanı bırakabilirsin
+        };
+        const txHash = await CURRENT_PROVIDER.request({ method:'eth_sendTransaction', params:[tx] });
+        alert(`Swap+Pay sent!\nTX: ${txHash}`);
+      }else{
+        console.error(quote);
+        alert("Swap teklifi alınamadı. Daha sonra tekrar dene.");
+      }
+    }
+    // TODO: backend’e satın alma kaydı ping (opsiyonel)
   }catch(e){
     console.error(e);
-    alert("Quote failed. Backend URL doğru mu çalışıyor mu kontrol et.");
+    alert("Ödeme reddedildi veya başarısız.");
   }
 }
 
-/* ========================= Ticker görünür nudge ========================= */
+/* ========================= Ticker nudge ========================= */
 (function ensureTickerVisible(){
   const t=$("#exTrack"); if(!t) return; t.style.transform="translateX(0)";
   setTimeout(()=>t.style.transform="", 60);
