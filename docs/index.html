@@ -111,20 +111,38 @@
       Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high <b>utility</b>.
     </p>
 
-    <!-- CTA + COUNTDOWN -->
-    <div class="hero-row">
-      <div class="cta">
-        <a href="#stake" class="btn primary" data-i="cta_stake">Start Staking</a>
-        <a href="#nft"   class="btn ghost"   data-i="cta_nft">NFT Rewards</a>
-      </div>
+    /* ===== Countdown: tek satır, modern görünüm ===== */
+.countdown{
+  display:flex; gap:10px; align-items:stretch;
+  overflow-x:auto; padding:6px 2px; -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.countdown::-webkit-scrollbar{ display:none; }
 
-      <div class="countdown">
-        <div class="flip"><div id="cdD" class="num">00</div><small data-i="days">DAYS</small></div>
-        <div class="flip"><div id="cdH" class="num">00</div><small data-i="hours">HOURS</small></div>
-        <div class="flip"><div id="cdM" class="num">00</div><small data-i="mins">MINUTES</small></div>
-        <div class="flip"><div id="cdS" class="num">00</div><small data-i="secs">SECONDS</small></div>
-      </div>
-    </div>
+.flip{
+  flex:0 0 92px;
+  background:linear-gradient(180deg,#15253f,#0f1b33);
+  border:1px solid #24385f; border-radius:14px;
+  box-shadow:inset 0 -36px 60px rgba(0,0,0,.18), 0 6px 18px rgba(0,0,0,.18);
+  text-align:center; position:relative;
+}
+.flip:before{
+  content:""; position:absolute; inset:0;
+  background:radial-gradient(120px 40px at 50% -10%,rgba(130,160,255,.25),transparent 60%);
+  border-radius:inherit; pointer-events:none;
+}
+.flip .num{font-size:1.9rem;font-weight:800;padding:.65rem 0;color:#eaf2ff;letter-spacing:1px}
+.flip small{
+  display:block; color:#a6bcdf; border-top:1px solid #203458;
+  padding:.35rem 0 .55rem; font-weight:800; letter-spacing:1px;
+}
+
+/* ===== Exchanges ticker ===== */
+.ticker{overflow:hidden;border:1px solid #1a2b4c;border-radius:16px;background:#0f1a30;padding:8px;margin-top:14px}
+.ticker__track{display:flex;gap:22px;align-items:center;animation:z-scroll 32s linear infinite;min-width:max-content}
+.ticker__item img{height:40px;width:auto;opacity:.95;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
+@keyframes z-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(max-width:720px){.ticker{padding:6px}.ticker__item img{height:28px}}
 
     <!-- Big logo/visual -->
     <div class="hero-visual">
