@@ -2,24 +2,24 @@
    CONFIG
 ========================= */
 const CONFIG = {
-  // SABİT LAUNCH: 24 Kasım 2025 13:00 (TR, UTC+3)
-  LAUNCH_ISO: "2025-11-24T13:00:00+03:00",
+  // SABİT LAUNCH: 23 Kasım 2025 Pazar 13:00 (TR, UTC+3)
+  LAUNCH_ISO: "2025-11-23T13:00:00+03:00",
 
-  // 4x15 gün
   WEEK_DAYS: 15,
-
-  // Fiyatlar (USDT)
   weekPrices: [0.040, 0.060, 0.080, 0.100],
 
-  // EVM
   POLYGON_CHAINID: "0x89",
-  USDT: "0xC2132D05D31c914a87C6611C10748AEb04B58e8F", // Polygon USDT (6 decimals)
+  USDT: "0xC2132D05D31c914a87C6611C10748AEb04B58e8F", // Polygon USDT (6)
   TREASURY: "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",
 
-  // LS keys
   LS_LANG: "zuzu_lang",
+  LS_REF_SELF: "zuzu_ref_self",
+  LS_REF_COUNT: "zuzu_ref_count"
 };
 
+/* =========================
+   i18n
+========================= */
 const I = {
   en:{nav_presale:"Pre-Sale",nav_stake:"Stake",nav_nft:"NFT Rewards",nav_roadmap:"Roadmap",nav_token:"Tokenomics",connect:"Connect Wallet",
       hero_badge:"Pre-Sale • Stake to Win NFT",hero_title:"ZUZU — Robotic Hedgehog 🦔⚡",
@@ -94,8 +94,8 @@ function applyLang(lang){
   }
 })();
 
-/* Countdown — sabit tarih */
-const LAUNCH = Date.parse(CONFIG.LAUNCH_ISO); // ms
+/* ========== Countdown — sabit tarih ========== */
+const LAUNCH = Date.parse(CONFIG.LAUNCH_ISO);
 function tick(){
   const left = Math.max(0, LAUNCH - Date.now());
   const d=Math.floor(left/86400000);
@@ -103,10 +103,11 @@ function tick(){
   const m=Math.floor((left%3600000)/60000);
   const s=Math.floor((left%60000)/1000);
   const pad=n=>n.toString().padStart(2,"0");
-  $("#cdDays")?.( $("#cdDays").textContent = pad(d) );
-  $("#cdHours")?.( $("#cdHours").textContent = pad(h) );
-  $("#cdMins")?.( $("#cdMins").textContent  = pad(m) );
-  $("#cdSecs")?.( $("#cdSecs").textContent  = pad(s) );
+  const dEl=$("#cdDays"),hEl=$("#cdHours"),mEl=$("#cdMins"),sEl=$("#cdSecs");
+  if(dEl) dEl.textContent=pad(d);
+  if(hEl) hEl.textContent=pad(h);
+  if(mEl) mEl.textContent=pad(m);
+  if(sEl) sEl.textContent=pad(s);
 }
 tick(); setInterval(tick,1000);
 
@@ -133,7 +134,7 @@ function activeWeekIndex(now=Date.now()){
   if(now>=W2_START && now<W3_START) return 1;
   if(now>=W3_START && now<W4_START) return 2;
   if(now>=W4_START && now<=W_END)   return 3;
-  return -1;
+  return -1; // presale dışı
 }
 function highlightWeek(){
   const idx = activeWeekIndex();
@@ -149,22 +150,40 @@ function updateCost(){
   const idx = activeWeekIndex();
   const price = CONFIG.weekPrices[Math.max(0,idx)];
   const cost = qty * price;
-  $("#costUSDT")&&( $("#costUSDT").textContent = cost.toLocaleString(undefined,{maximumFractionDigits:2}) );
+  const el=$("#costUSDT"); if(el) el.textContent = cost.toLocaleString(undefined,{maximumFractionDigits:2});
 }
 $("#buyAmount")?.addEventListener("input", updateCost);
 updateCost();
 
-/* Invite link */
-(function refLink(){
+/* ========== Invite & Earn (frontend) ========== */
+(function referralsInit(){
+  // ref ziyaret
   const url = new URL(location.href);
-  if(url.searchParams.get("ref")) localStorage.setItem("zuzu_refAddr", url.searchParams.get("ref"));
-  const addr = localStorage.getItem("zuzu_refAddr") || "";
-  const out = $("#refLink"); const copyBtn = $("#copyRef");
-  if(out){ out.value = `${location.origin}${location.pathname}?ref=${addr||"YOURCODE"}`; }
-  copyBtn?.addEventListener("click", ()=>{ navigator.clipboard.writeText(out.value); alert("Copied!"); });
+  const incoming = url.searchParams.get("ref");
+  if(incoming){
+    // basit sayaç: her yeni kişi gelen kişinin sayacını localStorage'ta artırır (demo)
+    const key = `${CONFIG.LS_REF_COUNT}:${incoming}`;
+    const prev = parseInt(localStorage.getItem(key)||"0",10);
+    localStorage.setItem(key, String(prev+1));
+  }
+
+  // kendi ref kodu
+  let selfCode = localStorage.getItem(CONFIG.LS_REF_SELF);
+  if(!selfCode){
+    selfCode = (Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-4)).toUpperCase();
+    localStorage.setItem(CONFIG.LS_REF_SELF, selfCode);
+  }
+  const out=$("#refLink");
+  if(out) out.value = `${location.origin}${location.pathname}?ref=${selfCode}`;
+  $("#copyRef")?.addEventListener("click", ()=>{ navigator.clipboard.writeText(out.value); alert("Copied!"); });
+
+  // sayım
+  const myCount = parseInt(localStorage.getItem(`${CONFIG.LS_REF_COUNT}:${selfCode}`)||"0",10);
+  $("#refCount")&&( $("#refCount").textContent = myCount );
+  $("#refBonus")&&( $("#refBonus").textContent = (myCount*250).toLocaleString() );
 })();
 
-/* NFT grid (12 adet) */
+/* ========== NFT grid (12 adet) ========== */
 (function renderNFTs(){
   const g=$("#nftGrid"); if(!g) return;
   g.innerHTML = Array.from({length:12}).map((_,i)=>`
@@ -188,7 +207,6 @@ async function ensurePolygon(){
     try{
       await provider.send("wallet_switchEthereumChain",[ { chainId: CONFIG.POLYGON_CHAINID } ]);
     }catch(e){
-      // add chain
       await provider.send("wallet_addEthereumChain",[{
         chainId: CONFIG.POLYGON_CHAINID,
         chainName: "Polygon Mainnet",
@@ -207,8 +225,13 @@ async function connectWallet(){
   await ensurePolygon();
   signer = provider.getSigner();
   userAddress = await signer.getAddress();
-  $("#connectBtn").textContent = `${userAddress.slice(0,6)}...${userAddress.slice(-4)}`;
-  $("#disconnectBtn").style.display = "inline-flex";
+  const btn=$("#connectBtn");
+  if(btn) btn.textContent = `${userAddress.slice(0,6)}...${userAddress.slice(-4)}`;
+  const d=$("#disconnectBtn"); if(d) d.style.display="inline-flex";
+
+  // ref linki adresinle güncelle (daha profesyonel)
+  localStorage.setItem(CONFIG.LS_REF_SELF, userAddress);
+  const out=$("#refLink"); if(out) out.value = `${location.origin}${location.pathname}?ref=${userAddress}`;
 }
 $("#connectBtn")?.addEventListener("click", connectWallet);
 $("#disconnectBtn")?.addEventListener("click", ()=>{ provider=null; signer=null; userAddress=null; $("#connectBtn").textContent = I[(localStorage.getItem(CONFIG.LS_LANG)||"en")].connect || "Connect Wallet"; $("#disconnectBtn").style.display="none"; });
@@ -219,6 +242,7 @@ async function buyNow(){
   const pay = $("#payWith")?.value || "USDT";
   const idx = activeWeekIndex();
   if(idx<0){ alert("Presale is not active yet."); return; }
+  if(!qty || qty<=0){ alert("Enter a valid amount."); return; }
   if(!userAddress){ await connectWallet(); if(!userAddress) return; }
 
   const price = CONFIG.weekPrices[idx];
@@ -227,12 +251,12 @@ async function buyNow(){
   await ensurePolygon();
 
   if(pay==="MATIC"){
-    // basit MATIC transfer (USDT yerine MATIC ödemek isteyenler için)
-    const valueWei = ethers.utils.parseEther((usdtCost/0.5).toFixed(6)); // NOT: oran örnek — gerçek MATIC/USDT oranı için backend gerekir
+    // DEMO oran: 1 MATIC ≈ 0.5 USDT varsayımı (backend yoksa)
+    const valueWei = ethers.utils.parseEther((usdtCost/0.5).toFixed(6));
     const tx = await signer.sendTransaction({ to: CONFIG.TREASURY, value: valueWei });
     alert("Sent. TX: "+tx.hash);
   }else{
-    // USDT transfer(to, amount)
+    // USDT transfer
     const usdtAbi = ["function transfer(address to,uint256 amount) returns (bool)","function decimals() view returns (uint8)"];
     const usdt = new ethers.Contract(CONFIG.USDT, usdtAbi, signer);
     const decimals = await usdt.decimals(); // 6
