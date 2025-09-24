@@ -15,18 +15,16 @@ a{color:#b8c7ff;text-decoration:none}
 .brand{display:flex;gap:.6rem;align-items:center;font-weight:800;letter-spacing:.3px}
 .brand img{width:40px;height:40px;border-radius:10px}
 
-/* Tabs (mobil küçük + sarma + kaydırma) */
-.tabs{display:flex;gap:8px;flex-wrap:wrap;overflow-x:auto;scrollbar-width:none}
+/* Sekmeler: tek satır + yatay kaydırma */
+.tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;white-space:nowrap;align-items:center}
 .tabs::-webkit-scrollbar{display:none}
-.tab{background:#15243f;border:1px solid #20365c;border-radius:12px;padding:.45rem .7rem;font-weight:700;font-size:14px;white-space:nowrap}
+.tab{background:#15243f;border:1px solid #20365c;border-radius:12px;padding:.44rem .66rem;font-weight:700;font-size:14px}
 .tab.ghost{background:#101a2e}
 .tab:hover{background:#1d2f51}
-@media(max-width:640px){
-  .tab{font-size:12px;padding:.35rem .55rem}
-}
+@media(max-width:640px){.tab{font-size:12px;padding:.34rem .54rem}}
 
 /* Buttons */
-.z-btn{display:inline-flex;gap:.5rem;align-items:center;border:0;border-radius:12px;padding:.7rem 1rem;font-weight:700;cursor:pointer}
+.z-btn{display:inline-flex;gap:.5rem;align-items:center;border:0;border-radius:12px;padding:.7rem 1rem;font-weight:700;cursor:pointer;white-space:nowrap}
 .z-btn.small{padding:.45rem .7rem}
 .z-btn-primary{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#08101d}
 .z-btn-ghost{background:#12203a;color:#cfe2ff}
@@ -68,16 +66,16 @@ a{color:#b8c7ff;text-decoration:none}
 .input{width:100%;padding:.7rem;border-radius:12px;background:#0f1c33;border:1px solid #23395d;color:var(--txt)}
 .z-chip-row{display:flex;gap:.5rem;flex-wrap:wrap}
 
-/* Presale Overview */
+/* Presale */
 .presale-overview{display:flex;gap:14px;flex-wrap:wrap}
 .presale-timeline{display:grid;grid-template-columns:repeat(4,minmax(130px,1fr));gap:10px;flex:1 1 420px}
 .wk{background:#0f1a30;border:1px solid #1d2d50;border-radius:14px;padding:12px}
 .wk h4{margin:0 0 6px}
 .wk .date{color:#9fb2da;font-size:.9rem;margin-bottom:6px}
 .wk.active{outline:2px solid #6a8cff}
-
-/* Chart (yatay) */
 .presale-info{flex:1 1 420px;display:grid;gap:12px}
+
+/* Yatay bar grafiği */
 .chart{background:#0f1a30;border:1px solid #1d2d50;border-radius:14px;padding:12px}
 .chart-head{color:#aecdff;margin-bottom:10px;font-weight:700}
 .chart-bars{display:flex;gap:10px;align-items:center}
@@ -85,7 +83,7 @@ a{color:#b8c7ff;text-decoration:none}
 .bar small{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-weight:800}
 
 /* Buy compact */
-.buybox.compact .inline{display:grid;grid-template-columns:1.4fr .9fr .9fr;gap:8px}
+.buybox.compact .inline{display:grid;grid-template-columns:1.2fr .9fr .9fr;gap:8px}
 @media(max-width:560px){.buybox.compact .inline{grid-template-columns:1fr 1fr;grid-auto-rows:auto}}
 .costline{margin-top:6px}
 
@@ -98,8 +96,8 @@ a{color:#b8c7ff;text-decoration:none}
 .stake-card .tier.silver{color:#cfe6ff}
 .stake-card .tier.gold{color:#ffd77c}
 
-/* NFT grid */
-.nft-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+/* NFT */
+.nft-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
 @media(max-width:1024px){.nft-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:700px){.nft-grid{grid-template-columns:repeat(2,1fr)}}
 .nft{background:#0f1a30;border:1px solid #1d2d50;border-radius:14px;overflow:hidden}
@@ -125,17 +123,3 @@ a{color:#b8c7ff;text-decoration:none}
 .z-footer{border-top:1px solid #15243f;padding:16px 0;color:#9cb6e6}
 .between{display:flex;justify-content:space-between}
 .center-v{align-items:center}
-
-/* Modal */
-.modal{position:fixed;inset:0;display:none;align-items:flex-end;background:rgba(2,8,20,.6);backdrop-filter:saturate(120%) blur(4px);z-index:60}
-.modal.show{display:flex}
-.sheet{width:100%;background:#0f1828;border-top-left-radius:18px;border-top-right-radius:18px;padding:18px 16px 22px;box-shadow:0 -10px 30px rgba(0,0,0,.35)}
-.wlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.wbtn{display:flex;align-items:center;gap:10px;background:#142136;border:1px solid #21314f;border-radius:14px;padding:10px 12px;cursor:pointer}
-.wbtn img{width:22px;height:22px}
-.wbtn:hover{border-color:#415c8f}
-.wm-row{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:10px}
-
-/* Invite */
-.invite .invite-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:8px}
-.invite .stats{display:flex;gap:16px;margin-top:8px;color:#cfe2ff}
