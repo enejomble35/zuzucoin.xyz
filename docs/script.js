@@ -1,3 +1,131 @@
+/* ====== QUICK FIX: image fallback + daha sağlam EVM wallet detect/connect ====== */
+
+/* helpers */
+const $ = (q,root=document)=>root.querySelector(q);
+const $$ = (q,root=document)=>[...root.querySelectorAll(q)];
+
+/* 1) Img fallback: eğer img 404 olursa inline SVG / harf göster */
+function ensureImgFallback(selector, fallbackHTML){
+  $$(selector).forEach(img=>{
+    if(!img) return;
+    // if already replaced skip
+    if(img.dataset.fallbackApplied) return;
+    img.onerror = function(){
+      try{
+        const wrapper = document.createElement('span');
+        wrapper.className = 'zph'; // style already inlined in index.html
+        wrapper.innerHTML = fallbackHTML;
+        img.replaceWith(wrapper);
+      }catch(e){ console.warn('fallback failed', e); }
+    };
+    // also check quickly if image is broken already (cached 404)
+    setTimeout(()=>{ if(img.naturalWidth === 0){ img.onerror(); img.dataset.fallbackApplied = "1"; } }, 300);
+  });
+}
+
+/* specify selectors and fallback content (can be single-letter or small svg) */
+ensureImgFallback('img#brandLogo', '<strong style="font-size:16px">Z</strong>');
+ensureImgFallback('.z-sbtn img[alt="X"], .z-chip img[alt="X"]', '<svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M21 3L7 17l-4 1 1-4L17 3z"/></svg>');
+ensureImgFallback('.z-sbtn img[alt="Telegram"], img[alt="Telegram"]', '<svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M2 12l7-2 3 2 6-7-16 17z"/></svg>');
+ensureImgFallback('.wbtn img[alt="MetaMask"]', '<span style="font-weight:800">MM</span>');
+ensureImgFallback('.wbtn img[alt="Phantom"]', '<span style="font-weight:800">P</span>');
+ensureImgFallback('.logo-big', '<div style="width:220px;height:220px;display:flex;align-items:center;justify-content:center;">Z</div>');
+/* Additional generic fallback for any other missing image */
+ensureImgFallback('img', '<span style="font-weight:700">?</span>');
+
+/* 2) Daha sağlam EVM provider pick ve connect (MetaMask + Phantom EVM fallback + mobile deeplink) */
+function pickEvmProvider(){
+  // prefer injected providers, handle multiple-provider injection
+  if(window.ethereum){
+    if(Array.isArray(window.ethereum.providers)){
+      // MetaMask + other wallets
+      const mm = window.ethereum.providers.find(p=>p.isMetaMask);
+      const ph = window.ethereum.providers.find(p=>p.isPhantom);
+      return mm || ph || window.ethereum.providers[0];
+    }
+    return window.ethereum;
+  }
+  // Phantom has separate global (older solana). EVM Phantom might also inject as window.phantom?.ethereum
+  if(window.phantom && window.phantom.ethereum) return window.phantom.ethereum;
+  return null;
+}
+
+/* Switch to polygon network (tries switch, otherwise tries add) */
+async function ensurePolygon(provider){
+  const chainHex = '0x89';
+  try{
+    await provider.request({ method: 'wallet_switchEthereumChain', params:[{ chainId: chainHex }] });
+    return;
+  }catch(e){
+    try{
+      await provider.request({ method:'wallet_addEthereumChain', params:[{
+        chainId: chainHex,
+        chainName: 'Polygon Mainnet',
+        nativeCurrency:{name:'MATIC', symbol:'MATIC', decimals:18},
+        rpcUrls:['https://polygon-rpc.com'],
+        blockExplorerUrls:['https://polygonscan.com']
+      }]});
+      return;
+    }catch(err){
+      console.warn('could not switch/add polygon', err);
+      throw err;
+    }
+  }
+}
+
+/* Improved connect flow - attach to your connect button */
+async function improvedConnectFlow(){
+  const btn = $('#connectBtn');
+  const modal = $('#walletModal');
+  const provider = pickEvmProvider();
+
+  if(provider && !/Android|iPhone|iPad|iPod/i.test(navigator.userAgent||"")){
+    // desktop direct connect
+    try{
+      await ensurePolygon(provider);
+      const accs = await provider.request({ method: 'eth_requestAccounts' });
+      const addr = accs && accs[0];
+      if(addr){
+        localStorage.setItem('zuzu_connected_addr', addr);
+        btn.textContent = `${addr.slice(0,6)}...${addr.slice(-4)}`;
+        document.dispatchEvent(new CustomEvent('zuzu:connected',{detail:{addr}}));
+        // enable buy buttons etc. (your existing onConnected handler can be used)
+      } else {
+        alert('No accounts returned by wallet.');
+      }
+    }catch(err){
+      console.error('connect failed', err);
+      alert('Wallet connection failed. Tarayıcıda MetaMask/Phantom açık mı?');
+    }
+    return;
+  }
+
+  // mobile or no provider: open modal so user can deeplink
+  if(modal){
+    modal.classList.add('show'); modal.removeAttribute('hidden');
+  }
+}
+
+/* wire up connect button quickly (safe - doesn't override existing complex flow) */
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', ()=>{ $('#connectBtn')?.addEventListener('click', improvedConnectFlow); });
+}else{
+  $('#connectBtn')?.addEventListener('click', improvedConnectFlow);
+}
+
+/* 3) console diagnostics:  show missing assets 404s (monitor) */
+window.addEventListener('error', function(e){
+  try{
+    if(e.target && e.target.tagName === 'IMG'){
+      console.warn('Image load error (fallback applied):', e.target.src);
+    } else {
+      console.error('JS error', e.error || e.message || e);
+    }
+  }catch(_){}
+}, true);
+
+/* end of quick-fix block */
+
 /* ========================= CONFIG (Polygon + EVM) ========================= */
 const CONFIG = {
   chainIdHex: "0x89", // Polygon mainnet
