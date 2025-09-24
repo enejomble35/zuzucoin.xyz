@@ -1,68 +1,95 @@
 <!doctype html>
-<html lang="en">
+<html lang="tr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ZUZUCOIN — Claim Portal</title>
-  <link rel="icon" type="image/png" href="assets/images/favicon.png">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ZUZU — Claim Portal (Polygon)</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<header class="z-nav">
-  <div class="z-container z-nav-inner">
-    <a class="brand" href="/"><img src="assets/images/logo.png" alt="ZUZU"><span>ZUZUCOIN</span></a>
-    <nav class="z-menu">
-      <a href="index.html#presale">Pre-Sale</a>
-      <a href="index.html#stake">Stake</a>
-      <a href="index.html#nft">NFT</a>
-      <a href="index.html#tokenomics">Tokenomics</a>
-      <button id="connectBtn" class="z-btn z-btn-primary">Connect Wallet</button>
-    </nav>
-  </div>
-</header>
-
-<main class="z-section">
-  <div class="z-container">
-    <div class="section-head">
-      <h2>Claim Portal</h2>
-      <p class="muted">Connect wallet to see claimable ZUZU/NFT. (Demo)</p>
+  <header class="z-nav">
+    <div class="z-container z-nav-inner">
+      <div class="brand">
+        <img src="assets/images/branding/zuzu-logo.png" alt="ZUZU" width="40" height="40">
+        <span>Claim Portal</span>
+      </div>
+      <nav class="z-menu">
+        <a href="index.html" class="z-chip">← Back</a>
+        <button id="connectBtn" class="z-btn z-btn-primary">Connect Wallet</button>
+      </nav>
     </div>
+  </header>
 
-    <div class="card">
-      <div id="claimState" class="muted">Not connected</div>
-      <div style="margin-top:10px">
-        <button id="claimBtn" class="z-btn z-btn-primary" disabled>Claim</button>
+  <main class="z-section">
+    <div class="z-container">
+      <div class="card">
+        <h2>Claim Your ZUZU</h2>
+        <p class="muted">Network: Polygon • Token: <a target="_blank" href="https://polygonscan.com/token/0xfEe7dd881255EE85b7D6FeAF778e10988486AFc2">View on Explorer ↗</a></p>
+
+        <div id="addr" style="margin:8px 0 14px"></div>
+
+        <div class="buy">
+          <input id="proofInput" class="input" placeholder="Merkle proof JSON (varsa)">
+          <button id="checkBtn" class="z-btn z-btn-ghost">Check Allocation</button>
+          <button id="claimBtn" class="z-btn z-btn-primary">Claim</button>
+        </div>
+
+        <div id="status" class="muted" style="margin-top:10px"></div>
       </div>
     </div>
-  </div>
-</main>
+  </main>
 
-<!-- same modal -->
-<div id="walletModal" class="modal" aria-hidden="true">
-  <div class="sheet">
-    <div class="wm-row">
-      <h3 style="margin:0">Connect Wallet</h3>
-      <button id="wmClose" class="z-btn z-btn-ghost small">✕</button>
-    </div>
-    <div id="wlist" class="wlist" style="margin-top:10px"></div>
-    <div class="wm-row" style="margin-top:12px">
-      <small style="color:#8aa2c9">Mobile: tap Phantom or Solflare.</small>
-      <button id="disconnectBtn" class="z-btn z-btn-ghost small" style="display:none">Disconnect</button>
-    </div>
-  </div>
-</div>
+  <script>
+  const CONFIG = {
+    chainIdHex: "0x89",
+    rpcUrls: ["https://polygon-rpc.com"],
+    CLAIM_CONTRACT: "0xYOUR_CLAIM_CONTRACT", // TODO
+    ZUZU_TOKEN: "0xfEe7dd881255EE85b7D6FeAF778e10988486AFc2"
+  };
+  const CLAIM_ABI = [
+    // TODO: kendi ABI’nı ekle (ör: function claim(bytes32[] proof,uint256 amount))
+  ];
 
-<script src="script.js"></script>
-<script>
-  // ufak demo: bağlanınca buton aktif, adresi göster
-  const el = document.getElementById('claimState');
-  function syncClaimUI(){
-    const a = localStorage.getItem('zuzu_connected_addr');
-    if(a){ el.textContent = `Connected: ${a.slice(0,6)}...${a.slice(-4)}`; claimBtn.disabled=false; }
-    else { el.textContent = 'Not connected'; claimBtn.disabled=true; }
+  const $ = (q,root=document)=>root.querySelector(q);
+  let provider, addr;
+
+  async function ensurePolygon(p){
+    try{
+      await p.request({ method:'wallet_switchEthereumChain', params:[{ chainId: CONFIG.chainIdHex }] });
+    }catch(err){
+      if(err?.code===4902){
+        await p.request({ method:'wallet_addEthereumChain', params:[{
+          chainId: CONFIG.chainIdHex, chainName:'Polygon Mainnet',
+          nativeCurrency:{name:'MATIC',symbol:'MATIC',decimals:18},
+          rpcUrls: CONFIG.rpcUrls, blockExplorerUrls:['https://polygonscan.com']
+        }]});
+      }else{ throw err; }
+    }
   }
-  syncClaimUI(); window.addEventListener('focus', syncClaimUI);
-  document.getElementById('claimBtn').onclick = ()=>alert('Claim demo: backend mint/airdrop entegrasyonu eklenecek.');
-</script>
+
+  async function connect(){
+    const eth = window.ethereum; if(!eth){ alert("EVM wallet yok."); return; }
+    await ensurePolygon(eth);
+    const a = await eth.request({ method:'eth_requestAccounts' });
+    addr = a?.[0]; provider = eth;
+    $("#addr").textContent = `Connected: ${addr.slice(0,6)}...${addr.slice(-4)}`;
+    $("#connectBtn").textContent = `${addr.slice(0,6)}...${addr.slice(-4)}`;
+  }
+
+  async function checkAlloc(){
+    // Buraya kendi backend kontrolünü koyabilirsin (addr => amount, claimed?)
+    $("#status").textContent = "Allocation kontrolü için backend/merkle verisi gerekli.";
+  }
+
+  async function doClaim(){
+    if(!provider || !addr){ await connect(); }
+    // Basit örnek (ethers kullanmadan raw tx): ABI gerekiyorsa ethers v6 ekleyebilirsin.
+    alert("Claim fonksiyonu için kontrat adresi ve ABI ekleyiniz.");
+  }
+
+  $("#connectBtn")?.addEventListener("click", connect);
+  $("#checkBtn")?.addEventListener("click", checkAlloc);
+  $("#claimBtn")?.addEventListener("click", doClaim);
+  </script>
 </body>
 </html>
