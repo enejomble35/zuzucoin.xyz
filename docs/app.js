@@ -1,144 +1,86 @@
-/* =========================
-   CONFIG
-========================= */
+/* ====== CONFIG (Polygon + Backend) ====== */
 const CONFIG = {
-  // Sabit: 23 Kasım 2025 Pazar 13:00 (TR)
-  LAUNCH_ISO: "2025-11-23T13:00:00+03:00",
+  // sabit lansman: 23 Kasım 13:00 (TRT +03:00)
+  launchAt: Date.parse("2025-11-23T13:00:00+03:00"),
 
-  WEEK_DAYS: 15,
+  // weeks (USDT)
   weekPrices: [0.040, 0.060, 0.080, 0.100],
 
-  POLYGON_CHAINID: "0x89",
-  USDT: "0xC2132D05D31c914a87C6611C10748AEb04B58e8F", // Polygon USDT (6)
-  TREASURY: "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",
+  // Polygon
+  CHAIN_ID_HEX: "0x89", // 137
+  CHAIN_PARAMS: {
+    chainId: "0x89",
+    chainName: "Polygon Mainnet",
+    nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },
+    rpcUrls: ["https://polygon-rpc.com"],
+    blockExplorerUrls: ["https://polygonscan.com"]
+  },
 
-  LS_LANG: "zuzu_lang",
-  LS_REF_SELF: "zuzu_ref_self",
-  LS_REF_COUNT: "zuzu_ref_count"
+  // senin adreslerin
+  TREASURY: "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", // örnek
+  ZUZU_TOKEN: "0x0000000000000000000000000000000000000000", // token adresini koy
+  USDT_TOKEN: "0xC2132D05D31c914a87C6611C10748AaCbC5329Ed", // Polygon USDT
+
+  // backend (USDT -> MATIC çevirimi için)
+  backendUrl: "https://SENIN-BACKEND-URLIN" // /api/quote?usdt=xx -> {matic: "x.y"}
 };
 
-/* =========================
-   i18n (TR+EN ana; diğerleri hazır)
-========================= */
+/* ====== helpers ====== */
+const $  = (q, r=document) => r.querySelector(q);
+const $$ = (q, r=document) => [...r.querySelectorAll(q)];
+const pad = n => n.toString().padStart(2,"0");
+
+/* ====== i18n (kısa) ====== */
 const I = {
   tr:{nav_presale:"Ön Satış",nav_stake:"Stake",nav_nft:"NFT Ödülleri",nav_roadmap:"Yol Haritası",nav_token:"Tokonomi",connect:"Cüzdan Bağla",
       hero_badge:"Ön Satış • Stake ile NFT Kazan",hero_title:"ZUZU — Geleceğin Robotic Kirpisi 🦔⚡",
       hero_lead:"Stake et ve <b>ZUZU Maskot NFT</b> kazan. Sınırlı arz, yüksek <b>utility</b>.",
       cta_stake:"Stake Etmeye Başla",cta_nft:"NFT Ödülleri",days:"GÜN",hours:"SAAT",mins:"DAKİKA",secs:"SANİYE",
-      presale_title:"Ön Satış — Geri Sayım",presale_lead:"ZUZU ön satışına hazır ol! <b>Sınırlı tahsis</b>, topluluğa özel fiyat.",
+      presale_title:"Pre-Sale — Tek Kart Görünüm",presale_lead:"ZUZU ön satışına hazır ol! <b>Sınırlı tahsis</b>, topluluğa özel fiyat.",
       stake_title:"Stake Pro — Kilitle, Kazan, NFT Kap ✨",stake_lead:"ZUZU’larını kilitle, <b>APY + NFT BOOST</b> ile kazan.",
-      token_title:"Tokonomi (Görsel)",road_title:"Yol Haritası"},
+      token_title:"Tokonomi (Görsel)"},
   en:{nav_presale:"Pre-Sale",nav_stake:"Stake",nav_nft:"NFT Rewards",nav_roadmap:"Roadmap",nav_token:"Tokenomics",connect:"Connect Wallet",
       hero_badge:"Pre-Sale • Stake to Win NFT",hero_title:"ZUZU — Robotic Hedgehog 🦔⚡",
       hero_lead:"Stake and win <b>ZUZU Maskot NFT</b>. Limited supply, high <b>utility</b>.",
       cta_stake:"Start Staking",cta_nft:"NFT Rewards",days:"DAYS",hours:"HOURS",mins:"MINUTES",secs:"SECONDS",
-      presale_title:"Pre-Sale — Countdown",presale_lead:"Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.",
-      stake_title:"Stake Pro — Lock, Earn, Get NFT ✨",stake_lead:"Lock your ZUZU, earn <b>APY + NFT BOOST</b>.",
-      token_title:"Tokenomics (Visualized)",road_title:"Roadmap"}
+      presale_title:"Pre-Sale — Single Card",presale_lead:"Get ready for ZUZU pre-sale! <b>Limited allocation</b>."}
 };
-const $  = (q, r=document)=>r.querySelector(q);
-const $$ = (q, r=document)=>[...r.querySelectorAll(q)];
 
-/* Lang */
 function applyLang(lang){
-  localStorage.setItem(CONFIG.LS_LANG, lang);
+  localStorage.setItem("zuzu_lang", lang);
   $("#langCode").textContent = lang.toUpperCase();
   $("#langFlag").src = `flags/${lang}.png`;
   $$("[data-i]").forEach(el=>{
-    const k=el.getAttribute("data-i"); if(I[lang]?.[k]) el.innerHTML = I[lang][k];
+    const k = el.getAttribute("data-i");
+    if(I[lang] && I[lang][k]) el.innerHTML = I[lang][k];
   });
 }
 (function initLang(){
-  const saved = localStorage.getItem(CONFIG.LS_LANG) || "tr";
+  const saved = localStorage.getItem("zuzu_lang") || "tr";
   applyLang(saved);
-  const langBtn=$("#langBtn"), menu=$("#langMenu");
-  langBtn.addEventListener("click",(e)=>{ e.stopPropagation(); menu.classList.toggle("show"); });
-  $$(".lang-opt").forEach(b=>b.addEventListener("click",(e)=>{ e.stopPropagation(); applyLang(b.dataset.lang); menu.classList.remove("show"); }));
-  document.addEventListener("click",(e)=>{ if(!menu.contains(e.target) && e.target!==langBtn) menu.classList.remove("show"); });
+  const btn=$("#langBtn"), menu=$("#langMenu");
+  btn.addEventListener("click",(e)=>{e.stopPropagation(); menu.classList.toggle("show");});
+  $$(".lang-opt").forEach(b=>b.addEventListener("click",(e)=>{e.stopPropagation();applyLang(b.dataset.lang);menu.classList.remove("show");}));
+  document.addEventListener("click",(e)=>{ if(!menu.contains(e.target) && e.target!==btn) menu.classList.remove("show"); });
 })();
 
-/* ===== Countdown (sabit) ===== */
-const LAUNCH = Date.parse(CONFIG.LAUNCH_ISO);
+/* ====== countdown (sabit tarih bozulmaz) ====== */
 function tick(){
-  const left = Math.max(0, LAUNCH - Date.now());
+  const left = Math.max(0, CONFIG.launchAt - Date.now());
   const d=Math.floor(left/86400000);
   const h=Math.floor((left%86400000)/3600000);
   const m=Math.floor((left%3600000)/60000);
   const s=Math.floor((left%60000)/1000);
-  const pad=n=>n.toString().padStart(2,"0");
-  $("#cdDays").textContent=pad(d);
-  $("#cdHours").textContent=pad(h);
-  $("#cdMins").textContent=pad(m);
-  $("#cdSecs").textContent=pad(s);
+  $("#cdDays").textContent  = pad(d);
+  $("#cdHours").textContent = pad(h);
+  $("#cdMins").textContent  = pad(m);
+  $("#cdSecs").textContent  = pad(s);
 }
 tick(); setInterval(tick,1000);
 
-/* ===== Presale tarihleri (4×15 gün) ===== */
-const START = LAUNCH - (60*24*3600*1000);
-const W1_START = START;
-const W2_START = W1_START + CONFIG.WEEK_DAYS*86400000;
-const W3_START = W2_START + CONFIG.WEEK_DAYS*86400000;
-const W4_START = W3_START + CONFIG.WEEK_DAYS*86400000;
-const W_END    = LAUNCH;
-
-function fmtRange(a,b){
-  const A=new Date(a), B=new Date(b-86400000);
-  const f=(d)=>d.toLocaleDateString('tr-TR',{day:'2-digit',month:'short'});
-  return `${f(A)} — ${f(B)}`;
-}
-$("#w1d").textContent = fmtRange(W1_START, W2_START);
-$("#w2d").textContent = fmtRange(W2_START, W3_START);
-$("#w3d").textContent = fmtRange(W3_START, W4_START);
-$("#w4d").textContent = fmtRange(W4_START, W_END);
-
-function activeWeekIndex(now=Date.now()){
-  if(now>=W1_START && now<W2_START) return 0;
-  if(now>=W2_START && now<W3_START) return 1;
-  if(now>=W3_START && now<W4_START) return 2;
-  if(now>=W4_START && now<=W_END)   return 3;
-  return -1;
-}
-function highlightWeek(){
-  const idx = activeWeekIndex();
-  ["wk1","wk2","wk3","wk4"].forEach((id,i)=>$("#"+id).classList.toggle("active", i===idx));
-  $("#activeW").textContent = idx>=0?`W${idx+1}`:"—";
-}
-highlightWeek(); setInterval(highlightWeek,60000);
-
-/* Maliyet */
-function updateCost(){
-  const qty = parseFloat(($("#buyAmount").value||"0").toString().replace(/[^\d.]/g,""))||0;
-  const idx = Math.max(0, activeWeekIndex());
-  const price = CONFIG.weekPrices[idx];
-  $("#costUSDT").textContent = (qty*price).toLocaleString(undefined,{maximumFractionDigits:2});
-}
-$("#buyAmount").addEventListener("input", updateCost); updateCost();
-
-/* ===== Invite & Earn (frontend demo) ===== */
-(function referralsInit(){
-  const url = new URL(location.href);
-  const incoming = url.searchParams.get("ref");
-  if(incoming){
-    const key = `${CONFIG.LS_REF_COUNT}:${incoming}`;
-    const prev = parseInt(localStorage.getItem(key)||"0",10);
-    localStorage.setItem(key,String(prev+1));
-  }
-  // kendi kodu (adres yoksa random)
-  let selfCode = localStorage.getItem(CONFIG.LS_REF_SELF);
-  if(!selfCode){
-    selfCode = (Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-4)).toUpperCase();
-    localStorage.setItem(CONFIG.LS_REF_SELF,selfCode);
-  }
-  $("#refLink").value = `${location.origin}${location.pathname}?ref=${selfCode}`;
-  $("#copyRef").addEventListener("click", ()=>{ navigator.clipboard.writeText($("#refLink").value); alert("Kopyalandı"); });
-  const myCount = parseInt(localStorage.getItem(`${CONFIG.LS_REF_COUNT}:${selfCode}`)||"0",10);
-  $("#refCount").textContent = myCount;
-  $("#refBonus").textContent = (myCount*250).toLocaleString();
-})();
-
-/* ===== NFT grid (10 adet) ===== */
+/* ====== NFT grid (10 adet) ====== */
 (function renderNFTs(){
-  const g=$("#nftGrid");
+  const g=$("#nftGrid"); if(!g) return;
   g.innerHTML = Array.from({length:10}).map((_,i)=>`
     <div class="nft">
       <img src="assets/images/mask/${i}.png" alt="ZUZU #${i+1}" loading="lazy"
@@ -147,87 +89,115 @@ $("#buyAmount").addEventListener("input", updateCost); updateCost();
     </div>`).join("");
 })();
 
-/* =========================
-   Wallet (MetaMask / Polygon)
-========================= */
-let provider, signer, userAddress;
+/* ====== Referral ====== */
+(function ref(){
+  const url = new URL(location.href);
+  const ref = url.searchParams.get("ref");
+  if(ref) localStorage.setItem("zuzu_ref", ref);
+  const my = localStorage.getItem("zuzu_my") || "";
+  const out = $("#refLink"); const copy = $("#copyRef");
+  out.value = `${location.origin}${location.pathname}?ref=${my||'YOURCODE'}`;
+  copy.addEventListener("click", ()=>{ navigator.clipboard.writeText(out.value); alert("Kopyalandı"); });
+  const rn=$("#refNote"); const raddr = localStorage.getItem("zuzu_ref");
+  rn.textContent = raddr ? `Aktif ref: ${raddr.slice(0,6)}...${raddr.slice(-4)} (başarılı alış başına +250 ZUZU)` : "Aktif ref yok.";
+})();
 
-function hasMM(){ return typeof window.ethereum!=="undefined"; }
-function dappDeepLink(){
-  // mobilde MetaMask yoksa uygulama içinde siteyi aç
-  const host = location.host; // zuzucoin.xyz
-  return `https://metamask.app.link/dapp/${host}/`;
+/* ====== fiyat/maliyet ====== */
+function activeWeek(){
+  // istersen gerçek tarihle hesaplayabilirsin, şimdilik Week1 aktif
+  return 0;
 }
+function updateCosts(){
+  const qty = parseFloat($("#buyAmount").value||"0")||0;
+  const price = CONFIG.weekPrices[activeWeek()];
+  const usdt = qty * price;
+  $("#costRow").innerHTML = `Seçilen hafta fiyatı: <b>${price.toFixed(3)}</b> USDT — Maliyet ≈ <b>${usdt.toFixed(2)}</b> USDT`;
+}
+$("#buyAmount").addEventListener("input", updateCosts); updateCosts();
+
+/* ====== Wallet (MetaMask / Polygon) ====== */
+let CURRENT_ADDR=null;
+
+function hasMM(){ return typeof window.ethereum !== "undefined"; }
 
 async function ensurePolygon(){
-  const chainId = await provider.send("eth_chainId",[]);
-  if(chainId !== CONFIG.POLYGON_CHAINID){
+  const eth = window.ethereum;
+  const cid = await eth.request({ method:"eth_chainId" });
+  if(cid !== CONFIG.CHAIN_ID_HEX){
     try{
-      await provider.send("wallet_switchEthereumChain",[ { chainId: CONFIG.POLYGON_CHAINID } ]);
+      await eth.request({ method:"wallet_switchEthereumChain", params:[{ chainId: CONFIG.CHAIN_ID_HEX }]});
     }catch(e){
-      await provider.send("wallet_addEthereumChain",[{
-        chainId: CONFIG.POLYGON_CHAINID,
-        chainName: "Polygon Mainnet",
-        rpcUrls: ["https://polygon-rpc.com"],
-        nativeCurrency: { name:"MATIC", symbol:"MATIC", decimals:18 },
-        blockExplorerUrls: ["https://polygonscan.com"]
-      }]);
+      if(e.code===4902){
+        await eth.request({ method:"wallet_addEthereumChain", params:[CONFIG.CHAIN_PARAMS]});
+      }else{ throw e; }
     }
   }
 }
 
-async function connectWallet(){
-  if(!hasMM()){
-    // otomatik MetaMask deep link
-    location.href = dappDeepLink();
-    return;
-  }
-  provider = new ethers.providers.Web3Provider(window.ethereum);
-  await provider.send("eth_requestAccounts",[]);
+async function connectMM(){
+  if(!hasMM()){ alert("MetaMask not found. Please install MetaMask."); return; }
   await ensurePolygon();
-  signer = provider.getSigner();
-  userAddress = await signer.getAddress();
-  $("#connectBtn").textContent = `${userAddress.slice(0,6)}...${userAddress.slice(-4)}`;
+  const [acc] = await ethereum.request({ method:"eth_requestAccounts" });
+  CURRENT_ADDR = acc;
+  localStorage.setItem("zuzu_my", acc);
+  $("#connectBtn").textContent = `${acc.slice(0,6)}...${acc.slice(-4)}`;
   $("#disconnectBtn").style.display="inline-flex";
-
-  // ref linki adresinle güncelle
-  localStorage.setItem(CONFIG.LS_REF_SELF, userAddress);
-  $("#refLink").value = `${location.origin}${location.pathname}?ref=${userAddress}`;
 }
-$("#connectBtn").addEventListener("click", connectWallet);
-$("#disconnectBtn").addEventListener("click", ()=>{
-  provider=null; signer=null; userAddress=null;
-  $("#connectBtn").textContent = I[(localStorage.getItem(CONFIG.LS_LANG)||"tr")].connect || "Cüzdan Bağla";
-  $("#disconnectBtn").style.display="none";
-});
 
-/* BUY */
-async function buyNow(){
-  const qty = parseFloat(($("#buyAmount").value||"0").toString().replace(/[^\d.]/g,""))||0;
-  const pay = $("#payWith").value || "USDT";
-  const idx = activeWeekIndex();
-  if(idx<0){ alert("Presale henüz aktif değil."); return; }
-  if(!qty || qty<=0){ alert("Geçerli miktar gir."); return; }
-  if(!userAddress){ await connectWallet(); if(!userAddress) return; }
+(function initWalletUI(){
+  const btn=$("#connectBtn"), modal=$("#walletModal"), close=$("#wmClose"), mm=$("#mmBtn"), disc=$("#disconnectBtn");
+  btn.addEventListener("click", ()=>{
+    if(hasMM()){ connectMM(); }
+    else { modal.classList.add("show"); }
+  });
+  mm.addEventListener("click", ()=>connectMM().then(()=>modal.classList.remove("show")));
+  close.addEventListener("click", ()=>modal.classList.remove("show"));
+  modal.addEventListener("click",(e)=>{ if(e.target===modal) modal.classList.remove("show"); });
+  disc.addEventListener("click", ()=>{ CURRENT_ADDR=null; $("#connectBtn").textContent=I[localStorage.getItem("zuzu_lang")||"tr"].connect; localStorage.removeItem("zuzu_my"); disc.style.display="none"; });
+})();
 
-  const price = CONFIG.weekPrices[idx];
+/* ====== Buy (backend'ten MATIC kotası + native transfer) ====== */
+async function handleBuy(){
+  const qty  = parseFloat($("#buyAmount").value||"0")||0;
+  if(qty<=0) return alert("Geçerli miktar gir.");
+  if(activeWeek()!==0) return alert("Şu an W1 aktif örnek yapı."); // istersen kaldır
+
+  const price = CONFIG.weekPrices[0];
   const usdtCost = qty * price;
 
-  await ensurePolygon();
+  if(!CURRENT_ADDR){ return alert("Önce MetaMask ile bağlan."); }
 
-  if(pay==="MATIC"){
-    // basit dönüşüm varsayımı: 1 MATIC ≈ 0.5 USDT (backend yoksa)
-    const valueWei = ethers.utils.parseEther((usdtCost/0.5).toFixed(6));
-    const tx = await signer.sendTransaction({ to: CONFIG.TREASURY, value: valueWei });
-    alert("MATIC gönderildi. TX: "+tx.hash);
-  }else{
-    // USDT transfer
-    const usdtAbi = ["function transfer(address to,uint256 amount) returns (bool)","function decimals() view returns (uint8)"];
-    const usdt = new ethers.Contract(CONFIG.USDT, usdtAbi, signer);
-    const decimals = await usdt.decimals(); // 6
-    const amt = ethers.utils.parseUnits(usdtCost.toFixed(decimals), decimals);
-    const t = await usdt.transfer(CONFIG.TREASURY, amt);
-    alert("USDT gönderildi. TX: "+t.hash);
+  // Backend'ten USDT->MATIC çevir ve native transfer başlat
+  let maticAmt = null;
+  try{
+    const r = await fetch(`${CONFIG.backendUrl}/api/quote?usdt=${usdtCost}`).then(x=>x.json());
+    maticAmt = r.matic; // string
+  }catch(e){
+    console.warn("quote fail", e);
+  }
+
+  if(!maticAmt){
+    return alert("Fiyatlandırma servisi ulaşılamadı (backend). Lütfen daha sonra tekrar deneyin.");
+  }
+
+  // native transfer
+  try{
+    const tx = await ethereum.request({
+      method:"eth_sendTransaction",
+      params:[{
+        from: CURRENT_ADDR,
+        to: CONFIG.TREASURY,
+        value: "0x" + BigInt(Math.floor(parseFloat(maticAmt)*1e18)).toString(16),
+      }]
+    });
+    alert("Gönderildi. Tx: "+tx);
+  }catch(e){
+    console.error(e); alert("İşlem iptal/başarısız.");
   }
 }
-$("#buyNow").addEventListener("click", buyNow);
+
+$("#buyBtn").addEventListener("click", handleBuy);
+
+/* ====== küçük iyileştirmeler ====== */
+$("#zuzuAddr").textContent = CONFIG.ZUZU_TOKEN.replace(/(.{6}).+(.{4})/,"$1…$2");
+$("#treasuryAddr").textContent = CONFIG.TREASURY.replace(/(.{6}).+(.{4})/,"$1…$2");
