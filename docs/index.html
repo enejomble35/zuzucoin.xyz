@@ -29,8 +29,15 @@
       <a href="#nft"        class="pill" data-i="nav_nft">NFT Ödülleri</a>
       <a href="#roadmap"    class="pill" data-i="nav_roadmap">Yol Haritası</a>
       <a href="#tokenomics" class="pill" data-i="nav_token">Tokonomi</a>
-      <a href="stake-simulator.html" class="pill ghost">Stake Simulator ↗</a>
-      <a href="claim.html"            class="pill ghost">Claim Portal ↗</a>
+      <a href="stake-simulator.html" class="pill ghost" data-i="nav_sim">Stake Simulator ↗</a>
+      <a href="claim.html"            class="pill ghost" data-i="nav_claim">Claim Portal ↗</a>
+      <!-- sosyal -->
+      <a href="https://x.com/ZUZUCOIN" target="_blank" rel="noopener" class="pill icon-pill" aria-label="X">
+        <img src="assets/images/social/x.svg" alt="X">
+      </a>
+      <a href="https://t.me/ZUZUCOIN" target="_blank" rel="noopener" class="pill icon-pill" aria-label="Telegram">
+        <img src="assets/images/social/telegram.svg" alt="Telegram">
+      </a>
     </nav>
 
     <div class="top-actions">
@@ -63,14 +70,18 @@
       <button id="drawerClose" class="xbtn">✕</button>
     </div>
     <div class="drawer-links">
-      <a href="#about"      class="pill">Hakkımızda</a>
-      <a href="#presale"    class="pill">Ön Satış</a>
-      <a href="#stake"      class="pill">Stake</a>
-      <a href="#nft"        class="pill">NFT Ödülleri</a>
-      <a href="#roadmap"    class="pill">Yol Haritası</a>
-      <a href="#tokenomics" class="pill">Tokonomi</a>
-      <a href="stake-simulator.html" class="pill ghost">Stake Simulator ↗</a>
-      <a href="claim.html"            class="pill ghost">Claim Portal ↗</a>
+      <a href="#about"      class="pill" data-i="nav_about">Hakkımızda</a>
+      <a href="#presale"    class="pill" data-i="nav_presale">Ön Satış</a>
+      <a href="#stake"      class="pill" data-i="nav_stake">Stake</a>
+      <a href="#nft"        class="pill" data-i="nav_nft">NFT Ödülleri</a>
+      <a href="#roadmap"    class="pill" data-i="nav_roadmap">Yol Haritası</a>
+      <a href="#tokenomics" class="pill" data-i="nav_token">Tokonomi</a>
+      <a href="stake-simulator.html" class="pill ghost" data-i="nav_sim">Stake Simulator ↗</a>
+      <a href="claim.html"            class="pill ghost" data-i="nav_claim">Claim Portal ↗</a>
+      <div class="drawer-social">
+        <a href="https://x.com/ZUZUCOIN" target="_blank" rel="noopener" class="pill icon-pill"><img src="assets/images/social/x.svg" alt="X">X</a>
+        <a href="https://t.me/ZUZUCOIN" target="_blank" rel="noopener" class="pill icon-pill"><img src="assets/images/social/telegram.svg" alt="Telegram">Telegram</a>
+      </div>
     </div>
     <div class="drawer-lang">
       <div class="lang-wrap full">
@@ -86,10 +97,14 @@
           <button class="lang-opt" data-lang="es"><img src="flags/es.png">ES</button>
         </div>
       </div>
-      <a href="#presale" class="z-btn wide">Buy $ZUZU</a>
+      <a href="#presale" class="z-btn wide" data-i="buy_cta">Buy $ZUZU</a>
     </div>
   </div>
 </aside>
+
+<!-- sağ altta sosyal sabit -->
+<a class="float-social fs-x" href="https://x.com/ZUZUCOIN" target="_blank" rel="noopener" aria-label="X"></a>
+<a class="float-social fs-tg" href="https://t.me/ZUZUCOIN" target="_blank" rel="noopener" aria-label="Telegram"></a>
 
 <main>
 
@@ -97,8 +112,8 @@
 <section id="about" class="z-section">
   <div class="z-container">
     <div class="section-head">
-      <h2>ZUZU — Robotic Hedgehog 🦔⚡</h2>
-      <p>Topluluk odaklı, NFT utility ve staking ödülleriyle güçlendirilmiş memecoin.</p>
+      <h2 data-i="about_title">ZUZU — Robotic Hedgehog 🦔⚡</h2>
+      <p data-i="about_lead">Topluluk odaklı, NFT utility ve staking ödülleriyle güçlendirilmiş memecoin.</p>
     </div>
   </div>
 </section>
@@ -126,7 +141,7 @@
     </div>
 
     <div class="hero-visual">
-      <img class="logo-big" src="assets/images/branding/zuzu-logo.svg"
+      <img class="logo-big" src="assets/images/branding/zuzu-logo.gif"
            onerror="this.onerror=null;this.src='assets/images/branding/zuzu-logo.png';"
            alt="ZUZU">
     </div>
@@ -157,9 +172,9 @@
             <option value="MATIC">MATIC</option>
             <option value="USDT">USDT (Polygon)</option>
           </select>
-          <button id="buyBtn" class="z-btn z-btn-primary">Buy Now</button>
+          <button id="buyBtn" class="z-btn z-btn-primary" data-i="buy_now">Hemen Satın Al</button>
         </div>
-        <small class="muted">Payments via MetaMask (Polygon). Mobilde MetaMask dApp ile otomatik açılır.</small>
+        <small class="muted" data-i="pay_note">Ödemeler MetaMask (Polygon) ile yapılır. Mobilde MetaMask dApp ile otomatik açılır.</small>
       </div>
 
       <div class="chartcol">
@@ -202,15 +217,15 @@
 
     <!-- Invite & Earn -->
     <div class="card" id="inviteCard" style="margin-top:14px">
-      <h3>Invite & Earn</h3>
-      <p>Her başarılı satın alım için davet edene <b>250 ZUZU</b> bonus verilir. Paylaş:</p>
+      <h3 data-i="invite_title">Invite & Earn</h3>
+      <p data-i="invite_lead">Her başarılı satın alım için davet edene <b>250 ZUZU</b> bonus verilir. Paylaş:</p>
       <input id="refLink" class="input" readonly>
       <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
-        <button id="copyRef" class="z-btn z-btn-ghost">Kopyala</button>
+        <button id="copyRef" class="z-btn z-btn-ghost" data-i="copy">Kopyala</button>
         <a id="shareWA" class="z-btn z-btn-ghost" href="#" target="_blank">WhatsApp</a>
         <a id="shareTG" class="z-btn z-btn-ghost" href="#" target="_blank">Telegram</a>
       </div>
-      <small class="muted">Not: Bonus dağıtımı backend doğrulaması ile yapılır.</small>
+      <small class="muted" data-i="invite_note">Not: Bonus dağıtımı backend doğrulaması ile yapılır.</small>
     </div>
 
   </div>
@@ -239,8 +254,8 @@
 <section id="nft" class="z-section">
   <div class="z-container">
     <div class="section-head">
-      <h2>ZUZU Maskot NFT Rewards 🎁</h2>
-      <p>Stakers win rare NFTs from the collection.</p>
+      <h2 data-i="nft_title">ZUZU Maskot NFT Rewards 🎁</h2>
+      <p data-i="nft_lead">Stakers win rare NFTs from the collection.</p>
     </div>
     <div id="nftGrid" class="nft-grid"></div>
   </div>
@@ -251,7 +266,7 @@
   <div class="z-container">
     <div class="section-head">
       <h2 data-i="token_title">Tokenomics (Visualized)</h2>
-      <p class="muted">Toplam Arz: 500,000,000 ZUZU</p>
+      <p class="muted" data-i="token_supply">Toplam Arz: 500,000,000 ZUZU</p>
     </div>
     <div class="card tk">
       <div>
@@ -283,8 +298,8 @@
 <section id="roadmap" class="z-section">
   <div class="z-container">
     <div class="section-head">
-      <h2>Yol Haritası</h2>
-      <p>Önemli kilometre taşları</p>
+      <h2 data-i="road_title">Yol Haritası</h2>
+      <p data-i="road_lead">Önemli kilometre taşları</p>
     </div>
     <div class="road">
       <div class="mile"><span>Q4 2025</span><b>Lansman</b><br>Presale, CEX listeleri, NFT airdrop.</div>
@@ -301,11 +316,11 @@
   <div class="z-container between center-v">
     <small>© 2025 ZUZUCOIN</small>
     <div class="z-chip-row">
-      <a class="z-chip" href="#about">Hakkımızda</a>
-      <a class="z-chip" href="#presale">Ön Satış</a>
-      <a class="z-chip" href="#stake">Stake</a>
-      <a class="z-chip" href="#nft">NFT</a>
-      <a class="z-chip" href="#tokenomics">Tokonomi</a>
+      <a class="z-chip" href="#about" data-i="nav_about">Hakkımızda</a>
+      <a class="z-chip" href="#presale" data-i="nav_presale">Ön Satış</a>
+      <a class="z-chip" href="#stake" data-i="nav_stake">Stake</a>
+      <a class="z-chip" href="#nft" data-i="nav_nft">NFT</a>
+      <a class="z-chip" href="#tokenomics" data-i="nav_token">Tokonomi</a>
     </div>
   </div>
 </footer>
