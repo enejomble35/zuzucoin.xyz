@@ -21,6 +21,7 @@ img{max-width:100%;display:block}
 .pill{display:inline-flex;align-items:center;gap:.35rem;padding:.45rem .7rem;border-radius:12px;background:#121f35;border:1px solid #1f2f50;white-space:nowrap}
 .pill.ghost{background:#0f1a2c}
 .pill:hover{background:#162544}
+.icon-pill img{width:16px;height:16px;display:block}
 
 .top-actions{display:flex;gap:8px;align-items:center}
 .z-btn{display:inline-flex;gap:.5rem;align-items:center;border:0;border-radius:12px;padding:.6rem 1rem;font-weight:800;cursor:pointer}
@@ -46,9 +47,18 @@ img{max-width:100%;display:block}
 .drawer-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .drawer-links{display:grid;gap:8px}
 .drawer-lang{margin-top:14px;display:grid;gap:10px}
+.drawer-social{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 .xbtn{background:#162744;border:1px solid #2a3c63;border-radius:10px;color:#cfe2ff;padding:.35rem .6rem}
 .lang-btn.full{width:100%;justify-content:center}
 .wide{justify-content:center}
+
+/* floating socials */
+.float-social{position:fixed;right:12px;width:44px;height:44px;border-radius:50%;z-index:60;border:1px solid #28406a;background:#13243f;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.float-social:after{content:"";position:absolute;inset:0;background-size:20px 20px;background-position:center;background-repeat:no-repeat;opacity:.95}
+.fs-x{bottom:84px}
+.fs-x:after{background-image:url("assets/images/social/x.svg")}
+.fs-tg{bottom:28px}
+.fs-tg:after{background-image:url("assets/images/social/telegram.svg")}
 
 /* sections */
 .z-section{padding:36px 0;border-top:1px solid #15243f}
