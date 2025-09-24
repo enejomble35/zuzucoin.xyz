@@ -15,7 +15,7 @@ const CONFIG = {
   launchAtUTC: Date.UTC(2025, 10, 24, 10, 0, 0), // ay 0-index, 10=Kasım; 13:00 TRT = 10:00 UTC
 
   // Presale fiyatları (USDT)
-  weekPrices: [0.0045, 0.0060, 0.0075, 0.0090],
+  weekPrices: [0.040, 0.060, 0.085, 0.01],
 
   // LS keys
   LS_ADDR: "zuzu_connected_addr",
