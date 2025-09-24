@@ -4,7 +4,6 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
-img{max-width:100%;display:block}
 a{color:#b8c7ff;text-decoration:none}
 .z-container{width:min(1200px,92%);margin:0 auto}
 .muted{color:#9ab0d6}
@@ -13,7 +12,7 @@ a{color:#b8c7ff;text-decoration:none}
 .z-nav{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(10,15,25,.9),rgba(10,15,25,.75));backdrop-filter:saturate(1.2) blur(8px);border-bottom:1px solid #16223a}
 .z-nav-inner{display:flex;align-items:center;justify-content:space-between;padding:.7rem 0;gap:10px}
 .brand{display:flex;gap:.6rem;align-items:center;font-weight:800;letter-spacing:.3px}
-.brand img{width:40px;height:40px}
+.brand svg{width:40px;height:40px}
 .z-menu{display:flex;gap:10px;align-items:center;flex-wrap:wrap;row-gap:6px}
 .z-menu a{padding:.45rem .65rem;border-radius:10px;background:transparent;white-space:nowrap}
 .z-menu a:hover{background:#12203a}
@@ -37,7 +36,6 @@ a{color:#b8c7ff;text-decoration:none}
 
 /* Lang menu */
 .lang-wrap{position:relative}
-.lang-wrap img{width:20px;height:20px;border-radius:50%}
 .lang-menu{position:absolute;right:0;top:calc(100% + 6px);background:#0f1828;border:1px solid #1b2a49;border-radius:12px;padding:8px;display:none;z-index:20}
 .lang-menu.show{display:grid}
 .lang-opt{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:#12203a;border:1px solid #22365a;color:#d6e6ff;cursor:pointer}
@@ -76,13 +74,12 @@ a{color:#b8c7ff;text-decoration:none}
 .buy{display:flex;gap:.5rem;margin-top:.6rem}
 .buy .z-btn{flex:1;justify-content:center}
 
-/* Exchanges ticker: KÜÇÜK ve akışkan */
+/* Exchanges ticker */
 .ticker{overflow:hidden;border:1px solid #1a2b4c;border-radius:16px;background:#0f1a30;padding:8px}
 .ticker__track{display:flex;gap:22px;align-items:center;animation:z-scroll 32s linear infinite;min-width:max-content}
-.ticker__item img{height:40px;width:auto;opacity:.95;filter:drop-shadow(0 2px 6px rgba(0,0,0,.25))}
+.ticker__item{font-weight:800;opacity:.95}
 @keyframes z-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .ex-note{color:#8ea7d3;font-style:italic;text-align:center;margin-top:8px}
-@media(max-width:720px){.ticker{padding:6px}.ticker__item img{height:28px}}
 
 /* Stake */
 .stake-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
@@ -93,12 +90,13 @@ a{color:#b8c7ff;text-decoration:none}
 .stake-card .tier.silver{color:#cfe6ff}
 .stake-card .tier.gold{color:#ffd77c}
 
-/* NFT grid */
+/* NFT grid (placeholder kareler) */
 .nft-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
 @media(max-width:1024px){.nft-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:700px){.nft-grid{grid-template-columns:repeat(2,1fr)}}
 .nft{background:#0f1a30;border:1px solid #1d2d50;border-radius:14px;overflow:hidden}
-.nft img{width:100%;aspect-ratio:1/1;object-fit:contain;object-position:center;background:#0b1426;padding:6px;border-bottom:1px solid #1d2d50}
+.nftph{width:100%;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;border-bottom:1px solid #1d2d50;
+  background:linear-gradient(135deg,#9aaeff,#6a8cff);color:#0b1426;font-weight:900;font-size:36px}
 .nft .meta{display:flex;justify-content:space-between;padding:10px}
 .nft .tag{font-size:.75rem;background:#152748;color:#a8c2ff;border:1px solid #274075;border-radius:999px;padding:.25rem .5rem}
 
@@ -127,6 +125,5 @@ a{color:#b8c7ff;text-decoration:none}
 .sheet{width:100%;background:#0f1828;border-top-left-radius:18px;border-top-right-radius:18px;padding:18px 16px 22px;box-shadow:0 -10px 30px rgba(0,0,0,.35)}
 .wlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .wbtn{display:flex;align-items:center;gap:10px;background:#142136;border:1px solid #21314f;border-radius:14px;padding:10px 12px;cursor:pointer}
-.wbtn img{width:22px;height:22px}
 .wbtn:hover{border-color:#415c8f}
 .wm-row{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:10px}
