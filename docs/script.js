@@ -1,24 +1,19 @@
 /* ========================= CONFIG (Polygon + EVM) ========================= */
 const CONFIG = {
   chainIdHex: "0x89", // Polygon mainnet
-  USDT_POLYGON: "0xC2132D05D31c914a87C6611C10748AEB04B58e8F", // USDT (6 decimals)
-  PRESALE_TREASURY: "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3",
-  ZEROX_BASE: "https://polygon.api.0x.org",
-
-  // Countdown
+  USDT_POLYGON: "0xC2132D05D31c914a87C6611C10748AEB04B58e8F", // 6 decimals (example)
+  PRESALE_TREASURY: "0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3", // senin adres
+  ZEROX_BASE: "https://polygon.api.0x.org", // 0x swap API (public)
   launchKey: "zuzu_launchAt",
   launchKeyVersion: "v2",
   defaultCountdownDays: 60,
-
-  // Presale prices (USDT)
   weekPrices: [0.0050, 0.0065, 0.0080, 0.0100],
-
-  // LS
   LS_ADDR: "zuzu_connected_addr",
   LS_LANG: "zuzu_lang"
 };
 
 /* ========================= i18n (EN/TR/FR/PT/RU/ES) ========================= */
+/* (Aynı I nesnesini index.html'deki data-i ile eşleştiriyor; eski I'yi buraya kopyaladım) */
 const I = {
   en:{nav_presale:"Pre-Sale",nav_stake:"Stake",nav_nft:"NFT Rewards",nav_roadmap:"Roadmap",nav_token:"Tokenomics",connect:"Connect Wallet",
       hero_badge:"Pre-Sale • Stake to Win NFT",hero_title:"ZUZU — Robotic Hedgehog 🦔⚡",hero_lead:"Stake and win **ZUZU Maskot NFT**. Limited supply, high **utility**.",
@@ -37,104 +32,106 @@ const I = {
   fr:{nav_presale:"Pré-vente",nav_stake:"Stake",nav_nft:"Récompenses NFT",nav_roadmap:"Feuille de route",nav_token:"Tokenomics",connect:"Connecter le Wallet",
       hero_badge:"Pré-vente • Stake pour gagner un NFT",hero_title:"ZUZU — Hérisson Robotique 🦔⚡",hero_lead:"Stake et gagne un **NFT Mascotte ZUZU**.",
       cta_stake:"Commencer le Stake",cta_nft:"Récompenses NFT",days:"JOURS",hours:"HEURES",mins:"MINUTES",secs:"SECONDES",
-      presale_title:"Pré-vente — Compte à rebours",presale_lead:"Prépare-toi pour la pré-vente ZUZU ! **Allocation limitée**.",
-      amount:"Montant (ZUZU)",cost:"Coût :",buy:"Acheter",exchanges:"Bourses prises en charge",
-      stake_title:"Stake Pro — Verrouille, Gagne, Reçois un NFT ✨",stake_lead:"Verrouille ton ZUZU et gagne **APY + BOOST NFT**.",
-      token_title:"Tokenomics (Visualisé)",road_title:"Feuille de route"},
+      presale_title:"Pré-vente — Compte à rebours",presale_lead:"Prépare-toi pour la pré-vente ZUZU ! **Allocation limitée**."},
   pt:{nav_presale:"Pré-venda",nav_stake:"Stake",nav_nft:"Recompensas NFT",nav_roadmap:"Roteiro",nav_token:"Tokenomics",connect:"Conectar Carteira",
       hero_badge:"Pré-venda • Stake para ganhar NFT",hero_title:"ZUZU — Ouriço Robótico 🦔⚡",hero_lead:"Faça stake e ganhe **NFT Mascote ZUZU**.",
       cta_stake:"Começar Stake",cta_nft:"Recompensas NFT",days:"DIAS",hours:"HORAS",mins:"MINUTOS",secs:"SEGUNDOS",
-      presale_title:"Pré-venda — Contagem regressiva",presale_lead:"Prepare-se para a pré-venda ZUZU! **Alocação limitada**.",
-      amount:"Quantidade (ZUZU)",cost:"Custo:",buy:"Comprar",exchanges:"Exchanges suportadas",
-      stake_title:"Stake Pro — Trave, Ganhe, Receba NFT ✨",stake_lead:"Trave seu ZUZU e ganhe **APY + BOOST NFT**.",
-      token_title:"Tokenomics (Visualizado)",road_title:"Roteiro"},
+      presale_title:"Pré-venda — Contagem regressiva",presale_lead:"Prepare-se para a pré-venda ZUZU! **Alocação limitada**."},
   ru:{nav_presale:"Предпродажа",nav_stake:"Стейкинг",nav_nft:"NFT награды",nav_roadmap:"Дорожная карта",nav_token:"Токеномика",connect:"Подключить кошелёк",
-      hero_badge:"Предпродажа • Стейкинг для NFT",hero_title:"ЗУЗУ — Робо-Ёж 🦔⚡",hero_lead:"Стейкай и получай **маскот NFT ZUZU**.",
-      cta_stake:"Начать стейкинг",cta_nft:"NFT награды",days:"ДНИ",hours:"ЧАСЫ",mins:"МИН.",secs:"СЕК.",
-      presale_title:"Предпродажа — Обратный отсчёт",presale_lead:"Готовься к предпродаже ZUZU! **Ограниченная аллокация**.",
-      amount:"Количество (ZUZU)",cost:"Стоимость:",buy:"Купить",exchanges:"Поддерживаемые биржи",
-      stake_title:"Stake Pro — Заморозь, Заработай, Получи NFT ✨",stake_lead:"Заморозь ZUZU и получай **APY + NFT BOOST**.",
-      token_title:"Токеномика (визуально)",road_title:"Дорожная карта"},
+      hero_badge:"Предпродажа • Стейкинг для NFT",hero_title:"ЗУЗУ — Робо-Ёж 🦔⚡",hero_lead:"Стейкай и получай **маскот NFT ZUZU**."},
   es:{nav_presale:"Pre-venta",nav_stake:"Stake",nav_nft:"Recompensas NFT",nav_roadmap:"Hoja de ruta",nav_token:"Tokenomics",connect:"Conectar Billetera",
-      hero_badge:"Pre-venta • Stake para ganar NFT",hero_title:"ZUZU — Erizo Robótico 🦔⚡",hero_lead:"Haz stake y gana **NFT Mascota ZUZU**.",
-      cta_stake:"Empezar Stake",cta_nft:"Recompensas NFT",days:"DÍAS",hours:"HORAS",mins:"MINUTOS",secs:"SEGUNDOS",
-      presale_title:"Pre-venta — Cuenta regresiva",presale_lead:"¡Prepárate para la pre-venta ZUZU! **Asignación limitada**.",
-      amount:"Cantidad (ZUZU)",cost:"Costo:",buy:"Comprar",exchanges:"Exchanges compatibles",
-      stake_title:"Stake Pro — Bloquea, Gana, Obtén NFT ✨",stake_lead:"Bloquea tu ZUZU y gana **APY + BOOST NFT**.",
-      token_title:"Tokenomics (Visualizado)",road_title:"Hoja de ruta"}
+      hero_badge:"Pre-venta • Stake para ganar NFT",hero_title:"ZUZU — Erizo Robótico 🦔⚡",hero_lead:"Haz stake y gana **NFT Mascota ZUZU**."}
 };
 
 /* helpers */
 const $  = (q, root=document) => root.querySelector(q);
 const $$ = (q, root=document) => [...root.querySelectorAll(q)];
 
-/* Lang */
+/* Lang handling */
 function applyLang(lang){
   localStorage.setItem(CONFIG.LS_LANG, lang);
   $("#langCode") && ($("#langCode").textContent = lang.toUpperCase());
   $("#langFlag") && ($("#langFlag").src = `flags/${lang}.png`);
   $$("[data-i]").forEach(el=>{
-    const k=el.getAttribute("data-i");
+    const k = el.getAttribute("data-i");
     if(I[lang] && I[lang][k]) el.innerHTML = I[lang][k];
   });
 }
 (function initLang(){
   const saved = localStorage.getItem(CONFIG.LS_LANG) || "en";
   applyLang(saved);
-  const langBtn=$("#langBtn"), langMenu=$("#langMenu");
+  const langBtn = $("#langBtn"), langMenu = $("#langMenu");
   if(langBtn && langMenu){
-    langBtn.addEventListener("click", (e)=>{ e.stopPropagation(); langMenu.classList.toggle("show"); });
-    $$(".lang-opt").forEach(b=>b.addEventListener("click", (e)=>{ e.stopPropagation(); applyLang(b.dataset.lang); langMenu.classList.remove("show"); }));
-    document.addEventListener("click", (e)=>{ if(!langMenu?.contains(e.target) && e.target!==langBtn) langMenu?.classList.remove("show"); });
+    langBtn.addEventListener("click", (e)=>{ e.stopPropagation(); langMenu.hidden = !langMenu.hidden; });
+    $$(".lang-opt").forEach(b=>b.addEventListener("click", (e)=>{ e.stopPropagation(); applyLang(b.dataset.lang); langMenu.hidden = true; }));
+    document.addEventListener("click", (e)=>{ if(!langMenu?.contains(e.target) && e.target!==langBtn) langMenu.hidden = true; });
   }
 })();
 
-/* ========================= Countdown (+60 gün sabit) ========================= */
+/* ========================= Countdown (60 gün) ========================= */
 function storageKey(){ return `${CONFIG.launchKey}:${CONFIG.launchKeyVersion}`; }
-function ensureFutureTs(ts){ const now=Date.now(); const minTarget = now + CONFIG.defaultCountdownDays*24*3600*1000; if(!ts || isNaN(ts) || ts < now) return minTarget; return ts; }
-function getLaunchAt(){ const url=new URL(location.href); let raw = localStorage.getItem(storageKey()); if(url.searchParams.get("resetcd")==="1") raw=null; let ts = raw ? parseInt(raw,10) : NaN; ts = ensureFutureTs(ts); localStorage.setItem(storageKey(), ts.toString()); return ts; }
-function tick(){ const left=Math.max(0,getLaunchAt()-Date.now()); const d=Math.floor(left/86400000); const h=Math.floor((left%86400000)/3600000); const m=Math.floor((left%3600000)/60000); const s=Math.floor((left%60000)/1000); const pad=n=>n.toString().padStart(2,"0"); $("#cdDays") && ($("#cdDays").textContent=pad(d)); $("#cdHours") && ($("#cdHours").textContent=pad(h)); $("#cdMins") && ($("#cdMins").textContent=pad(m)); $("#cdSecs") && ($("#cdSecs").textContent=pad(s)); }
+function ensureFutureTs(ts){ const now = Date.now(); const minTarget = now + CONFIG.defaultCountdownDays*24*3600*1000; if(!ts || isNaN(ts) || ts < now) return minTarget; return ts; }
+function getLaunchAt(){
+  const url = new URL(location.href);
+  let raw = localStorage.getItem(storageKey());
+  if(url.searchParams.get("resetcd")==="1") raw = null;
+  let ts = raw ? parseInt(raw,10) : NaN;
+  ts = ensureFutureTs(ts);
+  localStorage.setItem(storageKey(), ts.toString());
+  return ts;
+}
+function tick(){
+  const left = Math.max(0, getLaunchAt() - Date.now());
+  const d=Math.floor(left/86400000), h=Math.floor((left%86400000)/3600000), m=Math.floor((left%3600000)/60000), s=Math.floor((left%60000)/1000);
+  const pad = n=>n.toString().padStart(2,"0");
+  $("#cdDays") && ($("#cdDays").textContent = pad(d));
+  $("#cdHours") && ($("#cdHours").textContent = pad(h));
+  $("#cdMins") && ($("#cdMins").textContent = pad(m));
+  $("#cdSecs") && ($("#cdSecs").textContent = pad(s));
+}
 tick(); setInterval(tick,1000);
 
-/* ========================= Fiyat/maliyet ========================= */
+/* ========================= Price & cost display ========================= */
 function updateCosts(){
   const inp = $("#buyAmount");
   const qty = parseFloat((inp?.value||"0").toString().replace(/[^\d.]/g,""))||0;
   CONFIG.weekPrices.forEach((p,i)=>{
     $("#p"+i) && ($("#p"+i).textContent = p.toFixed(4));
-    $("#c"+i) && ($("#c"+i).textContent = (qty*p).toLocaleString(undefined,{maximumFractionDigits:2}));
+    $("#c"+i) && ($("#c"+i).textContent = (qty*p).toLocaleString(undefined,{maximumFractionDigits:6}));
   });
 }
 $("#buyAmount")?.addEventListener("input", updateCosts);
 updateCosts();
 
-/* ========================= NFT grid (örnek) ========================= */
+/* ========================= NFT grid render ========================= */
 (function renderNFTs(){
   const g=$("#nftGrid"); if(!g) return;
-  g.innerHTML = Array.from({length:10}).map((_,i)=>`
+  // render 12 örnek NFT; resimler yoksa kart gösterilecek
+  const n = 12;
+  g.innerHTML = Array.from({length:n}).map((_,i)=>`
     <div class="nft">
-      <img src="assets/images/mask/${i}.png" alt="ZUZU #${i+1}" loading="lazy"
-           onerror="this.style.display='none'">
+      <img src="assets/images/mask/${i}.png" alt="ZUZU #${i+1}" loading="lazy" onerror="this.style.display='none'">
       <div class="meta"><b>ZUZU #${i+1}</b><span class="tag">${i%5===0?'Legendary':(i%2?'Rare':'Epic')}</span></div>
     </div>`).join("");
 })();
 
-/* ========================= Invite link ========================= */
+/* ========================= Invite link (ref) ========================= */
 (function refLink(){
   const url = new URL(location.href);
   if(url.searchParams.get("ref")) localStorage.setItem("zuzu_refAddr", url.searchParams.get("ref"));
   const addr = localStorage.getItem("zuzu_refAddr") || "";
   const out = $("#refLink"); const copyBtn = $("#copyRef");
-  if(out){ out.value = `${location.origin}${location.pathname}?ref=${addr||"YOURCODE"}`; }
+  if(out) out.value = `${location.origin}${location.pathname}?ref=${addr||"YOURCODE"}`;
   copyBtn?.addEventListener("click", ()=>{ navigator.clipboard.writeText(out.value); alert("Copied!"); });
 })();
 
-/* ========================= Wallets (MetaMask + Phantom EVM) ========================= */
+/* ========================= Wallet integration (MetaMask + Phantom EVM) ========================= */
 const IS_MOBILE = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent||"");
-let CURRENT_ADDRESS = null; let CURRENT_PROVIDER = null;
+let CURRENT_ADDRESS = null, CURRENT_PROVIDER = null;
 
 function pickEvmProvider(){
   if(window.ethereum){
+    // modern multi-provider detection
     const p = window.ethereum;
     if(p.providers && Array.isArray(p.providers)){
       const mm = p.providers.find(x=>x.isMetaMask);
@@ -145,21 +142,23 @@ function pickEvmProvider(){
   }
   return null;
 }
+
 function walletListHTML(){
   return `
     <button class="wbtn" data-key="metamask">
-      <img src="assets/images/wallets/metamask.png" width="22" height="22"
-           onerror="this.outerHTML='<span class=&quot;zph&quot;>MM</span>'"><span>MetaMask</span>
+      <img src="assets/images/wallets/metamask.png" alt="MetaMask" onerror="this.outerHTML='<span class=&quot;zph&quot;>MM</span>'">
+      <span>MetaMask</span>
     </button>
     <button class="wbtn" data-key="phantom">
-      <img src="assets/images/wallets/phantom.png" width="22" height="22"
-           onerror="this.outerHTML='<span class=&quot;zph&quot;>P</span>'"><span>Phantom</span>
+      <img src="assets/images/wallets/phantom.png" alt="Phantom" onerror="this.outerHTML='<span class=&quot;zph&quot;>P</span>'">
+      <span>Phantom</span>
     </button>`;
 }
+
 function setBuyButtonsEnabled(ok){
   ["buyW0","buyW1","buyW2","buyW3"].forEach(id=>{
-    const b=document.getElementById(id); if(!b) return;
-    b.disabled=!ok; b.style.opacity=ok?"1":".5"; b.style.pointerEvents=ok?"auto":"none";
+    const b = document.getElementById(id); if(!b) return;
+    b.disabled = !ok; b.style.opacity = ok ? "1" : ".5"; b.style.pointerEvents = ok ? "auto" : "none";
   });
 }
 
@@ -173,7 +172,7 @@ function setBuyButtonsEnabled(ok){
   if(list) list.innerHTML = walletListHTML();
 
   const savedAddr = localStorage.getItem(CONFIG.LS_ADDR);
-  if(savedAddr){ onConnected(savedAddr,{silent:true}); } else { setBuyButtonsEnabled(false); }
+  if(savedAddr){ onConnected(savedAddr, {silent:true}); } else { setBuyButtonsEnabled(false); }
 
   btnConnect?.addEventListener("click", async ()=>{
     const provider = pickEvmProvider();
@@ -184,10 +183,10 @@ function setBuyButtonsEnabled(ok){
         CURRENT_PROVIDER = provider;
         onConnected(accs[0]);
         modal?.classList.remove("show"); modal?.setAttribute("hidden","");
-      }catch(e){ console.warn(e); alert("Wallet connection rejected or failed."); }
+      }catch(err){ console.warn(err); alert("Wallet connection rejected or failed. Tarayıcıda MetaMask/Phantom yüklü mü kontrol et."); }
       return;
     }
-    // mobil veya provider yok → modal
+    // mobil veya provider yok -> modal aç
     modal?.classList.add("show"); modal?.removeAttribute("hidden");
   });
 
@@ -196,8 +195,14 @@ function setBuyButtonsEnabled(ok){
     const key = btn.dataset.key;
     if(!IS_MOBILE){
       const provider = pickEvmProvider();
-      if(!provider){ alert("Tarayıcıda EVM cüzdanı yok. MetaMask/Phantom içinde aç."); return; }
-      try{ await ensurePolygon(provider); const acc = await provider.request({ method:'eth_requestAccounts' }); onConnected(acc[0]); modal?.classList.remove("show"); modal?.setAttribute("hidden",""); }catch(e){ console.warn(e); alert("Bağlantı hatası."); }
+      if(!provider){ alert("EVM cüzdanı bulunamadı. Lütfen MetaMask veya Phantom'ta açın."); return; }
+      try{
+        await ensurePolygon(provider);
+        const acc = await provider.request({ method:'eth_requestAccounts' });
+        CURRENT_PROVIDER = provider;
+        onConnected(acc[0]);
+        modal?.classList.remove("show"); modal?.setAttribute("hidden","");
+      }catch(e){ console.warn(e); alert("Bağlantı hatası."); }
     } else {
       // mobil deeplink
       if(key==="metamask"){
@@ -220,7 +225,8 @@ async function ensurePolygon(provider){
   try{
     await provider.request({ method:'wallet_switchEthereumChain', params:[{ chainId: CONFIG.chainIdHex }] });
   }catch(err){
-    if(err?.code===4902 || /Unrecognized chain/i.test(err?.message||"")){
+    // chain yoksa ekle
+    try{
       await provider.request({ method:'wallet_addEthereumChain', params:[{
         chainId: CONFIG.chainIdHex,
         chainName: "Polygon Mainnet",
@@ -228,9 +234,10 @@ async function ensurePolygon(provider){
         rpcUrls: ["https://polygon-rpc.com"],
         blockExplorerUrls: ["https://polygonscan.com"]
       }]});
-    }else{ throw err; }
+    }catch(e){ throw e; }
   }
 }
+
 function onConnected(addr, opts={}){
   CURRENT_ADDRESS = addr;
   localStorage.setItem(CONFIG.LS_ADDR, addr);
@@ -240,28 +247,30 @@ function onConnected(addr, opts={}){
   if(!opts.silent) console.log("Connected:", addr);
 }
 
-/* ========================= BUY (USDT veya MATIC→USDT, alıcı: treasury) ========================= */
-function activeWeek(){ return 0; } // şimdilik manuel
-["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{ const b=$("#"+id); if(b) b.addEventListener("click", ()=>handleBuy(i)); });
+/* ========================= BUY logic (USDT transfer or MATIC -> USDT swap) ========================= */
+function activeWeek(){ return 0; } // değiştir istersen: hangi haftanın aktif olduğunu döndür
+["buyW0","buyW1","buyW2","buyW3"].forEach((id,i)=>{ const b=$("#"+id); if(!b) return; b.addEventListener("click", ()=>handleBuy(i)); });
 
-function toUSDT6(n){ return BigInt(Math.round(parseFloat(n)*1e6)); }
+function toUSDT6(n){ // number -> BigInt (6 decimals)
+  return BigInt(Math.round(parseFloat(n)*1e6));
+}
 function encodeERC20Transfer(to, amount6){
-  const fn="a9059cbb"; // transfer(address,uint256)
+  const fn = "a9059cbb"; // transfer(address,uint256)
   const addr = to.toLowerCase().replace(/^0x/,"").padStart(64,"0");
   const amt  = amount6.toString(16).padStart(64,"0");
   return "0x"+fn+addr+amt;
 }
+
 async function handleBuy(weekIdx){
   const qty = parseFloat(($("#buyAmount")?.value||"0").toString().replace(/[^\d.]/g,""))||0;
   if(qty<=0){ alert("Enter a valid amount."); return; }
   if(weekIdx!==activeWeek()){ alert("This week is not active."); return; }
   if(!CURRENT_ADDRESS){ alert("Connect wallet first."); return; }
-
   const price = CONFIG.weekPrices[weekIdx];
   const usdtCost = (qty*price).toFixed(6);
   const payWith = $("#payWith")?.value || "USDT_POLYGON";
   const provider = pickEvmProvider();
-  if(!provider){ alert("EVM cüzdanı bulunamadı. MetaMask/Phantom ile aç."); return; }
+  if(!provider){ alert("EVM cüzdanı bulunamadı."); return; }
   await ensurePolygon(provider);
 
   try{
@@ -272,22 +281,28 @@ async function handleBuy(weekIdx){
       const txHash = await provider.request({ method:"eth_sendTransaction", params:[tx] });
       alert(`Payment sent! TX: ${txHash}`);
     } else {
-      // MATIC → USDT swap + recipient treasury (0x API)
-      const buyAmount = toUSDT6(usdtCost).toString(); // in 6d
+      // MATIC -> USDT via 0x swap API
+      const buyAmount = toUSDT6(usdtCost).toString();
       const qs = new URLSearchParams({
-        buyToken:"USDT", sellToken:"MATIC", buyAmount,
-        takerAddress: CURRENT_ADDRESS, recipient: CONFIG.PRESALE_TREASURY,
+        buyToken:"USDT",
+        sellToken:"MATIC",
+        buyAmount,
+        takerAddress: CURRENT_ADDRESS,
+        recipient: CONFIG.PRESALE_TREASURY,
         slippagePercentage:"0.02"
       });
-      const quote = await fetch(`${CONFIG.ZEROX_BASE}/swap/v1/quote?${qs}`).then(r=>r.json());
+      const resp = await fetch(`${CONFIG.ZEROX_BASE}/swap/v1/quote?${qs.toString()}`);
+      const quote = await resp.json();
       if(quote?.to && quote?.data){
         const tx = { from: CURRENT_ADDRESS, to: quote.to, data: quote.data, value: quote.value || "0x0" };
         const txHash = await provider.request({ method:"eth_sendTransaction", params:[tx] });
         alert(`Swap+Pay sent! TX: ${txHash}`);
-      } else { console.error(quote); alert("Swap quote failed."); }
+      } else {
+        console.error(quote); alert("Swap quote failed. Check console.");
+      }
     }
-  }catch(e){ console.error(e); alert("Transaction rejected or failed."); }
+  }catch(e){ console.error(e); alert("Transaction failed or rejected."); }
 }
 
-/* ========================= Küçük UI dokunuşu ========================= */
+/* small UI nudge for ticker */
 (function ensureTickerVisible(){ const t=$("#exTrack"); if(!t) return; t.style.transform="translateX(0)"; setTimeout(()=>t.style.transform="",60); })();
