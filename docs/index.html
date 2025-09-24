@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>ZUZUCOIN — Pre-Sale • Stake • NFT Rewards</title>
   <meta name="theme-color" content="#0e1522">
-
   <link rel="icon" type="image/png" href="assets/images/favicon.png">
   <link rel="apple-touch-icon" href="assets/images/favicon.png">
-
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -18,30 +16,21 @@
 <header class="z-nav">
   <div class="z-container z-nav-inner">
     <a class="brand" href="/">
-      <img src="assets/images/logo.png" alt="ZUZU" onerror="this.src='assets/images/branding/zuzu-logo.png'">
+      <img src="assets/images/logo.png" alt="ZUZU"
+           onerror="this.src='assets/images/branding/zuzu-logo.png'">
       <span>ZUZUCOIN</span>
     </a>
 
-    <!-- Üst sekmeler: kare/badge gibi -->
-    <nav class="tabs">
+    <!-- Sekmeler -->
+    <nav class="tabs" aria-label="Primary">
       <a class="tab" href="#presale" data-i="nav_presale">Pre-Sale</a>
       <a class="tab" href="#stake" data-i="nav_stake">Stake</a>
       <a class="tab" href="#nft" data-i="nav_nft">NFT Rewards</a>
       <a class="tab" href="#roadmap" data-i="nav_roadmap">Roadmap</a>
       <a class="tab" href="#tokenomics" data-i="nav_token">Tokenomics</a>
-      <a class="tab ghost" href="stake-simulator.html" target="_blank">Stake Simulator ↗</a>
-      <a class="tab ghost" href="claim.html" target="_blank">Claim Portal ↗</a>
+      <a class="tab ghost" href="stake-simulator.html" target="_blank" rel="noopener">Stake Simulator ↗</a>
+      <a class="tab ghost" href="claim.html" target="_blank" rel="noopener">Claim Portal ↗</a>
     </nav>
-
-    <!-- Sosyal -->
-    <div class="social">
-      <a class="sbtn" href="https://x.com/ZUZUCoin_Global?t=QXk4YYGBPptN9Didd4wkbw&s=09" target="_blank" rel="noopener" aria-label="X">
-        <img src="assets/images/social/x.svg" alt="X">
-      </a>
-      <a class="sbtn" href="https://t.me/ZUZUCoin_Global" target="_blank" rel="noopener" aria-label="Telegram">
-        <img src="assets/images/social/telegram.svg" alt="TG">
-      </a>
-    </div>
 
     <!-- Dil -->
     <div class="lang-wrap">
@@ -60,6 +49,7 @@
 
     <!-- Cüzdan -->
     <button id="connectBtn" class="z-btn z-btn-primary" data-i="connect">Connect Wallet</button>
+    <button id="disconnectBtn" class="z-btn z-btn-ghost small" style="display:none">Disconnect</button>
   </div>
 </header>
 
@@ -109,7 +99,7 @@
           <div class="wk" id="wk4"><h4>Week 4</h4><div class="date" id="w4d"></div><div class="pz">1 ZUZU = <b>0.100</b> USDT</div></div>
         </div>
 
-        <!-- Yatay bar grafik + satın alma -->
+        <!-- Grafik + Satın alma -->
         <div class="presale-info">
           <div class="chart">
             <div class="chart-head">Presale Pricing</div>
@@ -125,12 +115,12 @@
             <div class="inline">
               <input id="buyAmount" class="input" value="10000" inputmode="decimal" aria-label="Amount (ZUZU)">
               <select id="payWith" class="input">
+                <option value="USDT">USDT (Polygon)</option>
                 <option value="MATIC">MATIC</option>
-                <option value="USDT">USDT</option>
               </select>
               <button id="buyNow" class="z-btn z-btn-primary">Buy Now</button>
             </div>
-            <small class="muted">Payments via <b>MetaMask</b> on Polygon (EVM). Auto switch to chain 137.</small>
+            <small class="muted">Payments via <b>MetaMask</b> on Polygon (EVM).</small>
             <div class="costline">Cost: <b id="costUSDT">0</b> USDT (<span id="activeW">W1</span>)</div>
           </div>
         </div>
@@ -139,9 +129,15 @@
       <!-- Invite & Earn -->
       <div class="card invite">
         <h3>Invite & Earn</h3>
-        <p>Share your referral link. Each purchase via your link earns bonus ZUZU.</p>
-        <input id="refLink" class="input" readonly>
-        <button id="copyRef" class="z-btn z-btn-ghost" style="margin-top:8px">Copy</button>
+        <p>Share your link. Each purchase via your link earns <b>+250 ZUZU</b> for you.</p>
+        <div class="invite-row">
+          <input id="refLink" class="input" readonly>
+          <button id="copyRef" class="z-btn z-btn-ghost">Copy</button>
+        </div>
+        <div class="stats">
+          <span>Your referrals: <b id="refCount">0</b></span>
+          <span>Estimated bonus: <b id="refBonus">0</b> ZUZU</span>
+        </div>
       </div>
     </div>
   </section>
@@ -210,7 +206,7 @@
       <div class="card">
         <h3>Contracts</h3>
         <p>ZUZU Token (Polygon): <b>0x... (set your token)</b></p>
-        <p>Presale/Treasury: <b>0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3</b> (view on explorer)</p>
+        <p>Presale/Treasury: <b>0x69014a76Ee25c8B73dAe9044dfcAd7356fe74bC3</b></p>
       </div>
     </div>
   </section>
@@ -243,21 +239,6 @@
     </div>
   </div>
 </footer>
-
-<!-- Wallet modal -->
-<div id="walletModal" class="modal" aria-hidden="true">
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="wmTitle">
-    <div class="wm-row">
-      <h3 id="wmTitle" style="margin:0">Connect Wallet</h3>
-      <button id="wmClose" class="z-btn z-btn-ghost small" aria-label="Close">✕</button>
-    </div>
-    <div id="wlist" class="wlist" style="margin-top:10px"></div>
-    <div class="wm-row" style="margin-top:12px">
-      <small style="color:#8aa2c9">MetaMask (Polygon) desteklenir.</small>
-      <button id="disconnectBtn" class="z-btn z-btn-ghost small" style="display:none">Disconnect</button>
-    </div>
-  </div>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
 <script src="app.js"></script>
