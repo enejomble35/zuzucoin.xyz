@@ -1,14 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="tr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>ZUZUCOIN — Pre-Sale • Stake • NFT Rewards</title>
   <meta name="theme-color" content="#0e1522">
-
   <link rel="icon" type="image/png" href="assets/images/favicon.png">
   <link rel="apple-touch-icon" href="assets/images/favicon.png">
-
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -23,25 +21,27 @@
       <span>ZUZUCOIN</span>
     </a>
 
-    <!-- compact navbar (yatay kaydırmalı) -->
-    <nav class="nav-strip" id="navStrip">
-      <a href="#presale"    class="pill" data-i="nav_presale">Pre-Sale</a>
+    <!-- üst menü: yatay kaydırmalı, mobil uyumlu -->
+    <nav class="nav-strip">
+      <a href="#about"      class="pill" data-i="nav_about">Hakkımızda</a>
+      <a href="#presale"    class="pill" data-i="nav_presale">Ön Satış</a>
       <a href="#stake"      class="pill" data-i="nav_stake">Stake</a>
-      <a href="#nft"        class="pill" data-i="nav_nft">NFT Rewards</a>
-      <a href="#roadmap"    class="pill" data-i="nav_roadmap">Roadmap</a>
-      <a href="#tokenomics" class="pill" data-i="nav_token">Tokenomics</a>
+      <a href="#nft"        class="pill" data-i="nav_nft">NFT Ödülleri</a>
+      <a href="#roadmap"    class="pill" data-i="nav_roadmap">Yol Haritası</a>
+      <a href="#tokenomics" class="pill" data-i="nav_token">Tokonomi</a>
       <a href="stake-simulator.html" class="pill ghost">Stake Simulator ↗</a>
       <a href="claim.html"            class="pill ghost">Claim Portal ↗</a>
     </nav>
 
     <div class="top-actions">
+      <!-- diller -->
       <div class="lang-wrap">
         <button id="langBtn" class="lang-btn">
-          <img id="langFlag" src="flags/en.png" alt="EN"><span id="langCode">EN</span>
+          <img id="langFlag" src="flags/tr.png" alt="TR"><span id="langCode">TR</span>
         </button>
         <div id="langMenu" class="lang-menu">
-          <button class="lang-opt" data-lang="en"><img src="flags/en.png">EN</button>
           <button class="lang-opt" data-lang="tr"><img src="flags/tr.png">TR</button>
+          <button class="lang-opt" data-lang="en"><img src="flags/en.png">EN</button>
           <button class="lang-opt" data-lang="fr"><img src="flags/fr.png">FR</button>
           <button class="lang-opt" data-lang="pt"><img src="flags/pt.png">PT</button>
           <button class="lang-opt" data-lang="ru"><img src="flags/ru.png">RU</button>
@@ -55,7 +55,7 @@
   </div>
 </header>
 
-<!-- drawer (mobil) -->
+<!-- Mobil çekmece -->
 <aside id="drawer" class="drawer" aria-hidden="true">
   <div class="drawer-sheet">
     <div class="drawer-head">
@@ -63,22 +63,23 @@
       <button id="drawerClose" class="xbtn">✕</button>
     </div>
     <div class="drawer-links">
-      <a href="#presale"    class="pill">Pre-Sale</a>
+      <a href="#about"      class="pill">Hakkımızda</a>
+      <a href="#presale"    class="pill">Ön Satış</a>
       <a href="#stake"      class="pill">Stake</a>
-      <a href="#nft"        class="pill">NFT Rewards</a>
-      <a href="#roadmap"    class="pill">Roadmap</a>
-      <a href="#tokenomics" class="pill">Tokenomics</a>
+      <a href="#nft"        class="pill">NFT Ödülleri</a>
+      <a href="#roadmap"    class="pill">Yol Haritası</a>
+      <a href="#tokenomics" class="pill">Tokonomi</a>
       <a href="stake-simulator.html" class="pill ghost">Stake Simulator ↗</a>
       <a href="claim.html"            class="pill ghost">Claim Portal ↗</a>
     </div>
     <div class="drawer-lang">
       <div class="lang-wrap full">
         <button id="langBtn2" class="lang-btn full">
-          <img id="langFlag2" src="flags/en.png"><span id="langCode2">EN</span>
+          <img id="langFlag2" src="flags/tr.png"><span id="langCode2">TR</span>
         </button>
         <div id="langMenu2" class="lang-menu">
-          <button class="lang-opt" data-lang="en"><img src="flags/en.png">EN</button>
           <button class="lang-opt" data-lang="tr"><img src="flags/tr.png">TR</button>
+          <button class="lang-opt" data-lang="en"><img src="flags/en.png">EN</button>
           <button class="lang-opt" data-lang="fr"><img src="flags/fr.png">FR</button>
           <button class="lang-opt" data-lang="pt"><img src="flags/pt.png">PT</button>
           <button class="lang-opt" data-lang="ru"><img src="flags/ru.png">RU</button>
@@ -91,6 +92,16 @@
 </aside>
 
 <main>
+
+<!-- ABOUT -->
+<section id="about" class="z-section">
+  <div class="z-container">
+    <div class="section-head">
+      <h2>ZUZU — Robotic Hedgehog 🦔⚡</h2>
+      <p>Topluluk odaklı, NFT utility ve staking ödülleriyle güçlendirilmiş memecoin.</p>
+    </div>
+  </div>
+</section>
 
 <!-- HERO -->
 <section class="z-section hero">
@@ -105,7 +116,7 @@
         <a href="#nft"   class="z-btn z-btn-ghost"   data-i="cta_nft">NFT Ödülleri</a>
       </div>
 
-      <!-- Countdown: tek satır -->
+      <!-- Countdown: tek satır, şık -->
       <div class="countdown">
         <div class="flip"><div id="cdDays"  class="num">00</div><small data-i="days">GÜN</small></div>
         <div class="flip"><div id="cdHours" class="num">00</div><small data-i="hours">SAAT</small></div>
@@ -134,26 +145,10 @@
     <div class="card presale-card">
       <div class="wcol">
         <div class="wrow">
-          <div class="wbox">
-            <div class="wtitle">Week 1</div>
-            <div class="wdate">09 Kas — 24 Kas</div>
-            <div class="wprice">1 ZUZU = <b>0.040</b> USDT</div>
-          </div>
-          <div class="wbox">
-            <div class="wtitle">Week 2</div>
-            <div class="wdate">24 Kas — 09 Ara</div>
-            <div class="wprice">1 ZUZU = <b>0.060</b> USDT</div>
-          </div>
-          <div class="wbox">
-            <div class="wtitle">Week 3</div>
-            <div class="wdate">09 Ara — 24 Ara</div>
-            <div class="wprice">1 ZUZU = <b>0.080</b> USDT</div>
-          </div>
-          <div class="wbox">
-            <div class="wtitle">Week 4</div>
-            <div class="wdate">24 Ara — 08 Oca</div>
-            <div class="wprice">1 ZUZU = <b>0.100</b> USDT</div>
-          </div>
+          <div class="wbox"><div class="wtitle">Week 1</div><div class="wdate">09 Kas — 24 Kas</div><div class="wprice">1 ZUZU = <b>0.040</b> USDT</div></div>
+          <div class="wbox"><div class="wtitle">Week 2</div><div class="wdate">24 Kas — 09 Ara</div><div class="wprice">1 ZUZU = <b>0.060</b> USDT</div></div>
+          <div class="wbox"><div class="wtitle">Week 3</div><div class="wdate">09 Ara — 24 Ara</div><div class="wprice">1 ZUZU = <b>0.080</b> USDT</div></div>
+          <div class="wbox"><div class="wtitle">Week 4</div><div class="wdate">24 Ara — 08 Oca</div><div class="wprice">1 ZUZU = <b>0.100</b> USDT</div></div>
         </div>
 
         <div class="buyline">
@@ -164,7 +159,7 @@
           </select>
           <button id="buyBtn" class="z-btn z-btn-primary">Buy Now</button>
         </div>
-        <small class="muted">Payments via MetaMask / (mobile deep-link). Network: Polygon.</small>
+        <small class="muted">Payments via MetaMask (Polygon). Mobilde MetaMask dApp ile otomatik açılır.</small>
       </div>
 
       <div class="chartcol">
@@ -185,7 +180,7 @@
 
     <!-- Exchanges ticker -->
     <div class="card">
-      <h3 style="margin:0 0 10px" data-i="exchanges">Supported Exchanges</h3>
+      <h3 style="margin:0 0 10px" data-i="exchanges">Desteklenen Borsalar</h3>
       <div class="ticker">
         <div class="ticker__track">
           <div class="ticker__item"><img src="assets/images/exchanges/gateio.png" alt="Gate.io"></div>
@@ -206,13 +201,16 @@
     </div>
 
     <!-- Invite & Earn -->
-    <div class="card" style="margin-top:14px">
+    <div class="card" id="inviteCard" style="margin-top:14px">
       <h3>Invite & Earn</h3>
-      <p>Paylaş: Her başarılı alımda davet edene <b>250 ZUZU</b> bonus.</p>
+      <p>Her başarılı satın alım için davet edene <b>250 ZUZU</b> bonus verilir. Paylaş:</p>
       <input id="refLink" class="input" readonly>
-      <div style="margin-top:8px">
-        <button id="copyRef" class="z-btn z-btn-ghost">Copy</button>
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+        <button id="copyRef" class="z-btn z-btn-ghost">Kopyala</button>
+        <a id="shareWA" class="z-btn z-btn-ghost" href="#" target="_blank">WhatsApp</a>
+        <a id="shareTG" class="z-btn z-btn-ghost" href="#" target="_blank">Telegram</a>
       </div>
+      <small class="muted">Not: Bonus dağıtımı backend doğrulaması ile yapılır.</small>
     </div>
 
   </div>
@@ -253,7 +251,7 @@
   <div class="z-container">
     <div class="section-head">
       <h2 data-i="token_title">Tokenomics (Visualized)</h2>
-      <p class="muted">Total Supply: 500,000,000 ZUZU</p>
+      <p class="muted">Toplam Arz: 500,000,000 ZUZU</p>
     </div>
     <div class="card tk">
       <div>
@@ -285,14 +283,14 @@
 <section id="roadmap" class="z-section">
   <div class="z-container">
     <div class="section-head">
-      <h2>Roadmap</h2>
-      <p>Key milestones & timeline</p>
+      <h2>Yol Haritası</h2>
+      <p>Önemli kilometre taşları</p>
     </div>
     <div class="road">
-      <div class="mile"><span>Q4 2025</span><b>Launch</b><br>Presale, CEX listings & NFT airdrops.</div>
-      <div class="mile"><span>Q1 2026</span><b>Product</b><br>Staking UI 2.0, DEX listings.</div>
-      <div class="mile"><span>Q2 2026</span><b>Growth</b><br>Partnerships, mobile wallet integrations.</div>
-      <div class="mile"><span>Q3 2026</span><b>Expansion</b><br>Marketplace, DAO features.</div>
+      <div class="mile"><span>Q4 2025</span><b>Lansman</b><br>Presale, CEX listeleri, NFT airdrop.</div>
+      <div class="mile"><span>Q1 2026</span><b>Ürün</b><br>Staking UI 2.0, DEX listeleri.</div>
+      <div class="mile"><span>Q2 2026</span><b>Büyüme</b><br>Partnerlikler, mobil cüzdan entegrasyonları.</div>
+      <div class="mile"><span>Q3 2026</span><b>Genişleme</b><br>Marketplace, DAO özellikleri.</div>
     </div>
   </div>
 </section>
@@ -303,10 +301,11 @@
   <div class="z-container between center-v">
     <small>© 2025 ZUZUCOIN</small>
     <div class="z-chip-row">
-      <a class="z-chip" href="#presale">Pre-Sale</a>
+      <a class="z-chip" href="#about">Hakkımızda</a>
+      <a class="z-chip" href="#presale">Ön Satış</a>
       <a class="z-chip" href="#stake">Stake</a>
       <a class="z-chip" href="#nft">NFT</a>
-      <a class="z-chip" href="#tokenomics">Tokenomics</a>
+      <a class="z-chip" href="#tokenomics">Tokonomi</a>
     </div>
   </div>
 </footer>
