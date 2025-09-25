@@ -115,7 +115,7 @@
           <div class="flip"><div id="cdMins"  class="num">00</div><small data-i="mins">DAKİKA</small></div>
           <div class="flip"><div id="cdSecs"  class="num">00</div><small data-i="secs">SANİYE</small></div>
         </div>
-        <p class="list-note" data-i="listing_note">Borsa Listelemesi: 23 Kasım Pazar 13:00 (TR)</p>
+        <p class="list-note" data-i="listing_note">Exchange Listing: 23 Nov 10:00 UTC</p>
       </div>
 
       <div class="hero-visual">
@@ -137,26 +137,10 @@
       <div class="card presale-card">
         <div class="wcol">
           <div class="wrow">
-            <div class="wbox">
-              <div class="wtitle" data-i="week1">Hafta 1</div>
-              <div class="wdate">23 Eyl — 8 Eki</div>
-              <div class="wprice">1 ZUZU = <b>0.040</b> USDT</div>
-            </div>
-            <div class="wbox">
-              <div class="wtitle" data-i="week2">Hafta 2</div>
-              <div class="wdate">9 Eki — 23 Eki</div>
-              <div class="wprice">1 ZUZU = <b>0.060</b> USDT</div>
-            </div>
-            <div class="wbox">
-              <div class="wtitle" data-i="week3">Hafta 3</div>
-              <div class="wdate">24 Eki — 7 Kas</div>
-              <div class="wprice">1 ZUZU = <b>0.080</b> USDT</div>
-            </div>
-            <div class="wbox">
-              <div class="wtitle" data-i="week4">Hafta 4</div>
-              <div class="wdate">8 Kas — 23 Kas</div>
-              <div class="wprice">1 ZUZU = <b>0.100</b> USDT</div>
-            </div>
+            <div class="wbox"><div class="wtitle" data-i="week1">Hafta 1</div><div class="wdate">23 Eyl — 8 Eki</div><div class="wprice">1 ZUZU = <b>0.040</b> USDT</div></div>
+            <div class="wbox"><div class="wtitle" data-i="week2">Hafta 2</div><div class="wdate">9 Eki — 23 Eki</div><div class="wprice">1 ZUZU = <b>0.060</b> USDT</div></div>
+            <div class="wbox"><div class="wtitle" data-i="week3">Hafta 3</div><div class="wdate">24 Eki — 7 Kas</div><div class="wprice">1 ZUZU = <b>0.080</b> USDT</div></div>
+            <div class="wbox"><div class="wtitle" data-i="week4">Hafta 4</div><div class="wdate">8 Kas — 23 Kas</div><div class="wprice">1 ZUZU = <b>0.100</b> USDT</div></div>
           </div>
 
           <div class="buyline">
@@ -242,30 +226,44 @@
     </div>
   </section>
 
-  <!-- TOKENOMICS -->
+  <!-- TOKENOMICS (SVG donut, her zaman görünür) -->
   <section id="tokenomics" class="z-section">
     <div class="z-container">
       <div class="section-head">
         <h2 data-i="token_title">Tokonomi (Görsel)</h2>
         <p class="muted" data-i="token_supply">Toplam Arz: 500,000,000 ZUZU</p>
       </div>
+
       <div class="tk">
-        <img id="tokenImg" src="assets/images/tokenomics.png"
-             onerror="this.onerror=null;this.src='assets/images/tokonomics.png';"
-             alt="Tokenomics" style="width:100%;border-radius:14px;border:1px solid #1b2a49">
+        <div class="piewrap">
+          <!-- Donut -->
+          <svg viewBox="0 0 42 42" class="pie">
+            <!-- bg -->
+            <circle cx="21" cy="21" r="15.915" class="pie-bg"/>
+            <!-- slices (toplam 100) -->
+            <circle class="pie-slice c-comm"  cx="21" cy="21" r="15.915" stroke-dasharray="35 65" stroke-dashoffset="25"/>
+            <circle class="pie-slice c-liq"   cx="21" cy="21" r="15.915" stroke-dasharray="20 80" stroke-dashoffset="-10"/>
+            <circle class="pie-slice c-team"  cx="21" cy="21" r="15.915" stroke-dasharray="15 85" stroke-dashoffset="-30"/>
+            <circle class="pie-slice c-tres"  cx="21" cy="21" r="15.915" stroke-dasharray="10 90" stroke-dashoffset="-45"/>
+            <circle class="pie-slice c-stake" cx="21" cy="21" r="15.915" stroke-dasharray="15 85" stroke-dashoffset="-55"/>
+            <circle class="pie-slice c-prtn"  cx="21" cy="21" r="15.915" stroke-dasharray="5 95"  stroke-dashoffset="-70"/>
+            <text x="21" y="22" text-anchor="middle" class="pie-center">ZUZU</text>
+          </svg>
+        </div>
+
         <div class="legend">
-          <div><span class="dot" style="background:#7f9cff"></span><span data-i="lg_comm">Community — 35%</span></div>
-          <div><span class="dot" style="background:#16d2a6"></span><span data-i="lg_liq">Liquidity — 20%</span></div>
-          <div><span class="dot" style="background:#ffd77c"></span><span data-i="lg_team">Team (12m lock) — 15%</span></div>
-          <div><span class="dot" style="background:#9aaeff"></span><span data-i="lg_tres">Treasury — 10%</span></div>
-          <div><span class="dot" style="background:#b8c7ff"></span><span data-i="lg_stake">Staking Rewards — 15%</span></div>
-          <div><span class="dot" style="background:#a8c2ff"></span><span data-i="lg_prtn">Partners — 5%</span></div>
+          <div><span class="dot" style="background:#7f9cff"></span><span data-i="lg_comm">Topluluk — %35</span></div>
+          <div><span class="dot" style="background:#16d2a6"></span><span data-i="lg_liq">Likidite — %20</span></div>
+          <div><span class="dot" style="background:#ffd77c"></span><span data-i="lg_team">Ekip (12 ay kilit) — %15</span></div>
+          <div><span class="dot" style="background:#9aaeff"></span><span data-i="lg_tres">Hazine — %10</span></div>
+          <div><span class="dot" style="background:#b8c7ff"></span><span data-i="lg_stake">Staking Ödülleri — %15</span></div>
+          <div><span class="dot" style="background:#a8c2ff"></span><span data-i="lg_prtn">Partnerler — %5</span></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ROADMAP -->
+  <!-- ROADMAP (gerçekçi) -->
   <section id="roadmap" class="z-section">
     <div class="z-container">
       <div class="section-head">
@@ -273,10 +271,26 @@
         <p class="muted" data-i="road_lead">Önemli kilometre taşları</p>
       </div>
       <div class="road">
-        <div class="mile"><span>Q4 2025</span><b data-i="rm_launch">Lansman</b><div data-i="rm_l1">Presale, CEX listeleri, NFT airdrop.</div></div>
-        <div class="mile"><span>Q1 2026</span><b data-i="rm_prod">Ürün</b><div data-i="rm_l2">Staking UI 2.0, DEX listeleri.</div></div>
-        <div class="mile"><span>Q2 2026</span><b data-i="rm_grow">Büyüme</b><div data-i="rm_l3">Partnerlikler, mobil cüzdan entegrasyonları.</div></div>
-        <div class="mile"><span>Q3 2026</span><b data-i="rm_expand">Genişleme</b><div data-i="rm_l4">Marketplace, DAO özellikleri.</div></div>
+        <div class="mile">
+          <span>Q3 2025</span>
+          <b data-i="rm_phase0">Hazırlık</b>
+          <div data-i="rm_p0d">Whitepaper v1, web v2, akıllı sözleşme geliştirme & güvenlik denetimi başlatma.</div>
+        </div>
+        <div class="mile">
+          <span>Q4 2025</span>
+          <b data-i="rm_phase1">Ön Satış & Listeleme</b>
+          <div data-i="rm_p1d">Presale (4 faz), topluluk kampanyaları, <b>23 Nov 10:00 UTC</b> ilk CEX listemesi, staking beta.</div>
+        </div>
+        <div class="mile">
+          <span>Q1 2026</span>
+          <b data-i="rm_phase2">Ürün</b>
+          <div data-i="rm_p2d">NFT mint & ödüller, referral v2, ikinci CEX, DEX likidite artırımı.</div>
+        </div>
+        <div class="mile">
+          <span>Q2 2026</span>
+          <b data-i="rm_phase3">Büyüme & Yönetişim</b>
+          <div data-i="rm_p3d">Mobil cüzdan entegrasyonları, partnerlikler, snapshot tabanlı yönetişim oylamaları.</div>
+        </div>
       </div>
     </div>
   </section>
