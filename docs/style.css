@@ -183,3 +183,13 @@ img{max-width:100%;display:block}
 .center-v{align-items:center}
 .z-chip-row{display:flex;gap:.5rem;flex-wrap:wrap}
 .z-chip{display:inline-flex;align-items:center;gap:.35rem;background:var(--chip);color:#cfe2ff;border:1px solid #1f2f50;border-radius:999px;padding:.35rem .65rem;font-size:.9rem}
+
+/* ===== Toasts ===== */
+.toasts{position:fixed;right:16px;bottom:16px;display:grid;gap:10px;z-index:9999}
+.toast{min-width:260px;max-width:360px;background:#0f1a30;border:1px solid #22406a;color:#d9e6ff;
+  border-radius:12px;padding:12px 12px 12px 40px;position:relative;box-shadow:0 12px 30px rgba(0,0,0,.35)}
+.toast.ok{border-color:#1da97e}
+.toast.err{border-color:#b94b4b}
+.toast .ticon{position:absolute;left:10px;top:12px;font-size:18px;opacity:.9}
+.toast b{display:block;margin-bottom:4px}
+.toast a{color:#9dbbff;text-decoration:underline}
