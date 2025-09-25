@@ -75,10 +75,14 @@ const I = {
 
 function applyLang(lang){
   localStorage.setItem(CONFIG.LS_LANG, lang);
+  // <html lang=".."> güncelle
+  document.documentElement.setAttribute("lang", lang);
+  // buton bayrak/kod
   $("#langCode")?.replaceChildren(document.createTextNode(lang.toUpperCase()));
   $("#langFlag")?.setAttribute("src", `flags/${lang}.png`);
   $("#langCode2")?.replaceChildren(document.createTextNode(lang.toUpperCase()));
   $("#langFlag2")?.setAttribute("src", `flags/${lang}.png`);
+  // data-i içeren tüm metinler
   $$("[data-i]").forEach(el=>{
     const k=el.getAttribute("data-i");
     if(I[lang]?.[k]) el.innerHTML = I[lang][k];
@@ -100,7 +104,7 @@ function applyLang(lang){
   wire("#langBtn2","#langMenu2");
 })();
 
-/* ========== Drawer ========== */
+/* Drawer */
 (function(){
   const d=$("#drawer"), open=$("#menuBtn"), close=$("#drawerClose");
   open?.addEventListener("click",()=>d?.classList.add("show"));
@@ -108,7 +112,7 @@ function applyLang(lang){
   d?.addEventListener("click",(e)=>{ if(e.target===d) d.classList.remove("show"); });
 })();
 
-/* ========== Countdown (sabit) ========== */
+/* Countdown */
 function getTarget(){
   let ts = Number(localStorage.getItem(CONFIG.COUNTDOWN_KEY)||0);
   if(!ts){ ts = CONFIG.targetUTC; localStorage.setItem(CONFIG.COUNTDOWN_KEY, String(ts)); }
@@ -128,7 +132,7 @@ function tick(){
 }
 tick(); setInterval(tick,1000);
 
-/* ========== NFT grid (10 adet) ========== */
+/* NFT grid (10 adet) */
 (function renderNFTs(){
   const g=$("#nftGrid"); if(!g) return;
   g.innerHTML = Array.from({length:10}).map((_,i)=>`
@@ -139,7 +143,7 @@ tick(); setInterval(tick,1000);
     </div>`).join("");
 })();
 
-/* ========== Referans linki + paylaşım ========== */
+/* Referans linki + paylaşım */
 (function refLink(){
   const url = new URL(location.href);
   if(url.searchParams.get("ref")) localStorage.setItem("zuzu_refAddr", url.searchParams.get("ref"));
@@ -151,7 +155,7 @@ tick(); setInterval(tick,1000);
   $("#shareTG")?.setAttribute("href", `https://t.me/share/url?url=${encodeURIComponent(out?.value||"")}&text=${encodeURIComponent("250 ZUZU bonus!")}`);
 })();
 
-/* ========== Wallet (MetaMask + Polygon) ========== */
+/* Wallet (MetaMask + Polygon) */
 let EVM_ADDR = localStorage.getItem(CONFIG.LS_ADDR) || null;
 if(EVM_ADDR){ $("#btnConnect").textContent = `${EVM_ADDR.slice(0,6)}...${EVM_ADDR.slice(-4)}`; }
 
@@ -186,11 +190,9 @@ async function connect(){
 }
 $("#btnConnect")?.addEventListener("click", connect);
 
-/* ========== Buy Now (haftaya göre fiyat) ========== */
+/* Buy Now */
 $("#buyBtn")?.addEventListener("click", async ()=>{
   if(!EVM_ADDR){ await connect(); if(!EVM_ADDR) return; }
-
-  // 4 hafta x 15 gün — sayaç bitişi başlangıç kabul
   const start = getTarget();
   const weekMs = 15*24*3600*1000;
   let idx = 0;
@@ -204,7 +206,7 @@ $("#buyBtn")?.addEventListener("click", async ()=>{
   alert(`Week ${idx+1} • ${qty.toLocaleString()} ZUZU → ${costUSDT.toFixed(2)} USDT\n\n(Ödeme akışı backend ile bağlanacak.)`);
 });
 
-/* ========== Ticker nudge ========== */
+/* Ticker nudge */
 (function ensureTickerVisible(){
   const t=document.querySelector(".ticker__track"); if(!t) return;
   t.style.transform="translateX(0)"; setTimeout(()=>t.style.transform="", 60);
