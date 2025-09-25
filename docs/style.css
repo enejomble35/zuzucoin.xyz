@@ -15,14 +15,11 @@ img{max-width:100%;display:block}
 .brand{display:flex;gap:.55rem;align-items:center;font-weight:800}
 .brand img{width:34px;height:34px}
 
-/* navbar yatay kaydırmalı */
-.nav-strip{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;flex:1;justify-content:center}
-.nav-strip::-webkit-scrollbar{display:none}
+/* pills & buttons */
 .pill{display:inline-flex;align-items:center;gap:.35rem;padding:.45rem .7rem;border-radius:12px;background:#121f35;border:1px solid #1f2f50;white-space:nowrap}
 .pill.ghost{background:#0f1a2c}
 .pill:hover{background:#162544}
-.icon-pill img{width:16px;height:16px;display:block}
-
+.icon-pill img{width:16px;height:16px}
 .top-actions{display:flex;gap:8px;align-items:center}
 .z-btn{display:inline-flex;gap:.5rem;align-items:center;border:0;border-radius:12px;padding:.6rem 1rem;font-weight:800;cursor:pointer}
 .z-btn-primary{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#08101d}
@@ -54,7 +51,7 @@ img{max-width:100%;display:block}
 
 /* sections */
 .z-section{padding:36px 0;border-top:1px solid #15243f}
-.section-head h2{margin:.2rem 0 .4rem;font-size:clamp(1.4rem,3.2vw,2rem)}
+.section-head h1,.section-head h2{margin:.2rem 0 .4rem;font-size:clamp(1.4rem,3.2vw,2rem)}
 .section-head p{color:#bfd2ff}
 .badge{background:#172748;border:1px solid #263a63;color:#9eb9ff;padding:.3rem .55rem;border-radius:999px;font-size:.8rem}
 
@@ -69,7 +66,7 @@ img{max-width:100%;display:block}
 .hero-visual{display:flex;justify-content:center;align-items:center}
 .logo-big{max-width:420px;width:100%;filter:drop-shadow(0 16px 36px rgba(0,0,0,.4))}
 
-/* Countdown */
+/* countdown */
 .countdown{display:flex;gap:10px;align-items:stretch;overflow-x:auto;padding:6px 2px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .countdown::-webkit-scrollbar{display:none}
 .flip{flex:0 0 92px;background:linear-gradient(180deg,#15253f,#0f1b33);border:1px solid #24385f;border-radius:14px;box-shadow:inset 0 -36px 60px rgba(0,0,0,.18), 0 6px 18px rgba(0,0,0,.18);text-align:center;position:relative}
@@ -77,12 +74,12 @@ img{max-width:100%;display:block}
 .flip .num{font-size:1.9rem;font-weight:800;padding:.65rem 0;color:#eaf2ff;letter-spacing:1px}
 .flip small{display:block;color:#a6bcdf;border-top:1px solid #203458;padding:.35rem 0 .55rem;font-weight:800;letter-spacing:1px}
 
-/* Cards & inputs */
+/* cards & inputs */
 .card{background:var(--panel);border:1px solid #1b2a49;border-radius:16px;padding:16px}
 .input{width:100%;padding:.7rem;border-radius:12px;background:#0f1c33;border:1px solid #23395d;color:var(--txt)}
 .input.mini{max-width:140px}
 
-/* Presale layout */
+/* presale */
 .presale-card{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
 .wrow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media(max-width:920px){.presale-card{grid-template-columns:1fr}.wrow{grid-template-columns:1fr 1fr}}
@@ -106,7 +103,7 @@ img{max-width:100%;display:block}
 .ex-note{color:#8ea7d3;font-style:italic;text-align:center;margin-top:8px}
 @media(max-width:720px){.ticker{padding:6px}.ticker__item img{height:28px}}
 
-/* Stake */
+/* stake */
 .stake-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 @media(max-width:980px){.stake-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:640px){.stake-grid{grid-template-columns:1fr}}
@@ -115,7 +112,7 @@ img{max-width:100%;display:block}
 .stake-card .tier.silver{color:#cfe6ff}
 .stake-card .tier.gold{color:#ffd77c}
 
-/* NFT grid */
+/* nft */
 .nft-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
 @media(max-width:1024px){.nft-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:700px){.nft-grid{grid-template-columns:repeat(2,1fr)}}
@@ -124,7 +121,7 @@ img{max-width:100%;display:block}
 .nft .meta{display:flex;justify-content:space-between;padding:10px}
 .nft .tag{font-size:.75rem;background:#152748;color:#a8c2ff;border:1px solid #274075;border-radius:999px;padding:.25rem .5rem}
 
-/* Tokenomics & Roadmap */
+/* tokenomics & roadmap */
 .tk{display:grid;grid-template-columns:1.1fr .9fr;gap:20px}
 @media(max-width:900px){.tk{grid-template-columns:1fr}}
 .legend{display:grid;gap:.45rem}
