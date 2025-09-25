@@ -13,7 +13,6 @@
 </head>
 <body>
 
-<!-- ======= TOP BAR ======= -->
 <header class="z-top">
   <div class="z-container z-top-inner">
     <a class="brand" href="#top" aria-label="ZUZUCOIN">
@@ -21,10 +20,8 @@
       <span>ZUZUCOIN</span>
     </a>
 
-    <!-- sağ aksiyonlar: SADECE dil + sosyal + connect + burger -->
     <div class="top-actions wide">
-
-      <!-- Dil seçici -->
+      <!-- Dil -->
       <div class="lang-wrap">
         <button id="langBtn" class="lang-btn" aria-haspopup="true" aria-expanded="false">
           <img id="langFlag" src="flags/tr.png" alt="TR"><span id="langCode">TR</span>
@@ -39,7 +36,7 @@
         </div>
       </div>
 
-      <!-- Resmi sosyal hesaplar (YOLLAR DÜZELTİLDİ) -->
+      <!-- Sosyal -->
       <a href="https://x.com/ZUZUCoin_Global?t=QXk4YYGBPptN9Didd4wkbw&s=09" target="_blank" rel="noopener" class="pill icon-pill" aria-label="X">
         <img src="assets/images/social/x.png" alt="">
       </a>
@@ -47,16 +44,13 @@
         <img src="assets/images/social/telegram.png" alt="">
       </a>
 
-      <!-- Cüzdan -->
       <button id="btnConnect" class="z-btn z-btn-primary" data-i="connect">Cüzdan Bağla</button>
-
-      <!-- Burger -->
       <button id="menuBtn" class="burger" aria-label="Menu"></button>
     </div>
   </div>
 </header>
 
-<!-- ======= DRAWER (NAV MENÜ) ======= -->
+<!-- Drawer -->
 <div id="drawer" class="drawer" hidden>
   <aside class="drawer-sheet">
     <div class="drawer-head">
@@ -75,7 +69,6 @@
       <a href="claim.html"            class="pill ghost" data-i="nav_claim">Claim Portal ↗</a>
     </nav>
 
-    <!-- Drawer içi Dil seçici -->
     <div class="drawer-lang">
       <button id="langBtn2" class="lang-btn full">
         <img id="langFlag2" src="flags/tr.png" alt="TR"><span id="langCode2">TR</span>
@@ -90,7 +83,6 @@
       </div>
     </div>
 
-    <!-- Drawer sosyal (opsiyonel tekrar) -->
     <div class="drawer-social">
       <a href="https://x.com/ZUZUCoin_Global?t=QXk4YYGBPptN9Didd4wkbw&s=09" target="_blank" class="xbtn">X</a>
       <a href="https://t.me/ZUZUCoin_Global" target="_blank" class="xbtn">Telegram</a>
@@ -103,7 +95,6 @@
 </div>
 
 <main id="top">
-
   <!-- HERO -->
   <section id="about" class="z-section hero">
     <div class="z-container grid-2">
@@ -118,12 +109,13 @@
         </div>
 
         <!-- Countdown -->
-        <div class="countdown">
+        <div class="countdown fancy">
           <div class="flip"><div id="cdDays"  class="num">00</div><small data-i="days">GÜN</small></div>
           <div class="flip"><div id="cdHours" class="num">00</div><small data-i="hours">SAAT</small></div>
           <div class="flip"><div id="cdMins"  class="num">00</div><small data-i="mins">DAKİKA</small></div>
           <div class="flip"><div id="cdSecs"  class="num">00</div><small data-i="secs">SANİYE</small></div>
         </div>
+        <p class="list-note" data-i="listing_note">Borsa Listelemesi: 23 Kasım Pazar 13:00 (TR)</p>
       </div>
 
       <div class="hero-visual">
@@ -145,10 +137,26 @@
       <div class="card presale-card">
         <div class="wcol">
           <div class="wrow">
-            <div class="wbox"><div class="wtitle">Week 1</div><div class="wdate">09 Kas — 24 Kas</div><div class="wprice">1 ZUZU = <b>0.040</b> USDT</div></div>
-            <div class="wbox"><div class="wtitle">Week 2</div><div class="wdate">24 Kas — 09 Ara</div><div class="wprice">1 ZUZU = <b>0.060</b> USDT</div></div>
-            <div class="wbox"><div class="wtitle">Week 3</div><div class="wdate">09 Ara — 24 Ara</div><div class="wprice">1 ZUZU = <b>0.080</b> USDT</div></div>
-            <div class="wbox"><div class="wtitle">Week 4</div><div class="wdate">24 Ara — 08 Oca</div><div class="wprice">1 ZUZU = <b>0.100</b> USDT</div></div>
+            <div class="wbox">
+              <div class="wtitle" data-i="week1">Hafta 1</div>
+              <div class="wdate">23 Eyl — 8 Eki</div>
+              <div class="wprice">1 ZUZU = <b>0.040</b> USDT</div>
+            </div>
+            <div class="wbox">
+              <div class="wtitle" data-i="week2">Hafta 2</div>
+              <div class="wdate">9 Eki — 23 Eki</div>
+              <div class="wprice">1 ZUZU = <b>0.060</b> USDT</div>
+            </div>
+            <div class="wbox">
+              <div class="wtitle" data-i="week3">Hafta 3</div>
+              <div class="wdate">24 Eki — 7 Kas</div>
+              <div class="wprice">1 ZUZU = <b>0.080</b> USDT</div>
+            </div>
+            <div class="wbox">
+              <div class="wtitle" data-i="week4">Hafta 4</div>
+              <div class="wdate">8 Kas — 23 Kas</div>
+              <div class="wprice">1 ZUZU = <b>0.100</b> USDT</div>
+            </div>
           </div>
 
           <div class="buyline">
@@ -189,12 +197,12 @@
             <div class="ticker__item"><img src="assets/images/exchanges/bybit.png"   alt="Bybit"></div>
           </div>
         </div>
-        <div class="ex-note">Will Be Listed Soon</div>
+        <div class="ex-note" data-i="ex_soon">Yakında listelenecek</div>
       </div>
 
       <!-- Invite & Earn -->
       <div class="card" id="inviteCard" style="margin-top:14px">
-        <h3 data-i="invite_title">Invite & Earn</h3>
+        <h3 data-i="invite_title">Davet Et & Kazan</h3>
         <p data-i="invite_lead">Her başarılı satın alım için davet edene <b>250 ZUZU</b> bonus verilir. Paylaş:</p>
         <input id="refLink" class="input" readonly>
         <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
@@ -216,9 +224,9 @@
       </div>
 
       <div class="stake-grid">
-        <div class="stake-card"><div class="tier">Bronze</div><ul><li>30 gün kilit</li><li><b>12% APY</b></li><li>Erken çekiliş</li></ul></div>
-        <div class="stake-card"><div class="tier silver">Silver</div><ul><li>90 gün kilit</li><li><b>24% APY</b></li><li>+5% NFT boost</li></ul></div>
-        <div class="stake-card"><div class="tier gold">Gold</div><ul><li>180 gün kilit</li><li><b>40% APY</b></li><li>Whitelist + ZUZU badge</li></ul></div>
+        <div class="stake-card"><div class="tier" data-i="tier_bronze">Bronze</div><ul><li data-i="l_30">30 gün kilit</li><li><b>12% APY</b></li><li data-i="l_early">Erken çekiliş</li></ul></div>
+        <div class="stake-card"><div class="tier silver" data-i="tier_silver">Silver</div><ul><li data-i="l_90">90 gün kilit</li><li><b>24% APY</b></li><li>+5% NFT boost</li></ul></div>
+        <div class="stake-card"><div class="tier gold" data-i="tier_gold">Gold</div><ul><li data-i="l_180">180 gün kilit</li><li><b>40% APY</b></li><li data-i="l_wl">Whitelist + ZUZU rozet</li></ul></div>
       </div>
     </div>
   </section>
@@ -242,14 +250,16 @@
         <p class="muted" data-i="token_supply">Toplam Arz: 500,000,000 ZUZU</p>
       </div>
       <div class="tk">
-        <img src="assets/images/tokonomics.png" alt="Tokenomics" style="width:100%;border-radius:14px;border:1px solid #1b2a49">
+        <img id="tokenImg" src="assets/images/tokenomics.png"
+             onerror="this.onerror=null;this.src='assets/images/tokonomics.png';"
+             alt="Tokenomics" style="width:100%;border-radius:14px;border:1px solid #1b2a49">
         <div class="legend">
-          <div><span class="dot" style="background:#7f9cff"></span>Community — 35%</div>
-          <div><span class="dot" style="background:#16d2a6"></span>Liquidity — 20%</div>
-          <div><span class="dot" style="background:#ffd77c"></span>Team (12m lock) — 15%</div>
-          <div><span class="dot" style="background:#9aaeff"></span>Treasury — 10%</div>
-          <div><span class="dot" style="background:#b8c7ff"></span>Staking Rewards — 15%</div>
-          <div><span class="dot" style="background:#a8c2ff"></span>Partners — 5%</div>
+          <div><span class="dot" style="background:#7f9cff"></span><span data-i="lg_comm">Community — 35%</span></div>
+          <div><span class="dot" style="background:#16d2a6"></span><span data-i="lg_liq">Liquidity — 20%</span></div>
+          <div><span class="dot" style="background:#ffd77c"></span><span data-i="lg_team">Team (12m lock) — 15%</span></div>
+          <div><span class="dot" style="background:#9aaeff"></span><span data-i="lg_tres">Treasury — 10%</span></div>
+          <div><span class="dot" style="background:#b8c7ff"></span><span data-i="lg_stake">Staking Rewards — 15%</span></div>
+          <div><span class="dot" style="background:#a8c2ff"></span><span data-i="lg_prtn">Partners — 5%</span></div>
         </div>
       </div>
     </div>
@@ -263,10 +273,10 @@
         <p class="muted" data-i="road_lead">Önemli kilometre taşları</p>
       </div>
       <div class="road">
-        <div class="mile"><span>Q4 2025</span><b>Lansman</b><div>Presale, CEX listeleri, NFT airdrop.</div></div>
-        <div class="mile"><span>Q1 2026</span><b>Ürün</b><div>Staking UI 2.0, DEX listeleri.</div></div>
-        <div class="mile"><span>Q2 2026</span><b>Büyüme</b><div>Partnerlikler, mobil cüzdan entegrasyonları.</div></div>
-        <div class="mile"><span>Q3 2026</span><b>Genişleme</b><div>Marketplace, DAO özellikleri.</div></div>
+        <div class="mile"><span>Q4 2025</span><b data-i="rm_launch">Lansman</b><div data-i="rm_l1">Presale, CEX listeleri, NFT airdrop.</div></div>
+        <div class="mile"><span>Q1 2026</span><b data-i="rm_prod">Ürün</b><div data-i="rm_l2">Staking UI 2.0, DEX listeleri.</div></div>
+        <div class="mile"><span>Q2 2026</span><b data-i="rm_grow">Büyüme</b><div data-i="rm_l3">Partnerlikler, mobil cüzdan entegrasyonları.</div></div>
+        <div class="mile"><span>Q3 2026</span><b data-i="rm_expand">Genişleme</b><div data-i="rm_l4">Marketplace, DAO özellikleri.</div></div>
       </div>
     </div>
   </section>
