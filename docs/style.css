@@ -158,6 +158,19 @@ img{max-width:100%;display:block}
 .legend{display:grid;gap:.45rem}
 .legend div{display:flex;align-items:center;gap:.55rem}
 .dot{width:12px;height:12px;border-radius:3px}
+.piewrap{display:flex;align-items:center;justify-content:center}
+.pie{width:100%;max-width:440px}
+.pie-bg{fill:none;stroke:#132341;stroke-width:3}
+.pie-slice{fill:none;stroke-width:10;transform:rotate(-90deg);transform-origin:50% 50%}
+.c-comm{stroke:#7f9cff}
+.c-liq{stroke:#16d2a6}
+.c-team{stroke:#ffd77c}
+.c-tres{stroke:#9aaeff}
+.c-stake{stroke:#b8c7ff}
+.c-prtn{stroke:#a8c2ff}
+.pie-center{fill:#cfe2ff;font-size:5px;font-weight:800}
+
+/* roadmap */
 .road{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 @media(max-width:900px){.road{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.road{grid-template-columns:1fr}}
