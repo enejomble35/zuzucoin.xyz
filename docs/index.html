@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -24,11 +24,11 @@
       <!-- Dil -->
       <div class="lang-wrap">
         <button id="langBtn" class="lang-btn" aria-haspopup="true" aria-expanded="false">
-          <img id="langFlag" src="flags/tr.png" alt="TR"><span id="langCode">TR</span>
+          <img id="langFlag" src="flags/en.png" alt="EN"><span id="langCode">EN</span>
         </button>
         <div id="langMenu" class="lang-menu" role="menu" aria-label="Languages">
-          <button class="lang-opt" data-lang="tr"><img src="flags/tr.png" alt="">TR</button>
           <button class="lang-opt" data-lang="en"><img src="flags/en.png" alt="">EN</button>
+          <button class="lang-opt" data-lang="tr"><img src="flags/tr.png" alt="">TR</button>
           <button class="lang-opt" data-lang="fr"><img src="flags/fr.png" alt="">FR</button>
           <button class="lang-opt" data-lang="pt"><img src="flags/pt.png" alt="">PT</button>
           <button class="lang-opt" data-lang="ru"><img src="flags/ru.png" alt="">RU</button>
@@ -44,7 +44,7 @@
         <img src="assets/images/social/telegram.png" alt="">
       </a>
 
-      <button id="btnConnect" class="z-btn z-btn-primary" data-i="connect">Cüzdan Bağla</button>
+      <button id="btnConnect" class="z-btn z-btn-primary" data-i="connect">Connect Wallet</button>
       <button id="menuBtn" class="burger" aria-label="Menu"></button>
     </div>
   </div>
@@ -59,23 +59,23 @@
     </div>
 
     <nav class="drawer-links">
-      <a href="#about"      class="pill" data-i="nav_about">Hakkımızda</a>
-      <a href="#presale"    class="pill" data-i="nav_presale">Ön Satış</a>
+      <a href="#about"      class="pill" data-i="nav_about">About</a>
+      <a href="#presale"    class="pill" data-i="nav_presale">Pre-Sale</a>
       <a href="#stake"      class="pill" data-i="nav_stake">Stake</a>
-      <a href="#nft"        class="pill" data-i="nav_nft">NFT Ödülleri</a>
-      <a href="#tokenomics" class="pill" data-i="nav_token">Tokonomi</a>
-      <a href="#roadmap"    class="pill" data-i="nav_roadmap">Yol Haritası</a>
+      <a href="#nft"        class="pill" data-i="nav_nft">NFT Rewards</a>
+      <a href="#tokenomics" class="pill" data-i="nav_token">Tokenomics</a>
+      <a href="#roadmap"    class="pill" data-i="nav_roadmap">Roadmap</a>
       <a href="stake-simulator.html" class="pill ghost" data-i="nav_sim">Stake Simulator ↗</a>
       <a href="claim.html"            class="pill ghost" data-i="nav_claim">Claim Portal ↗</a>
     </nav>
 
     <div class="drawer-lang">
       <button id="langBtn2" class="lang-btn full">
-        <img id="langFlag2" src="flags/tr.png" alt="TR"><span id="langCode2">TR</span>
+        <img id="langFlag2" src="flags/en.png" alt="EN"><span id="langCode2">EN</span>
       </button>
       <div id="langMenu2" class="lang-menu" role="menu">
-        <button class="lang-opt" data-lang="tr"><img src="flags/tr.png" alt="">TR</button>
         <button class="lang-opt" data-lang="en"><img src="flags/en.png" alt="">EN</button>
+        <button class="lang-opt" data-lang="tr"><img src="flags/tr.png" alt="">TR</button>
         <button class="lang-opt" data-lang="fr"><img src="flags/fr.png" alt="">FR</button>
         <button class="lang-opt" data-lang="pt"><img src="flags/pt.png" alt="">PT</button>
         <button class="lang-opt" data-lang="ru"><img src="flags/ru.png" alt="">RU</button>
@@ -99,21 +99,21 @@
   <section id="about" class="z-section hero">
     <div class="z-container grid-2">
       <div class="section-head">
-        <span class="badge" data-i="hero_badge">Ön Satış • Stake ile NFT Kazan</span>
-        <h1 data-i="hero_title">ZUZU — Geleceğin Robotic Kirpisi 🦔⚡</h1>
-        <p data-i="hero_lead">Stake et ve <b>ZUZU Maskot NFT</b> kazan. Sınırlı arz, yüksek <b>utility</b>.</p>
+        <span class="badge" data-i="hero_badge">Pre-Sale • Stake to Win NFT</span>
+        <h1 data-i="hero_title">ZUZU — Robotic Hedgehog 🦔⚡</h1>
+        <p data-i="hero_lead">Stake and win <b>ZUZU Mascot NFT</b>. Limited supply, high <b>utility</b>.</p>
 
         <div class="hero-cta">
-          <a href="#stake" class="z-btn z-btn-primary" data-i="cta_stake">Stake Etmeye Başla</a>
-          <a href="#nft"   class="z-btn z-btn-ghost"   data-i="cta_nft">NFT Ödülleri</a>
+          <a href="#stake" class="z-btn z-btn-primary" data-i="cta_stake">Start Staking</a>
+          <a href="#nft"   class="z-btn z-btn-ghost"   data-i="cta_nft">NFT Rewards</a>
         </div>
 
         <!-- Countdown -->
         <div class="countdown fancy">
-          <div class="flip"><div id="cdDays"  class="num">00</div><small data-i="days">GÜN</small></div>
-          <div class="flip"><div id="cdHours" class="num">00</div><small data-i="hours">SAAT</small></div>
-          <div class="flip"><div id="cdMins"  class="num">00</div><small data-i="mins">DAKİKA</small></div>
-          <div class="flip"><div id="cdSecs"  class="num">00</div><small data-i="secs">SANİYE</small></div>
+          <div class="flip"><div id="cdDays"  class="num">00</div><small data-i="days">DAYS</small></div>
+          <div class="flip"><div id="cdHours" class="num">00</div><small data-i="hours">HOURS</small></div>
+          <div class="flip"><div id="cdMins"  class="num">00</div><small data-i="mins">MINUTES</small></div>
+          <div class="flip"><div id="cdSecs"  class="num">00</div><small data-i="secs">SECONDS</small></div>
         </div>
         <p class="list-note" data-i="listing_note">Exchange Listing: 23 Nov 10:00 UTC</p>
       </div>
@@ -130,17 +130,17 @@
   <section id="presale" class="z-section">
     <div class="z-container">
       <div class="section-head">
-        <h2 data-i="presale_title">Ön Satış — Geri Sayım</h2>
-        <p class="muted" data-i="presale_lead">ZUZU ön satışına hazır ol! <b>Sınırlı tahsis</b>, topluluğa özel fiyat.</p>
+        <h2 data-i="presale_title">Pre-Sale — Countdown</h2>
+        <p class="muted" data-i="presale_lead">Get ready for ZUZU pre-sale! <b>Limited allocation</b>, community price.</p>
       </div>
 
       <div class="card presale-card">
         <div class="wcol">
           <div class="wrow">
-            <div class="wbox"><div class="wtitle" data-i="week1">Hafta 1</div><div class="wdate">23 Eyl — 8 Eki</div><div class="wprice">1 ZUZU = <b>0.040</b> USDT</div></div>
-            <div class="wbox"><div class="wtitle" data-i="week2">Hafta 2</div><div class="wdate">9 Eki — 23 Eki</div><div class="wprice">1 ZUZU = <b>0.060</b> USDT</div></div>
-            <div class="wbox"><div class="wtitle" data-i="week3">Hafta 3</div><div class="wdate">24 Eki — 7 Kas</div><div class="wprice">1 ZUZU = <b>0.080</b> USDT</div></div>
-            <div class="wbox"><div class="wtitle" data-i="week4">Hafta 4</div><div class="wdate">8 Kas — 23 Kas</div><div class="wprice">1 ZUZU = <b>0.100</b> USDT</div></div>
+            <div class="wbox"><div class="wtitle" data-i="week1">Week 1</div><div class="wdate">23 Sep — 8 Oct</div><div class="wprice">1 ZUZU = <b>0.040</b> USDT</div></div>
+            <div class="wbox"><div class="wtitle" data-i="week2">Week 2</div><div class="wdate">9 Oct — 23 Oct</div><div class="wprice">1 ZUZU = <b>0.060</b> USDT</div></div>
+            <div class="wbox"><div class="wtitle" data-i="week3">Week 3</div><div class="wdate">24 Oct — 7 Nov</div><div class="wprice">1 ZUZU = <b>0.080</b> USDT</div></div>
+            <div class="wbox"><div class="wtitle" data-i="week4">Week 4</div><div class="wdate">8 Nov — 23 Nov</div><div class="wprice">1 ZUZU = <b>0.100</b> USDT</div></div>
           </div>
 
           <div class="buyline">
@@ -149,9 +149,19 @@
               <option value="MATIC">MATIC</option>
               <option value="USDT">USDT (Polygon)</option>
             </select>
-            <button id="buyBtn" class="z-btn z-btn-primary" data-i="buy_now">Hemen Satın Al</button>
+            <button id="buyBtn" class="z-btn z-btn-primary" data-i="buy_now">Buy Now</button>
           </div>
-          <small class="muted" data-i="pay_note">Ödemeler MetaMask (Polygon) ile yapılır. Mobilde MetaMask dApp ile otomatik açılır.</small>
+          <small class="muted" data-i="pay_note">Payments via MetaMask (Polygon). On mobile, opens in MetaMask dApp.</small>
+
+          <!-- Contract info + add token -->
+          <div class="card" style="margin-top:10px;padding:10px">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+              <small><b>Presale/Token Contract:</b> <span id="zuzuContractText">0xfEe7dd881255EE85b7D6FeAF778e10988486AFc2</span></small>
+              <button id="copyContract" class="z-btn z-btn-ghost" style="padding:.35rem .6rem">Copy</button>
+              <a id="scanContract" class="z-btn z-btn-ghost" style="padding:.35rem .6rem" target="_blank" rel="noopener">Polygonscan</a>
+              <button id="addToken" class="z-btn z-btn-ghost" style="padding:.35rem .6rem">Add $ZUZU to MetaMask</button>
+            </div>
+          </div>
         </div>
 
         <div class="chartcol">
@@ -170,7 +180,7 @@
 
       <!-- Exchanges -->
       <div class="card">
-        <h3 style="margin:0 0 10px" data-i="exchanges">Desteklenen Borsalar</h3>
+        <h3 style="margin:0 0 10px" data-i="exchanges">Supported Exchanges</h3>
         <div class="ticker">
           <div class="ticker__track">
             <div class="ticker__item"><img src="assets/images/exchanges/gateio.png"  alt="Gate.io"></div>
@@ -181,20 +191,20 @@
             <div class="ticker__item"><img src="assets/images/exchanges/bybit.png"   alt="Bybit"></div>
           </div>
         </div>
-        <div class="ex-note" data-i="ex_soon">Yakında listelenecek</div>
+        <div class="ex-note" data-i="ex_soon">Will Be Listed Soon</div>
       </div>
 
       <!-- Invite & Earn -->
       <div class="card" id="inviteCard" style="margin-top:14px">
-        <h3 data-i="invite_title">Davet Et & Kazan</h3>
-        <p data-i="invite_lead">Her başarılı satın alım için davet edene <b>250 ZUZU</b> bonus verilir. Paylaş:</p>
+        <h3 data-i="invite_title">Invite & Earn</h3>
+        <p data-i="invite_lead">Earn <b>250 ZUZU</b> per successful purchase via your link.</p>
         <input id="refLink" class="input" readonly>
         <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
-          <button id="copyRef" class="z-btn z-btn-ghost" data-i="copy">Kopyala</button>
+          <button id="copyRef" class="z-btn z-btn-ghost" data-i="copy">Copy</button>
           <a id="shareWA" class="z-btn z-btn-ghost" href="#" target="_blank">WhatsApp</a>
           <a id="shareTG" class="z-btn z-btn-ghost" href="#" target="_blank">Telegram</a>
         </div>
-        <small class="muted" data-i="invite_note">Not: Bonus dağıtımı backend doğrulaması ile yapılır.</small>
+        <small class="muted" data-i="invite_note">Note: Bonuses are confirmed via backend.</small>
       </div>
     </div>
   </section>
@@ -203,14 +213,14 @@
   <section id="stake" class="z-section">
     <div class="z-container">
       <div class="section-head">
-        <h2 data-i="stake_title">Stake Pro — Kilitle, Kazan, NFT Kap ✨</h2>
-        <p class="muted" data-i="stake_lead">ZUZU’larını kilitle, <b>APY + NFT BOOST</b> ile kazan.</p>
+        <h2 data-i="stake_title">Stake Pro — Lock, Earn, Get NFT ✨</h2>
+        <p class="muted" data-i="stake_lead">Lock your ZUZU, <b>APY + NFT BOOST</b>.</p>
       </div>
 
       <div class="stake-grid">
-        <div class="stake-card"><div class="tier" data-i="tier_bronze">Bronze</div><ul><li data-i="l_30">30 gün kilit</li><li><b>12% APY</b></li><li data-i="l_early">Erken çekiliş</li></ul></div>
-        <div class="stake-card"><div class="tier silver" data-i="tier_silver">Silver</div><ul><li data-i="l_90">90 gün kilit</li><li><b>24% APY</b></li><li>+5% NFT boost</li></ul></div>
-        <div class="stake-card"><div class="tier gold" data-i="tier_gold">Gold</div><ul><li data-i="l_180">180 gün kilit</li><li><b>40% APY</b></li><li data-i="l_wl">Whitelist + ZUZU rozet</li></ul></div>
+        <div class="stake-card"><div class="tier" data-i="tier_bronze">Bronze</div><ul><li data-i="l_30">30-day lock</li><li><b>12% APY</b></li><li data-i="l_early">Early drawings</li></ul></div>
+        <div class="stake-card"><div class="tier silver" data-i="tier_silver">Silver</div><ul><li data-i="l_90">90-day lock</li><li><b>24% APY</b></li><li>+5% NFT boost</li></ul></div>
+        <div class="stake-card"><div class="tier gold" data-i="tier_gold">Gold</div><ul><li data-i="l_180">180-day lock</li><li><b>40% APY</b></li><li data-i="l_wl">Whitelist + ZUZU badge</li></ul></div>
       </div>
     </div>
   </section>
@@ -219,28 +229,25 @@
   <section id="nft" class="z-section">
     <div class="z-container">
       <div class="section-head">
-        <h2 data-i="nft_title">ZUZU Maskot NFT Ödülleri 🎁</h2>
-        <p class="muted" data-i="nft_lead">Stake edenler koleksiyondan nadir NFT’ler kazanır.</p>
+        <h2 data-i="nft_title">ZUZU Mascot NFT Rewards 🎁</h2>
+        <p class="muted" data-i="nft_lead">Stakers win rare NFTs from the collection.</p>
       </div>
       <div id="nftGrid" class="nft-grid"></div>
     </div>
   </section>
 
-  <!-- TOKENOMICS (SVG donut, her zaman görünür) -->
+  <!-- TOKENOMICS (SVG donut) -->
   <section id="tokenomics" class="z-section">
     <div class="z-container">
       <div class="section-head">
-        <h2 data-i="token_title">Tokonomi (Görsel)</h2>
-        <p class="muted" data-i="token_supply">Toplam Arz: 500,000,000 ZUZU</p>
+        <h2 data-i="token_title">Tokenomics (Visualized)</h2>
+        <p class="muted" data-i="token_supply">Total Supply: 500,000,000 ZUZU</p>
       </div>
 
       <div class="tk">
         <div class="piewrap">
-          <!-- Donut -->
           <svg viewBox="0 0 42 42" class="pie">
-            <!-- bg -->
             <circle cx="21" cy="21" r="15.915" class="pie-bg"/>
-            <!-- slices (toplam 100) -->
             <circle class="pie-slice c-comm"  cx="21" cy="21" r="15.915" stroke-dasharray="35 65" stroke-dashoffset="25"/>
             <circle class="pie-slice c-liq"   cx="21" cy="21" r="15.915" stroke-dasharray="20 80" stroke-dashoffset="-10"/>
             <circle class="pie-slice c-team"  cx="21" cy="21" r="15.915" stroke-dasharray="15 85" stroke-dashoffset="-30"/>
@@ -252,44 +259,44 @@
         </div>
 
         <div class="legend">
-          <div><span class="dot" style="background:#7f9cff"></span><span data-i="lg_comm">Topluluk — %35</span></div>
-          <div><span class="dot" style="background:#16d2a6"></span><span data-i="lg_liq">Likidite — %20</span></div>
-          <div><span class="dot" style="background:#ffd77c"></span><span data-i="lg_team">Ekip (12 ay kilit) — %15</span></div>
-          <div><span class="dot" style="background:#9aaeff"></span><span data-i="lg_tres">Hazine — %10</span></div>
-          <div><span class="dot" style="background:#b8c7ff"></span><span data-i="lg_stake">Staking Ödülleri — %15</span></div>
-          <div><span class="dot" style="background:#a8c2ff"></span><span data-i="lg_prtn">Partnerler — %5</span></div>
+          <div><span class="dot" style="background:#7f9cff"></span><span data-i="lg_comm">Community — 35%</span></div>
+          <div><span class="dot" style="background:#16d2a6"></span><span data-i="lg_liq">Liquidity — 20%</span></div>
+          <div><span class="dot" style="background:#ffd77c"></span><span data-i="lg_team">Team (12m lock) — 15%</span></div>
+          <div><span class="dot" style="background:#9aaeff"></span><span data-i="lg_tres">Treasury — 10%</span></div>
+          <div><span class="dot" style="background:#b8c7ff"></span><span data-i="lg_stake">Staking Rewards — 15%</span></div>
+          <div><span class="dot" style="background:#a8c2ff"></span><span data-i="lg_prtn">Partners — 5%</span></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ROADMAP (gerçekçi) -->
+  <!-- ROADMAP -->
   <section id="roadmap" class="z-section">
     <div class="z-container">
       <div class="section-head">
-        <h2 data-i="road_title">Yol Haritası</h2>
-        <p class="muted" data-i="road_lead">Önemli kilometre taşları</p>
+        <h2 data-i="road_title">Roadmap</h2>
+        <p class="muted" data-i="road_lead">Milestones</p>
       </div>
       <div class="road">
         <div class="mile">
           <span>Q3 2025</span>
-          <b data-i="rm_phase0">Hazırlık</b>
-          <div data-i="rm_p0d">Whitepaper v1, web v2, akıllı sözleşme geliştirme & güvenlik denetimi başlatma.</div>
+          <b data-i="rm_phase0">Preparation</b>
+          <div data-i="rm_p0d">Whitepaper v1, website v2, contract dev & start audit.</div>
         </div>
         <div class="mile">
           <span>Q4 2025</span>
-          <b data-i="rm_phase1">Ön Satış & Listeleme</b>
-          <div data-i="rm_p1d">Presale (4 faz), topluluk kampanyaları, <b>23 Nov 10:00 UTC</b> ilk CEX listemesi, staking beta.</div>
+          <b data-i="rm_phase1">Presale & Listing</b>
+          <div data-i="rm_p1d">4-phase presale, community campaigns, <b>23 Nov 10:00 UTC</b> first CEX listing, staking beta.</div>
         </div>
         <div class="mile">
           <span>Q1 2026</span>
-          <b data-i="rm_phase2">Ürün</b>
-          <div data-i="rm_p2d">NFT mint & ödüller, referral v2, ikinci CEX, DEX likidite artırımı.</div>
+          <b data-i="rm_phase2">Product</b>
+          <div data-i="rm_p2d">NFT mint & rewards, referral v2, second CEX, deeper DEX liquidity.</div>
         </div>
         <div class="mile">
           <span>Q2 2026</span>
-          <b data-i="rm_phase3">Büyüme & Yönetişim</b>
-          <div data-i="rm_p3d">Mobil cüzdan entegrasyonları, partnerlikler, snapshot tabanlı yönetişim oylamaları.</div>
+          <b data-i="rm_phase3">Growth & Governance</b>
+          <div data-i="rm_p3d">Mobile wallet integrations, partnerships, snapshot-based governance votes.</div>
         </div>
       </div>
     </div>
@@ -300,19 +307,16 @@
   <div class="z-container between center-v">
     <small>© 2025 ZUZUCOIN</small>
     <div class="z-chip-row">
-      <a class="z-chip" href="#about" data-i="nav_about">Hakkımızda</a>
-      <a class="z-chip" href="#presale" data-i="nav_presale">Ön Satış</a>
+      <a class="z-chip" href="#about" data-i="nav_about">About</a>
+      <a class="z-chip" href="#presale" data-i="nav_presale">Pre-Sale</a>
       <a class="z-chip" href="#stake" data-i="nav_stake">Stake</a>
       <a class="z-chip" href="#nft" data-i="nav_nft">NFT</a>
-      <a class="z-chip" href="#tokenomics" data-i="nav_token">Tokonomi</a>
+      <a class="z-chip" href="#tokenomics" data-i="nav_token">Tokenomics</a>
     </div>
   </div>
 </footer>
 
-<script src="app.js"></script>
 <div id="toasts" class="toasts"></div>
 <script src="app.js"></script>
-</body>
-</html>
 </body>
 </html>
