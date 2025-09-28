@@ -169,7 +169,12 @@ img{max-width:100%;display:block}
 .c-stake{stroke:#b8c7ff}
 .c-prtn{stroke:#a8c2ff}
 .pie-center{fill:#cfe2ff;font-size:5px;font-weight:800}
-
+<form action="mailto:info@zuzucoin.xyz" method="post" enctype="text/plain">
+  <input type="text" name="name" placeholder="Your Name" required>
+  <input type="email" name="email" placeholder="Your Email" required>
+  <textarea name="message" placeholder="Your Message" required></textarea>
+  <button type="submit">Send</button>
+</form>
 /* roadmap */
 .road{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 @media(max-width:900px){.road{grid-template-columns:1fr 1fr}}
